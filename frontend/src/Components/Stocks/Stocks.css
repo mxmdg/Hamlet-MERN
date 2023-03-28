@@ -1,0 +1,67 @@
+:root {
+    --color1: #57C5B6;
+    --color2: #159895;
+    --color3: #1A5F7A;
+    --color4: #002B5B;
+    --color5: #9A208C;
+    --color6: #E11299;
+    --color7: #FFEAEA;
+    --color8: #F5C6EC;
+    --color9: #A9907E;
+    --color10: #F3DEBA;
+    --color11: #ABC4AA;
+    --color12: #675D50;
+}
+
+.StockMainContainer{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 300px);
+    gap: 5px;
+}
+
+.Stockframe {
+    display: flex;
+    align-content: baseline;
+}
+
+.Stockframe h4 {
+    margin: 7px;
+    padding: 8px;
+}
+
+.Stockframe h5 {
+    margin-top: 3px;
+    margin-bottom: 3px;
+    margin-left: 7px;
+    margin-right: 7px;
+    padding: 8px;
+    background-color: var(--color7);
+    transition: all 1s;
+}
+
+.Stockframe h5:hover{
+    background-color: var(--color3);
+    color: var(--color11);
+    transition: all .3s;
+}
+
+.stockMainContainer {
+    text-align: left;
+    border-bottom: 1px solid #000;
+}
+
+.deleteBtn {
+    background-color: red;
+    display: flex;
+    color: white;
+    width: 12px;
+    height: 12px;
+    font-size: .8em;
+    font-weight: 900;
+    padding: 3px;
+    text-align: center;
+    justify-content: center;
+    border-radius: 10px;
+    border:1px solid #000;
+    line-height: 12px;
+}

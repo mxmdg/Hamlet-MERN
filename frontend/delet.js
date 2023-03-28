@@ -1,0 +1,1 @@
+const delet = ()=> alert("delete")
