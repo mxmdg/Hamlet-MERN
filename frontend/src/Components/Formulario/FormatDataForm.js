@@ -1,17 +1,17 @@
 let MoldeFormato = [{
     inputName: 'Nombre',
     type: 'Text',
-    id: 'id_001'
+    id: 'id_301'
 },
 {
     inputName: 'Ancho',
     type: 'Number',
-    id: 'id_002'
+    id: 'id_302'
 },
 {
     inputName: 'Alto',
     type: 'Number',
-    id: 'id_003'
+    id: 'id_303'
 }]
 
 export default MoldeFormato

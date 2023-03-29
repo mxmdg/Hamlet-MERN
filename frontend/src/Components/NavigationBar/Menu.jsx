@@ -6,7 +6,8 @@ const Menu = (props)=> {
                     <li><Link to="/" >Hamlet</Link></li>
                     <li><Link id='jobs' to='/Hamlet/jobs'>Trabajos</Link></li>
                     <li><Link id='impresoras' to='/Hamlet/impresoras'>Impresoras</Link></li>
-                    <li><Link id='materiales' to='/Hamlet/materiales'>Materiales</Link></li>      
+                    <li><Link id='materiales' to='/Hamlet/materiales'>Materiales</Link></li>
+                    <li><Link id='formatos' to='/Hamlet/formatos'>Formatos</Link></li>     
                 </ul>
             </nav>
     

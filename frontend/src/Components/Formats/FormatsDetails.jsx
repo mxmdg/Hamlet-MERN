@@ -13,7 +13,7 @@ const FormatsDetails = (props)=> {
     return (
         <div className="Stockframe">
             <h5>{props.pd.Nombre} ({props.pd.Ancho} x {props.pd.Alto})</h5>
-            <div className='deleteBtn' onClick={()=>deleteClickHandler(props.pd._id)}>X</div>
+            <h5 className='deleteBtn' onClick={()=>deleteClickHandler(props.pd._id)}>Eliminar</h5>
         </div>
         )
 }

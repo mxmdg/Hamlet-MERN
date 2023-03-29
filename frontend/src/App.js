@@ -3,6 +3,7 @@ import './Styles/hamlet.css'
 import Header from './Components/NavigationBar/Header'
 import PrintersMainContainer from './Components/Printers/PrintersMainContainer';
 import StocksMainContainer from './Components/Stocks/StocksMainContainer';
+import FormatsMainContainer from './Components/Formats/FormatsMainContainer';
 import Jobs from './Components/Jobs/Jobs'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from './Components/home'
@@ -17,6 +18,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/hamlet/impresoras" element={<PrintersMainContainer />} />
             <Route path="/hamlet/materiales" element={<StocksMainContainer />} />
+            <Route path="/hamlet/formatos" element={<FormatsMainContainer />} />
             <Route path="/hamlet/jobs" element={<Jobs />} />
           </Routes>  
         </div>

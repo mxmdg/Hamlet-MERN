@@ -1,14 +1,13 @@
 import Stocks from './Stocks'
 import Form from '../Formulario/Form'
-import FormDataForm from '../Formulario/FormatDataForm'
+import StockDataForm from '../Formulario/StockDataForm'
 import '../../Styles/hamlet.css'
 
 const StocksMainContainer = ()=> {
     return (<>
                 <div>
-                    <h3>Materiales</h3>
                     <Stocks/>
-                    <Form form={FormDataForm} collection='formatos'/>   
+                    <Form form={StockDataForm} collection='materiales'/>   
                 </div>
             </>)
 }
