@@ -15,7 +15,7 @@ app.get('/hamlet/formatos', (rej, res)=>{
 })
 
 // configurar server (basico)
-app.listen(465, ()=> console.log('Server running on port 465'))
+app.listen(465, '0.0.0.0', ()=> console.log('Server running on port 465'))
 
 // Rutas (Las traje de Hamlet-FS)
 

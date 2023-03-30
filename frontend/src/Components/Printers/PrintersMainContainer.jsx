@@ -1,8 +1,10 @@
 import Printers from './Printers'
 import Form from '../Formulario/Form'
 import PrintersDataForm from '../Formulario/PrintersDataForm'
+import React, { useState } from 'react';
 
 import './printers.css'
+
 
 const PrintersMainContainer = ()=> {
     return (

@@ -25,7 +25,7 @@ let PrintersDataForm = [{
 },
 {
     inputName: 'Y_Minimo',
-    type: 'text',
+    type: 'Number',
     id: 'id_006'
 },
 {

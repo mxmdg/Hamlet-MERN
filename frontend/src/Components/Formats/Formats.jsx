@@ -3,6 +3,7 @@ import axios from 'axios'
 import FormatsDetails from './FormatsDetails';
 import '../../Styles/hamlet.css'
 import '../Stocks/Stocks.css'
+import { serverURL } from '../../config';
 
 const Formats = ()=> {
     const [formatList , setFormatList] = useState([])
@@ -10,7 +11,7 @@ const Formats = ()=> {
     useEffect(()=> {
         const fetchData = async () => {
             try {
-                const formats = await axios.get("http://localhost:5000/Hamlet/formatos")
+                const formats = await axios.get(`${serverURL}/hamlet/formatos/`)
                 setFormatList(formats.data)
             } catch (err) {
                 console.log(err)

@@ -1,6 +1,6 @@
 const Home = (props)=> {
 
-    return <h1>Welcome to hamlet</h1>
+    return <h3>Welcome to hamlet</h3>
 }
 
 export default Home

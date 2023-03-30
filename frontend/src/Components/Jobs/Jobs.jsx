@@ -1,5 +1,5 @@
 const Jobs = ()=> {
-    return <h1>Trabajo Nuevo proximamente</h1>
+    return <h3>Trabajo Nuevo proximamente</h3>
 }
 
 export default Jobs

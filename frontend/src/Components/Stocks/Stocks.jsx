@@ -3,6 +3,7 @@ import axios from 'axios'
 import StockDetails from './StocksDetails';
 import '../../Styles/hamlet.css'
 import './Stocks.css'
+import { serverURL } from '../../config';
 
 const Stocks = ()=> {
     const [stockList , setStockList] = useState([])
@@ -10,7 +11,7 @@ const Stocks = ()=> {
     useEffect(()=> {
         const fetchData = async () => {
             try {
-                const res = await axios.get("http://localhost:5000/Hamlet/materiales")
+                const res = await axios.get(`${serverURL}/hamlet/materiales`)
                 setStockList(res.data)
             } catch (err) {
                 console.log(err)

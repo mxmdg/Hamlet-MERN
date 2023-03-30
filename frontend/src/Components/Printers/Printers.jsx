@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios'
 import PrinterDetails from './PrinterDetails';
 import './printers.css'
+import { serverURL } from '../../config';
 
 const readPrinters = async () => {
-    const res = await axios.get("http://localhost:5000/hamlet/impresoras")
+    const res = await axios.get(`${serverURL}/hamlet/impresoras`)
                 return (res.data)
 }
 

@@ -2,6 +2,7 @@ import './printers.css'
 import Cmyk from './Cmyk'
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { serverURL } from '../../config';
 
 const PrinterDetails = (props)=> {
     
@@ -17,7 +18,7 @@ const PrinterDetails = (props)=> {
 
     const deleteClickHandler = async (id)=>{
         try {
-             await axios.delete("http://localhost:5000/hamlet/impresoras/" + id)
+             await axios.delete(`${serverURL}/hamlet/impresoras/${id}` )
         } catch (e) {
             alert(e)
         }

@@ -1,9 +1,10 @@
 import '../../Styles/hamlet.css'
 import axios from 'axios';
+import { serverURL } from '../../config';
 
 const deleteClickHandler = async (id)=>{
     try {
-         await axios.delete("http://localhost:5000/hamlet/formatos/" + id)
+         await axios.delete(`${serverURL}/hamlet/formatos/${id}`)
     } catch (e) {
         alert(e)
     }
