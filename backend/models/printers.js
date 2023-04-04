@@ -2,7 +2,7 @@ const { Schema, model } = require('mongoose');
 
 const printerSchema = new Schema(
     { 
-        'Nombre': {type: String, required: true},
+        'Modelo': {type: String, required: true},
         'Fabricante': {type: String, required: false},
         'Colores': {type: Number, required: true},
         'X_Minimo': {type: Number, required: true},

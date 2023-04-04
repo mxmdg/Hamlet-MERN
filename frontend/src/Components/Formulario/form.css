@@ -1,11 +1,17 @@
 .formContainer {
-    margin:30px;
+	position: absolute;
+	top:50px;
+	left: 0;
+	right: 0;
+    margin:auto;
     padding:25px;
     border: 1px solid #59e3ea;
     display: flex;
     width: 300px;
-    background: #00000066;
+    background: #111111bb;
+	backdrop-filter: blur(7px);
     border-radius: 15px;
+	box-shadow: 10px 10px 7px #00000066;
 }
 
 
@@ -61,6 +67,27 @@
 	margin-top: 5px;
 	margin-bottom: 5px;
 } 
+
+.formulario button {
+	border: 1px solid #666;
+	padding: 10px 20px;
+	margin: 10px;
+	color: #666;
+	background-color: #111;
+	border-radius: 10px;
+	box-shadow: 3px 3px 5px #000;
+	transition: all 2s;
+}
+
+.formulario button:hover {
+	border: 1px solid #59e3ea;
+	color: #59e3ea;
+	background-color: #222;
+	box-shadow: 5px 5px 10px #000;
+
+	transition: all 1s;
+
+}
 
 .formulario > .inputError {
 	background-color: #f24;

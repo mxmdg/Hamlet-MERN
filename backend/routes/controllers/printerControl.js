@@ -8,10 +8,10 @@ printerControl.getPrinters = async (req,res) => {{
 }}
 
 printerControl.addPrinter = async (req,res)=>{{
-    const {Nombre, Fabricante, Colores, X_Minimo, X_Maximo, Y_Minimo, Y_Maximo, Paginas_por_minuto, Costo_impresion} = req.body;
-    const newPrinter = new printers.esquema({Nombre, Fabricante, Colores, X_Minimo, X_Maximo, Y_Minimo, Y_Maximo, Paginas_por_minuto, Costo_impresion});
+    const {Modelo, Fabricante, Colores, X_Minimo, X_Maximo, Y_Minimo, Y_Maximo, Paginas_por_minuto, Costo_impresion} = req.body;
+    const newPrinter = new printers.esquema({Modelo, Fabricante, Colores, X_Minimo, X_Maximo, Y_Minimo, Y_Maximo, Paginas_por_minuto, Costo_impresion});
     await newPrinter.save();
-    res.json({"message": newPrinter.Nombre + " guardado OK"});
+    res.json({"message": newPrinter.Modelo + " guardado OK"});
     
 }}
 
@@ -20,9 +20,9 @@ printerControl.getPrinter = async (req, res)=> {
     res.json({"Message": "Impresora encontrada " + req.params.id})
 }
 printerControl.updatePrinter = async (req, res)=> {
-    const {Nombre, Fabricante, Colores, X_Minimo, X_Maximo, Y_Minimo, Y_Maximo, Paginas_por_minuto, Costo_impresion} = req.body;
-    const printer = await printers.esquema.findOneAndUpdate({Nombre, Fabricante, Colores, X_Minimo, X_Maximo, Y_Minimo, Y_Maximo, Paginas_por_minuto, Costo_impresion})
-    res.json({"Message": "Impresora actualizada " + printer.Nombre})
+    const {Modelo, Fabricante, Colores, X_Minimo, X_Maximo, Y_Minimo, Y_Maximo, Paginas_por_minuto, Costo_impresion} = req.body;
+    const printer = await printers.esquema.findOneAndUpdate({Modelo, Fabricante, Colores, X_Minimo, X_Maximo, Y_Minimo, Y_Maximo, Paginas_por_minuto, Costo_impresion})
+    res.json({"Message": "Impresora actualizada " + printer.Modelo})
 }
 printerControl.deletePrinter = async (req, res)=> {
     const impresora =  await printers.esquema.findByIdAndDelete(req.params.id);

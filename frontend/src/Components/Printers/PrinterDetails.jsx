@@ -27,7 +27,7 @@ const PrinterDetails = (props)=> {
     const Show = (
         <div id={props.pd._id} className="frame">
             <div className="frame__title">
-                <h4>{props.pd.Nombre}</h4> <h5>{props.pd.Fabricante}</h5>
+                <h4>{props.pd.Modelo}</h4> <h5>{props.pd.Fabricante}</h5>
             </div>
             <Cmyk colores={props.pd.Colores}/>
             <h5>PPM: {props.pd.Paginas_por_minuto}</h5>
@@ -40,7 +40,7 @@ const PrinterDetails = (props)=> {
         const Edit = (
             <div id={props.pd._id} className="frame">
                 <div className="frame__title">
-                    <input type='text' placeholder={props.pd.Nombre}></input> <input type='text' placeholder={props.pd.Fabricante}></input>
+                    <input type='text' placeholder={props.pd.Modelo}></input> <input type='text' placeholder={props.pd.Fabricante}></input>
                 </div>
                 <input type='number' placeholder='Colores'></input>
                 <input type='number' placeholder='Paginas por minuto'></input>

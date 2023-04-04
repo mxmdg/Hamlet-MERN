@@ -1,5 +1,5 @@
 let PrintersDataForm = [{
-    inputName: 'Nombre',
+    inputName: 'Modelo',
     type: 'Text',
     id: 'id_001'
 },

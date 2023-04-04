@@ -1,3 +1,4 @@
+import {useState} from 'react'
 import Input from './Input'
 import Select from './Select'
 import Button from './Button'
@@ -15,30 +16,42 @@ function convertirArrayAObjeto(arr) {
   }, {});
 }
 
-const submitHandler = (e, collection)=> {
-  e.preventDefault()
-  const datos = []
-  for (let element of e.target.elements) {
-    console.log(element, typeof element)
-    if (element.tagName === 'INPUT' || element.tagName === 'SELECT' ) {
-      let nombre = element.placeholder
-      let value = element.value
-      datos.push({nombre, value})
-    }
-  }
-  const formData = convertirArrayAObjeto(datos)
-  console.log(datos, formData)
-  try {
-    axios.post("http://localhost:5000/hamlet/" + collection, formData)
-  } catch (e) {
-    console.log(e)
-  }
-  
-}
-
 const Form = (props)=> {
 
+    const [useHidden, setHidden] = useState(props.item?false:true)
+    const [useItem, setItem] = useState(props.item || {})
+
     let dataForm = props.form
+
+    const submitHandler = async (e, collection, id = null)=> {
+      e.preventDefault()
+      const datos = []
+      for (let element of e.target.elements) {
+        console.log(element, typeof element)
+        if (element.tagName === 'INPUT' || element.tagName === 'SELECT' ) {
+          let nombre = element.placeholder
+          let value = element.value
+          datos.push({nombre, value})
+        }
+      }
+      const formData = convertirArrayAObjeto(datos)
+      console.log(datos, formData)
+    
+      try {
+        if (id === null) {
+          await axios.post("http://localhost:5000/hamlet/" + collection, formData)
+        } else {
+          await axios.put(`http://localhost:5000/hamlet/${collection}/${id}`, formData)
+        }
+        setHidden(true)
+      } catch (e) {
+        console.log('No se pudeo guardar' + e)
+      }   
+    }
+
+    const toogleHandler = ()=> {
+      setHidden(!useHidden)
+    }
 
     const typeOfInput = (inp) => {
         if (inp.type === "Select") {
@@ -51,18 +64,21 @@ const Form = (props)=> {
         } else if (inp.type === "button"){
             return <Button inputName={inp.inputName} key={inp.id} type={inp.type} selectForm={props.selectForm} id={"Register"}></Button>
         } else {
-          return <Input inputName={inp.inputName} key={inp.id} type={inp.type}></Input>;
+          return <Input inputName={inp.inputName} key={inp.id} type={inp.type} item={(useItem !== {})?useItem.data:''}></Input>;
         }
       };
 
-    return <div className='formContainer'>
-            <div className={"close_btn"} onClick={props.resetForms}><p>X</p></div>
-            <form onSubmit={(e)=>submitHandler(e,props.collection)} className="formulario">
-                {dataForm.map((inp)=> typeOfInput(inp))}
-                <button id="submitBTN" type="submit">Enviar</button>
-                <button id="cancelBTN" type="cancel">Cancelar</button>                
-            </form>
-            </div>
+    const hiddenTrue = (<div className='formulario'><button onClick={toogleHandler}>+</button></div>)
+    
+    const hiddenFalse = (<div className='formContainer'>
+                            <form onSubmit={(e)=>submitHandler(e,props.collection, props._id)} className="formulario">
+                                {dataForm.map((inp)=> typeOfInput(inp))}
+                                <button id="submitBTN" type="submit">Enviar</button>
+                                <button id="cancelBTN" type="cancel" onClick={toogleHandler}>Cancelar</button>                
+                            </form>
+                          </div>)
+
+    return useHidden ? hiddenTrue : hiddenFalse
             
 } 
 

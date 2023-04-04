@@ -13,7 +13,10 @@ const PrintersMainContainer = ()=> {
                 <h3>Impresoras</h3>
                 <Form form={PrintersDataForm} collection='impresoras'/>
             </div>
-            <Printers/>
+            <div className="panel">
+                <Printers/>
+            </div>
+            
              </>)
 }
 
