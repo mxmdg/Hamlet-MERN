@@ -9,12 +9,19 @@ import { useState } from 'react'
 const FormatsDetails = (props)=> {
 
     const [useAction, setAction] = useState('view')
-    const [useID, setID] = useState('')
-    const [useItemToEdit, setItemToEdit] = useState({})
+    const [useID, setID] = useState('useID')
+    const [useItemToEdit, setItemToEdit] = useState({itemToEdit: 'itemToEdit'})
+    const [useFormatsList, setFormatsList] = useState([])
+
+    const getElements = async () => {
+        const formats = await axios.get(`${serverURL}/hamlet/formatos/`)
+        setFormatsList(formats.data)
+    }
 
     const deleteClickHandler = async (id)=>{
         try {
              await axios.delete(`${serverURL}/hamlet/formatos/${id}`)
+             getElements()
         } catch (e) {
             alert(e)
         }
@@ -23,9 +30,9 @@ const FormatsDetails = (props)=> {
     const editClickHandler = async (id)=> {
         try {
             const itemToEdit = await axios.get(`${serverURL}/hamlet/formatos/${id}`)
-            setAction('edit')
-            setID(itemToEdit.data.id)
-            setItemToEdit(itemToEdit)
+           setAction('edit')
+           setID(itemToEdit.data._id)
+           setItemToEdit(itemToEdit)
         } catch (e) {
             console.log(e)
         }

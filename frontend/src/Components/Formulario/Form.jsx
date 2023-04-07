@@ -7,7 +7,7 @@ import './form.css'
 
 function convertirArrayAObjeto(arr) {
   return arr.reduce((obj, item) => {
-    const propName = item.nombre;
+    const propName = (item.nombre || item.Nombre_material || item.Modelo);
     const propValue = isNaN(item.value) ? item.value.toLowerCase() : Number(item.value);
 
     obj[propName] = propValue;
@@ -25,6 +25,7 @@ const Form = (props)=> {
 
     const submitHandler = async (e, collection, id = null)=> {
       e.preventDefault()
+      console.log("Form.jsx > props.id: " + useItem.data._id + " / " + id)
       const datos = []
       for (let element of e.target.elements) {
         console.log(element, typeof element)
@@ -71,7 +72,7 @@ const Form = (props)=> {
     const hiddenTrue = (<div className='formulario'><button onClick={toogleHandler}>+</button></div>)
     
     const hiddenFalse = (<div className='formContainer'>
-                            <form onSubmit={(e)=>submitHandler(e,props.collection, props._id)} className="formulario">
+                            <form onSubmit={(e)=>submitHandler(e,props.collection, useItem.data._id)} className="formulario">
                                 {dataForm.map((inp)=> typeOfInput(inp))}
                                 <button id="submitBTN" type="submit">Enviar</button>
                                 <button id="cancelBTN" type="cancel" onClick={toogleHandler}>Cancelar</button>                

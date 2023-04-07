@@ -6,7 +6,7 @@ import '../../Styles/hamlet.css'
 const StocksMainContainer = ()=> {
     return (<>
                 <div>
-                    <Stocks/>
+                    <Stocks collection='materiales'/>
                     <Form form={StockDataForm} collection='materiales'/>   
                 </div>
             </>)

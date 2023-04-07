@@ -16,12 +16,22 @@ materialControl.addMaterial = async (req,res)=>{{
 }}
 
 materialControl.getMaterial = async (req, res)=> {
-    console.log(req.params.id)
-    res.json({"Message": "Material encontrado " + req.params.id})
+    try {
+        const material = await materials.esquema.findById(req.params.id);
+        if (material) {
+            res.json(material)
+        } else {
+            res.status(404).json({ message: "Material no encontrado" });
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Error al obtener el Material" });
+    }
 }
+    
 materialControl.updateMaterial = async (req, res)=> {
     const {Nombre_Material, Marca, Gramaje, Tipo, Ancho_Resma, Alto_Resma, Espesor_Resma, Fibra, Precio_x_Kilo, Color} = req.body;
-    const material = await materials.esquema.findOneAndUpdate({Nombre_Material, Marca, Gramaje, Tipo, Ancho_Resma, Alto_Resma, Espesor_Resma, Fibra, Precio_x_Kilo, Color})
+    const material = await materials.esquema.findOneAndUpdate({ _id: req.params.id },{Nombre_Material, Marca, Gramaje, Tipo, Ancho_Resma, Alto_Resma, Espesor_Resma, Fibra, Precio_x_Kilo, Color})
     res.json({"Message": "Material actualizado " + material.Nombre})
 }
 materialControl.deleteMaterial = async (req, res)=> {

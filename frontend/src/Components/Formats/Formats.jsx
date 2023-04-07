@@ -1,18 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios'
-import FormatsDetails from './FormatsDetails';
+import FormatDataForm from '../Formulario/FormatDataForm';
+import ItemsDetails from './itemsDetails';
 import '../../Styles/hamlet.css'
 import '../Stocks/Stocks.css'
 import { serverURL } from '../../config';
 
-const Formats = ()=> {
+const Formats = (props)=> {
     const [formatList , setFormatList] = useState([])
+
+    const getElements = async () => {
+        const formats = await axios.get(`${serverURL}/hamlet/${props.collection}/`)
+        setFormatList(formats.data)
+    }
     
     useEffect(()=> {
         const fetchData = async () => {
             try {
-                const formats = await axios.get(`${serverURL}/hamlet/formatos/`)
-                setFormatList(formats.data)
+                getElements()
             } catch (err) {
                 console.log(err)
             }
@@ -25,7 +30,7 @@ const Formats = ()=> {
             <div className="stockMainContainer">
                 {/* Renderiza la lista de Formatos */}
                 {formatList.map(format => (
-                    <FormatsDetails pd={format} key={format._id}/>
+                    <ItemsDetails pd={format} collection={props.collection} key={format._id} id={format._id} formData={FormatDataForm}/>
                 ))}
             </div>
         </>

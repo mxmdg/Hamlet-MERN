@@ -7,7 +7,7 @@ const FormatsMainContainer = ()=> {
     return (<>
                 <div>
                     <h3>Formatos</h3>
-                    <Formats/>
+                    <Formats collection='formatos'/>
                     <Form form={FormDataForm} collection='formatos'/>   
                 </div>
             </>)

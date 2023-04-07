@@ -12,6 +12,7 @@
 	backdrop-filter: blur(7px);
     border-radius: 15px;
 	box-shadow: 10px 10px 7px #00000066;
+	z-index: 10;
 }
 
 
