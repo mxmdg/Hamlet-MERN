@@ -23,9 +23,9 @@ const Jobs = ()=> {
     },[])
 
     return (
-        <div>
+        <div className='formulario'>
             <h3>Impresoras:</h3>
-            <select>
+            <select >
                 {usePrinters.map(printer => (
                     <option key={printer._id}>{printer.Fabricante} {printer.Modelo}</option>
                 ))}

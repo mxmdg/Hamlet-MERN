@@ -19,16 +19,14 @@ function convertirArrayAObjeto(arr) {
 const Form = (props)=> {
 
     const [useHidden, setHidden] = useState(props.item?false:true)
-    const [useItem, setItem] = useState(props.item || {})
+    const [useItem, setItem] = useState(props.item || 'new')
 
     let dataForm = props.form
 
-    const submitHandler = async (e, collection, id = null)=> {
+    const submitHandler = async (e, collection, id)=> {
       e.preventDefault()
-      console.log("Form.jsx > props.id: " + useItem.data._id + " / " + id)
       const datos = []
       for (let element of e.target.elements) {
-        console.log(element, typeof element)
         if (element.tagName === 'INPUT' || element.tagName === 'SELECT' ) {
           let nombre = element.placeholder
           let value = element.value
@@ -38,16 +36,24 @@ const Form = (props)=> {
       const formData = convertirArrayAObjeto(datos)
       console.log(datos, formData)
     
-      try {
-        if (id === null) {
+      if (useItem == 'new') {
+       try {
           await axios.post("http://localhost:5000/hamlet/" + collection, formData)
-        } else {
-          await axios.put(`http://localhost:5000/hamlet/${collection}/${id}`, formData)
+          setHidden(true)
+        } catch (e) {
+          console.log('No se pudeo guardar' + e)
+        } 
+      }
+         else {
+          try {
+            await axios.put(`http://localhost:5000/hamlet/${collection}/${id}`, formData)
+            setHidden(true)
+          } catch (e) {
+            console.log('No se pudeo actualizar' + e)
+          }
         }
-        setHidden(true)
-      } catch (e) {
-        console.log('No se pudeo guardar' + e)
-      }   
+        
+        
     }
 
     const toogleHandler = ()=> {
@@ -72,7 +78,7 @@ const Form = (props)=> {
     const hiddenTrue = (<div className='formulario'><button onClick={toogleHandler}>+</button></div>)
     
     const hiddenFalse = (<div className='formContainer'>
-                            <form onSubmit={(e)=>submitHandler(e,props.collection, useItem.data._id)} className="formulario">
+                            <form onSubmit={(e)=>submitHandler(e,props.collection, (useItem !== 'new')?useItem.data._id:'')} className="formulario">
                                 {dataForm.map((inp)=> typeOfInput(inp))}
                                 <button id="submitBTN" type="submit">Enviar</button>
                                 <button id="cancelBTN" type="cancel" onClick={toogleHandler}>Cancelar</button>                
