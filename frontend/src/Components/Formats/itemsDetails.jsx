@@ -50,7 +50,7 @@ const ItemsDetails = (props)=> {
                     <div className="Stockframe">
                         <h5>{props.pd.Nombre || props.pd.Nombre_Material || props.pd.Modelo}</h5>
                         <h5 className='deleteBtn' onClick={()=>editClickHandler(props.id)}>Editar</h5>
-                        <h5 className='deleteBtn' onClick={()=>deleteClickHandler(useID)}>Eliminar</h5>
+                        <h5 className='deleteBtn' onClick={()=>deleteClickHandler(props.id)}>Eliminar</h5>
                     </div>
                     )
 

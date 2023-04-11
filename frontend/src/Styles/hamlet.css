@@ -19,8 +19,8 @@
 }
 
 .mainContainer {
-    display: grid;
-    grid-template-columns: 1fr 3fr;
+    display: flex;
+    flex-direction: row;
     padding: 5px;
     gap: 5px;
     background-image: url(../img/Dark_Wood_Background.jpg);
@@ -30,4 +30,24 @@
 .mainContainer h3{
     margin: 30px;
     color: #59e3ea;
+}
+
+.fieldset {
+    border: 1px solid #e29;
+    border-radius: 20px;
+    margin: 25px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.legend {
+    color: #e29;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin: auto;
+    padding: 20px;
+    text-align: center;
 }
