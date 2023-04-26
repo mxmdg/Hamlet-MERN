@@ -1,11 +1,14 @@
+import JobParts from "./JobsParts"
+
 const AddPartForm = (props)=>{
 
-    console.log(props.stocks)
+    //console.log(props.stocks)
 
     return (
         <>
         <fieldset className="fieldset">
             <legend className="legend">Parte</legend>
+            <JobParts onChange={props.onChange}/>
             <div>
                 <label htmlFor="pages">Páginas</label>
                 <input type="number" name='pages'/>
@@ -13,11 +16,13 @@ const AddPartForm = (props)=>{
             <div>
                 <label htmlFor="frontColors">Colores Frente</label>
                <select name="frontColors" id="frontColors">
+                    <option value="0">Sin impresion</option>
                     <option value="1">Negro</option>
                     <option value="4">CMYK</option>
                </select>
                <label htmlFor="backColors">Colores Dorso</label>
                <select name="backColors" id="backColors">
+                    <option value="0">Sin impresion</option>
                     <option value="1">Negro</option>
                     <option value="4">CMYK</option>
                </select>

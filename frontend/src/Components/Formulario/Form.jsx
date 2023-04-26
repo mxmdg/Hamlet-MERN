@@ -7,7 +7,7 @@ import './form.css'
 
 function convertirArrayAObjeto(arr) {
   return arr.reduce((obj, item) => {
-    const propName = (item.nombre || item.Nombre_material || item.Modelo);
+    const propName = (item.nombre || item.Nombre_material || item.Modelo || item.Proceso);
     const propValue = isNaN(item.value) ? item.value.toLowerCase() : Number(item.value);
 
     obj[propName] = propValue;
@@ -36,12 +36,12 @@ const Form = (props)=> {
       const formData = convertirArrayAObjeto(datos)
       console.log(datos, formData)
     
-      if (useItem == 'new') {
+      if (useItem === 'new') {
        try {
           await axios.post("http://localhost:5000/hamlet/" + collection, formData)
           setHidden(true)
         } catch (e) {
-          console.log('No se pudeo guardar' + e)
+          console.log('No se pudo guardar ' + e)
         } 
       }
          else {
@@ -52,12 +52,13 @@ const Form = (props)=> {
             console.log('No se pudeo actualizar' + e)
           }
         }
-        
+      props.action('view')  
         
     }
 
     const toogleHandler = ()=> {
       setHidden(!useHidden)
+      props.action('view')
     }
 
     const typeOfInput = (inp) => {
@@ -71,7 +72,7 @@ const Form = (props)=> {
         } else if (inp.type === "button"){
             return <Button inputName={inp.inputName} key={inp.id} type={inp.type} selectForm={props.selectForm} id={"Register"}></Button>
         } else {
-          return <Input inputName={inp.inputName} key={inp.id} type={inp.type} item={(useItem !== {})?useItem.data:''}></Input>;
+          return <Input inputName={inp.inputName} key={inp.id} type={inp.type} step={inp.step!==undefined?inp.step:1} item={(useItem !== {})?useItem.data:''}></Input>;
         }
       };
 

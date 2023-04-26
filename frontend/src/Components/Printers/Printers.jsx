@@ -24,7 +24,7 @@ const Printers = (props)=> {
             }
         }
         fetchData()
-    }, [])
+    }, [printerList])
 
     return (<>
         <div className="printersMainContainer">
@@ -32,14 +32,7 @@ const Printers = (props)=> {
             {printerList.map(printer => (
                 <ItemsDetails pd={printer} key={printer._id} id={printer._id} collection={props.collection} formData={PrintersDataForm}/>
             ))}
-        </div>
-        <div className="printersMainContainer">
-            {/* Renderiza la lista de impresoras */}
-            {printerList.map(printer => (
-                <PrinterDetails pd={printer} key={printer._id}/>
-            ))}
-        </div>
-        
+        </div>      
         </>)
 }
 

@@ -1,4 +1,4 @@
-let MoldeFormato = [{
+let PricesDataForm = [{
     inputName: 'Nombre',
     type: 'Text',
     id: 'id_301'
@@ -14,4 +14,4 @@ let MoldeFormato = [{
     id: 'id_303'
 }]
 
-export default MoldeFormato
+export default PricesDataForm

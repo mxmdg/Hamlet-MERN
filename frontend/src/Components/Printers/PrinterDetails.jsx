@@ -17,11 +17,13 @@ const PrinterDetails = (props)=> {
     }
 
     const deleteClickHandler = async (id)=>{
-        try {
-             await axios.delete(`${serverURL}/hamlet/impresoras/${id}` )
-        } catch (e) {
-            alert(e)
-        }
+       if (window.confirm('Estas recontra seguro de borrar esta impresora?')){
+            try {
+                await axios.delete(`${serverURL}/hamlet/impresoras/${id}` )
+            } catch (e) {
+                alert(e)
+            }
+       }         
     }
 
     const Show = (
@@ -33,7 +35,6 @@ const PrinterDetails = (props)=> {
             <h5>PPM: {props.pd.Paginas_por_minuto}</h5>
             <h5>X: {props.pd.X_Minimo}-{props.pd.X_Maximo}</h5>
             <h5>Y: {props.pd.Y_Minimo}-{props.pd.Y_Maximo}</h5>
-            <button onClick={editClickHandler}>Editar</button>
             <button onClick={()=>deleteClickHandler(props.pd._id)}>Eliminar</button>
         </div>)
 

@@ -19,10 +19,10 @@
 }
 
 .mainContainer {
-    display: flex;
-    flex-direction: row;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
     padding: 5px;
-    gap: 5px;
+    gap: 20px;
     background-image: url(../img/Dark_Wood_Background.jpg);
     height: 100%;
 }

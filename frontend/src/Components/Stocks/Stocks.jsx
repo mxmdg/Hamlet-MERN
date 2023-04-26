@@ -19,7 +19,7 @@ const Stocks = (props)=> {
             }
         }
         fetchData()
-    }, [])
+    }, [stockList])
 
     return (
         <>

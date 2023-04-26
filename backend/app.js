@@ -14,6 +14,7 @@ app.get('/', (rej, res)=>{res.send("Welcome to node.js server")})
 app.use("/Hamlet/jobs",require('./routes/jobs'));
 app.use("/Hamlet/Impresoras",require('./routes/printers'));
 app.use("/Hamlet/formatos",require('./routes/formatos'));
+app.use("/Hamlet/precios",require('./routes/prices'));
 app.use("/Hamlet/materiales",require('./routes/materiales'));
 
 module.exports = app

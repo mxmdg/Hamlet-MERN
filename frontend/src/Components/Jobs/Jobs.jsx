@@ -24,8 +24,8 @@ const Jobs = ()=> {
         fechtData('materiales', setStocks)
         fechtData('formatos', setFormats)
         sortFormats()
-        
-    },[])
+        console.log(usePart)
+    },[usePart])
 
     const sortFormats = () => {
         const formatsSorted = useFormats.sort((a, b)=> {if ( a.Nombre < b.Nombre )
@@ -63,9 +63,7 @@ const Jobs = ()=> {
                 </fieldset>
             </form>
           
-            <JobParts onChange={setPart}/>
-
-            {(useStocks.length > 0)?<AddPartForm stocks={useStocks} />:<></>}
+           {(useStocks.length > 0)?<AddPartForm stocks={useStocks} onChange={setPart} />:<></>}
 
             <select >
                 {usePrinters.map(printer => (

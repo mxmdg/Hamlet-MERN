@@ -19,12 +19,14 @@ const ItemsDetails = (props)=> {
     }
 
     const deleteClickHandler = async (id)=>{
-        try {
-             await axios.delete(`${serverURL}/hamlet/${props.collection}/${id}`)
-             getElements()
-        } catch (e) {
-            alert(e)
-        }
+        if (window.confirm(`Estas recontra seguro de borrar ${props.pd.Nombre || props.pd.Nombre_Material || props.pd.Modelo || props.pd.Proceso }`)) {
+            try {
+                await axios.delete(`${serverURL}/hamlet/${props.collection}/${id}`)
+                getElements()
+            } catch (e) {
+                alert(e)
+            }
+        }        
     }
 
     const editClickHandler = async (id)=> {
@@ -42,13 +44,14 @@ const ItemsDetails = (props)=> {
     const editor =  <Form 
                     form={props.formData} 
                     collection={props.collection} 
-                    item={useItemToEdit} 
+                    item={useItemToEdit}
+                    action={setAction} 
                     _id={props.pd._id}
                     />
 
     const viewer = (
                     <div className="Stockframe">
-                        <h5>{props.pd.Nombre || props.pd.Nombre_Material || props.pd.Modelo}</h5>
+                        <h5>{props.pd.Nombre || props.pd.Nombre_Material || props.pd.Modelo || props.pd.Proceso }</h5>
                         <h5 className='deleteBtn' onClick={()=>editClickHandler(props.id)}>Editar</h5>
                         <h5 className='deleteBtn' onClick={()=>deleteClickHandler(props.id)}>Eliminar</h5>
                     </div>

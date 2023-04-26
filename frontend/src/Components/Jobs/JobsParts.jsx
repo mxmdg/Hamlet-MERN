@@ -25,7 +25,7 @@ const JobParts = (props)=>{
     
     return (
         <>
-            <label htmlFor="Parte"></label>
+            <label htmlFor="Parte">Parte</label>
             <select name="jobParts" onChange={onChangeHandler}>
                 {parts.map((part)=><option 
                                         value={part} 

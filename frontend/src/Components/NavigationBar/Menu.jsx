@@ -7,7 +7,9 @@ const Menu = (props)=> {
                     <li><Link id='jobs' to='/Hamlet/jobs'>Trabajos</Link></li>
                     <li><Link id='impresoras' to='/Hamlet/impresoras'>Impresoras</Link></li>
                     <li><Link id='materiales' to='/Hamlet/materiales'>Materiales</Link></li>
-                    <li><Link id='formatos' to='/Hamlet/formatos'>Formatos</Link></li>     
+                    <li><Link id='formatos' to='/Hamlet/formatos'>Formatos</Link></li>
+                    <li><Link id='Precioso' to='/Hamlet/precios'>Precioso</Link></li>
+                    <li><Link id='Config' to='/hamlet/configuracion'>Configuracion</Link></li>      
                 </ul>
             </nav>
     
