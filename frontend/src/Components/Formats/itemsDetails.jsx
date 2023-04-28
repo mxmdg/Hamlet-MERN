@@ -3,7 +3,7 @@ import axios from 'axios'
 import { serverURL } from '../../config'
 import Form from '../Formulario/Form'
 import { useState } from 'react'
-
+//import { DataGrid } from '@mui/x-data-grid';
 
 const ItemsDetails = (props)=> {
 
@@ -41,6 +41,8 @@ const ItemsDetails = (props)=> {
         }
     }
 
+   // const rows: GridRowsProp = props.pd
+
     const editor =  <Form 
                     form={props.formData} 
                     collection={props.collection} 
@@ -50,11 +52,13 @@ const ItemsDetails = (props)=> {
                     />
 
     const viewer = (
+                    <>
                     <div className="Stockframe">
                         <h5>{props.pd.Nombre || props.pd.Nombre_Material || props.pd.Modelo || props.pd.Proceso }</h5>
                         <h5 className='deleteBtn' onClick={()=>editClickHandler(props.id)}>Editar</h5>
                         <h5 className='deleteBtn' onClick={()=>deleteClickHandler(props.id)}>Eliminar</h5>
                     </div>
+                    </>
                     )
 
     return (useAction === "view") ? viewer : editor
