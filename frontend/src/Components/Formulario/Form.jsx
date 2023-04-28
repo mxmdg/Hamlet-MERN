@@ -58,7 +58,7 @@ const Form = (props)=> {
 
     const toogleHandler = ()=> {
       setHidden(!useHidden)
-      props.action('view')
+      props.action?props.action('view'):console.log('edit')
     }
 
     const typeOfInput = (inp) => {
@@ -79,7 +79,7 @@ const Form = (props)=> {
     const hiddenTrue = (<div className='formulario'><button onClick={toogleHandler}>+</button></div>)
     
     const hiddenFalse = (<div className='formContainer'>
-                            <form onSubmit={(e)=>submitHandler(e,props.collection, (useItem !== 'new')?useItem.data._id:'')} className="formulario">
+                            <form onSubmit={(e)=>submitHandler(e, props.collection, (useItem !== 'new')?useItem.data._id:'')} className="formulario">
                                 {dataForm.map((inp)=> typeOfInput(inp))}
                                 <button id="submitBTN" type="submit">Enviar</button>
                                 <button id="cancelBTN" type="cancel" onClick={toogleHandler}>Cancelar</button>                

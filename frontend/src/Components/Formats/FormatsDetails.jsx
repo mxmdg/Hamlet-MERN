@@ -38,7 +38,7 @@ const FormatsDetails = (props)=> {
         }
     }
 
-    const editor =  <Form form={FormDataForm} collection='formatos' item={useItemToEdit} _id={useID}/>
+    const editor =  <Form form={FormDataForm} collection='formatos' item={useItemToEdit} action={setAction} _id={useID}/>
 
     const viewer = (
                     <div className="Stockframe">

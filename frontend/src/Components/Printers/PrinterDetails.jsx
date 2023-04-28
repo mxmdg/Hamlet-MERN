@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { serverURL } from '../../config';
 
+
 const PrinterDetails = (props)=> {
     
     const editClickHandler = (e)=>{
@@ -28,9 +29,11 @@ const PrinterDetails = (props)=> {
 
     const Show = (
         <div id={props.pd._id} className="frame">
+            
             <div className="frame__title">
                 <h4>{props.pd.Modelo}</h4> <h5>{props.pd.Fabricante}</h5>
             </div>
+           
             <Cmyk colores={props.pd.Colores}/>
             <h5>PPM: {props.pd.Paginas_por_minuto}</h5>
             <h5>X: {props.pd.X_Minimo}-{props.pd.X_Maximo}</h5>

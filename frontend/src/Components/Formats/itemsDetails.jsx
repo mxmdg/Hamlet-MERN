@@ -4,6 +4,12 @@ import { serverURL } from '../../config'
 import Form from '../Formulario/Form'
 import { useState } from 'react'
 //import { DataGrid } from '@mui/x-data-grid';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
 
 const ItemsDetails = (props)=> {
 
@@ -53,12 +59,28 @@ const ItemsDetails = (props)=> {
 
     const viewer = (
                     <>
-                    <div className="Stockframe">
+                   {/*  <div className="Stockframe">
                         <h5>{props.pd.Nombre || props.pd.Nombre_Material || props.pd.Modelo || props.pd.Proceso }</h5>
                         <h5 className='deleteBtn' onClick={()=>editClickHandler(props.id)}>Editar</h5>
                         <h5 className='deleteBtn' onClick={()=>deleteClickHandler(props.id)}>Eliminar</h5>
                     </div>
+                    <div> */}
+                    <Card sx={{ maxWidth: 345 }}variant="outlined">
+                        <CardContent>
+                            <Typography gutterBottom variant="h5" component="div">
+                            {props.pd.Nombre || props.pd.Nombre_Material || props.pd.Modelo || props.pd.Proceso }
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary">
+                                {props.pd.Formula?props.pd.Formula:''}
+                            </Typography>
+                        </CardContent>
+                        <CardActions>
+                            <Button size="small" variant="outlined" onClick={()=>editClickHandler(props.id)}>Editar</Button>
+                            <Button size="small" variant="contained" color="error" onClick={()=>deleteClickHandler(props.id)}>Eliminar</Button>
+                        </CardActions>
+                    </Card>
                     </>
+                    
                     )
 
     return (useAction === "view") ? viewer : editor
