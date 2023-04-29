@@ -2,7 +2,7 @@ import './printers.css'
 import Cmyk from './Cmyk'
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { serverURL } from '../../config';
+import { serverURL } from '../Config/config';
 
 
 const PrinterDetails = (props)=> {

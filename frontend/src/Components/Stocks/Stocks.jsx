@@ -4,7 +4,9 @@ import StockDataForm from '../Formulario/StockDataForm';
 import ItemsDetails from '../Formats/itemsDetails';
 import '../../Styles/hamlet.css'
 import './Stocks.css'
-import { serverURL } from '../../config';
+import { serverURL } from '../Config/config';
+import Box from '@mui/material/Box'
+import Grid from '@mui/material/InputLabel'
 
 const Stocks = (props)=> {
     const [stockList , setStockList] = useState([])
@@ -22,15 +24,13 @@ const Stocks = (props)=> {
     }, [stockList])
 
     return (
-        <>
+        <div className="printersMainContainer">
             <h3>Materiales</h3>
-            <div className="stockMainContainer">
-                {/* Renderiza la lista de materiales */}
-                {stockList.map(stock => (
-                    <ItemsDetails pd={stock} key={stock._id} id={stock._id} collection={props.collection} formData={StockDataForm}/>
-                ))}
-            </div>
-        </>
+            {/* Renderiza la lista de materiales */}
+            {stockList.map(stock => (
+                <ItemsDetails pd={stock} key={stock._id} id={stock._id} collection={props.collection} formData={StockDataForm}/>
+            ))}
+        </div>
     )
 }
 

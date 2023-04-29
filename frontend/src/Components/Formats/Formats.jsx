@@ -4,7 +4,7 @@ import FormatDataForm from '../Formulario/FormatDataForm';
 import ItemsDetails from './itemsDetails';
 import '../../Styles/hamlet.css'
 import '../Stocks/Stocks.css'
-import { serverURL } from '../../config';
+import { serverURL } from '../Config/config';
 
 const Formats = (props)=> {
     const [formatList , setFormatList] = useState([])
@@ -27,7 +27,7 @@ const Formats = (props)=> {
 
     return (
         <>
-            <div className="stockMainContainer">
+            <div className="printersMainContainer">
                 {/* Renderiza la lista de Formatos */}
                 {formatList.map(format => (
                     <ItemsDetails pd={format} collection={props.collection} key={format._id} id={format._id} formData={FormatDataForm}/>

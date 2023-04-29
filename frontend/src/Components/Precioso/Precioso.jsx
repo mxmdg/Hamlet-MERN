@@ -4,7 +4,7 @@ import PricesDataForm from '../Formulario/PricesDataForm';
 import ItemsDetails from '../Formats/itemsDetails'
 import '../../Styles/hamlet.css'
 import '../Stocks/Stocks.css'
-import { serverURL } from '../../config';
+import { serverURL } from '../Config/config';
 
 const Precioso = (props)=> {
     const [priceList , setPriceList] = useState([])
@@ -27,7 +27,7 @@ const Precioso = (props)=> {
 
     return (
         <>
-            <div className="stockMainContainer">
+            <div className="printersMainContainer">
                 {/* Renderiza la lista de Formatos */}
                 {priceList.map(price => (
                     <ItemsDetails pd={price} collection={props.collection} key={price._id} id={price._id} formData={PricesDataForm}/>

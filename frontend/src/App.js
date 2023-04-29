@@ -9,13 +9,14 @@ import PricesMainContainer from './Components/Precioso/PricesMainContainer';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from './Components/home'
 import ConfigMainContainer from './Components/Config/ConfigMainContainer';
+import Box from '@mui/material/Box'
 
 
 function App() {
   return (
     <BrowserRouter>    
       <Header />
-        <div className='mainContainer'>
+        <Box className='mainContainer'>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/hamlet/impresoras" element={<PrintersMainContainer />} />
@@ -25,7 +26,7 @@ function App() {
             <Route path="/hamlet/precios" element={<PricesMainContainer />} />
             <Route path="/hamlet/configuracion" element={<ConfigMainContainer />} />
           </Routes>  
-        </div>
+        </Box>
       </BrowserRouter>
   )
 }

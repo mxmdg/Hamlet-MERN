@@ -4,7 +4,7 @@ import PrinterDetails from './PrinterDetails';
 import PrintersDataForm from '../Formulario/PrintersDataForm';
 import './printers.css'
 import ItemsDetails from '../Formats/itemsDetails';
-import { serverURL } from '../../config';
+import { serverURL } from '../Config/config';
 
 const readPrinters = async () => {
     const res = await axios.get(`${serverURL}/hamlet/impresoras`)

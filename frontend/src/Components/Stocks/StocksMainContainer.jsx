@@ -3,12 +3,14 @@ import Form from '../Formulario/Form'
 import StockDataForm from '../Formulario/StockDataForm'
 import '../../Styles/hamlet.css'
 
+import Box from '@mui/material/Box'
+
 const StocksMainContainer = ()=> {
     return (<>
-                <div>
+                <Box>
                     <Stocks collection='materiales'/>
                     <Form form={StockDataForm} collection='materiales'/>   
-                </div>
+                </Box>
             </>)
 }
 

@@ -1,6 +1,6 @@
 import '../../Styles/hamlet.css'
 import axios from 'axios'
-import { serverURL } from '../../config'
+import { serverURL } from '../Config/config'
 import Form from '../Formulario/Form'
 import { useState } from 'react'
 //import { DataGrid } from '@mui/x-data-grid';
