@@ -65,17 +65,17 @@ const ItemsDetails = (props)=> {
                         <h5 className='deleteBtn' onClick={()=>deleteClickHandler(props.id)}>Eliminar</h5>
                     </div>
                     <div> */}
-                    <Card sx={{ maxWidth: 345 }}variant="outlined">
+                    <Card sx={{ maxWidth: 345, background: '#88009933' }} color='primary'variant="elevation" elevation={16} square={true}>
                         <CardContent>
-                            <Typography gutterBottom variant="h5" component="div">
+                            <Typography gutterBottom variant="h6" color="#e6f" fontWeight={600} component="div">
                             {props.pd.Nombre || props.pd.Nombre_Material || props.pd.Modelo || props.pd.Proceso }
                             </Typography>
-                            <Typography variant="body2" color="text.secondary">
+                            <Typography variant="body2" color="#e6f">
                                 {props.pd.Formula?props.pd.Formula:''}
                             </Typography>
                         </CardContent>
                         <CardActions>
-                            <Button size="small" variant="outlined" onClick={()=>editClickHandler(props.id)}>Editar</Button>
+                            <Button size="small" variant="contained" color="success"onClick={()=>editClickHandler(props.id)}>Editar</Button>
                             <Button size="small" variant="contained" color="error" onClick={()=>deleteClickHandler(props.id)}>Eliminar</Button>
                         </CardActions>
                     </Card>

@@ -25,7 +25,6 @@ const Stocks = (props)=> {
 
     return (
         <div className="printersMainContainer">
-            <h3>Materiales</h3>
             {/* Renderiza la lista de materiales */}
             {stockList.map(stock => (
                 <ItemsDetails pd={stock} key={stock._id} id={stock._id} collection={props.collection} formData={StockDataForm}/>
