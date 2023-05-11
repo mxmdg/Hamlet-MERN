@@ -10,6 +10,7 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const ItemsDetails = (props)=> {
 
@@ -65,7 +66,7 @@ const ItemsDetails = (props)=> {
                         <h5 className='deleteBtn' onClick={()=>deleteClickHandler(props.id)}>Eliminar</h5>
                     </div>
                     <div> */}
-                    <Card sx={{ maxWidth: 345, background: '#88009933' }} color='primary'variant="elevation" elevation={16} square={true}>
+                    <Card sx={{ maxWidth: 345, background: '#88009933' }} color='primary' variant="elevation" elevation={16} square={false}>
                         <CardContent>
                             <Typography gutterBottom variant="h6" color="#e6f" fontWeight={600} component="div">
                             {props.pd.Nombre || props.pd.Nombre_Material || props.pd.Modelo || props.pd.Proceso }
@@ -76,7 +77,7 @@ const ItemsDetails = (props)=> {
                         </CardContent>
                         <CardActions>
                             <Button size="small" variant="contained" color="success"onClick={()=>editClickHandler(props.id)}>Editar</Button>
-                            <Button size="small" variant="contained" color="error" onClick={()=>deleteClickHandler(props.id)}>Eliminar</Button>
+                            <Button size="small" variant="outlined" color="error" startIcon={<DeleteIcon />} onClick={()=>deleteClickHandler(props.id)}>Eliminar</Button>
                         </CardActions>
                     </Card>
                     </>

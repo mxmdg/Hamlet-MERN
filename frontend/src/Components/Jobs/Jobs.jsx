@@ -8,7 +8,7 @@ const Jobs = ()=> {
     const [usePrinters , setPrinters ] = useState([])
     const [useStocks , setStocks] = useState([])
     const [useFormats , setFormats] = useState([])
-    const [usePart, setPart] = useState('')
+    const [usePart, setPart] = useState([])
     const [useOrderNumber, setOrderNumber] = useState(0)
 
     const fechtData = async (collection,setFunction) => {
@@ -63,7 +63,7 @@ const Jobs = ()=> {
                 </fieldset>
             </form>
           
-           {(useStocks.length > 0)?<AddPartForm stocks={useStocks} onChange={setPart} />:<></>}
+           {(useStocks.length > 0)?<AddPartForm stocks={useStocks} onChange={setPart} partDefinition={usePart}/>:<></>}
 
             <select >
                 {usePrinters.map(printer => (
