@@ -18,11 +18,6 @@ let MoldePrecios = [{
     inputName: 'Entrada',
     type: 'Number',
     id: 'id_404'
-},
-{
-    inputName: 'Formula',
-    type: 'textarea',
-    id: 'id_405'
 }
 ]
 

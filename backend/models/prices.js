@@ -8,7 +8,6 @@ const pricesSchema = new Schema(
         'Entrada': {type: Number, required: false},
         'Formula': {type: String, required: true},
         'Fecha': {type: Date, default: Date.now, required: false}
-        
     });
 
 module.exports.esquema = model('Precios', pricesSchema);
