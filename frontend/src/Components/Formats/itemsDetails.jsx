@@ -25,6 +25,8 @@ const ItemsDetails = (props)=> {
         console.table(items.data)
     }
 
+    console.log(props.formCLC?props.formCLC:"")
+
     const deleteClickHandler = async (id)=>{
         if (window.confirm(`Estas recontra seguro de borrar ${props.pd.Nombre || props.pd.Nombre_Material || props.pd.Modelo || props.pd.Proceso }`)) {
             try {
@@ -72,7 +74,7 @@ const ItemsDetails = (props)=> {
                             {props.pd.Nombre || props.pd.Nombre_Material || props.pd.Modelo || props.pd.Proceso }
                             </Typography>
                             <Typography variant="body2" color="#e6f">
-                                {props.pd.Formula?props.pd.Formula:''}
+                                {props.formCLC?props.formCLC.Formula:''}
                             </Typography>
                         </CardContent>
                         <CardActions>

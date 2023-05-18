@@ -16,35 +16,34 @@ import {
 const Precioso = (props)=> {
     const [priceList , setPriceList] = useState([])
 
+    const formulaCLC = (item)=>{
+        let formula
+        switch (item.Proceso) {
+            case 'nuvera':
+                formula = formNuvera(item.Valor,item.Minimo,item.Entrada)
+                break;
+            case 'igen color':
+                formula = formIgenColor(item.Valor,item.Minimo,item.Entrada)
+                break;                    
+            case 'laminado':
+                formula = formLaminado(item.Valor,item.Minimo,item.Entrada)
+                break;
+            case 'acaballado':
+            case 'pur':
+            case 'eva':
+                formula = formEncuadernacion(item.Valor,item.Minimo,item.Entrada)
+                break;
+            case 'igen b&n':
+                formula = formIgenBN(item.Valor,item.Minimo,item.Entrada)
+                break;
+                        
+        }
+
+        return formula
+    }
+
     const getElements = async () => {
         const prices = await axios.get(`${serverURL}/hamlet/${props.collection}/`)
-
-        let formula
-        
-        prices.data.map(item=>{
-            switch (item.Proceso) {
-                case 'nuvera':
-                    formula = formNuvera(item.Valor,item.Minimo,item.Entrada)
-                    break;
-                case 'igen color':
-                    formula = formIgenColor(item.Valor,item.Minimo,item.Entrada)
-                    break;                    
-                case 'laminado':
-                    formula = formLaminado(item.Valor,item.Minimo,item.Entrada)
-                    break;
-                case 'acaballado':
-                case 'pur':
-                case 'eva':
-                    formula = formEncuadernacion(item.Valor,item.Minimo,item.Entrada)
-                    break;
-                case 'igen b&n':
-                    formula = formIgenBN(item.Valor,item.Minimo,item.Entrada)
-                    break;
-                            
-            }
-
-            console.log(formula)
-        })
         setPriceList(prices.data)
     }
     
@@ -67,7 +66,8 @@ const Precioso = (props)=> {
                     <ItemsDetails 
                         pd={price} 
                         collection={props.collection} 
-                        key={price._id} id={price._id} 
+                        key={price._id} id={price._id}
+                        formCLC={formulaCLC(price)} 
                         formData={PricesDataForm}/>
                 ))}
             </div>

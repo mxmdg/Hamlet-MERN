@@ -55,15 +55,11 @@ const Jobs = ()=> {
                         <label htmlFor="jobName">Nomnre del trabajo</label>
                         <input type="text" name='jobName' placeholder='Nombre del trabajo'/>
                     </div>
-                    <div>
-                        <button>Agregar Parte</button>
-                       
-                    </div>
-
                 </fieldset>
+                {(useStocks.length > 0)?<AddPartForm stocks={useStocks} onChange={setPart} partDefinition={usePart}/>:<></>}
             </form>
           
-           {(useStocks.length > 0)?<AddPartForm stocks={useStocks} onChange={setPart} partDefinition={usePart}/>:<></>}
+           
 
             <select >
                 {usePrinters.map(printer => (
