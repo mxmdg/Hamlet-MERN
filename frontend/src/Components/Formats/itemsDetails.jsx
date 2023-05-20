@@ -2,7 +2,7 @@ import '../../Styles/hamlet.css'
 import axios from 'axios'
 import { serverURL } from '../Config/config'
 import Form from '../Formulario/Form'
-import { useState } from 'react'
+import { useState , useEffect } from 'react'
 //import { DataGrid } from '@mui/x-data-grid';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -22,10 +22,10 @@ const ItemsDetails = (props)=> {
     const getElements = async () => {
         const items = await axios.get(`${serverURL}/hamlet/${props.collection}/`)
         setItemsList(items.data)
-        console.table(items.data)
+
     }
 
-    console.log(props.formCLC?props.formCLC:"")
+    //console.log(props.formCLC?props.formCLC:"")
 
     const deleteClickHandler = async (id)=>{
         if (window.confirm(`Estas recontra seguro de borrar ${props.pd.Nombre || props.pd.Nombre_Material || props.pd.Modelo || props.pd.Proceso }`)) {
@@ -49,7 +49,9 @@ const ItemsDetails = (props)=> {
             console.log(e)
         }
     }
+    useEffect(()=>{
 
+    },[props.formCLC])
    // const rows: GridRowsProp = props.pd
 
     const editor =  <Form 
@@ -74,7 +76,7 @@ const ItemsDetails = (props)=> {
                             {props.pd.Nombre || props.pd.Nombre_Material || props.pd.Modelo || props.pd.Proceso }
                             </Typography>
                             <Typography variant="body2" color="#e6f">
-                                {props.formCLC?props.formCLC.Formula:''}
+                                {JSON.stringify(props.formCLC)}
                             </Typography>
                         </CardContent>
                         <CardActions>

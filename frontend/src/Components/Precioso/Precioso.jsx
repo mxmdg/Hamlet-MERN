@@ -42,12 +42,12 @@ const Precioso = (props)=> {
         return formula
     }
 
-    const getElements = async () => {
-        const prices = await axios.get(`${serverURL}/hamlet/${props.collection}/`)
-        setPriceList(prices.data)
-    }
-    
+       
     useEffect(()=> {
+        const getElements = async () => {
+            const prices = await axios.get(`${serverURL}/hamlet/${props.collection}/`)
+            setPriceList(prices.data)
+        }
         const fetchData = async () => {
             try {
                 getElements()
@@ -56,7 +56,7 @@ const Precioso = (props)=> {
             }
         }
         fetchData()
-    }, [])
+    }, [props.collection])
 
     return (
         <>
