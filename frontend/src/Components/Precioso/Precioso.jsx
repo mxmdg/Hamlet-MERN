@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios'
 import PricesDataForm from '../Formulario/PricesDataForm';
 import ItemsDetails from '../Formats/itemsDetails'
+import PriceTable from './PriceTable';
 import '../../Styles/hamlet.css'
 import '../Stocks/Stocks.css'
 import { serverURL } from '../Config/config';
@@ -56,14 +57,14 @@ const Precioso = (props)=> {
             }
         }
         fetchData()
-    }, [props.collection])
+    }, [priceList])
 
     return (
         <>
             <div className="printersMainContainer">
                 {/* Renderiza la lista de Formatos */}
                 {priceList.map(price => (
-                    <ItemsDetails 
+                    <PriceTable 
                         pd={price} 
                         collection={props.collection} 
                         key={price._id} id={price._id}

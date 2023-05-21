@@ -5,14 +5,20 @@ import Form from '../Formulario/Form'
 import { useState , useEffect } from 'react'
 //import { DataGrid } from '@mui/x-data-grid';
 import Card from '@mui/material/Card';
+import Paper from '@mui/material/Paper'
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-const ItemsDetails = (props)=> {
+const PriceTable = (props)=> {
 
     const [useAction, setAction] = useState('view')
     const [useID, setID] = useState('')
@@ -25,7 +31,6 @@ const ItemsDetails = (props)=> {
 
     }
 
-    //console.log(props.formCLC?props.formCLC:"")
 
     const deleteClickHandler = async (id)=>{
         if (window.confirm(`Estas recontra seguro de borrar ${props.pd.Nombre || props.pd.Nombre_Material || props.pd.Modelo || props.pd.Proceso }`)) {
@@ -54,9 +59,6 @@ const ItemsDetails = (props)=> {
     },[props.formCLC])
    // const rows: GridRowsProp = props.pd
 
-  
-    
-
     const editor =  <Form 
                     form={props.formData} 
                     collection={props.collection} 
@@ -73,20 +75,40 @@ const ItemsDetails = (props)=> {
                         <h5 className='deleteBtn' onClick={()=>deleteClickHandler(props.id)}>Eliminar</h5>
                     </div>
                     <div> */}
-                    <Card sx={{ maxWidth: 345, background: '#88009933' }} color='primary' variant="elevation" elevation={16} square={false}>
+                    <Paper sx={{ maxWidth: 345, background: '#88009933' }} color='primary' variant="elevation" elevation={16} square={false}>
                         <CardContent>
                             <Typography gutterBottom variant="h6" color="#e6f" fontWeight={600} component="div">
-                            {props.pd.Nombre || props.pd.Nombre_Material || props.pd.Modelo || props.pd.Proceso }
+                            { props.pd.Proceso }
                             </Typography>
-                            <Typography variant="body2" color="#e6f">
-                                
-                            </Typography>
+                            <TableContainer component={Paper}>
+                                <Table sx={{ maxWidth: 350 }} size="small" aria-label="a dense table">
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell>Proceso</TableCell>
+                                            <TableCell align="right">Valor</TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                    {Object.entries(props.formCLC).map(([key,value]) => (
+                                        <TableRow
+                                        key={key}
+                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                        >
+                                        <TableCell component="th" scope="price">
+                                            {key}
+                                        </TableCell>
+                                        <TableCell align="right">{value}</TableCell>
+                                        </TableRow>
+                                    ))}
+                                    </TableBody>
+                                </Table>
+                                </TableContainer>
                         </CardContent>
                         <CardActions>
                             <Button size="small" variant="contained" color="success"onClick={()=>editClickHandler(props.id)}>Editar</Button>
                             <Button size="small" variant="outlined" color="error" startIcon={<DeleteIcon />} onClick={()=>deleteClickHandler(props.id)}>Eliminar</Button>
                         </CardActions>
-                    </Card>
+                    </Paper>
                     </>
                     
                     )
@@ -94,4 +116,4 @@ const ItemsDetails = (props)=> {
     return (useAction === "view") ? viewer : editor
 }
 
-export default ItemsDetails
+export default PriceTable
