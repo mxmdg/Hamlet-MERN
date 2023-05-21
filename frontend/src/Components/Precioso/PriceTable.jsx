@@ -3,6 +3,7 @@ import axios from 'axios'
 import { serverURL } from '../Config/config'
 import Form from '../Formulario/Form'
 import { useState , useEffect } from 'react'
+import { Grid } from '@mui/material'
 //import { DataGrid } from '@mui/x-data-grid';
 import Card from '@mui/material/Card';
 import Paper from '@mui/material/Paper'
@@ -17,6 +18,7 @@ import TableRow from '@mui/material/TableRow';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import DeleteIcon from '@mui/icons-material/Delete';
+import Modal from './Modal'
 
 const PriceTable = (props)=> {
 
@@ -75,7 +77,15 @@ const PriceTable = (props)=> {
                         <h5 className='deleteBtn' onClick={()=>deleteClickHandler(props.id)}>Eliminar</h5>
                     </div>
                     <div> */}
-                    <Paper sx={{ maxWidth: 345, background: '#88009933' }} color='primary' variant="elevation" elevation={16} square={false}>
+                    
+                        <Grid
+                        container
+                        direction="column"
+                        justifyContent="space-between"
+                        alignItems="baseline"
+                        >
+
+                    <Card sx={{ maxWidth: 345, background: '#88009933' }} color='primary' variant="elevation" elevation={16} square={false}>
                         <CardContent>
                             <Typography gutterBottom variant="h6" color="#e6f" fontWeight={600} component="div">
                             { props.pd.Proceso }
@@ -85,7 +95,7 @@ const PriceTable = (props)=> {
                                     <TableHead>
                                         <TableRow>
                                             <TableCell>Proceso</TableCell>
-                                            <TableCell align="right">Valor</TableCell>
+                                            <TableCell align="left">Valor</TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
@@ -94,10 +104,16 @@ const PriceTable = (props)=> {
                                         key={key}
                                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                         >
-                                        <TableCell component="th" scope="price">
-                                            {key}
-                                        </TableCell>
-                                        <TableCell align="right">{value}</TableCell>
+                                            <TableCell component="th" align="left">
+                                                {key}
+                                            </TableCell>
+                                            <TableCell align="left">{key==='formula'
+                                                ?<Modal 
+                                                    btnText={`ver ${key}`}
+                                                    modalTitle={`${props.pd.Proceso} ${key}`}
+                                                    modalText={value}
+                                                    />
+                                                :value}</TableCell>
                                         </TableRow>
                                     ))}
                                     </TableBody>
@@ -108,7 +124,8 @@ const PriceTable = (props)=> {
                             <Button size="small" variant="contained" color="success"onClick={()=>editClickHandler(props.id)}>Editar</Button>
                             <Button size="small" variant="outlined" color="error" startIcon={<DeleteIcon />} onClick={()=>deleteClickHandler(props.id)}>Eliminar</Button>
                         </CardActions>
-                    </Paper>
+                    </Card>
+                    </Grid>
                     </>
                     
                     )

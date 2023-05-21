@@ -68,11 +68,30 @@ const Form = (props)=> {
                 e.preventDefault()
                 return value=e.target.value
             }  
-          return <Select inputName={inp.inputName} key={inp.id} type={inp.type} value={value} changeHandler={changeHandler} options={inp.options}></Select>
+          return  <Select 
+                    inputName={inp.inputName} 
+                    key={inp.id} 
+                    type={inp.type} 
+                    value={value} 
+                    changeHandler={changeHandler} 
+                    options={inp.options}>
+                  </Select>
         } else if (inp.type === "button"){
-            return <Button inputName={inp.inputName} key={inp.id} type={inp.type} selectForm={props.selectForm} id={"Register"}></Button>
+            return <Button 
+                      inputName={inp.inputName} 
+                      key={inp.id} 
+                      type={inp.type} 
+                      selectForm={props.selectForm} 
+                      id={"Register"}>
+                    </Button>
         } else {
-          return <Input inputName={inp.inputName} key={inp.id} type={inp.type} step={inp.step!==undefined?inp.step:1} item={(useItem !== {})?useItem.data:''}></Input>;
+          return <Input 
+                    inputName={inp.inputName} 
+                    key={inp.id} 
+                    type={inp.type} 
+                    step={inp.step!==undefined?inp.step:1} 
+                    item={(useItem !== {})?useItem.data:''}>
+                  </Input>;
         }
       };
 

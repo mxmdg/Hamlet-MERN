@@ -67,7 +67,8 @@ const Precioso = (props)=> {
                     <PriceTable 
                         pd={price} 
                         collection={props.collection} 
-                        key={price._id} id={price._id}
+                        key={price._id} 
+                        id={price._id}
                         formCLC={formulaCLC(price)} 
                         formData={PricesDataForm}/>
                 ))}

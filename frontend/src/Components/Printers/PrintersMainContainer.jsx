@@ -1,9 +1,9 @@
 import Printers from './Printers'
 import Form from '../Formulario/Form'
 import PrintersDataForm from '../Formulario/PrintersDataForm'
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 import Container from '@mui/material/Container'
-import Box from '@mui/material/Box';
+import Box from '@mui/material/Box'
 
 
 import './printers.css'

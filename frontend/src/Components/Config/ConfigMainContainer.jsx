@@ -8,10 +8,7 @@ import Box from '@mui/material/Box'
 
 const ConfigMainContainer = ()=> {
     return (<Box>
-                <PricesMainContainer/>
-                <PrintersMainContainer/>
-                <StocksMainContainer/>
-                <FormatsMainContainer/>  
+                <PricesMainContainer/> 
             </Box>)
 }
 
