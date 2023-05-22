@@ -33,3 +33,8 @@ export const formLaminado= (valor , minimo , entrada )=> {
     return resultado
 }
 
+export const formDefault= (valor , minimo , entrada )=> {
+    const formula = `(${entrada} + (Cab_Cant_Millar * 1000))`
+    const resultado = { formula , valor , minimo, entrada}
+    return resultado
+}

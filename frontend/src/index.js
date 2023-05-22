@@ -4,8 +4,8 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import TimeAgo from 'javascript-time-ago'
 
-import en from 'javascript-time-ago/locale/en.json'
-import ar from 'javascript-time-ago/locale/ar.json'
+//import en from 'javascript-time-ago/locale/en.json'
+import es from 'javascript-time-ago/locale/es.json'
 
 
 
@@ -13,8 +13,8 @@ import ar from 'javascript-time-ago/locale/ar.json'
 import './Styles/hamlet.css';
 import './index.css';
 
-TimeAgo.addDefaultLocale(en)
-TimeAgo.addLocale(ar)
+//TimeAgo.addDefaultLocale(en)
+TimeAgo.addLocale(es)
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

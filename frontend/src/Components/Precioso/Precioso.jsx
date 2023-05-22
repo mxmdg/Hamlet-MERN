@@ -11,7 +11,8 @@ import {
     formIgenColor , 
     formLaminado , 
     formEncuadernacion , 
-    formIgenBN} 
+    formIgenBN,
+    formDefault} 
     from './updateService';
 
 const Precioso = (props)=> {
@@ -37,7 +38,9 @@ const Precioso = (props)=> {
             case 'igen b&n':
                 formula = formIgenBN(item.Valor,item.Minimo,item.Entrada)
                 break;
-                        
+            default:
+                formula = formDefault(item.Valor,item.Minimo,item.Entrada)
+                break;            
         }
 
         return formula

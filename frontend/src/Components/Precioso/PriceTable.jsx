@@ -89,10 +89,12 @@ const PriceTable = (props)=> {
                     <Card sx={{ maxWidth: 345, background: '#88009933' }} color='primary' variant="elevation" elevation={16} square={false}>
                         <CardContent>
                             <Typography gutterBottom variant="h6" color="#e6f" fontWeight={600} component="div">
-                            { props.pd.Proceso}
+                                { props.pd.Proceso}
+                            </Typography>
+                            <Typography gutterBottom variant="p" color="#e6f" fontWeight={300} component="p">
                                 <LastSeen date={props.pd.Fecha} />
                             </Typography>
-
+                            
 
                             <TableContainer component={Paper}>
                                 <Table sx={{ maxWidth: 350 }} size="small" aria-label="a dense table">

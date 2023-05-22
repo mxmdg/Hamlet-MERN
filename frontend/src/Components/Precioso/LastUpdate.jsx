@@ -3,8 +3,8 @@ import ReactTimeAgo from 'react-time-ago'
 
 export default function LastSeen(props) {
   return (
-    <div>
-      Actualizado: <ReactTimeAgo date={props.date} locale="es-AR"/>
-    </div>
+    <>
+      Actualizado: <ReactTimeAgo date={Date.parse(props.date)} locale="es-ES"/>
+    </>
   )
 }
