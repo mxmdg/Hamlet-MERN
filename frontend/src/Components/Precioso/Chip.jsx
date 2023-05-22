@@ -11,8 +11,8 @@ export default function IconChips(props) {
         color='secondary'
         variant="contained" 
         onClick={props.onClick} 
-        icon={<IntegrationInstructionsIcon 
-        />} btnText={props.btnText} />
+        icon={<IntegrationInstructionsIcon />} 
+        />
     </Stack>
   );
 }

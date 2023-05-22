@@ -39,9 +39,10 @@ pricesControl.getPrice = async (req, res) => {
 pricesControl.updatePrice = async (req, res) => {
   try {
     const {Proceso, Valor, Minimo, Entrada } = req.body;
+    const Fecha = Date.now()
     const price = await prices.esquema.findByIdAndUpdate(
       req.params.id,
-      { Proceso, Valor, Minimo, Entrada },
+      { Proceso, Valor, Minimo, Entrada, Fecha },
       { new: false }
     );
     if (!price) {

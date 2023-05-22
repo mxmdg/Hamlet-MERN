@@ -5,7 +5,6 @@ import PrintersDataForm from '../Formulario/PrintersDataForm';
 import './printers.css'
 import ItemsDetails from '../Formats/itemsDetails';
 import { serverURL } from '../Config/config';
-import PriceTable from '../Precioso/PriceTable'
 
 
 const readPrinters = async () => {

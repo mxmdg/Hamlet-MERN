@@ -2,10 +2,19 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import TimeAgo from 'javascript-time-ago'
+
+import en from 'javascript-time-ago/locale/en.json'
+import ar from 'javascript-time-ago/locale/ar.json'
+
+
 
 //styles
 import './Styles/hamlet.css';
 import './index.css';
+
+TimeAgo.addDefaultLocale(en)
+TimeAgo.addLocale(ar)
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -13,6 +22,7 @@ root.render(
     <App />
   </React.StrictMode>
 );
+
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

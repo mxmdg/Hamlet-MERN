@@ -19,6 +19,8 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Modal from './Modal'
+import LastSeen from './LastUpdate'
+
 
 const PriceTable = (props)=> {
 
@@ -32,7 +34,6 @@ const PriceTable = (props)=> {
         setItemsList(items.data)
 
     }
-
 
     const deleteClickHandler = async (id)=>{
         if (window.confirm(`Estas recontra seguro de borrar ${props.pd.Nombre || props.pd.Nombre_Material || props.pd.Modelo || props.pd.Proceso }`)) {
@@ -51,7 +52,7 @@ const PriceTable = (props)=> {
            setAction('edit')
            setID(itemToEdit.data._id)
            setItemToEdit(itemToEdit)
-           console.log("id: " + itemToEdit.data._id)
+           console.log("Fecha: " + itemToEdit.data.Fecha)
         } catch (e) {
             console.log(e)
         }
@@ -88,18 +89,21 @@ const PriceTable = (props)=> {
                     <Card sx={{ maxWidth: 345, background: '#88009933' }} color='primary' variant="elevation" elevation={16} square={false}>
                         <CardContent>
                             <Typography gutterBottom variant="h6" color="#e6f" fontWeight={600} component="div">
-                            { props.pd.Proceso }
+                            { props.pd.Proceso}
+                                <LastSeen date={props.pd.Fecha} />
                             </Typography>
+
+
                             <TableContainer component={Paper}>
                                 <Table sx={{ maxWidth: 350 }} size="small" aria-label="a dense table">
                                     <TableHead>
                                         <TableRow>
-                                            <TableCell>Proceso</TableCell>
+                                            <TableCell align="left">Proceso</TableCell>
                                             <TableCell align="left">Valor</TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
-                                    {Object.entries(props.formCLC).map(([key,value]) => (
+                                    {Object.entries(props.formCLC)?.map(([key,value]) => (
                                         <TableRow
                                         key={key}
                                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
