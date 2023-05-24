@@ -1,6 +1,5 @@
 export const formNuvera= (valor , minimo , entrada )=> {
     let valorPapyrus = (valor * 100 + '/100')
-    const Valor = 1
     const Minimo = minimo + entrada
     const formula = `(${entrada} + (( Pliegos *IF( Colores_Dorso >0,2,1) / if ( Pliego_Largo >  Pliego_Ancho , if( Pliego_Largo > 355/10, 1,16/10), if( Pliego_Ancho > 355/10, 1,16/10)))) * (${valorPapyrus}))`
     const resultado = { valor, formula , "Minimo + Entrada": Minimo , minimo , entrada }
