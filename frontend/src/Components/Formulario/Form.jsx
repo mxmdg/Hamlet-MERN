@@ -20,11 +20,11 @@ const Form = (props)=> {
 
     const [useHidden, setHidden] = useState(props.item?false:true)
     const [useItem, setItem] = useState(props.item || 'new')
-
     let dataForm = props.form
 
     const submitHandler = async (e, collection, id)=> {
       e.preventDefault()
+      
       const datos = []
       for (let element of e.target.elements) {
         if (element.tagName === 'INPUT' || element.tagName === 'SELECT' ) {
@@ -34,6 +34,10 @@ const Form = (props)=> {
         }
       }
       const formData = convertirArrayAObjeto(datos)
+      const history =(props.history)
+      const historial =(props.item.data.Historial)
+      historial.push(history)
+      formData.Historial = historial
       console.log(datos, formData)
     
       if (useItem === 'new') {

@@ -10,7 +10,8 @@ pricesControl.getPrices = async (req,res)=>{{
 pricesControl.addPrice = async (req,res)=>{{
     try {
         const {Proceso, Valor, Minimo, Entrada} = req.body;
-        const newPrice = new prices.esquema({Proceso, Valor, Minimo, Entrada});
+        const Historial = []
+        const newPrice = new prices.esquema({Proceso, Valor, Minimo, Entrada, Historial});
         await newPrice.save();
         res.json({"message": newPrice.Proceso + " ha sido agregado"});
     } catch (e) {
@@ -34,11 +35,11 @@ pricesControl.getPrice = async (req, res) => {
 
 pricesControl.updatePrice = async (req, res) => {
   try {
-    const {Proceso, Valor, Minimo, Entrada } = req.body;
+    const {Proceso, Valor, Minimo, Entrada , Historial} = req.body;
     const Fecha = Date.now()
     const price = await prices.esquema.findByIdAndUpdate(
       req.params.id,
-      { Proceso, Valor, Minimo, Entrada, Fecha },
+      { Proceso, Valor, Minimo, Entrada, Fecha , Historial},
       { new: false }
     );
     if (!price) {

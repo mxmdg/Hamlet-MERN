@@ -28,6 +28,7 @@ const PriceTable = (props)=> {
     const [useID, setID] = useState('')
     const [useItemToEdit, setItemToEdit] = useState({})
     const [useItemsList, setItemsList] = useState([])
+    const [ useHistory , setHistory ] = useState(props.Historial)
 
     const getElements = async () => {
         const items = await axios.get(`${serverURL}/hamlet/${props.collection}/`)
@@ -49,9 +50,15 @@ const PriceTable = (props)=> {
     const editClickHandler = async (id)=> {
         try {
            const itemToEdit = await axios.get(`${serverURL}/hamlet/${props.collection}/${id}`)
+           let history = [{
+                Valor: itemToEdit.data.Valor , 
+                Entrada: itemToEdit.data.Entrada , 
+                Minimo: itemToEdit.data.Minimo , 
+                Fecha: itemToEdit.data.Fecha}]
            setAction('edit')
            setID(itemToEdit.data._id)
            setItemToEdit(itemToEdit)
+           setHistory(history)
            console.log("Fecha: " + itemToEdit.data.Fecha)
         } catch (e) {
             console.log(e)
@@ -59,13 +66,14 @@ const PriceTable = (props)=> {
     }
     useEffect(()=>{
 
-    },[props.formCLC])
+    },[props.formCLC, useAction])
    // const rows: GridRowsProp = props.pd
 
     const editor =  <Form 
                     form={props.formData} 
                     collection={props.collection} 
                     item={useItemToEdit}
+                    history={useHistory}
                     action={setAction} 
                     _id={props.pd._id}
                     />

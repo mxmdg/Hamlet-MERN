@@ -6,7 +6,15 @@ const pricesSchema = new Schema(
         'Valor': {type: Number, required: true},
         'Minimo': {type: Number, required: true},
         'Entrada': {type: Number, required: false},
-        // 'Historial': {type: String, required: false},
+        'Historial': [
+            {
+              Valor: { type: Number, required: true },
+              Minimo: { type: Number, required: true },
+              Entrada: { type: Number, required: false },
+              Fecha: { type: Date, default: Date.now, required: true }
+            }
+          ],
+          default: [],
         'Fecha': {type: Date, default: Date.now, required: false}
     });
 
