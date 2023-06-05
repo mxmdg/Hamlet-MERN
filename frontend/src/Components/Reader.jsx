@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 const Reader = (props) => {
   const [data, setData] = useState(null);
@@ -7,9 +7,11 @@ const Reader = (props) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/hamlet/${props.collection}`);
+        const res = await axios.get(
+          `http://localhost:5000/hamlet/${props.collection}`
+        );
         setData(res.data);
-        console.log(res.data)
+        console.log(res.data);
       } catch (err) {
         console.log(err);
       }
@@ -21,7 +23,7 @@ const Reader = (props) => {
   if (!data) {
     return <h1>Loading...</h1>;
   } else {
-    return <div>Hay data...</div>
+    return <div>Hay data...</div>;
   }
 
   /* return (

@@ -5,6 +5,7 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import IconChips from "./Chip";
+import { LineChart, Line } from "recharts";
 
 const style = {
   position: "absolute",
@@ -17,7 +18,7 @@ const style = {
   p: 4,
 };
 
-export default function BasicModal(props) {
+export default function Historial(props) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -44,14 +45,7 @@ export default function BasicModal(props) {
             component="h2"
             color="secondary"
           >
-            {props.modalTitle}
-          </Typography>
-          <Typography
-            id="modal-modal-description"
-            color="primary"
-            sx={{ mt: 2 }}
-          >
-            {props.modalText}
+            {props.data}
           </Typography>
         </Paper>
       </Modal>

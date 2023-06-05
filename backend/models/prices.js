@@ -14,7 +14,6 @@ const pricesSchema = new Schema(
               Fecha: { type: Date, default: Date.now, required: true }
             }
           ],
-          default: [],
         'Fecha': {type: Date, default: Date.now, required: false}
     });
 
