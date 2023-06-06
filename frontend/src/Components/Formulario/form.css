@@ -16,9 +16,7 @@
 }
 
 
-.formulario input,
-.formulario select,
-input.gridjs-input {
+.formulario input, .formulario select, input.gridjs-input {
 	color: #eee;
 	background: #55555533;
 	border: 1px solid #222;
@@ -34,7 +32,7 @@ input.gridjs-input {
 	border: 1px solid #59e3ea;
 	background: #444;
 }
-.formulario label, .formulario legend {
+.formulario label {
 	padding: 0 5px;
 	font-size: 12px;
 	color: #999;
@@ -43,7 +41,7 @@ input.gridjs-input {
 	
 }
 
-.formulario label, .formulario legend[for="impresion"] {
+.formulario label[for="impresion"] {
 	margin: 5px;
 }
 
@@ -52,13 +50,8 @@ input.gridjs-input {
 	width: 50%;
 	margin-left: 20%;
 
-}
- 
-.formulario fieldset {
-	padding: 0;
-	border-radius: 10px;
-	border: 1px solid #ddd;
-}
+} 
+
 
 
 .formulario input[type="text"], .formulario select {

@@ -32,7 +32,11 @@ pricesControl.getPrice = async (req, res) => {
     res.status(500).json({ message: "Error al obtener la formula" });
   }
 };
-
+/* formatControl.updateFormat = async (req, res)=> {
+    const {Nombre, Alto, Ancho} = req.body;
+    const format = await formatos.esquema.findOneAndUpdate({_id: req.params.id}, {Nombre, Alto, Ancho})
+    res.json({"Message": "Formato actualizado " + req.params.id})
+  } */
 pricesControl.updatePrice = async (req, res) => {
   try {
     const {Proceso, Valor, Minimo, Entrada , Historial} = req.body;
