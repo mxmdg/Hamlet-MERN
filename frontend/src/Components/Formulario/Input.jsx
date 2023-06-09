@@ -1,5 +1,3 @@
-import TextField from '@mui/material/TextField';
-
 const Input = (props)=> {
     
     const valueFinder = ()=> {
@@ -13,23 +11,11 @@ const Input = (props)=> {
 
     const valor = props.item?valueFinder():''
     
-    /* return <TextField
-                id={props.id}
-                label={props.inputName}
-                type={props.type}
-                step={props.step}
-                defaultValue={valor}
-                InputLabelProps={{
-                shrink: true,
-                }}
-                variant="filled"
-        /> */
        
-        return <div id={props.id}>
+    return <div id={props.id}>
             <label>{props.inputName}</label>
             <input type={props.type} placeholder={props.inputName} step={props.step} defaultValue={valor}></input>
            </div>
-        
-   }        
+   }         
 
 export default Input;
