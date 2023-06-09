@@ -22,6 +22,7 @@ function convertirArrayAObjeto(arr) {
 const Form = (props) => {
   const [useHidden, setHidden] = useState(props.item ? false : true);
   const [useItem, setItem] = useState(props.item || "new");
+ 
   let dataForm = props.form;
 
   const submitHandler = async (e, collection, id) => {
@@ -37,23 +38,24 @@ const Form = (props) => {
     }
     const formData = convertirArrayAObjeto(datos);
 
-    if (useItem === "new") {
+    if (props.task === "new" || props.task === "copy") {
       try {
         await axios.post(
           "http://localhost:5000/hamlet/" + collection,
           formData
         );
         setHidden(true);
+        props.setState !== undefined ? props.setState(true) : console.log('No es nuevo')
       } catch (e) {
         console.log("No se pudo guardar " + e);
       }
     } else {
-      const history = props.history;
+      /* const history = props.history;
       const historial = props.item.data.Historial;
       console.log(historial);
       //historial !== undefined ? historial.push(history) : [];
       formData.Historial = historial;
-      console.log(datos, formData);
+      console.log(datos, formData); */
       try {
         await axios.put(
           `http://localhost:5000/hamlet/${collection}/${id}`,
@@ -65,13 +67,14 @@ const Form = (props) => {
         console.log("No se pudeo actualizar" + e);
       }
     }
-    props.action("view");
+    props.view!==undefined ? props.view("open"): props.view("editor");
   };
 
   const toogleHandler = () => {
     setHidden(!useHidden);
-    props.action ? props.action("view") : console.log("edit");
-  };
+    props.setState!==undefined ? props.setState(false) : console.log('no setState');
+    props.view!==undefined ? props.view("open"): props.view("editor");
+    };
 
   const typeOfInput = (inp) => {
     if (inp.type === "Select") {

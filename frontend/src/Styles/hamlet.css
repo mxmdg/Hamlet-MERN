@@ -23,7 +23,8 @@
     grid-template-columns: 1fr 1fr 1fr 1fr; */
     padding: 5px;
     gap: 20px;
-    background-image: url(../img/Dark_Wood_Background.jpg);
+    /*background-image: url(../img/Dark_Wood_Background.jpg);*/
+    background-color: #333;
     height: 100%;
 }
 

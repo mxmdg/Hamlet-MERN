@@ -14,6 +14,7 @@ import {
   formIgenBN,
   formDefault,
 } from "./updateService";
+import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2
 
 const Precioso = (props) => {
   const [priceList, setPriceList] = useState([]);
@@ -66,14 +67,15 @@ const Precioso = (props) => {
       }
     };
     fetchData();
-  }, [useEdit]);
+  }, [useEdit , props.priceState]);
 
   return (
     <>
-      <div className="printersMainContainer">
+      <Grid  container spacing={3}>
         {/* Renderiza la lista de Formatos */}
         {priceList.map((price) => (
-          <PriceTable
+          <Grid xs={12} md={4}>
+            <PriceTable
             pd={price}
             collection={props.collection}
             key={price._id}
@@ -82,8 +84,9 @@ const Precioso = (props) => {
             formData={PricesDataForm}
             editor={setEdit}
           />
+          </Grid>
         ))}
-      </div>
+      </Grid>
     </>
   );
 };

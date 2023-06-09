@@ -23,16 +23,14 @@ import Historial from "./Historial";
 import LastSeen from "./LastUpdate";
 
 const PriceTable = (props) => {
-  const [useAction, setAction] = useState("view");
-  const [useID, setID] = useState("");
+  const [useView, setView] = useState("open");
   const [useItemToEdit, setItemToEdit] = useState({});
-  const [useItemsList, setItemsList] = useState([]);
+  const [ useTask , setTask ] = useState('new')
   const [useHistory, setHistory] = useState(props.pd.Historial);
   const [showHistory, setShowHistory] = useState(false);
 
   const getElements = async () => {
     const items = await axios.get(`${serverURL}/hamlet/${props.collection}/`);
-    setItemsList(items.data);
   };
 
   const deleteClickHandler = async (id) => {
@@ -49,7 +47,7 @@ const PriceTable = (props) => {
       try {
         await axios.delete(`${serverURL}/hamlet/${props.collection}/${id}`);
         getElements();
-        editor(true);
+        props.editor(true);
       } catch (e) {
         alert(e);
       }
@@ -69,9 +67,10 @@ const PriceTable = (props) => {
           Fecha: itemToEdit.data.Fecha,
         },
       ];
+      console.log('History loaded')
       console.log(history);
-      setAction("edit");
-      setID(itemToEdit.data._id);
+      setTask('edit')
+      setView("open");
       setItemToEdit(itemToEdit);
       setHistory(history);
       console.log("Historial: " + itemToEdit.Historial);
@@ -80,7 +79,7 @@ const PriceTable = (props) => {
       console.log(e);
     }
   };
-  useEffect(() => {}, [props.formCLC, useAction]);
+  useEffect(() => {}, [props.formCLC, useView]);
   // const rows: GridRowsProp = props.pd
 
   const editor = (
@@ -88,22 +87,16 @@ const PriceTable = (props) => {
       form={props.formData}
       collection={props.collection}
       item={useItemToEdit}
+      view={setView}
+      task={useTask}
       history={useHistory}
-      action={setAction}
       _id={props.pd._id}
       editor={props.editor}
     />
   );
 
-  const viewer = (
+  const open = (
     <>
-      {/*  <div className="Stockframe">
-                        <h5>{props.pd.Nombre || props.pd.Nombre_Material || props.pd.Modelo || props.pd.Proceso }</h5>
-                        <h5 className='deleteBtn' onClick={()=>editClickHandler(props.id)}>Editar</h5>
-                        <h5 className='deleteBtn' onClick={()=>deleteClickHandler(props.id)}>Eliminar</h5>
-                    </div>
-                    <div> */}
-
       <Grid
         container
         direction="column"
@@ -111,18 +104,17 @@ const PriceTable = (props) => {
         alignItems="baseline"
       >
         <Card
-          sx={{ maxWidth: 345, background: "#88009933", height: "100%" }}
-          color="primary"
-          variant="elevation"
-          elevation={16}
-          square={false}
+          sx={{ maxWidth: 350, minHeight: 400 }}
+          direction="column"
+          aligncontent="space-between"
+          color="secondary"
+          square={true}
         >
           <CardContent>
             <Typography
               gutterBottom
               variant="h6"
-              color="#e6f"
-              fontWeight={600}
+              color="text.primary"
               component="div"
             >
               {props.pd.Proceso}
@@ -130,8 +122,7 @@ const PriceTable = (props) => {
             <Typography
               gutterBottom
               variant="p"
-              color="#e6f"
-              fontWeight={300}
+              color="text.secondary"
               component="p"
             >
               <LastSeen date={props.pd.Fecha} />
@@ -207,7 +198,7 @@ const PriceTable = (props) => {
     </>
   );
 
-  return useAction === "view" ? viewer : editor;
+  return useView === "open" ? open : editor;
 };
 
 export default PriceTable;

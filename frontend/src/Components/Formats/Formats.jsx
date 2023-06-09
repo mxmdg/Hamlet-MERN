@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import FormatDataForm from "../Formulario/FormatDataForm";
 import ItemsDetails from "../General/itemsDetails";
-import "../../Styles/hamlet.css";
-import "../Stocks/Stocks.css";
+// import "../../Styles/hamlet.css";
+// import "../Stocks/Stocks.css";
 import { serverURL } from "../Config/config";
+import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2
+
 
 const Formats = (props) => {
   const [formatList, setFormatList] = useState([]);
@@ -25,13 +27,14 @@ const Formats = (props) => {
       }
     };
     fetchData();
-  }, [useEdit]);
+  }, [useEdit ,  props.formatState]);
 
   return (
     <>
-      <div className="printersMainContainer">
+      <Grid container spacing={3}>
         {/* Renderiza la lista de Formatos */}
         {formatList.map((format) => (
+          <Grid xs={12} md={4}>
           <ItemsDetails
             pd={format}
             collection={props.collection}
@@ -40,8 +43,9 @@ const Formats = (props) => {
             formData={FormatDataForm}
             editor={setEdit}
           />
+          </Grid>
         ))}
-      </div>
+      </Grid>
     </>
   );
 };

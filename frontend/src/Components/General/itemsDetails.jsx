@@ -12,15 +12,14 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import DeleteIcon from "@mui/icons-material/Delete";
 
+
 const ItemsDetails = (props) => {
-  const [useAction, setAction] = useState("view");
-  const [useID, setID] = useState("");
+  const [useView, setView] = useState("open");
   const [useItemToEdit, setItemToEdit] = useState({});
-  const [useItemsList, setItemsList] = useState([]);
+  const [ useTask , setTask ] = useState('new')
 
   const getElements = async () => {
     const items = await axios.get(`${serverURL}/hamlet/${props.collection}/`);
-    setItemsList(items.data);
   };
 
   //console.log(props.formCLC?props.formCLC:"")
@@ -39,6 +38,7 @@ const ItemsDetails = (props) => {
       try {
         await axios.delete(`${serverURL}/hamlet/${props.collection}/${id}`);
         getElements();
+        props.editor('deleted')
       } catch (e) {
         alert(e);
       }
@@ -50,8 +50,8 @@ const ItemsDetails = (props) => {
       const itemToEdit = await axios.get(
         `${serverURL}/hamlet/${props.collection}/${id}`
       );
-      setAction("edit");
-      setID(itemToEdit.data._id);
+      setTask('edit')
+      setView("open");
       setItemToEdit(itemToEdit);
       console.log("id: " + itemToEdit.data._id);
     } catch (e) {
@@ -61,38 +61,40 @@ const ItemsDetails = (props) => {
   useEffect(() => {}, [props.formCLC]);
   // const rows: GridRowsProp = props.pd
 
+  const copyClickHandler = async (id) => {
+    try {
+      const itemToEdit = await axios.get(
+        `${serverURL}/hamlet/${props.collection}/${id}`
+      );
+      setTask('copy')
+      setView("open");
+      setItemToEdit(itemToEdit);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  useEffect(() => {}, [props.formCLC]);
+
   const editor = (
     <Form
       form={props.formData}
       collection={props.collection}
       item={useItemToEdit}
-      action={setAction}
+      view={setView}
+      task={useTask}
       _id={props.pd._id}
       editor={props.editor}
     />
   );
 
-  const viewer = (
+  const open = (
     <>
-      {/*  <div className="Stockframe">
-                        <h5>{props.pd.Nombre || props.pd.Nombre_Material || props.pd.Modelo || props.pd.Proceso }</h5>
-                        <h5 className='deleteBtn' onClick={()=>editClickHandler(props.id)}>Editar</h5>
-                        <h5 className='deleteBtn' onClick={()=>deleteClickHandler(props.id)}>Eliminar</h5>
-                    </div>
-                    <div> */}
       <Card
-        sx={{ maxWidth: 345, background: "#88009933", height: "100%" }}
-        color="primary"
-        variant="elevation"
-        elevation={16}
-        square={false}
+        sx={{ maxWidth: 345, height: "100%" }}
       >
         <CardContent>
           <Typography
             gutterBottom
-            variant="h6"
-            color="#e6f"
-            fontWeight={600}
             component="div"
           >
             {props.pd.Nombre ||
@@ -100,20 +102,28 @@ const ItemsDetails = (props) => {
               props.pd.Modelo ||
               props.pd.Proceso}
           </Typography>
-          <Typography variant="body2" color="#e6f"></Typography>
+          <Typography variant="body2"></Typography>
         </CardContent>
         <CardActions>
           <Button
             size="small"
-            variant="contained"
-            color="success"
+            variant="text"
+            color="primary"
             onClick={() => editClickHandler(props.id)}
           >
             Editar
           </Button>
           <Button
             size="small"
-            variant="outlined"
+            variant="text"
+            color="secondary"
+            onClick={() => copyClickHandler(props.id)}
+          >
+            Copiar
+          </Button>
+          <Button
+            size="small"
+            variant="text"
             color="error"
             startIcon={<DeleteIcon />}
             onClick={() => deleteClickHandler(props.id)}
@@ -125,7 +135,7 @@ const ItemsDetails = (props) => {
     </>
   );
 
-  return useAction === "view" ? viewer : editor;
+  return useView === "open" ? open : editor;
 };
 
 export default ItemsDetails;

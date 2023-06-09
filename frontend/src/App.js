@@ -11,24 +11,27 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from './Components/home'
 import ConfigMainContainer from './Components/Config/ConfigMainContainer';
 import Container from '@mui/material/Container'
+import { themeOptions } from './Components/Config/theme';
 
 
 function App() {
   return (
-    <BrowserRouter>    
-      <Header />
-      <Container>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/hamlet/impresoras" element={<MainContainer entity={'impresoras'}/>} />
-          <Route path="/hamlet/materiales" element={<MainContainer entity={'materiales'}/>} />
-          <Route path="/hamlet/formatos" element={<MainContainer entity={'formatos'}/>} />
-          <Route path="/hamlet/trabajos" element={<Jobs />} />
-          <Route path="/hamlet/precios" element={<MainContainer entity={'precios'}/>} />
-          <Route path="/hamlet/configuracion" element={<PricesMainContainer />} />
-        </Routes>  
-      </Container>
-      </BrowserRouter>
+    <themeOptions>
+      <BrowserRouter>    
+        <Header />
+          <Container>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/hamlet/impresoras" element={<MainContainer entity={'impresoras'}/>} />
+              <Route path="/hamlet/materiales" element={<MainContainer entity={'materiales'}/>} />
+              <Route path="/hamlet/formatos" element={<MainContainer entity={'formatos'}/>} />
+              <Route path="/hamlet/trabajos" element={<Jobs />} />
+              <Route path="/hamlet/precios" element={<MainContainer entity={'precios'}/>} />
+              <Route path="/hamlet/configuracion" element={<ConfigMainContainer />} />
+            </Routes>  
+          </Container>
+        </BrowserRouter>
+      </themeOptions>
   )
 }
 

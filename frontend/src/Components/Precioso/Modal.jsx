@@ -23,14 +23,16 @@ export default function BasicModal(props) {
   const handleClose = () => setOpen(false);
 
   return (
-    <div>
-      <IconChips
-        variant="contained"
+    <Box>
+      <Button
+        variant="text"
         size="small"
-        color="success"
+        color="secondary"
+        sx={{textAlign: 'left'}}
         label={props.btnText}
         onClick={handleOpen}
-      />
+        value={props.btnText}>Ver Formula</Button>
+      
       <Modal
         open={open}
         onClose={handleClose}
@@ -55,6 +57,6 @@ export default function BasicModal(props) {
           </Typography>
         </Paper>
       </Modal>
-    </div>
+    </Box>
   );
 }
