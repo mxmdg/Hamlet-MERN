@@ -8,8 +8,8 @@ const pricesSchema = new Schema(
         'Entrada': {type: Number, required: false},
         'Historial': [
             {
-              Valor: { type: Number, required: true },
-              Minimo: { type: Number, required: true },
+              Valor: { type: Number, required: false },
+              Minimo: { type: Number, required: false },
               Entrada: { type: Number, required: false },
               Fecha: { type: Date, default: Date.now, required: true }
             }

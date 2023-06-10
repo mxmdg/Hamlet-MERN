@@ -20,9 +20,11 @@ function convertirArrayAObjeto(arr) {
 }
 
 const Form = (props) => {
-  const [useHidden, setHidden] = useState(props.item ? false : true);
+  const [useHidden, setHidden] = useState(
+    props.task === "copy" || props.task === "edit" ? false : true
+  );
   const [useItem, setItem] = useState(props.item || "new");
- 
+
   let dataForm = props.form;
 
   const submitHandler = async (e, collection, id) => {
@@ -45,17 +47,16 @@ const Form = (props) => {
           formData
         );
         setHidden(true);
-        props.setState !== undefined ? props.setState(true) : console.log('No es nuevo')
+        props.setState !== undefined
+          ? props.setState(true)
+          : console.log("No es nuevo");
       } catch (e) {
         console.log("No se pudo guardar " + e);
       }
     } else {
-      /* const history = props.history;
-      const historial = props.item.data.Historial;
-      console.log(historial);
+      //console.log(props.history);
       //historial !== undefined ? historial.push(history) : [];
-      formData.Historial = historial;
-      console.log(datos, formData); */
+      //formData.Historial = props.history;
       try {
         await axios.put(
           `http://localhost:5000/hamlet/${collection}/${id}`,
@@ -67,14 +68,31 @@ const Form = (props) => {
         console.log("No se pudeo actualizar" + e);
       }
     }
-    props.view!==undefined ? props.view("open"): props.view("editor");
+    console.log("View Prop of Form: " + props.view);
+    try {
+      typeof props.view === "function"
+        ? props.view("viewer")
+        : props.view("editor");
+    } catch (e) {
+      console.log("There is no props.view");
+      console.log(e);
+    }
   };
 
   const toogleHandler = () => {
     setHidden(!useHidden);
-    props.setState!==undefined ? props.setState(false) : console.log('no setState');
-    props.view!==undefined ? props.view("open"): props.view("editor");
-    };
+    props.setState !== undefined
+      ? props.setState(false)
+      : console.log("no setState");
+    try {
+      typeof props.view === "function"
+        ? props.view("viewer")
+        : props.view("editor");
+    } catch (e) {
+      console.log("There is no props.view");
+      console.log(e);
+    }
+  };
 
   const typeOfInput = (inp) => {
     if (inp.type === "Select") {
@@ -118,7 +136,7 @@ const Form = (props) => {
 
   const hiddenTrue = (
     <div className="formulario">
-      <button onClick={toogleHandler}>+</button>
+      <button onClick={toogleHandler}>Agregar {props.collection}</button>
     </div>
   );
 
@@ -138,7 +156,7 @@ const Form = (props) => {
         <button id="submitBTN" type="submit">
           Enviar
         </button>
-        <button id="cancelBTN" type="cancel" onClick={toogleHandler}>
+        <button id="cancelBTN" onClick={toogleHandler}>
           Cancelar
         </button>
       </form>

@@ -23,10 +23,10 @@ import Historial from "./Historial";
 import LastSeen from "./LastUpdate";
 
 const PriceTable = (props) => {
-  const [useView, setView] = useState("open");
+  const [useView, setView] = useState("viewer");
   const [useItemToEdit, setItemToEdit] = useState({});
-  const [ useTask , setTask ] = useState('new')
-  const [useHistory, setHistory] = useState(props.pd.Historial);
+  const [useTask, setTask] = useState("new");
+  //const useHistory = [props.priceHistory];
   const [showHistory, setShowHistory] = useState(false);
 
   const getElements = async () => {
@@ -59,27 +59,27 @@ const PriceTable = (props) => {
       const itemToEdit = await axios.get(
         `${serverURL}/hamlet/${props.collection}/${id}`
       );
-      let history = [
+      /* let history = [
         {
           Valor: itemToEdit.data.Valor,
           Entrada: itemToEdit.data.Entrada,
           Minimo: itemToEdit.data.Minimo,
           Fecha: itemToEdit.data.Fecha,
         },
-      ];
-      console.log('History loaded')
-      console.log(history);
-      setTask('edit')
-      setView("open");
+      ]; */
+
+      setTask("edit");
+      setView("editor");
       setItemToEdit(itemToEdit);
-      setHistory(history);
-      console.log("Historial: " + itemToEdit.Historial);
-      console.log("history: " + useHistory);
+      /* useHistory.push(history);
+
+      console.log(props.priceHistory);
+      console.log(useHistory); */
     } catch (e) {
       console.log(e);
     }
   };
-  useEffect(() => {}, [props.formCLC, useView]);
+  useEffect(() => {}, [useView, useTask]);
   // const rows: GridRowsProp = props.pd
 
   const editor = (
@@ -89,13 +89,12 @@ const PriceTable = (props) => {
       item={useItemToEdit}
       view={setView}
       task={useTask}
-      history={useHistory}
       _id={props.pd._id}
       editor={props.editor}
     />
   );
 
-  const open = (
+  const viewer = (
     <>
       <Grid
         container
@@ -193,12 +192,12 @@ const PriceTable = (props) => {
             </Button>
           </CardActions>
         </Card>
-        {showHistory && <Historial data={useHistory} btnText="ver grafico" />}
+        {showHistory && <Historial data={props.pd.Historial} btnText="ver" />}
       </Grid>
     </>
   );
 
-  return useView === "open" ? open : editor;
+  return useView === "viewer" ? viewer : editor;
 };
 
 export default PriceTable;

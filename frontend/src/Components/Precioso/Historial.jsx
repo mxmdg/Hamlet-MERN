@@ -19,19 +19,19 @@ const style = {
 };
 
 export default function Historial(props) {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(true);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
   return (
     <div>
-      <IconChips
+      {/* <IconChips
         variant="contained"
         size="small"
         color="success"
         label={props.btnText}
         onClick={handleOpen}
-      />
+      /> */}
       <Modal
         open={open}
         onClose={handleClose}
@@ -45,7 +45,14 @@ export default function Historial(props) {
             component="h2"
             color="secondary"
           >
-            {props.data}
+            {props.data.map((item) => {
+              return (
+                <p>
+                  Valor: {item.Valor} - Entrada: {item.Entrada} - Minimo:{" "}
+                  {item.Minimo} - Fecha: {item.Fecha.toLocaleString("es-ES")}
+                </p>
+              );
+            })}
           </Typography>
         </Paper>
       </Modal>

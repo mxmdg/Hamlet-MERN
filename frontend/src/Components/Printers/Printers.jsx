@@ -5,7 +5,7 @@ import PrintersDataForm from "../Formulario/PrintersDataForm";
 // import "./printers.css";
 import ItemsDetails from "../General/itemsDetails";
 import { serverURL } from "../Config/config";
-import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2
+import Grid from "@mui/material/Unstable_Grid2"; // Grid version 2
 
 const readPrinters = async () => {
   const res = await axios.get(`${serverURL}/hamlet/impresoras`);
@@ -14,7 +14,7 @@ const readPrinters = async () => {
 
 const Printers = (props) => {
   const [printerList, setPrinterList] = useState([]);
-  const [useEdit, setEdit] = useState(false);
+  const [useEdit, setEdit] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -26,25 +26,23 @@ const Printers = (props) => {
       }
     };
     fetchData();
-  }, [useEdit]);
+  }, [useEdit, printerList]);
 
   return (
-    
-      <Grid container spacing={3}>
-        {/* Renderiza la lista de impresoras */}
-        {printerList.map((printer) => (
-          <Grid xs={12} md={4}>
-            <ItemsDetails
+    <Grid container spacing={3}>
+      {/* Renderiza la lista de impresoras */}
+      {printerList.map((printer) => (
+        <Grid xs={12} md={4} key={printer._id}>
+          <ItemsDetails
             pd={printer}
-            key={printer._id}
             id={printer._id}
             collection={props.collection}
             formData={PrintersDataForm}
             editor={setEdit}
           />
-          </Grid>
-        ))}
-      </Grid>
+        </Grid>
+      ))}
+    </Grid>
   );
 };
 

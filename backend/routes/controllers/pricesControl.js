@@ -37,7 +37,7 @@ pricesControl.getPrice = async (req, res) => {
     const format = await formatos.esquema.findOneAndUpdate({_id: req.params.id}, {Nombre, Alto, Ancho})
     res.json({"Message": "Formato actualizado " + req.params.id})
   } */
-pricesControl.updatePrice = async (req, res) => {
+/* pricesControl.updatePrice = async (req, res) => {
   try {
     const {Proceso, Valor, Minimo, Entrada , Historial} = req.body;
     const Fecha = Date.now()
@@ -54,7 +54,43 @@ pricesControl.updatePrice = async (req, res) => {
     console.error(error);
     res.status(500).json({ message: "Error al actualizar la Formula" });
   }
+}; */
+
+//Update Price por GPT
+
+pricesControl.updatePrice = async (req, res) => {
+  try {
+    const { Proceso, Valor, Minimo, Entrada, Historial } = req.body;
+    const Fecha = Date.now();
+
+    const price = await prices.esquema.findById(req.params.id);
+
+    if (!price) {
+      return res.status(404).json({ message: "Formula no encontrada" });
+    }
+
+    const historialItem = {
+      Valor: price.Valor,
+      Minimo: price.Minimo,
+      Entrada: price.Entrada,
+      Fecha: price.Fecha
+    };
+    price.Historial.push(historialItem);
+    price.Valor = Valor;
+    price.Minimo = Minimo;
+    price.Entrada = Entrada;
+    price.Fecha = Fecha;
+
+    await price.save();
+
+    res.json({ message: "Formula actualizada", price });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error al actualizar la Formula" });
+  }
 };
+
+
 pricesControl.deletePrice = async (req, res)=> {
   const price =  await prices.esquema.findByIdAndDelete(req.params.id);
   res.json({"Message": "Formula eliminado"})

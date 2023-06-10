@@ -4,17 +4,31 @@ import PricesDataForm from "../Formulario/PricesDataForm";
 //import "../../Styles/hamlet.css";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
-import { useState } from 'react';
+import { Typography } from "@mui/material";
+import { useState } from "react";
 
 const PricesMainContainer = () => {
-  const [ useNewPrice , setNewPrice ] = useState(false)
+  const [useNewPrice, setNewPrice] = useState(false);
 
   return (
     <Container>
       <Box>
-        <h3>Costos</h3>
+        <Typography
+          gutterBottom
+          variant="h6"
+          color="secondary"
+          fontWeight={600}
+          component="div"
+        >
+          Costos
+        </Typography>
         <Precioso collection="precios" priceState={useNewPrice} />
-        <Form form={PricesDataForm} collection="precios" setState={setNewPrice} task="new"/>
+        <Form
+          form={PricesDataForm}
+          collection="precios"
+          setState={setNewPrice}
+          task="new"
+        />
       </Box>
     </Container>
   );

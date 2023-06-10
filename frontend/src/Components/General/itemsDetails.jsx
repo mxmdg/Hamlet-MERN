@@ -12,11 +12,10 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-
 const ItemsDetails = (props) => {
-  const [useView, setView] = useState("open");
+  const [useView, setView] = useState("viewer");
   const [useItemToEdit, setItemToEdit] = useState({});
-  const [ useTask , setTask ] = useState('new')
+  const [useTask, setTask] = useState("new");
 
   const getElements = async () => {
     const items = await axios.get(`${serverURL}/hamlet/${props.collection}/`);
@@ -38,7 +37,7 @@ const ItemsDetails = (props) => {
       try {
         await axios.delete(`${serverURL}/hamlet/${props.collection}/${id}`);
         getElements();
-        props.editor('deleted')
+        props.editor("deleted");
       } catch (e) {
         alert(e);
       }
@@ -50,15 +49,16 @@ const ItemsDetails = (props) => {
       const itemToEdit = await axios.get(
         `${serverURL}/hamlet/${props.collection}/${id}`
       );
-      setTask('edit')
-      setView("open");
+      setTask("edit");
+      props.editor("edited");
+      setView("editor");
       setItemToEdit(itemToEdit);
       console.log("id: " + itemToEdit.data._id);
     } catch (e) {
       console.log(e);
     }
   };
-  useEffect(() => {}, [props.formCLC]);
+
   // const rows: GridRowsProp = props.pd
 
   const copyClickHandler = async (id) => {
@@ -66,14 +66,16 @@ const ItemsDetails = (props) => {
       const itemToEdit = await axios.get(
         `${serverURL}/hamlet/${props.collection}/${id}`
       );
-      setTask('copy')
-      setView("open");
+      setTask("copy");
+      props.editor("copied");
+      setView("editor");
       setItemToEdit(itemToEdit);
     } catch (e) {
       console.log(e);
     }
   };
-  useEffect(() => {}, [props.formCLC]);
+
+  useEffect(() => {}, [props.editor, useView, useTask]);
 
   const editor = (
     <Form
@@ -83,20 +85,14 @@ const ItemsDetails = (props) => {
       view={setView}
       task={useTask}
       _id={props.pd._id}
-      editor={props.editor}
     />
   );
 
-  const open = (
+  const viewer = (
     <>
-      <Card
-        sx={{ maxWidth: 345, height: "100%" }}
-      >
+      <Card sx={{ maxWidth: 345, height: "100%" }}>
         <CardContent>
-          <Typography
-            gutterBottom
-            component="div"
-          >
+          <Typography gutterBottom component="div">
             {props.pd.Nombre ||
               props.pd.Nombre_Material ||
               props.pd.Modelo ||
@@ -135,7 +131,7 @@ const ItemsDetails = (props) => {
     </>
   );
 
-  return useView === "open" ? open : editor;
+  return useView === "viewer" ? viewer : editor;
 };
 
 export default ItemsDetails;

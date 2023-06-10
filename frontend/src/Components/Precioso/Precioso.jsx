@@ -14,7 +14,7 @@ import {
   formIgenBN,
   formDefault,
 } from "./updateService";
-import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2
+import Grid from "@mui/material/Unstable_Grid2"; // Grid version 2
 
 const Precioso = (props) => {
   const [priceList, setPriceList] = useState([]);
@@ -67,23 +67,22 @@ const Precioso = (props) => {
       }
     };
     fetchData();
-  }, [useEdit , props.priceState]);
+  }, [useEdit, props.priceState]);
 
   return (
     <>
-      <Grid  container spacing={3}>
+      <Grid container spacing={3}>
         {/* Renderiza la lista de Formatos */}
         {priceList.map((price) => (
-          <Grid xs={12} md={4}>
+          <Grid xs={12} md={4} key={price._id}>
             <PriceTable
-            pd={price}
-            collection={props.collection}
-            key={price._id}
-            id={price._id}
-            formCLC={formulaCLC(price)}
-            formData={PricesDataForm}
-            editor={setEdit}
-          />
+              pd={price}
+              collection={props.collection}
+              id={price._id}
+              formCLC={formulaCLC(price)}
+              formData={PricesDataForm}
+              editor={setEdit}
+            />
           </Grid>
         ))}
       </Grid>
