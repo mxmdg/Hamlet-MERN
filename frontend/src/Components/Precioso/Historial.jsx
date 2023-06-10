@@ -6,6 +6,13 @@ import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import IconChips from "./Chip";
 import { LineChart, Line } from "recharts";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import LastSeen from "./LastUpdate";
 
 const style = {
   position: "absolute",
@@ -21,7 +28,15 @@ const style = {
 export default function Historial(props) {
   const [open, setOpen] = React.useState(true);
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  React.useEffect(() => {}, [open]);
+
+  const tableHead = props.data
+    ? Object.getOwnPropertyNames(props.data[props.data.length - 1])
+    : ["No", "Hay", "Elementos"];
 
   return (
     <div>
@@ -45,15 +60,39 @@ export default function Historial(props) {
             component="h2"
             color="secondary"
           >
-            {props.data.map((item) => {
-              return (
-                <p>
-                  Valor: {item.Valor} - Entrada: {item.Entrada} - Minimo:{" "}
-                  {item.Minimo} - Fecha: {item.Fecha.toLocaleString("es-ES")}
-                </p>
-              );
-            })}
+            Historial!
           </Typography>
+          <TableContainer component={Paper}>
+            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+              <TableHead>
+                <TableRow>
+                  {tableHead.slice(0, -1).map((title) => (
+                    <TableCell align="left" key={title}>
+                      {title}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {props.data.map((row) => (
+                  <TableRow>
+                    <TableCell component="th" scope="row" align="left">
+                      {row.Valor}
+                    </TableCell>
+                    <TableCell component="th" scope="row" align="left">
+                      {row.Entrada}
+                    </TableCell>
+                    <TableCell component="th" scope="row" align="left">
+                      {row.Minimo}
+                    </TableCell>
+                    <TableCell component="th" scope="row" align="left">
+                      {row.Fecha}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
         </Paper>
       </Modal>
     </div>
