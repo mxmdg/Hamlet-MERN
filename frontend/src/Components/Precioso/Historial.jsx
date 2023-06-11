@@ -19,7 +19,7 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 400,
+  width: "fit-content",
   border: "1px solid #839",
   boxShadow: 24,
   p: 4,
@@ -30,13 +30,19 @@ export default function Historial(props) {
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
     setOpen(false);
+    props.stateHistory(false);
   };
 
   React.useEffect(() => {}, [open]);
 
-  const tableHead = props.data
-    ? Object.getOwnPropertyNames(props.data[props.data.length - 1])
-    : ["No", "Hay", "Elementos"];
+  const tableHead = ((data) => {
+    try {
+      return Object.getOwnPropertyNames(data[data.length - 1]);
+    } catch (e) {
+      console.log(e);
+      return ["Error", "No hay datos en el historial", e];
+    }
+  })(props.data);
 
   return (
     <div>
@@ -66,8 +72,8 @@ export default function Historial(props) {
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
                 <TableRow>
-                  {tableHead.slice(0, -1).map((title) => (
-                    <TableCell align="left" key={title}>
+                  {tableHead.slice(0, -1).map((title, index) => (
+                    <TableCell align="left" key={title + index}>
                       {title}
                     </TableCell>
                   ))}

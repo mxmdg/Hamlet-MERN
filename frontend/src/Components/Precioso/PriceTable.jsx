@@ -79,6 +79,19 @@ const PriceTable = (props) => {
       console.log(e);
     }
   };
+
+  const handleHistory = () => {
+    try {
+      if (props.Historial !== undefined || props.Historial !== null) {
+        setShowHistory(true);
+      } else {
+        alert("No hay datos en el historial");
+      }
+    } catch (e) {
+      alert(e.message);
+    }
+  };
+
   useEffect(() => {}, [useView, useTask]);
   // const rows: GridRowsProp = props.pd
 
@@ -167,11 +180,7 @@ const PriceTable = (props) => {
           </CardContent>
 
           <CardActions>
-            <Button
-              size="small"
-              color="secondary"
-              onClick={() => setShowHistory(true)}
-            >
+            <Button size="small" color="secondary" onClick={handleHistory}>
               Historial
             </Button>
             <Button
@@ -192,7 +201,13 @@ const PriceTable = (props) => {
             </Button>
           </CardActions>
         </Card>
-        {showHistory && <Historial data={props.pd.Historial} btnText="ver" />}
+        {showHistory && (
+          <Historial
+            data={props.pd.Historial}
+            btnText="ver"
+            stateHistory={setShowHistory}
+          />
+        )}
       </Grid>
     </>
   );
