@@ -9,6 +9,7 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
+import { ButtonGroup } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import DeleteIcon from "@mui/icons-material/Delete";
 
@@ -90,7 +91,7 @@ const ItemsDetails = (props) => {
 
   const viewer = (
     <>
-      <Card sx={{ maxWidth: 345, height: "100%" }}>
+      <Card elevation={8} sx={{ maxWidth: 345, height: "100%" }}>
         <CardContent>
           <Typography gutterBottom component="div">
             {props.pd.Nombre ||
@@ -101,31 +102,33 @@ const ItemsDetails = (props) => {
           <Typography variant="body2"></Typography>
         </CardContent>
         <CardActions>
-          <Button
-            size="small"
-            variant="text"
-            color="primary"
-            onClick={() => editClickHandler(props.id)}
-          >
-            Editar
-          </Button>
-          <Button
-            size="small"
-            variant="text"
-            color="secondary"
-            onClick={() => copyClickHandler(props.id)}
-          >
-            Copiar
-          </Button>
-          <Button
-            size="small"
-            variant="text"
-            color="error"
-            startIcon={<DeleteIcon />}
-            onClick={() => deleteClickHandler(props.id)}
-          >
-            Eliminar
-          </Button>
+          <ButtonGroup>
+            <Button
+              size="small"
+              variant="text"
+              color="info"
+              onClick={() => editClickHandler(props.id)}
+            >
+              Editar
+            </Button>
+            <Button
+              size="small"
+              variant="text"
+              color="success"
+              onClick={() => copyClickHandler(props.id)}
+            >
+              Copiar
+            </Button>
+            <Button
+              size="small"
+              variant="text"
+              color="error"
+              startIcon={<DeleteIcon />}
+              onClick={() => deleteClickHandler(props.id)}
+            >
+              Eliminar
+            </Button>
+          </ButtonGroup>
         </CardActions>
       </Card>
     </>

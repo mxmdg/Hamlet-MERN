@@ -19,6 +19,21 @@ function convertirArrayAObjeto(arr) {
   }, {});
 }
 
+const style = {
+  position: "relative",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: "100%",
+  border: "1px solid #839",
+  background: "#00000077",
+  backDropFilter: "blur(5px)",
+  boxShadow: "13px 13px 15px #00000088",
+  padding: "10px",
+  borderRadius: "10px",
+  zIndex: "10",
+};
+
 const Form = (props) => {
   const [useHidden, setHidden] = useState(
     props.task === "copy" || props.task === "edit" ? false : true
@@ -141,7 +156,7 @@ const Form = (props) => {
   );
 
   const hiddenFalse = (
-    <div className="formContainer">
+    <div style={style}>
       <form
         onSubmit={(e) =>
           submitHandler(

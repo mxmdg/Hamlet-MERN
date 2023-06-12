@@ -28,11 +28,14 @@ export default function BasicModal(props) {
         variant="text"
         size="small"
         color="secondary"
-        sx={{textAlign: 'left'}}
+        sx={{ textAlign: "left" }}
         label={props.btnText}
         onClick={handleOpen}
-        value={props.btnText}>Ver Formula</Button>
-      
+        value={props.btnText}
+      >
+        Ver Formula
+      </Button>
+
       <Modal
         open={open}
         onClose={handleClose}
@@ -44,15 +47,11 @@ export default function BasicModal(props) {
             id="modal-modal-title"
             variant="h6"
             component="h2"
-            color="secondary"
+            color="success"
           >
             {props.modalTitle}
           </Typography>
-          <Typography
-            id="modal-modal-description"
-            color="primary"
-            sx={{ mt: 2 }}
-          >
+          <Typography id="modal-modal-description" color="info" sx={{ mt: 2 }}>
             {props.modalText}
           </Typography>
         </Paper>

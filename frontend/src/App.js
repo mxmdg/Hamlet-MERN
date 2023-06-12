@@ -11,12 +11,12 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from './Components/home'
 import ConfigMainContainer from './Components/Config/ConfigMainContainer';
 import Container from '@mui/material/Container'
-import { themeOptions } from './Components/Config/theme';
+import ThemeProv from './Components/Config/theme';
 
 
 function App() {
   return (
-    <themeOptions>
+    <ThemeProv>
       <BrowserRouter>    
         <Header />
           <Container>
@@ -28,10 +28,13 @@ function App() {
               <Route path="/hamlet/trabajos" element={<Jobs />} />
               <Route path="/hamlet/precios" element={<MainContainer entity={'precios'}/>} />
               <Route path="/hamlet/configuracion" element={<ConfigMainContainer />} />
+              <Route path="/hamlet/configuracion/formatos" element={<FormatsMainContainer />} />
+              <Route path="/hamlet/configuracion/materiales" element={<StocksMainContainer />} />
+              <Route path="/hamlet/configuracion/impresoras" element={<PrintersMainContainer />} />
             </Routes>  
           </Container>
         </BrowserRouter>
-      </themeOptions>
+      </ThemeProv>
   )
 }
 

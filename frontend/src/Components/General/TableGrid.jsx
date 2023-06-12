@@ -164,22 +164,10 @@ function EnhancedTableToolbar(props) {
   const { numSelected } = props;
 
   return (
-    <Toolbar
-      sx={{
-        pl: { sm: 2 },
-        pr: { xs: 1, sm: 1 },
-        ...(numSelected > 0 && {
-          bgcolor: (theme) =>
-            alpha(
-              theme.palette.primary.main,
-              theme.palette.action.activatedOpacity
-            ),
-        }),
-      }}
-    >
+    <Toolbar>
       {numSelected > 0 ? (
         <Typography
-          sx={{ flex: "1 1 100%" }}
+          //sx={{ flex: "1 1 100%" }}
           color="inherite"
           variant="subtitle1"
           component="div"
@@ -293,7 +281,7 @@ export default function EnhancedTable(props) {
 
   return (
     <Box sx={{ width: "100%" }}>
-      <Paper sx={{ width: "100%", mb: 2, background: "#00aaff88" }}>
+      <Paper elevation={8} sx={{ width: "100%", mb: 2 }}>
         <EnhancedTableToolbar
           collection={props.collection}
           numSelected={selected.length}

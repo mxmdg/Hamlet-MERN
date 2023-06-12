@@ -16,6 +16,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Button from "@mui/material/Button";
+import ButtonGroup from "@mui/material/ButtonGroup";
 import Typography from "@mui/material/Typography";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Modal from "./Modal";
@@ -116,17 +117,26 @@ const PriceTable = (props) => {
         alignItems="baseline"
       >
         <Card
-          sx={{ maxWidth: 350, minHeight: 400 }}
+          sx={{
+            maxWidth: 350,
+            minHeight: 400,
+            height: "100%",
+          }}
           direction="column"
-          aligncontent="space-between"
           color="secondary"
           square={true}
         >
-          <CardContent>
+          <CardContent
+            sx={{
+              maxWidth: 350,
+              minHeight: 400,
+              height: "100%",
+            }}
+          >
             <Typography
               gutterBottom
-              variant="h6"
-              color="text.primary"
+              variant="h4"
+              color="text.secondary"
               component="div"
             >
               {props.pd.Proceso}
@@ -140,7 +150,7 @@ const PriceTable = (props) => {
               <LastSeen date={props.pd.Fecha} />
             </Typography>
 
-            <TableContainer component={Paper}>
+            <TableContainer component={Paper} elevation={8}>
               <Table
                 sx={{ maxWidth: 350 }}
                 size="small"
@@ -179,26 +189,40 @@ const PriceTable = (props) => {
             </TableContainer>
           </CardContent>
 
-          <CardActions>
-            <Button size="small" color="secondary" onClick={handleHistory}>
-              Historial
-            </Button>
-            <Button
-              size="small"
-              color="success"
-              onClick={() => editClickHandler(props.id)}
-            >
-              Editar
-            </Button>
-            <Button
-              size="small"
-              variant="outlined"
-              color="error"
-              startIcon={<DeleteIcon />}
-              onClick={() => deleteClickHandler(props.id)}
-            >
-              Eliminar
-            </Button>
+          <CardActions
+            sx={{
+              marginTop: "auto",
+              marginBottom: "15px",
+              alignContent: "center",
+            }}
+          >
+            <ButtonGroup>
+              <Button
+                size="small"
+                variant="outlined"
+                color="info"
+                onClick={handleHistory}
+              >
+                Historial
+              </Button>
+              <Button
+                size="small"
+                variant="outlined"
+                color="success"
+                onClick={() => editClickHandler(props.id)}
+              >
+                Editar
+              </Button>
+              <Button
+                size="small"
+                variant="outlined"
+                color="error"
+                startIcon={<DeleteIcon />}
+                onClick={() => deleteClickHandler(props.id)}
+              >
+                Eliminar
+              </Button>
+            </ButtonGroup>
           </CardActions>
         </Card>
         {showHistory && (
