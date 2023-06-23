@@ -26,7 +26,7 @@ const style = {
   transform: "translate(-50%, -50%)",
   width: "100%",
   border: "1px solid #839",
-  background: "#00000077",
+  background: "#000",
   backDropFilter: "blur(5px)",
   boxShadow: "13px 13px 15px #00000088",
   padding: "10px",

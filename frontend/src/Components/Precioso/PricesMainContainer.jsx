@@ -22,13 +22,13 @@ const PricesMainContainer = () => {
         Costos
       </Typography>
       <Box>
+        <Precioso collection="precios" priceState={useNewPrice} />
         <Form
           form={PricesDataForm}
           collection="precios"
           setState={setNewPrice}
           task="new"
         />
-        <Precioso collection="precios" priceState={useNewPrice} />
       </Box>
     </Container>
   );

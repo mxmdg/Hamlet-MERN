@@ -25,6 +25,7 @@ const Jobs = ()=> {
         fechtData('formatos', setFormats)
         sortFormats()
         console.log(usePart)
+        console.log(useStocks)
     },[usePart])
 
     const sortFormats = () => {
@@ -70,7 +71,7 @@ const Jobs = ()=> {
             <select 
                 onChange={(e)=>console.log(e.target.value.Tipo, e.target.value.Gramaje)}>
                 {useStocks.map(stock => (
-                    <option key={stock._id} value={stock}>{stock.Tipo} {stock.Gramaje}</option>
+                    <option key={stock._id} value={stock}>{stock.Nombre_Material} {stock.Tipo} {stock.Gramaje}</option>
                 ))}
             </select>
             <h3>Formatos:</h3>

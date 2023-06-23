@@ -247,7 +247,7 @@ export default function EnhancedTable(props) {
         selected.slice(selectedIndex + 1)
       );
     }
-
+    console.table(newSelected)
     setSelected(newSelected);
   };
 

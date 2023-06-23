@@ -27,7 +27,6 @@ const PriceTable = (props) => {
   const [useView, setView] = useState("viewer");
   const [useItemToEdit, setItemToEdit] = useState({});
   const [useTask, setTask] = useState("new");
-  //const useHistory = [props.priceHistory];
   const [showHistory, setShowHistory] = useState(false);
 
   const getElements = async () => {
@@ -93,7 +92,7 @@ const PriceTable = (props) => {
     }
   };
 
-  useEffect(() => {}, [useView, useTask]);
+  useEffect(() => {}, [useView, useTask, useItemToEdit]);
   // const rows: GridRowsProp = props.pd
 
   const editor = (
@@ -139,7 +138,7 @@ const PriceTable = (props) => {
               color="text.secondary"
               component="div"
             >
-              {props.pd.Proceso}
+              {props.pd.Proceso}  
             </Typography>
             <Typography
               gutterBottom
@@ -226,11 +225,13 @@ const PriceTable = (props) => {
           </CardActions>
         </Card>
         {showHistory && (
+          <>
           <Historial
             data={props.pd.Historial}
             btnText="ver"
             stateHistory={setShowHistory}
           />
+          </>
         )}
       </Grid>
     </>

@@ -5,7 +5,6 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import IconChips from "./Chip";
-import { LineChart, Line } from "recharts";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -13,6 +12,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import LastSeen from "./LastUpdate";
+import MyLineChart from "./LineChart";
 
 const style = {
   position: "absolute",
@@ -32,6 +32,13 @@ export default function Historial(props) {
     setOpen(false);
     props.stateHistory(false);
   };
+
+  const handleDate = (date)=> {
+    const fecha = new Date(date)
+    const options = { day: 'numeric', month: 'long', year: 'numeric' };
+    const formattedDate = fecha.toLocaleDateString('es-ES', options);
+    return formattedDate
+  }
 
   React.useEffect(() => {}, [open]);
 
@@ -92,13 +99,14 @@ export default function Historial(props) {
                       {row.Minimo}
                     </TableCell>
                     <TableCell component="th" scope="row" align="left">
-                      {row.Fecha}
+                      {handleDate(row.Fecha)}
                     </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
           </TableContainer>
+          <MyLineChart data={props.data}/>
         </Paper>
       </Modal>
     </div>

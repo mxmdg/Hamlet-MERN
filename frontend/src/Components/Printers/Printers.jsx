@@ -26,7 +26,7 @@ const Printers = (props) => {
       }
     };
     fetchData();
-  }, [useEdit, printerList]);
+  }, [useEdit]);
 
   return (
     <Grid container spacing={3}>

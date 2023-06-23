@@ -80,6 +80,7 @@ pricesControl.updatePrice = async (req, res) => {
     price.Minimo = Minimo;
     price.Entrada = Entrada;
     price.Fecha = Fecha;
+    price.Proceso =Proceso;
 
     await price.save();
 

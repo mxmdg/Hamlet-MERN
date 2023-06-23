@@ -22,7 +22,7 @@ const Stocks = (props) => {
       }
     };
     fetchData();
-  }, [useEdit, stockList]);
+  }, [useEdit]);
 
   return (
     <Grid container spacing={3}>

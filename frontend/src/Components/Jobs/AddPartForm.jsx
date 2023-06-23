@@ -6,6 +6,7 @@ const AddPartForm = (props)=>{
     const defaultPart = ['Tapa',1,2,'simplex','duplex',170,350]
     //console.log(props.stocks)
     const [ usePartDefinition , setPartDefinition ] = useState([defaultPart])
+    const [useSelectedStock, setSelectedStock] = useState('')
     
     useEffect(()=>{
         try {
@@ -15,7 +16,7 @@ const AddPartForm = (props)=>{
             console.log(e)
         }
         
-   },[props.partDefinition])
+   },[props.partDefinition, props.stocks])
 
     return (
         <>
@@ -45,12 +46,12 @@ const AddPartForm = (props)=>{
                </select>
             </div>
             <div>
-                <label htmlFor="stockSelector">Material</label>
+                <label htmlFor="stockSelector">Material {useSelectedStock!==''?`: ${useSelectedStock}`:`: selecciar material`}</label>
                 <select name="stockSelector"
-                    onChange={(e)=>console.log(e.target.value.Tipo, e.target.value.Gramaje)}>
+                    onChange={(e)=>setSelectedStock(e.value)}>
                     {props.stocks.map(stock => {
                             if ((stock.Gramaje > usePartDefinition[usePartDefinition.length - 2] && stock.Gramaje < usePartDefinition[usePartDefinition.length - 1])) {
-                                return  (<option key={stock._id} value={stock}>{stock.Tipo} {stock.Gramaje}</option>)
+                                return  (<option key={stock._id} >{stock.Nombre_Material} {stock.Marca} {stock.Tipo} {stock.Gramaje}</option>)
                             }
                         }
                     )
