@@ -1,7 +1,5 @@
 import * as React from "react";
-import { setState } from "react";
 import PropTypes from "prop-types";
-import { alpha } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -20,8 +18,11 @@ import Tooltip from "@mui/material/Tooltip";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from '@mui/icons-material/Edit';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
+import { deleteMultiple } from "./DBServices";
 
 function createData(name, calories, fat, carbs, protein) {
   return {
@@ -186,11 +187,27 @@ function EnhancedTableToolbar(props) {
       )}
 
       {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton>
+        <>
+        <Tooltip title="Borrar">
+          <IconButton onClick={()=>deleteMultiple(props.idSelected,props.collection)}>
             <DeleteIcon />
           </IconButton>
         </Tooltip>
+        {numSelected === 1 && (
+        <>
+        <Tooltip title="Copiar">
+          <IconButton>
+            <ContentCopyIcon />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Editar">
+          <IconButton>
+            <EditIcon />
+          </IconButton>
+        </Tooltip>
+        </>)}
+        
+      </>
       ) : (
         <Tooltip title="Filter list">
           <IconButton>
@@ -226,9 +243,12 @@ export default function EnhancedTable(props) {
     if (event.target.checked) {
       const newSelected = rows.map((n) => n._id);
       setSelected(newSelected);
+      props.editor(newSelected);
       return;
     }
     setSelected([]);
+    props.editor([]);
+    
   };
 
   const handleClick = (event, name) => {
@@ -247,8 +267,8 @@ export default function EnhancedTable(props) {
         selected.slice(selectedIndex + 1)
       );
     }
-    console.table(newSelected)
     setSelected(newSelected);
+    props.editor(newSelected);
   };
 
   const handleChangePage = (event, newPage) => {
@@ -285,6 +305,7 @@ export default function EnhancedTable(props) {
         <EnhancedTableToolbar
           collection={props.collection}
           numSelected={selected.length}
+          idSelected={selected}
         />
         <TableContainer>
           <Table
@@ -356,7 +377,7 @@ export default function EnhancedTable(props) {
           </Table>
         </TableContainer>
         <TablePagination
-          rowsPerPageOptions={[5, 10, 15, 20, 25, 50]}
+          rowsPerPageOptions={[5, 10, 15, 20]}
           component="div"
           count={rows.length}
           rowsPerPage={rowsPerPage}

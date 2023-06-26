@@ -7,9 +7,17 @@ import {
   XAxis,
   YAxis,
   Tooltip,
+  Label,
   CartesianGrid,
   Legend
 } from "recharts";
+
+const handleDate = (date)=> {
+    const fecha = new Date(date)
+    const options = { day: 'numeric', month: 'numeric', year: 'numeric' };
+    const formattedDate = fecha.toLocaleDateString('es-ES', options);
+    return formattedDate
+ }
 
 export default function MyLineChart(props) {
     const data = props.data
@@ -26,13 +34,14 @@ export default function MyLineChart(props) {
           type="monotone"
           dataKey="Valor"
           stroke="#337598"
-          activeDot={{ r: 8 }}
+          activeDot={{ r: 4 }}
         />
-        <Line type="monotone" dataKey="Entrada" stroke="#982489" activeDot={{ r: 8 }} />
-        <Line type="monotone" dataKey="Minimo" stroke="#979723" activeDot={{ r: 8 }}/>
+        <Line type="monotone" dataKey="Entrada" stroke="#982489" activeDot={{ r: 4 }} />
+        <Line type="monotone" dataKey="Minimo" stroke="#979723" activeDot={{ r: 4 }}/>
+        <Label/>
         <Tooltip/>
         <Legend/>
-      </LineChart>
+      </LineChart >
     </ResponsiveContainer>
   );
 

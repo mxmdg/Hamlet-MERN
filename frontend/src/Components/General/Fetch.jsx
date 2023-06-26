@@ -11,7 +11,7 @@ import EnhancedTable from "./TableGrid";
 
 const Fetch = (props) => {
   const [useList, setList] = useState([]);
-  const [useEdit, setEdit] = useState(false);
+  const [useSelected, setSelected] = useState([]);
   const [useLoading, setLoading] = useState(true);
   const [useHeaders, setHeaders] = useState([]);
 
@@ -43,14 +43,13 @@ const Fetch = (props) => {
       try {
         await getElements();
         setLoading(false);
-        setEdit(false);
       } catch (err) {
         console.log(err);
       }
     };
     fetchData();
     console.log(useList);
-  }, [useEdit]);
+  }, [useSelected]);
 
   const Loading = (
     <Container>
@@ -70,7 +69,8 @@ const Fetch = (props) => {
           rows={useList}
           headCells={useHeaders}
           collection={props.collection}
-          //editor={setEdit}
+          editor={setSelected}
+          selected={useSelected}
         />
       </Container>
     </>

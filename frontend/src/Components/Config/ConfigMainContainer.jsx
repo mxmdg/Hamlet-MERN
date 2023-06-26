@@ -12,7 +12,7 @@ const ConfigMainContainer = () => {
         <PricesMainContainer />
       </li>
       <Divider light={false} />
-      {/* <li>
+      <li>
         <FormatsMainContainer />
       </li>
       <Divider light={false} />
@@ -22,7 +22,7 @@ const ConfigMainContainer = () => {
       <Divider light={false} />
       <li>
         <PrintersMainContainer />{" "}
-      </li> */}
+      </li>
     </ul>
   );
 };
