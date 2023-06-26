@@ -11,6 +11,7 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import TablePagination from "@mui/material/TablePagination";
 import LastSeen from "./LastUpdate";
 import MyLineChart from "./LineChart";
 
@@ -26,6 +27,8 @@ const style = {
 };
 
 export default function Historial(props) {
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [open, setOpen] = React.useState(true);
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
@@ -33,12 +36,12 @@ export default function Historial(props) {
     props.stateHistory(false);
   };
 
-  const handleDate = (date)=> {
-    const fecha = new Date(date)
-    const options = { day: 'numeric', month: 'long', year: 'numeric' };
-    const formattedDate = fecha.toLocaleDateString('es-ES', options);
-    return formattedDate
-  }
+  const handleDate = (date) => {
+    const fecha = new Date(date);
+    const options = { day: "numeric", month: "long", year: "numeric" };
+    const formattedDate = fecha.toLocaleDateString("es-ES", options);
+    return formattedDate;
+  };
 
   React.useEffect(() => {}, [open]);
 
@@ -50,6 +53,15 @@ export default function Historial(props) {
       return ["Error", "No hay datos en el historial", e];
     }
   })(props.data);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  };
 
   return (
     <div>
@@ -69,14 +81,18 @@ export default function Historial(props) {
         <Paper elevation={12} sx={style}>
           <Typography
             id="modal-modal-title"
-            variant="h6"
-            component="h2"
-            color="secondary"
+            variant="h5"
+            component="h4"
+            color="info"
           >
             Historial!
           </Typography>
           <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <Table
+              sx={{ minWidth: 650 }}
+              stickyHeader
+              aria-label="sticky table"
+            >
               <TableHead>
                 <TableRow>
                   {tableHead.slice(0, -1).map((title, index) => (
@@ -87,26 +103,37 @@ export default function Historial(props) {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {props.data.map((row) => (
-                  <TableRow>
-                    <TableCell component="th" scope="row" align="left">
-                      {row.Valor}
-                    </TableCell>
-                    <TableCell component="th" scope="row" align="left">
-                      {row.Entrada}
-                    </TableCell>
-                    <TableCell component="th" scope="row" align="left">
-                      {row.Minimo}
-                    </TableCell>
-                    <TableCell component="th" scope="row" align="left">
-                      {handleDate(row.Fecha)}
-                    </TableCell>
-                  </TableRow>
-                ))}
+                {props.data
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((row) => (
+                    <TableRow>
+                      <TableCell component="th" scope="row" align="left">
+                        {row.Valor}
+                      </TableCell>
+                      <TableCell component="th" scope="row" align="left">
+                        {row.Entrada}
+                      </TableCell>
+                      <TableCell component="th" scope="row" align="left">
+                        {row.Minimo}
+                      </TableCell>
+                      <TableCell component="th" scope="row" align="left">
+                        {handleDate(row.Fecha)}
+                      </TableCell>
+                    </TableRow>
+                  ))}
               </TableBody>
             </Table>
           </TableContainer>
-          <MyLineChart data={props.data}/>
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 20]}
+            component="div"
+            count={props.data.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+          <MyLineChart data={props.data} />
         </Paper>
       </Modal>
     </div>
