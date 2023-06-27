@@ -14,15 +14,17 @@ import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from '@mui/icons-material/Edit';
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import EditIcon from "@mui/icons-material/Edit";
+import AddBoxIcon from "@mui/icons-material/AddBox";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
 import { deleteMultiple } from "./DBServices";
+import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
+import { styled } from "@mui/material/styles";
 
 function createData(name, calories, fat, carbs, protein) {
   return {
@@ -102,6 +104,7 @@ function stableSort(array, comparator) {
 function EnhancedTableHead(props) {
   const {
     onSelectAllClick,
+    onDelete,
     order,
     orderBy,
     numSelected,
@@ -161,6 +164,37 @@ EnhancedTableHead.propTypes = {
   rowCount: PropTypes.number.isRequired,
 };
 
+const StyledTooltip = styled(({ className, ...props }) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: "#111111bb",
+    color: "#ddd",
+    border: "1px solid #59e3ea",
+    boxShadow: "10px 10px 7px #00000066",
+    padding: "10px",
+    fontSize: 13,
+  },
+  [`& .${tooltipClasses.arrow}`]: {
+    color: "#59e3ea",
+  },
+}));
+
+const DangerTooltip = styled(({ className, ...props }) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: "#a22",
+    color: "#000",
+    boxShadow: "7px 10px 10px #00000077",
+    padding: "10px",
+    fontSize: 13,
+  },
+  [`& .${tooltipClasses.arrow}`]: {
+    color: "#a22",
+  },
+}));
+
 function EnhancedTableToolbar(props) {
   const { numSelected } = props;
 
@@ -168,7 +202,7 @@ function EnhancedTableToolbar(props) {
     <Toolbar>
       {numSelected > 0 ? (
         <Typography
-          //sx={{ flex: "1 1 100%" }}
+          sx={{ flex: "1 1 100%" }}
           color="inherite"
           variant="subtitle1"
           component="div"
@@ -185,35 +219,46 @@ function EnhancedTableToolbar(props) {
           {props.collection}
         </Typography>
       )}
-
+      <StyledTooltip title="Agregar" arrow>
+        <IconButton onClick={() => {}} sx={{ alignSelf: "right" }}>
+          <AddBoxIcon />
+        </IconButton>
+      </StyledTooltip>
       {numSelected > 0 ? (
         <>
-        <Tooltip title="Borrar">
-          <IconButton onClick={()=>deleteMultiple(props.idSelected,props.collection)}>
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
-        {numSelected === 1 && (
-        <>
-        <Tooltip title="Copiar">
-          <IconButton>
-            <ContentCopyIcon />
-          </IconButton>
-        </Tooltip>
-        <Tooltip title="Editar">
-          <IconButton>
-            <EditIcon />
-          </IconButton>
-        </Tooltip>
-        </>)}
-        
-      </>
+          {numSelected === 1 && (
+            <>
+              <StyledTooltip title="Copiar" arrow>
+                <IconButton sx={{ alignSelf: "right" }}>
+                  <ContentCopyIcon />
+                </IconButton>
+              </StyledTooltip>
+              <StyledTooltip title="Editar" arrow>
+                <IconButton sx={{ alignSelf: "right" }}>
+                  <EditIcon />
+                </IconButton>
+              </StyledTooltip>
+            </>
+          )}
+          <DangerTooltip title="¡BORRAR!" arrow>
+            <IconButton
+              sx={{ alignSelf: "right" }}
+              onClick={() => {
+                deleteMultiple(props.idSelected, props.collection);
+                props.onDelete([]);
+              }}
+              color="error"
+            >
+              <DeleteIcon />
+            </IconButton>
+          </DangerTooltip>
+        </>
       ) : (
-        <Tooltip title="Filter list">
+        <StyledTooltip title="Filter list" arrow>
           <IconButton>
             <FilterListIcon />
           </IconButton>
-        </Tooltip>
+        </StyledTooltip>
       )}
     </Toolbar>
   );
@@ -248,7 +293,6 @@ export default function EnhancedTable(props) {
     }
     setSelected([]);
     props.editor([]);
-    
   };
 
   const handleClick = (event, name) => {
@@ -306,6 +350,7 @@ export default function EnhancedTable(props) {
           collection={props.collection}
           numSelected={selected.length}
           idSelected={selected}
+          onDelete={setSelected}
         />
         <TableContainer>
           <Table
