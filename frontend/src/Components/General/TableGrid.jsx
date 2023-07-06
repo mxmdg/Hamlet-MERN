@@ -26,16 +26,6 @@ import { deleteMultiple } from "./DBServices";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import { styled } from "@mui/material/styles";
 
-function createData(name, calories, fat, carbs, protein) {
-  return {
-    name,
-    calories,
-    fat,
-    carbs,
-    protein,
-  };
-}
-
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -67,39 +57,6 @@ function stableSort(array, comparator) {
   });
   return stabilizedThis.map((el) => el[0]);
 }
-
-/* const headCells = [
-  {
-    id: "name",
-    numeric: false,
-    disablePadding: true,
-    label: "Dessert (100g serving)",
-  },
-  {
-    id: "calories",
-    numeric: true,
-    disablePadding: false,
-    label: "Calories",
-  },
-  {
-    id: "fat",
-    numeric: true,
-    disablePadding: false,
-    label: "Fat (g)",
-  },
-  {
-    id: "carbs",
-    numeric: true,
-    disablePadding: false,
-    label: "Carbs (g)",
-  },
-  {
-    id: "protein",
-    numeric: true,
-    disablePadding: false,
-    label: "Protein (g)",
-  },
-]; */
 
 function EnhancedTableHead(props) {
   const {
@@ -244,8 +201,18 @@ function EnhancedTableToolbar(props) {
             <IconButton
               sx={{ alignSelf: "right" }}
               onClick={() => {
-                deleteMultiple(props.idSelected, props.collection);
-                props.onDelete([]);
+                
+                const pasarBorrado = ()=>{
+                  try {
+                    props.deleted([props.idSelected]);
+                    deleteMultiple(props.idSelected, props.collection);
+                  } catch (e) {
+                    console.log(e)
+                  }
+                }
+
+                pasarBorrado()
+                
               }}
               color="error"
             >
@@ -350,7 +317,7 @@ export default function EnhancedTable(props) {
           collection={props.collection}
           numSelected={selected.length}
           idSelected={selected}
-          onDelete={setSelected}
+          deleted={props.deleted}
         />
         <TableContainer>
           <Table

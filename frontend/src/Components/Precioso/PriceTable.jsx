@@ -195,26 +195,20 @@ const PriceTable = (props) => {
               alignContent: "center",
             }}
           >
-            <ButtonGroup>
+            <ButtonGroup variant="text" aria-label="text button group">
               <Button
-                size="small"
-                variant="outlined"
                 color="info"
                 onClick={handleHistory}
               >
                 Historial
               </Button>
-              <Button
-                size="small"
-                variant="outlined"
+              <Button 
                 color="success"
                 onClick={() => editClickHandler(props.id)}
               >
                 Editar
               </Button>
               <Button
-                size="small"
-                variant="outlined"
                 color="error"
                 startIcon={<DeleteIcon />}
                 onClick={() => deleteClickHandler(props.id)}

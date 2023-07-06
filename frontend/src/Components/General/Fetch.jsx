@@ -12,6 +12,7 @@ import EnhancedTable from "./TableGrid";
 const Fetch = (props) => {
   const [useList, setList] = useState([]);
   const [useSelected, setSelected] = useState([]);
+  const [useDeleted, setDeleted] = useState([]);
   const [useLoading, setLoading] = useState(true);
   const [useHeaders, setHeaders] = useState([]);
 
@@ -19,7 +20,6 @@ const Fetch = (props) => {
     const elements = await axios.get(
       `${serverURL}/hamlet/${props.collection}/`
     );
-    console.table(elements.data);
     setList(Object.values(elements.data));
     setHeaders(() => {
       const arr = [];
@@ -35,7 +35,6 @@ const Fetch = (props) => {
       });
       return arr;
     });
-    console.log(useHeaders);
   };
 
   useEffect(() => {
@@ -48,8 +47,7 @@ const Fetch = (props) => {
       }
     };
     fetchData();
-    console.log(useList);
-  }, [useSelected]);
+  }, [useSelected, useDeleted]);
 
   const Loading = (
     <Container>
@@ -71,6 +69,7 @@ const Fetch = (props) => {
           collection={props.collection}
           editor={setSelected}
           selected={useSelected}
+          deleted={setDeleted}
         />
       </Container>
     </>

@@ -54,6 +54,7 @@ export default function Historial(props) {
     }
   })(props.data);
 
+  
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -62,6 +63,7 @@ export default function Historial(props) {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
+
 
   return (
     <div>
