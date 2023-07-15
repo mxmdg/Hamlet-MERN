@@ -1,12 +1,13 @@
-.formContainer {
-	position: absolute;
-	top:50px;
+/* .formContainer {
+	position: relative;
+	bottom:50px;
 	left: 0;
 	right: 0;
     margin:auto;
     padding:25px;
     border: 1px solid #59e3ea;
     display: flex;
+	flex-direction: column;
     width: 300px;
     background: #111111bb;
 	backdrop-filter: blur(7px);
@@ -23,8 +24,8 @@
 	border-radius: 5px;
 	height: 35px;
 	margin: 0 auto 13px 10%;
-	padding: 0 0 0 10px;
-	transition: border 1s;
+	padding: 10px;
+	transition: border .3s ease-out;
 }
 
 .formulario input:focus, .formulario select:focus, input.gridjs-input:focus {
@@ -51,8 +52,6 @@
 	margin-left: 20%;
 
 } 
-
-
 
 .formulario input[type="text"], .formulario select {
 	width: 80%;
@@ -86,11 +85,11 @@
 	background-color: #222;
 	box-shadow: 5px 5px 10px #000;
 
-	transition: all 1s;
+	transition: all .3s;
 
 }
 
 .formulario > .inputError {
 	background-color: #f24;
 	border: 2px solid #900;
-}
+} */

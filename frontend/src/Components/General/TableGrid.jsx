@@ -25,6 +25,7 @@ import { visuallyHidden } from "@mui/utils";
 import { deleteMultiple } from "./DBServices";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import { styled } from "@mui/material/styles";
+import { useNavigate } from 'react-router-dom';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -61,7 +62,6 @@ function stableSort(array, comparator) {
 function EnhancedTableHead(props) {
   const {
     onSelectAllClick,
-    onDelete,
     order,
     orderBy,
     numSelected,
@@ -154,6 +154,7 @@ const DangerTooltip = styled(({ className, ...props }) => (
 
 function EnhancedTableToolbar(props) {
   const { numSelected } = props;
+  const navigate = useNavigate()
 
   return (
     <Toolbar>
@@ -161,7 +162,7 @@ function EnhancedTableToolbar(props) {
         <Typography
           sx={{ flex: "1 1 100%" }}
           color="inherite"
-          variant="subtitle1"
+          variant="subtitle"
           component="div"
         >
           {numSelected} seleccionado
@@ -177,7 +178,7 @@ function EnhancedTableToolbar(props) {
         </Typography>
       )}
       <StyledTooltip title="Agregar" arrow>
-        <IconButton onClick={() => {}} sx={{ alignSelf: "right" }}>
+        <IconButton onClick={() => {navigate(`/hamlet/${props.collection}/add`)}} sx={{ alignSelf: "right" }}>
           <AddBoxIcon />
         </IconButton>
       </StyledTooltip>
@@ -186,12 +187,12 @@ function EnhancedTableToolbar(props) {
           {numSelected === 1 && (
             <>
               <StyledTooltip title="Copiar" arrow>
-                <IconButton sx={{ alignSelf: "right" }}>
+                <IconButton onClick={() => {navigate(`/hamlet/${props.collection}/copy/${props.idSelected}`)}} sx={{ alignSelf: "right" }}>
                   <ContentCopyIcon />
                 </IconButton>
               </StyledTooltip>
               <StyledTooltip title="Editar" arrow>
-                <IconButton sx={{ alignSelf: "right" }}>
+                <IconButton onClick={() => {navigate(`/hamlet/${props.collection}/edit/${props.idSelected}`)}} sx={{ alignSelf: "right" }}>
                   <EditIcon />
                 </IconButton>
               </StyledTooltip>
@@ -206,6 +207,7 @@ function EnhancedTableToolbar(props) {
                   try {
                     props.deleted([props.idSelected]);
                     deleteMultiple(props.idSelected, props.collection);
+                    props.resetSelected([])
                   } catch (e) {
                     console.log(e)
                   }
@@ -243,7 +245,6 @@ export default function EnhancedTable(props) {
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const rows = props.rows;
-  console.log(rows);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -307,8 +308,10 @@ export default function EnhancedTable(props) {
         page * rowsPerPage,
         page * rowsPerPage + rowsPerPage
       ),
-    [order, orderBy, page, rowsPerPage]
+    [order, orderBy, page, rowsPerPage, rows]
   );
+
+  let i = 0;
 
   return (
     <Box sx={{ width: "100%" }}>
@@ -318,6 +321,7 @@ export default function EnhancedTable(props) {
           numSelected={selected.length}
           idSelected={selected}
           deleted={props.deleted}
+          resetSelected={setSelected}
         />
         <TableContainer>
           <Table
@@ -371,7 +375,8 @@ export default function EnhancedTable(props) {
                     {Object.values(row)
                       .slice(1, -1)
                       .map((element) => {
-                        return <TableCell align="left">{element}</TableCell>;
+                        i++
+                        return <TableCell align="left" key={`${row.Tipo}_${row.Gramaje}-${element}_${i}`}>{element}</TableCell>;
                       })}
                   </TableRow>
                 );

@@ -14,7 +14,7 @@ printerControl.addPrinter = async (req,res)=>{{
         await newPrinter.save();
         res.json({"message": newPrinter.Modelo + " guardado OK"});
     } catch (error) {
-        alert(error)
+        console.log(error)
     }
    
     

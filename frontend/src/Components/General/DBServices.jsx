@@ -40,4 +40,14 @@ export const deleteMultiple = (id, collection) => {
 
 export const addElement = (data) => {};
 
+export const getElement = (id, collection) => {
+  try {
+    const item = axios.get(`${serverURL}/hamlet/${collection}/${id}`);
+    return item
+  } catch (e){
+    console.log(e)
+    return id
+  }
+};
+
 const DBServices = (props) => {};

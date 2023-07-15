@@ -12,18 +12,19 @@ import EnhancedTable from "./TableGrid";
 const Fetch = (props) => {
   const [useList, setList] = useState([]);
   const [useSelected, setSelected] = useState([]);
-  const [useDeleted, setDeleted] = useState([]);
   const [useLoading, setLoading] = useState(true);
   const [useHeaders, setHeaders] = useState([]);
+  const [useDeleted, setDeleted] = useState([])
 
   const getElements = async () => {
     const elements = await axios.get(
       `${serverURL}/hamlet/${props.collection}/`
     );
+    console.table(elements.data);
     setList(Object.values(elements.data));
     setHeaders(() => {
       const arr = [];
-      const labels = Object.getOwnPropertyNames(elements.data[1]).slice(1, -1);
+      const labels = elements.data.length ? Object.getOwnPropertyNames(elements.data[0]).slice(1, -1) : ['Error','Datos inexistentes'];
       labels.map((e) => {
         const obj = {
           id: e,
@@ -35,6 +36,7 @@ const Fetch = (props) => {
       });
       return arr;
     });
+    console.log(useHeaders);
   };
 
   useEffect(() => {
@@ -43,10 +45,11 @@ const Fetch = (props) => {
         await getElements();
         setLoading(false);
       } catch (err) {
-        console.log(err);
+        alert(err);
       }
     };
     fetchData();
+    console.log(useList);
   }, [useSelected, useDeleted]);
 
   const Loading = (

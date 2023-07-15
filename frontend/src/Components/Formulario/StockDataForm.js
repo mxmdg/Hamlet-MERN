@@ -15,7 +15,7 @@ let PrintersDataForm = [{
 },
 {
     inputName: 'Tipo',
-    type: 'texto',
+    type: 'Text',
     id: 'id_004',
     options: [{text: "Obra", value: "Obra"},
         {text: "Bookcell", value: "Bookcell"},

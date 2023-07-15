@@ -10,8 +10,12 @@ let PrintersDataForm = [{
 },
 {
     inputName: 'Colores',
-    type: 'Number',
-    id: 'id_003'
+    type: 'Text',
+    id: 'id_003',
+    options: [
+        {text: 'CMYK', value: 4},
+        {text: 'B&N', value: 1}
+    ]
 },
 {
     inputName: 'X_Minimo',

@@ -1,9 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useParams } from 'react-router-dom';
 import Input from "./Input";
-import Select from "./Select";
-import Button from "./Button";
 import axios from "axios";
+import { serverURL } from "../Config/config";
 import "./form.css";
+import { getElement } from "../General/DBServices";
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormHelperText from '@mui/material/FormHelperText';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import Button from '@mui/material/Button';
+import { useNavigate } from 'react-router-dom';
 
 function convertirArrayAObjeto(arr) {
   return arr.reduce((obj, item) => {
@@ -19,7 +27,7 @@ function convertirArrayAObjeto(arr) {
   }, {});
 }
 
-const style = {
+let style = {
   position: "relative",
   top: "50%",
   left: "50%",
@@ -40,7 +48,37 @@ const Form = (props) => {
   );
   const [useItem, setItem] = useState(props.item || "new");
 
+  const params = useParams()
+
   let dataForm = props.form;
+
+  useEffect(()=>{
+     if (props.item === undefined && props.task === 'edit' || props.task === 'copy') {
+    
+      const { id } = params;
+
+      const fetchItem = async ()=>{
+        try {
+        const itemToEdit = await axios.get(
+          `${serverURL}/hamlet/${props.collection}/${id}`
+        );
+        setItem(itemToEdit);
+        console.log("id: " + itemToEdit.data._id);
+      } catch (e) {
+        console.log(e);
+      }
+      }
+      fetchItem()
+    } else if (props.item) {
+      console.log(useItem)
+    } else {
+      console.log('new')
+    }
+  },[setItem])
+
+  
+ 
+  
 
   const submitHandler = async (e, collection, id) => {
     e.preventDefault();
@@ -117,24 +155,35 @@ const Form = (props) => {
         return (value = e.target.value);
       };
       return (
+        <FormControl sx={{ m: 1, minWidth: 120 }}>
+        <InputLabel id={inp.id}>{inp.inputName}</InputLabel>
         <Select
-          inputName={inp.inputName}
-          key={inp.id}
-          type={inp.type}
+          labelId={inp.id}
+          id={inp.id}
           value={value}
-          changeHandler={changeHandler}
-          options={inp.options}
-        ></Select>
+          label={value}
+          onChange={changeHandler}
+        >
+          {inp.options.map((opt)=>{
+          return (<MenuItem value={opt.value}>
+            <em>{opt.text}</em>
+          </MenuItem>)
+          })}
+        </Select>
+        <FormHelperText>Elija una opción</FormHelperText>
+      </FormControl>
+        
       );
     } else if (inp.type === "button") {
       return (
         <Button
+          variant="outlined"
           inputName={inp.inputName}
           key={inp.id}
           type={inp.type}
           selectForm={props.selectForm}
-          id={"Register"}
-        ></Button>
+          id={inp.id}
+        >{inp.inputName}</Button>
       );
     } else {
       return (
@@ -156,7 +205,7 @@ const Form = (props) => {
   );
 
   const hiddenFalse = (
-    <div style={style}>
+    <div {...props.task !== 'new'?style={style}:''}>
       <form
         onSubmit={(e) =>
           submitHandler(
