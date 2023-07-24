@@ -35,7 +35,6 @@ const JobsForm = () => {
           subheader="Solicita tu presupuesto!"
         />
         <CardContent>
-          <MyStepper />
           <FormControl sx={{ m: 1, minWidth: 120 }}>
             <form action="">
               <Grid

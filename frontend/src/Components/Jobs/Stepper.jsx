@@ -7,16 +7,28 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import JobsForm from "./JobsForm";
 import JobParts from "./JobsParts";
+import Card from "@mui/material/Card";
+import CardHeader from "@mui/material/CardHeader";
+import CardActions from "@mui/material/CardActions";
+import CardContent from "@mui/material/CardContent";
 
-const steps = [
-  "Defina el tipo de producto",
-  "Agregue las partes",
-  "Confirme el pedido",
-];
+
 
 export default function MyStepper() {
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set());
+  const parts = []
+
+  const handlePartsChange = (e)=> {
+    parts.push(e.target.value)
+    console.log(parts)
+  }
+
+  const steps = [
+    ["Defina el tipo de producto", <JobsForm/>],
+    ["Agregue las partes", <JobParts onChange={handlePartsChange}/>],
+    ["Confirme el pedido", <div>FIN</div>],
+  ];
 
   const isStepOptional = (step) => {
     return step === 1;
@@ -61,7 +73,22 @@ export default function MyStepper() {
   };
 
   return (
-    <Box sx={{ width: "100%" }}>
+    <Box
+      sx={{
+        width: "fit-content",
+      }}
+    >
+      <Card
+        raised
+        sx={{ gap: "20px", background: "#056", maxWidth: "600px" }}
+        color="info"
+      >
+        <CardHeader
+          title="Nuevo Trabajo"
+          subheader="Solicita tu presupuesto!"
+        />
+        <CardContent>
+          <Box sx={{ width: "100%" }}>
       <Stepper activeStep={activeStep}>
         {steps.map((label, index) => {
           const stepProps = {};
@@ -75,8 +102,8 @@ export default function MyStepper() {
             stepProps.completed = false;
           }
           return (
-            <Step key={label} {...stepProps}>
-              <StepLabel {...labelProps}>{label}</StepLabel>
+            <Step key={label.label} {...stepProps}>
+              <StepLabel {...labelProps}>{label[0]}</StepLabel>
             </Step>
           );
         })}
@@ -88,14 +115,16 @@ export default function MyStepper() {
           </Typography>
           <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
             <Box sx={{ flex: "1 1 auto" }} />
-            <Button onClick={handleReset}>Reset</Button>
+            <Button onClick={handleReset} variant="filled">Reset</Button>
           </Box>
         </React.Fragment>
       ) : (
         <React.Fragment>
           <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography>
+          {steps[activeStep][1]}
           <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
             <Button
+               variant="filled"
               color="inherit"
               disabled={activeStep === 0}
               onClick={handleBack}
@@ -110,12 +139,16 @@ export default function MyStepper() {
               </Button>
             )}
 
-            <Button onClick={handleNext}>
+            <Button onClick={handleNext} variant="filled">
               {activeStep === steps.length - 1 ? "Finish" : "Next"}
             </Button>
           </Box>
         </React.Fragment>
       )}
     </Box>
+        </CardContent>
+      </Card>
+    </Box>
+    
   );
 }

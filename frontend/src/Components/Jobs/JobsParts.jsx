@@ -111,7 +111,7 @@ const JobParts = (props)=>{
     return (
         <>
             <label htmlFor="Parte">Parte</label>
-            <select name="jobParts" onChange={onChangeHandler}>
+            <select name="jobParts" onChange={props.onChange}>
                 {parts.map((part)=><option 
                                         value={[part.type, part.pageRange, part.printModAllowed, part.stockWeightRange]}
                                         id={`${parts.indexOf(part)}_jobPart`} 

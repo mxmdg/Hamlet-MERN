@@ -108,7 +108,7 @@ export const themeGreen = createTheme({
 });
 
 const ThemeProv = (props) => {
-  return <ThemeProvider theme={themeMxm}>{props.children}</ThemeProvider>;
+  return <ThemeProvider theme={themeOptions}>{props.children}</ThemeProvider>;
 };
 
 export default ThemeProv;
