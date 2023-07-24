@@ -20,6 +20,7 @@ const pages = [
   "Configuracion",
   "Formatos",
   "Impresoras",
+  "JobParts",
   "Materiales",
 ];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
@@ -44,7 +45,7 @@ function ResponsiveAppBar() {
   };
 
   return (
-    <AppBar position="static" color="transparent">
+    <AppBar position="static" color="primary">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <LocalLibraryIcon
@@ -104,6 +105,7 @@ function ResponsiveAppBar() {
                     textAlign="center"
                     component="a"
                     href={`/Hamlet/${page}`}
+                    color={"#0ef"}
                   >
                     {page}
                   </Typography>

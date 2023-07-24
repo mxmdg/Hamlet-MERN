@@ -29,6 +29,11 @@ const Menu = (props) => {
           </Link>
         </li>
         <li>
+          <Link id="jobParts" to="/Hamlet/jobParts">
+            Job Parts
+          </Link>
+        </li>
+        <li>
           <Link id="Precioso" to="/Hamlet/precios">
             Precioso
           </Link>

@@ -2,7 +2,11 @@ import * as React from "react";
 import { ThemeOptions } from "@mui/material/styles";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 
+//Color Pallete Checker http://a11yrocks.com/colorPalette/
+// #3f51b5,#f50057,#ff1744,#29b6f8,#66bb6a,#222222
+
 export const themeMxm = createTheme({
+  spacing: 4,
   palette: {
     mode: "dark",
     primary: {
@@ -12,7 +16,7 @@ export const themeMxm = createTheme({
       contrastText: "#ffffff",
     },
     secondary: {
-      main: "#f50057",
+      main: "#f87527",
       light: "#f73378",
       dark: "#ab003c",
       contrastText: "#ffffff",
@@ -20,7 +24,7 @@ export const themeMxm = createTheme({
     divider: "#fff",
     background: {
       paper: "#222222",
-      default: "#121212",
+      default: "#aef",
     },
     text: {
       primary: "#ffffff",
@@ -51,6 +55,54 @@ export const themeMxm = createTheme({
       light: "#84ca87",
       dark: "#478f4a",
       contrastText: "#162910",
+    },
+  },
+});
+
+export const themeOptions = createTheme({
+  palette: {
+    mode: "dark",
+    primary: {
+      main: "#5893df",
+    },
+    secondary: {
+      main: "#2ec5d3",
+    },
+    background: {
+      default: "#192231",
+      paper: "#24344d",
+    },
+  },
+});
+
+export const themeGreen = createTheme({
+  palette: {
+    mode: "light",
+    primary: {
+      main: "#00796b",
+      light: "#80cbc4",
+      dark: "#004d40",
+    },
+    secondary: {
+      main: "#76ff03",
+      light: "#33691e",
+      dark: "#b2ff59",
+    },
+    background: {
+      paper: "#e0e0e0",
+      default: "#bdbdbd",
+    },
+    error: {
+      main: "#f50057",
+    },
+    warning: {
+      main: "#ff3d00",
+    },
+    info: {
+      main: "#00b0ff",
+    },
+    success: {
+      main: "#64dd17",
     },
   },
 });
