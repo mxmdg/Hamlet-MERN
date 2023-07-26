@@ -63,14 +63,14 @@ export const themeOptions = createTheme({
   palette: {
     mode: "dark",
     primary: {
-      main: "#5893df",
+      main: "#e06",
     },
     secondary: {
-      main: "#2ec5d3",
+      main: "#50e",
     },
     background: {
-      default: "#192231",
-      paper: "#24344d",
+      default: "#0e5",
+      paper: "#f056",
     },
   },
 });
@@ -108,7 +108,7 @@ export const themeGreen = createTheme({
 });
 
 const ThemeProv = (props) => {
-  return <ThemeProvider theme={themeOptions}>{props.children}</ThemeProvider>;
+  return <ThemeProvider theme={themeMxm}>{props.children}</ThemeProvider>;
 };
 
 export default ThemeProv;

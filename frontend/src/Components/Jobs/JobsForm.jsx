@@ -25,11 +25,7 @@ const JobsForm = () => {
         width: "fit-content",
       }}
     >
-      <Card
-        raised
-        sx={{ gap: "20px", background: "#056", maxWidth: "600px" }}
-        color="info"
-      >
+      <Card raised sx={{ gap: "20px", maxWidth: "600px" }} color="main">
         <CardHeader
           title="Que necesitas?"
           subheader="Solicita tu presupuesto!"
@@ -81,21 +77,15 @@ const JobsForm = () => {
                 </Grid>
                 <Grid item xs={1} sm={2} md={4}>
                   <TextField
-                    id="quantity"
-                    type="number"
-                    label="Cantidad"
+                    id="endDate"
+                    type="date"
+                    label=" "
                     variant="standard"
-                    name="quantity"
+                    name="endDate"
                   />
-                </Grid>
-                <Grid item xs={1} sm={2} md={4}>
-                  <TextField
-                    id="quantity"
-                    type="number"
-                    label="Cantidad"
-                    variant="standard"
-                    name="quantity"
-                  />
+                  <FormHelperText color="secondary">
+                    Fecha de entrega
+                  </FormHelperText>
                 </Grid>
               </Grid>
             </form>

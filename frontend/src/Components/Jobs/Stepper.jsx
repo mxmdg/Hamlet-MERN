@@ -12,21 +12,19 @@ import CardHeader from "@mui/material/CardHeader";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 
-
-
 export default function MyStepper() {
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set());
-  const parts = []
+  const parts = [];
 
-  const handlePartsChange = (e)=> {
-    parts.push(e.target.value)
-    console.log(parts)
-  }
+  const handlePartsChange = (e) => {
+    parts.push(e.target.value);
+    console.log(parts);
+  };
 
   const steps = [
-    ["Defina el tipo de producto", <JobsForm/>],
-    ["Agregue las partes", <JobParts onChange={handlePartsChange}/>],
+    ["Defina el tipo de producto", <JobsForm />],
+    ["Agregue las partes", <JobParts onChange={handlePartsChange} />],
     ["Confirme el pedido", <div>FIN</div>],
   ];
 
@@ -78,77 +76,76 @@ export default function MyStepper() {
         width: "fit-content",
       }}
     >
-      <Card
-        raised
-        sx={{ gap: "20px", background: "#056", maxWidth: "600px" }}
-        color="info"
-      >
+      <Card raised sx={{ gap: "20px", maxWidth: "600px" }} color="info">
         <CardHeader
           title="Nuevo Trabajo"
           subheader="Solicita tu presupuesto!"
         />
         <CardContent>
           <Box sx={{ width: "100%" }}>
-      <Stepper activeStep={activeStep}>
-        {steps.map((label, index) => {
-          const stepProps = {};
-          const labelProps = {};
-          if (isStepOptional(index)) {
-            labelProps.optional = (
-              <Typography variant="caption">Optional</Typography>
-            );
-          }
-          if (isStepSkipped(index)) {
-            stepProps.completed = false;
-          }
-          return (
-            <Step key={label.label} {...stepProps}>
-              <StepLabel {...labelProps}>{label[0]}</StepLabel>
-            </Step>
-          );
-        })}
-      </Stepper>
-      {activeStep === steps.length ? (
-        <React.Fragment>
-          <Typography sx={{ mt: 2, mb: 1 }}>
-            All steps completed - you&apos;re finished
-          </Typography>
-          <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-            <Box sx={{ flex: "1 1 auto" }} />
-            <Button onClick={handleReset} variant="filled">Reset</Button>
-          </Box>
-        </React.Fragment>
-      ) : (
-        <React.Fragment>
-          <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography>
-          {steps[activeStep][1]}
-          <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-            <Button
-               variant="filled"
-              color="inherit"
-              disabled={activeStep === 0}
-              onClick={handleBack}
-              sx={{ mr: 1 }}
-            >
-              Back
-            </Button>
-            <Box sx={{ flex: "1 1 auto" }} />
-            {isStepOptional(activeStep) && (
-              <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
-                Skip
-              </Button>
-            )}
+            <Stepper activeStep={activeStep}>
+              {steps.map((label, index) => {
+                const stepProps = {};
+                const labelProps = {};
+                if (isStepOptional(index)) {
+                  labelProps.optional = (
+                    <Typography variant="caption">Optional</Typography>
+                  );
+                }
+                if (isStepSkipped(index)) {
+                  stepProps.completed = false;
+                }
+                return (
+                  <Step key={label.label} {...stepProps}>
+                    <StepLabel {...labelProps}>{label[0]}</StepLabel>
+                  </Step>
+                );
+              })}
+            </Stepper>
+            {activeStep === steps.length ? (
+              <React.Fragment>
+                <Typography sx={{ mt: 2, mb: 1 }}>
+                  All steps completed - you&apos;re finished
+                </Typography>
+                <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
+                  <Box sx={{ flex: "1 1 auto" }} />
+                  <Button onClick={handleReset} variant="filled">
+                    Reset
+                  </Button>
+                </Box>
+              </React.Fragment>
+            ) : (
+              <React.Fragment>
+                <Typography sx={{ mt: 2, mb: 1 }}>
+                  Step {activeStep + 1}
+                </Typography>
+                {steps[activeStep][1]}
+                <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
+                  <Button
+                    variant="filled"
+                    color="inherit"
+                    disabled={activeStep === 0}
+                    onClick={handleBack}
+                    sx={{ mr: 1 }}
+                  >
+                    Back
+                  </Button>
+                  <Box sx={{ flex: "1 1 auto" }} />
+                  {isStepOptional(activeStep) && (
+                    <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
+                      Skip
+                    </Button>
+                  )}
 
-            <Button onClick={handleNext} variant="filled">
-              {activeStep === steps.length - 1 ? "Finish" : "Next"}
-            </Button>
+                  <Button onClick={handleNext} variant="filled">
+                    {activeStep === steps.length - 1 ? "Finish" : "Next"}
+                  </Button>
+                </Box>
+              </React.Fragment>
+            )}
           </Box>
-        </React.Fragment>
-      )}
-    </Box>
         </CardContent>
       </Card>
     </Box>
-    
   );
 }
