@@ -4,27 +4,26 @@ import FormDataForm from "../Formulario/FormatDataForm";
 //import "../../Styles/hamlet.css";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
 import { useState } from 'react';
+import { Typography, Button, Grid, Card, CardContent, CardActions, CardHeader } from '@mui/material'
+import { useNavigate } from 'react-router-dom';
 
 const FormatsMainContainer = () => {
   const [ formatState , setFormatState ] = useState()
+  const collection= 'formatos'
+  const navigate = useNavigate()
 
   return (
     <Container>
-      <Box>
-        <Typography
-          gutterBottom
-          variant="h6"
-          color="secondary"
-          fontWeight={600}
-          component="div"
-        >
-          Formatos
-        </Typography>
-        <Formats collection="formatos" formatState={formatState}/>
-        <Form form={FormDataForm} collection="formatos" setState={setFormatState} task="new"/>
-      </Box>
+      <Card variant="elevation" elevation={10} raised m={10} sx={{p: "25px"}}>
+        <CardHeader title={collection} />
+        <CardContent>
+          <Formats collection={collection} formatState={formatState}/>
+        </CardContent>
+        <CardActions>
+          <Button variant="outlined" size="small" color="info" onClick={()=>navigate(`/hamlet/${collection}/add`)}>Agregar {collection}</Button>
+        </CardActions>    
+      </Card>
     </Container>
   );
 };

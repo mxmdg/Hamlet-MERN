@@ -22,12 +22,14 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import Modal from "./Modal";
 import Historial from "./Historial";
 import LastSeen from "./LastUpdate";
+import { useNavigate } from "react-router-dom";
 
 const PriceTable = (props) => {
   const [useView, setView] = useState("viewer");
   const [useItemToEdit, setItemToEdit] = useState({});
   const [useTask, setTask] = useState("new");
   const [showHistory, setShowHistory] = useState(false);
+  const navigate = useNavigate()
 
   const getElements = async () => {
     const items = await axios.get(`${serverURL}/hamlet/${props.collection}/`);
@@ -204,7 +206,7 @@ const PriceTable = (props) => {
               </Button>
               <Button 
                 color="success"
-                onClick={() => editClickHandler(props.id)}
+                onClick={() => {navigate(`/hamlet/${props.collection}/edit/${props.id}`)}}
               >
                 Editar
               </Button>

@@ -8,6 +8,7 @@ import StockDataForm from './Components/Formulario/StockDataForm'
 import FormatsMainContainer from './Components/Formats/FormatsMainContainer';
 import FormatDataForm from './Components/Formulario/FormatDataForm';
 import jobPartDataForm from './Components/Formulario/JobPartsDataForm';
+import PricesDataForm from './Components/Formulario/PricesDataForm';
 import MainContainer from './Components/General/MainContainer';
 import JobsForm from './Components/Jobs/JobsForm'
 import MyStepper from './Components/Jobs/Stepper';
@@ -58,6 +59,8 @@ function App() {
               <Route path="/hamlet/JobParts/edit/:id" element={<Form form={jobPartDataForm} collection='JobParts' task="edit"/>} />
               <Route path="/hamlet/trabajos" element={<MyStepper />} />
               <Route path="/hamlet/precios" element={<MainContainer entity={'precios'}/>} />
+              <Route path="/hamlet/precios/edit/:id" element={<Form form={PricesDataForm} collection='precios' task="edit"/>} />
+              <Route path="/hamlet/precios/add" element={<Form form={PricesDataForm} collection='precios' task="new"/>} />
               <Route path="/hamlet/configuracion" element={<ConfigMainContainer />} />
               <Route path="/hamlet/configuracion/formatos" element={<FormatsMainContainer />} />
               <Route path="/hamlet/configuracion/materiales" element={<StocksMainContainer />} />

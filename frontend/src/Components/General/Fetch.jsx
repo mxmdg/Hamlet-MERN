@@ -36,7 +36,6 @@ const Fetch = (props) => {
       });
       return arr;
     });
-    console.log(useHeaders);
   };
 
   useEffect(() => {

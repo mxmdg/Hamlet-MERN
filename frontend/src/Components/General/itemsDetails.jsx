@@ -12,12 +12,13 @@ import Button from "@mui/material/Button";
 import { ButtonGroup } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { useNavigate } from "react-router-dom";
 
 const ItemsDetails = (props) => {
   const [useView, setView] = useState("viewer");
   const [useItemToEdit, setItemToEdit] = useState({});
   const [useTask, setTask] = useState("new");
-
+  const navigate = useNavigate()
   const getElements = async () => {
     const items = await axios.get(`${serverURL}/hamlet/${props.collection}/`);
   };
@@ -63,6 +64,8 @@ const ItemsDetails = (props) => {
   // const rows: GridRowsProp = props.pd
 
   const copyClickHandler = async (id) => {
+
+    
     try {
       const itemToEdit = await axios.get(
         `${serverURL}/hamlet/${props.collection}/${id}`
@@ -107,7 +110,8 @@ const ItemsDetails = (props) => {
               size="small"
               variant="text"
               color="info"
-              onClick={() => editClickHandler(props.id)}
+              //onClick={() => editClickHandler(props.id)}
+              onClick={() => {navigate(`/hamlet/${props.collection}/edit/${props.id}`)}}
             >
               Editar
             </Button>
@@ -115,7 +119,8 @@ const ItemsDetails = (props) => {
               size="small"
               variant="text"
               color="success"
-              onClick={() => copyClickHandler(props.id)}
+              //onClick={() => copyClickHandler(props.id)}
+              onClick={() => {navigate(`/hamlet/${props.collection}/copy/${props.id}`)}}
             >
               Copiar
             </Button>

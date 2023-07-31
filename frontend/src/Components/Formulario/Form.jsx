@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
 import Input from "./Input";
 import axios from "axios";
 import { serverURL } from "../Config/config";
@@ -11,6 +11,8 @@ import FormHelperText from '@mui/material/FormHelperText';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import Button from '@mui/material/Button';
+import ButtonGroup from "@mui/material/ButtonGroup";
+import { Container, Box, Grid, Card, CardContent, CardActions, CardHeader, Typography } from "@mui/material";
 import { useNavigate } from 'react-router-dom';
 
 function convertirArrayAObjeto(arr) {
@@ -47,10 +49,11 @@ const Form = (props) => {
     props.task === "copy" || props.task === "edit" ? false : true
   );
   const [useItem, setItem] = useState(props.item || "new");
-
+  const navigate = useNavigate()  
   const params = useParams()
 
   let dataForm = props.form;
+
 
   useEffect(()=>{
      if (props.item === undefined && props.task === 'edit' || props.task === 'copy') {
@@ -64,6 +67,7 @@ const Form = (props) => {
         );
         setItem(itemToEdit);
         console.log("id: " + itemToEdit.data._id);
+        console.log("Coleccion: " + props.collection)
       } catch (e) {
         console.log(e);
       }
@@ -100,6 +104,7 @@ const Form = (props) => {
           formData
         );
         setHidden(true);
+        navigate(-1)
         props.setState !== undefined
           ? props.setState(true)
           : console.log("No es nuevo");
@@ -107,18 +112,16 @@ const Form = (props) => {
         console.log("No se pudo guardar " + e);
       }
     } else {
-      //console.log(props.history);
-      //historial !== undefined ? historial.push(history) : [];
-      //formData.Historial = props.history;
       try {
         await axios.put(
           `http://localhost:5000/hamlet/${collection}/${id}`,
           formData
         );
         setHidden(true);
+        navigate(-1)
         props.editor(true);
       } catch (e) {
-        console.log("No se pudeo actualizar" + e);
+        console.log("No se pudo actualizar" + e);
       }
     }
     console.log("View Prop of Form: " + props.view);
@@ -155,23 +158,26 @@ const Form = (props) => {
         return (value = e.target.value);
       };
       return (
-        <FormControl sx={{ m: 1, minWidth: 120 }}>
-        <InputLabel id={inp.id}>{inp.inputName}</InputLabel>
-        <Select
-          labelId={inp.id}
-          id={inp.id}
-          value={value}
-          label={value}
-          onChange={changeHandler}
-        >
-          {inp.options.map((opt)=>{
-          return (<MenuItem value={opt.value}>
-            <em>{opt.text}</em>
-          </MenuItem>)
-          })}
-        </Select>
+        <Grid item xs={2} md={4}>
+          <FormControl sx={{ m: 1, minWidth: 120 }}>
+            <InputLabel id={inp.id}>{inp.inputName}</InputLabel>
+            <Select
+              labelId={inp.id}
+              id={inp.id}
+              value={value}
+              label={value}
+              onChange={changeHandler}
+            >
+              {inp.options.map((opt)=>{
+              return (<MenuItem value={opt.value}>
+                <em>{opt.text}</em>
+              </MenuItem>)
+              })}
+            </Select>
         <FormHelperText>Elija una opción</FormHelperText>
       </FormControl>
+        </Grid>
+        
         
       );
     } else if (inp.type === "button") {
@@ -205,29 +211,46 @@ const Form = (props) => {
   );
 
   const hiddenFalse = (
-    <div {...props.task !== 'new'?style={style}:''}>
-      <form
-        onSubmit={(e) =>
-          submitHandler(
-            e,
-            props.collection,
-            useItem !== "new" ? useItem.data._id : ""
-          )
-        }
-        className="formulario"
-      >
-        {dataForm.map((inp) => typeOfInput(inp))}
-        <button id="submitBTN" type="submit">
-          Enviar
-        </button>
-        <button id="cancelBTN" onClick={toogleHandler}>
-          Cancelar
-        </button>
-      </form>
-    </div>
+    <Container >
+      <Card raised>
+        <CardHeader component="div" title={props.collection} subheader={props.Task} />
+        <CardContent>
+            <div {...props.task !== 'new'?style={style}:''}>
+              <form
+                onSubmit={(e) =>
+                  submitHandler(
+                    e,
+                    props.collection,
+                    useItem !== "new" ? useItem.data._id : ""
+                  )
+                }
+                className="formulario"
+              > 
+              
+                <Grid container>
+                  {dataForm.map((inp) => typeOfInput(inp))}
+                  <ButtonGroup variant="outlined" color="warning" aria-label="text button group">
+                          <Button id="submitBTN" type="submit">
+                            Enviar
+                          </Button>
+                          <Button id="cancelBTN" onClick={()=>navigate(-1)}>
+                            Cancelar
+                          </Button>
+                  </ButtonGroup>
+                </Grid>
+              </form>
+            </div>
+        </CardContent>
+        
+      </Card>
+       
+      
+    </Container>
+    
   );
 
-  return useHidden ? hiddenTrue : hiddenFalse;
+  //return useHidden ? hiddenTrue : hiddenFalse;
+  return hiddenFalse;
 };
 
 export default Form;
