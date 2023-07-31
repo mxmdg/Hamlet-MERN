@@ -40,13 +40,23 @@ export const deleteMultiple = (id, collection) => {
 
 export const addElement = (data) => {};
 
-export const getElement = (id, collection) => {
+export const getElement = async (id, collection) => {
   try {
-    const item = axios.get(`${serverURL}/hamlet/${collection}/${id}`);
-    return item
-  } catch (e){
-    console.log(e)
-    return id
+    const item = await axios.get(`${serverURL}/hamlet/${collection}/${id}`);
+    return item;
+  } catch (e) {
+    console.log(e);
+    return id;
+  }
+};
+
+export const getElements = async (collection) => {
+  try {
+    const items = await axios.get(`${serverURL}/hamlet/${collection}`);
+    console.log(items.data);
+    return items;
+  } catch (e) {
+    console.log(e);
   }
 };
 

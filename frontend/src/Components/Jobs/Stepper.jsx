@@ -15,16 +15,39 @@ import CardContent from "@mui/material/CardContent";
 export default function MyStepper() {
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set());
-  const parts = [];
+  const [useParts, setParts] = React.useState([]);
+  const [useJobType, setJobType] = React.useState({});
+  const [useJob, setJob] = React.useState({});
 
   const handlePartsChange = (e) => {
+    const parts = useParts;
     parts.push(e.target.value);
-    console.log(parts);
+    setParts(parts);
+    console.table(useParts);
   };
 
+  const handleJobTypeChange = (e) => {
+    setJobType(e.target.value);
+    console.table(e.target.value);
+    console.table(useJobType);
+  };
+
+  // El siguiente array contiene los componentes
+  // que se rendarizan en cada paso del stepper:
+
   const steps = [
-    ["Defina el tipo de producto", <JobsForm />],
-    ["Agregue las partes", <JobParts onChange={handlePartsChange} />],
+    [
+      "Defina el tipo de producto",
+      <JobsForm
+        onChange={handleJobTypeChange}
+        jobType={useJobType}
+        setJob={setJob}
+      />,
+    ],
+    [
+      "Agregue las partes",
+      <JobParts onChange={handlePartsChange} jobType={useJobType} />,
+    ],
     ["Confirme el pedido", <div>FIN</div>],
   ];
 
@@ -89,14 +112,16 @@ export default function MyStepper() {
                 const labelProps = {};
                 if (isStepOptional(index)) {
                   labelProps.optional = (
-                    <Typography variant="caption">Optional</Typography>
+                    <Typography variant="caption" key={index}>
+                      Optional
+                    </Typography>
                   );
                 }
                 if (isStepSkipped(index)) {
                   stepProps.completed = false;
                 }
                 return (
-                  <Step key={label.label} {...stepProps}>
+                  <Step key={index + "_label"} {...stepProps}>
                     <StepLabel {...labelProps}>{label[0]}</StepLabel>
                   </Step>
                 );

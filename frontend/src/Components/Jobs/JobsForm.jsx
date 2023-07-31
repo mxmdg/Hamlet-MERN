@@ -16,9 +16,16 @@ import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import { Grid } from "@mui/material";
-import MyStepper from "./Stepper";
+import JobTypes from "./JobTypes";
 
-const JobsForm = () => {
+const JobsForm = (props) => {
+  const handleChange = (e) => {
+    e.preventDefault();
+    props.setJob(e);
+  };
+
+  const onSubmit = (values) => console.log(values);
+
   return (
     <Box
       sx={{
@@ -27,12 +34,12 @@ const JobsForm = () => {
     >
       <Card raised sx={{ gap: "20px", maxWidth: "600px" }} color="main">
         <CardHeader
-          title="Que necesitas?"
-          subheader="Solicita tu presupuesto!"
+          title="Completa el formulario"
+          subheader="y solicita tu presupuesto!"
         />
         <CardContent>
           <FormControl sx={{ m: 1, minWidth: 120 }}>
-            <form action="">
+            <form name="form1" action="" onChange={onSubmit}>
               <Grid
                 container
                 spacing={{ xs: 2, md: 3 }}
@@ -43,16 +50,28 @@ const JobsForm = () => {
                     Elegi un tipo de trabajo
                   </InputLabel>
                   <Select
-                    id="JobType"
+                    id="JobTypeSelector"
+                    defaultValue={
+                      props.jobType === {} ? JobTypes[0] : props.jobType
+                    }
+                    inputProps={{
+                      name: "JobTypeSelector",
+                      id: "uncontrolled-native",
+                    }}
+                    controlled={"true"}
                     label="Tipo de Trabajo"
                     variant="standard"
                     name="JobType"
                     sx={{ width: "90%" }}
+                    onChange={props.onChange}
                   >
-                    <MenuItem value={10}>Libro</MenuItem>
-                    <MenuItem value={20}>Twenty</MenuItem>
-                    <MenuItem value={20}>Twenty</MenuItem>
-                    <MenuItem value={30}>Thirty</MenuItem>
+                    {JobTypes.map((jt) => {
+                      return (
+                        <MenuItem value={jt} key={jt.id}>
+                          {jt.name}
+                        </MenuItem>
+                      );
+                    })}
                   </Select>
                   <FormHelperText color="secondary">
                     Selecciona un tipo de trabajo!

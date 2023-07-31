@@ -3,6 +3,7 @@ import axios from "axios";
 import { getElement } from "../General/DBServices";
 import JobParts from "./JobsParts";
 import AddPartForm from "./AddPartForm";
+import { fechtData } from "../customHooks/FetchDataHook";
 
 const Jobs = () => {
   const [usePrinters, setPrinters] = useState([]);
@@ -13,15 +14,6 @@ const Jobs = () => {
   const [useOrderNumber, setOrderNumber] = useState(0);
   const [useCustomer, setCustomer] = useState("Maximilano Maro");
   const [useJob, setJob] = useState({});
-
-  const fechtData = async (collection, setFunction) => {
-    try {
-      const res = await axios.get(collection);
-      setFunction(res.data);
-    } catch (e) {
-      console.log(e);
-    }
-  };
 
   useEffect(() => {
     fechtData("impresoras", setPrinters);
