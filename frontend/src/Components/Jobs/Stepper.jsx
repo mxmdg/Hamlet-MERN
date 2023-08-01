@@ -11,6 +11,7 @@ import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
+import { parts } from "./JobsParts"
 
 export default function MyStepper() {
   const [activeStep, setActiveStep] = React.useState(0);
@@ -21,7 +22,7 @@ export default function MyStepper() {
 
   const handlePartsChange = (e) => {
     const parts = useParts;
-    parts.push(e.target.value);
+    //parts.push(e.target.value);
     setParts(parts);
     console.table(useParts);
   };

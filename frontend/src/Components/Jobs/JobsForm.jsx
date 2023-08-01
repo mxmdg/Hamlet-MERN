@@ -46,21 +46,17 @@ const JobsForm = (props) => {
                 columns={{ xs: 1, sm: 4, md: 8 }}
               >
                 <Grid item xs={1} sm={2} md={4}>
-                  <InputLabel id="demo-simple-select-helper-label">
-                    Elegi un tipo de trabajo
-                  </InputLabel>
                   <Select
                     id="JobTypeSelector"
-                    defaultValue={
-                      props.jobType === {} ? JobTypes[0] : props.jobType
-                    }
+                    value={props.jobType || JobTypes[0]}
+                    defaultValue={""}
                     inputProps={{
                       name: "JobTypeSelector",
-                      id: "uncontrolled-native",
+                      id: "JobTypeSelector",
                     }}
                     controlled={"true"}
-                    label="Tipo de Trabajo"
-                    variant="standard"
+                    variant="outlined"
+                    label="Elegi un tipo de trabajo"
                     name="JobType"
                     sx={{ width: "90%" }}
                     onChange={props.onChange}
@@ -73,7 +69,7 @@ const JobsForm = (props) => {
                       );
                     })}
                   </Select>
-                  <FormHelperText color="secondary">
+                  <FormHelperText color="warning">
                     Selecciona un tipo de trabajo!
                   </FormHelperText>
                 </Grid>
@@ -81,7 +77,7 @@ const JobsForm = (props) => {
                   <TextField
                     id="jobName"
                     label="Nombre del Trabajo"
-                    variant="filled"
+                    variant="outlined"
                     name="jobName"
                   />
                 </Grid>
@@ -98,9 +94,10 @@ const JobsForm = (props) => {
                   <TextField
                     id="endDate"
                     type="date"
-                    label=" "
-                    variant="standard"
+                    label="Fecha de entrega"
+                    variant="outlined"
                     name="endDate"
+                    placeholder=""
                   />
                   <FormHelperText color="secondary">
                     Fecha de entrega
