@@ -45,8 +45,8 @@ function ResponsiveAppBar() {
   };
 
   return (
-    <AppBar position="static" color="primary">
-      <Container maxWidth="xl">
+    <AppBar position="static">
+      <Container maxWidth="xl" color="primary">
         <Toolbar disableGutters>
           <LocalLibraryIcon
             sx={{ display: { xs: "none", md: "flex" }, mr: 1, color: "#ddd" }}

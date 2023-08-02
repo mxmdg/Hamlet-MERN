@@ -1,19 +1,28 @@
 import { useEffect, useState } from "react";
-import { Navigate, useParams } from 'react-router-dom';
+import { Navigate, useParams } from "react-router-dom";
 import Input from "./Input";
 import axios from "axios";
-import { serverURL } from "../Config/config";
+import { serverURL, databaseURL } from "../Config/config";
 import "./form.css";
 import { getElement } from "../General/DBServices";
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormHelperText from '@mui/material/FormHelperText';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
-import Button from '@mui/material/Button';
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormHelperText from "@mui/material/FormHelperText";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
-import { Container, Box, Grid, Card, CardContent, CardActions, CardHeader, Typography } from "@mui/material";
-import { useNavigate } from 'react-router-dom';
+import {
+  Container,
+  Box,
+  Grid,
+  Card,
+  CardContent,
+  CardActions,
+  CardHeader,
+  Typography,
+} from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 function convertirArrayAObjeto(arr) {
   return arr.reduce((obj, item) => {
@@ -49,40 +58,37 @@ const Form = (props) => {
     props.task === "copy" || props.task === "edit" ? false : true
   );
   const [useItem, setItem] = useState(props.item || "new");
-  const navigate = useNavigate()  
-  const params = useParams()
+  const navigate = useNavigate();
+  const params = useParams();
 
   let dataForm = props.form;
 
-
-  useEffect(()=>{
-     if (props.item === undefined && props.task === 'edit' || props.task === 'copy') {
-    
+  useEffect(() => {
+    if (
+      (props.item === undefined && props.task === "edit") ||
+      props.task === "copy"
+    ) {
       const { id } = params;
 
-      const fetchItem = async ()=>{
+      const fetchItem = async () => {
         try {
-        const itemToEdit = await axios.get(
-          `${serverURL}/hamlet/${props.collection}/${id}`
-        );
-        setItem(itemToEdit);
-        console.log("id: " + itemToEdit.data._id);
-        console.log("Coleccion: " + props.collection)
-      } catch (e) {
-        console.log(e);
-      }
-      }
-      fetchItem()
+          const itemToEdit = await axios.get(
+            `${serverURL}/hamlet/${props.collection}/${id}`
+          );
+          setItem(itemToEdit);
+          console.log("id: " + itemToEdit.data._id);
+          console.log("Coleccion: " + props.collection);
+        } catch (e) {
+          console.log(e);
+        }
+      };
+      fetchItem();
     } else if (props.item) {
-      console.log(useItem)
+      console.log(useItem);
     } else {
-      console.log('new')
+      console.log("new");
     }
-  },[setItem])
-
-  
- 
-  
+  }, [setItem]);
 
   const submitHandler = async (e, collection, id) => {
     e.preventDefault();
@@ -99,12 +105,9 @@ const Form = (props) => {
 
     if (props.task === "new" || props.task === "copy") {
       try {
-        await axios.post(
-          "http://localhost:5000/hamlet/" + collection,
-          formData
-        );
+        await axios.post(databaseURL + collection, formData);
         setHidden(true);
-        navigate(-1)
+        navigate(-1);
         props.setState !== undefined
           ? props.setState(true)
           : console.log("No es nuevo");
@@ -113,12 +116,9 @@ const Form = (props) => {
       }
     } else {
       try {
-        await axios.put(
-          `http://localhost:5000/hamlet/${collection}/${id}`,
-          formData
-        );
+        await axios.put(`${databaseURL}${collection}/${id}`, formData);
         setHidden(true);
-        navigate(-1)
+        navigate(-1);
         props.editor(true);
       } catch (e) {
         console.log("No se pudo actualizar" + e);
@@ -158,48 +158,60 @@ const Form = (props) => {
         return (value = e.target.value);
       };
       return (
-        <Grid item xs={2} md={4}>
+        <Grid item xs={1} sm={2} md={4}>
           <FormControl sx={{ m: 1, minWidth: 120 }}>
             <InputLabel id={inp.id}>{inp.inputName}</InputLabel>
             <Select
               labelId={inp.id}
+              color="primary"
               id={inp.id}
               value={value}
               label={value}
               onChange={changeHandler}
+              fullWidth
             >
-              {inp.options.map((opt)=>{
-              return (<MenuItem value={opt.value}>
-                <em>{opt.text}</em>
-              </MenuItem>)
+              {inp.options.map((opt) => {
+                return (
+                  <MenuItem value={opt.value}>
+                    <em>{opt.text}</em>
+                  </MenuItem>
+                );
               })}
             </Select>
-        <FormHelperText>Elija una opción</FormHelperText>
-      </FormControl>
+            <FormHelperText>Elija una opción</FormHelperText>
+          </FormControl>
         </Grid>
-        
-        
       );
     } else if (inp.type === "button") {
       return (
-        <Button
-          variant="outlined"
-          inputName={inp.inputName}
-          key={inp.id}
-          type={inp.type}
-          selectForm={props.selectForm}
-          id={inp.id}
-        >{inp.inputName}</Button>
+        <Grid item xs={1} sm={2} md={4}>
+          <Button
+            variant="outlined"
+            inputName={inp.inputName}
+            color="primary"
+            key={inp.id}
+            type={inp.type}
+            selectForm={props.selectForm}
+            id={inp.id}
+            fullWidth
+          >
+            {inp.inputName}
+          </Button>
+        </Grid>
       );
     } else {
       return (
-        <Input
-          inputName={inp.inputName}
-          key={inp.id}
-          type={inp.type}
-          step={inp.step !== undefined ? inp.step : 1}
-          item={useItem !== {} ? useItem.data : ""}
-        ></Input>
+        <Grid item xs={12} sm={3} md={3}>
+          <Input
+            inputName={inp.inputName}
+            color="primary"
+            key={inp.id}
+            type={inp.type}
+            step={inp.step !== undefined ? inp.step : 1}
+            item={useItem !== {} ? useItem.data : ""}
+            fullWidth
+          ></Input>
+        </Grid>
       );
     }
   };
@@ -211,42 +223,55 @@ const Form = (props) => {
   );
 
   const hiddenFalse = (
-    <Container >
+    <Container>
       <Card raised>
-        <CardHeader component="div" title={props.collection} subheader={props.Task} />
+        <CardHeader
+          component="div"
+          title={props.collection}
+          subheader={props.Task}
+        />
         <CardContent>
-            <div {...props.task !== 'new'?style={style}:''}>
-              <form
-                onSubmit={(e) =>
-                  submitHandler(
-                    e,
-                    props.collection,
-                    useItem !== "new" ? useItem.data._id : ""
-                  )
-                }
-                className="formulario"
-              > 
-              
-                <Grid container>
-                  {dataForm.map((inp) => typeOfInput(inp))}
-                  <ButtonGroup variant="outlined" color="warning" aria-label="text button group">
-                          <Button id="submitBTN" type="submit">
-                            Enviar
-                          </Button>
-                          <Button id="cancelBTN" onClick={()=>navigate(-1)}>
-                            Cancelar
-                          </Button>
-                  </ButtonGroup>
-                </Grid>
-              </form>
-            </div>
+          <div {...(props.task !== "new" ? (style = { style }) : "")}>
+            <form
+              onSubmit={(e) =>
+                submitHandler(
+                  e,
+                  props.collection,
+                  useItem !== "new" ? useItem.data._id : ""
+                )
+              }
+              className="formulario"
+            >
+              <Grid
+                container
+                spacing={{ xs: 2, md: 3 }}
+                columns={{ xs: 4, sm: 8, md: 12 }}
+              >
+                {dataForm.map((inp) => typeOfInput(inp))}
+              </Grid>
+            </form>
+          </div>
         </CardContent>
-        
+        <CardActions sx={{ display: "flex", justifyContent: "flex-end" }}>
+          <Button
+            variant="outlined"
+            id="submitBTN"
+            color="primary"
+            type="submit"
+          >
+            Enviar
+          </Button>
+          <Button
+            variant="outlined"
+            id="cancelBTN"
+            color="warning"
+            onClick={() => navigate(-1)}
+          >
+            Cancelar
+          </Button>
+        </CardActions>
       </Card>
-       
-      
     </Container>
-    
   );
 
   //return useHidden ? hiddenTrue : hiddenFalse;

@@ -25,7 +25,7 @@ import { visuallyHidden } from "@mui/utils";
 import { deleteMultiple } from "./DBServices";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import { styled } from "@mui/material/styles";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -121,7 +121,7 @@ EnhancedTableHead.propTypes = {
   rowCount: PropTypes.number.isRequired,
 };
 
-const StyledTooltip = styled(({ className, ...props }) => (
+export const StyledTooltip = styled(({ className, ...props }) => (
   <Tooltip {...props} classes={{ popper: className }} />
 ))(({ theme }) => ({
   [`& .${tooltipClasses.tooltip}`]: {
@@ -137,7 +137,7 @@ const StyledTooltip = styled(({ className, ...props }) => (
   },
 }));
 
-const DangerTooltip = styled(({ className, ...props }) => (
+export const DangerTooltip = styled(({ className, ...props }) => (
   <Tooltip {...props} classes={{ popper: className }} />
 ))(({ theme }) => ({
   [`& .${tooltipClasses.tooltip}`]: {
@@ -154,7 +154,7 @@ const DangerTooltip = styled(({ className, ...props }) => (
 
 function EnhancedTableToolbar(props) {
   const { numSelected } = props;
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   return (
     <Toolbar>
@@ -178,7 +178,12 @@ function EnhancedTableToolbar(props) {
         </Typography>
       )}
       <StyledTooltip title="Agregar" arrow>
-        <IconButton onClick={() => {navigate(`/hamlet/${props.collection}/add`)}} sx={{ alignSelf: "right" }}>
+        <IconButton
+          onClick={() => {
+            navigate(`/hamlet/${props.collection}/add`);
+          }}
+          sx={{ alignSelf: "right" }}
+        >
           <AddBoxIcon />
         </IconButton>
       </StyledTooltip>
@@ -187,12 +192,26 @@ function EnhancedTableToolbar(props) {
           {numSelected === 1 && (
             <>
               <StyledTooltip title="Copiar" arrow>
-                <IconButton onClick={() => {navigate(`/hamlet/${props.collection}/copy/${props.idSelected}`)}} sx={{ alignSelf: "right" }}>
+                <IconButton
+                  onClick={() => {
+                    navigate(
+                      `/hamlet/${props.collection}/copy/${props.idSelected}`
+                    );
+                  }}
+                  sx={{ alignSelf: "right" }}
+                >
                   <ContentCopyIcon />
                 </IconButton>
               </StyledTooltip>
               <StyledTooltip title="Editar" arrow>
-                <IconButton onClick={() => {navigate(`/hamlet/${props.collection}/edit/${props.idSelected}`)}} sx={{ alignSelf: "right" }}>
+                <IconButton
+                  onClick={() => {
+                    navigate(
+                      `/hamlet/${props.collection}/edit/${props.idSelected}`
+                    );
+                  }}
+                  sx={{ alignSelf: "right" }}
+                >
                   <EditIcon />
                 </IconButton>
               </StyledTooltip>
@@ -202,19 +221,17 @@ function EnhancedTableToolbar(props) {
             <IconButton
               sx={{ alignSelf: "right" }}
               onClick={() => {
-                
-                const pasarBorrado = ()=>{
+                const pasarBorrado = () => {
                   try {
                     props.deleted([props.idSelected]);
                     deleteMultiple(props.idSelected, props.collection);
-                    props.resetSelected([])
+                    props.resetSelected([]);
                   } catch (e) {
-                    console.log(e)
+                    console.log(e);
                   }
-                }
+                };
 
-                pasarBorrado()
-                
+                pasarBorrado();
               }}
               color="error"
             >
@@ -375,8 +392,15 @@ export default function EnhancedTable(props) {
                     {Object.values(row)
                       .slice(1, -1)
                       .map((element) => {
-                        i++
-                        return <TableCell align="left" key={`${row.Tipo}_${row.Gramaje}-${element}_${i}`}>{element}</TableCell>;
+                        i++;
+                        return (
+                          <TableCell
+                            align="left"
+                            key={`${row.Tipo}_${row.Gramaje}-${element}_${i}`}
+                          >
+                            {element}
+                          </TableCell>
+                        );
                       })}
                   </TableRow>
                 );

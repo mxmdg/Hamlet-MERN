@@ -38,7 +38,7 @@ const JobsForm = (props) => {
           subheader="y solicita tu presupuesto!"
         />
         <CardContent>
-          <FormControl sx={{ m: 1, minWidth: 120 }}>
+          <FormControl sx={{ width: "90%" }}>
             <form name="form1" action="" onChange={onSubmit}>
               <Grid
                 container
@@ -46,19 +46,24 @@ const JobsForm = (props) => {
                 columns={{ xs: 1, sm: 4, md: 8 }}
               >
                 <Grid item xs={1} sm={2} md={4}>
+                  <InputLabel id="demo-simple-select-label">
+                    Tipo de trabajo
+                  </InputLabel>
                   <Select
                     id="JobTypeSelector"
-                    value={props.jobType || JobTypes[0]}
-                    defaultValue={""}
+                    {...(props.jobType
+                      ? { value: props.jobType }
+                      : { displayEmpty: true })}
                     inputProps={{
                       name: "JobTypeSelector",
                       id: "JobTypeSelector",
                     }}
                     controlled={"true"}
                     variant="outlined"
-                    label="Elegi un tipo de trabajo"
+                    color="primary"
+                    label="Tipo de trabajo"
                     name="JobType"
-                    sx={{ width: "90%" }}
+                    sx={{ width: "100%" }}
                     onChange={props.onChange}
                   >
                     {JobTypes.map((jt) => {
@@ -69,9 +74,6 @@ const JobsForm = (props) => {
                       );
                     })}
                   </Select>
-                  <FormHelperText color="warning">
-                    Selecciona un tipo de trabajo!
-                  </FormHelperText>
                 </Grid>
                 <Grid item xs={1} sm={2} md={4}>
                   <TextField
@@ -86,7 +88,7 @@ const JobsForm = (props) => {
                     id="quantity"
                     type="number"
                     label="Cantidad"
-                    variant="standard"
+                    variant="outlined"
                     name="quantity"
                   />
                 </Grid>
@@ -97,11 +99,15 @@ const JobsForm = (props) => {
                     label="Fecha de entrega"
                     variant="outlined"
                     name="endDate"
-                    placeholder=""
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    InputProps={{
+                      inputProps: {
+                        placeholder: " ",
+                      },
+                    }}
                   />
-                  <FormHelperText color="secondary">
-                    Fecha de entrega
-                  </FormHelperText>
                 </Grid>
               </Grid>
             </form>

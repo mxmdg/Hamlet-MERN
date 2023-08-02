@@ -29,7 +29,7 @@ const PriceTable = (props) => {
   const [useItemToEdit, setItemToEdit] = useState({});
   const [useTask, setTask] = useState("new");
   const [showHistory, setShowHistory] = useState(false);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const getElements = async () => {
     const items = await axios.get(`${serverURL}/hamlet/${props.collection}/`);
@@ -140,7 +140,7 @@ const PriceTable = (props) => {
               color="text.secondary"
               component="div"
             >
-              {props.pd.Proceso}  
+              {props.pd.Proceso}
             </Typography>
             <Typography
               gutterBottom
@@ -198,15 +198,14 @@ const PriceTable = (props) => {
             }}
           >
             <ButtonGroup variant="text" aria-label="text button group">
-              <Button
-                color="info"
-                onClick={handleHistory}
-              >
+              <Button color="info" onClick={handleHistory}>
                 Historial
               </Button>
-              <Button 
+              <Button
                 color="success"
-                onClick={() => {navigate(`/hamlet/${props.collection}/edit/${props.id}`)}}
+                onClick={() => {
+                  navigate(`/hamlet/${props.collection}/edit/${props.id}`);
+                }}
               >
                 Editar
               </Button>
@@ -222,11 +221,11 @@ const PriceTable = (props) => {
         </Card>
         {showHistory && (
           <>
-          <Historial
-            data={props.pd.Historial}
-            btnText="ver"
-            stateHistory={setShowHistory}
-          />
+            <Historial
+              data={props.pd.Historial}
+              btnText="ver"
+              stateHistory={setShowHistory}
+            />
           </>
         )}
       </Grid>

@@ -10,9 +10,9 @@ export const themeMxm = createTheme({
   palette: {
     mode: "dark",
     primary: {
-      main: "#3f51b5",
-      light: "#6573c3",
-      dark: "#2c387e",
+      main: "#59e3ea",
+      light: "#5ad3ff",
+      dark: "#26a3aa",
       contrastText: "#ffffff",
     },
     secondary: {
