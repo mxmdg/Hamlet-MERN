@@ -21,16 +21,24 @@ const Input = (props) => {
   const valor = props.item ? valueFinder() : "";
 
   return (
-    <FormControl id={props.id}>
-      <TextField
-        label={props.inputName}
-        variant="outlined"
+    /*<TextField
+      label={props.inputName}
+      variant="outlined"
+      type={props.type}
+      step={props.step}
+      value={valor}
+      inputProps={ariaLabel}
+      onChange={() => {}}
+    /> */
+    <div id={props.id}>
+      <label>{props.inputName}</label>
+      <input
         type={props.type}
+        placeholder={props.inputName}
         step={props.step}
-        value={valor}
-        inputProps={ariaLabel}
-      ></TextField>
-    </FormControl>
+        defaultValue={valor}
+      ></input>
+    </div>
   );
 };
 

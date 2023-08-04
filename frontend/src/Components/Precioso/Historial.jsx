@@ -20,7 +20,7 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: "fit-content",
+  width: "96vw",
   border: "1px solid #839",
   boxShadow: 24,
   p: 4,
@@ -54,7 +54,6 @@ export default function Historial(props) {
     }
   })(props.data);
 
-  
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -63,7 +62,6 @@ export default function Historial(props) {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
-
 
   return (
     <div>

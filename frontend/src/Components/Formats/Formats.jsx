@@ -6,13 +6,16 @@ import ItemsDetails from "../General/itemsDetails";
 // import "../Stocks/Stocks.css";
 import { serverURL } from "../Config/config";
 import Grid from "@mui/material/Unstable_Grid2"; // Grid version 2
+import Spinner from "../General/Spinner";
 
 const Formats = (props) => {
   const [formatList, setFormatList] = useState([]);
   const [useEdit, setEdit] = useState("");
+  const [useLoading, setLoading] = useState(true);
 
   const getElements = async () => {
     const formats = await axios.get(`${serverURL}/hamlet/${props.collection}/`);
+    setLoading(false);
     setFormatList(formats.data);
   };
 
@@ -26,25 +29,27 @@ const Formats = (props) => {
       }
     };
     fetchData();
-  }, [useEdit, props.formatState]);
+  }, [useEdit]);
 
   return (
-    <>
-      <Grid container spacing={3}>
-        {/* Renderiza la lista de Formatos */}
-        {formatList.map((format) => (
+    <Grid container spacing={3}>
+      {/* Renderiza la lista de materiales */}
+      {useLoading ? (
+        <Spinner color="info" /> // Asegúrate de importar el componente Spinner si lo tienes
+      ) : (
+        formatList.map((format) => (
           <Grid xs={12} md={4} key={format._id}>
             <ItemsDetails
               pd={format}
-              collection={props.collection}
               id={format._id}
+              collection={props.collection}
               formData={FormatDataForm}
               editor={setEdit}
             />
           </Grid>
-        ))}
-      </Grid>
-    </>
+        ))
+      )}
+    </Grid>
   );
 };
 

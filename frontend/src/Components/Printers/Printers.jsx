@@ -6,6 +6,7 @@ import PrintersDataForm from "../Formulario/PrintersDataForm";
 import ItemsDetails from "../General/itemsDetails";
 import { serverURL } from "../Config/config";
 import Grid from "@mui/material/Unstable_Grid2"; // Grid version 2
+import Spinner from "../General/Spinner";
 
 const readPrinters = async () => {
   const res = await axios.get(`${serverURL}/hamlet/impresoras`);
@@ -15,12 +16,14 @@ const readPrinters = async () => {
 const Printers = (props) => {
   const [printerList, setPrinterList] = useState([]);
   const [useEdit, setEdit] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setPrinterList(await readPrinters());
         setEdit(false);
+        setLoading(false);
       } catch (err) {
         console.log(err);
       }
@@ -31,17 +34,21 @@ const Printers = (props) => {
   return (
     <Grid container spacing={3}>
       {/* Renderiza la lista de impresoras */}
-      {printerList.map((printer) => (
-        <Grid xs={12} md={4} key={printer._id}>
-          <ItemsDetails
-            pd={printer}
-            id={printer._id}
-            collection={props.collection}
-            formData={PrintersDataForm}
-            editor={setEdit}
-          />
-        </Grid>
-      ))}
+      {loading ? (
+        <Spinner color="warning" /> // Asegúrate de importar el componente Spinner si lo tienes
+      ) : (
+        printerList.map((printer) => (
+          <Grid xs={12} md={4} key={printer._id}>
+            <ItemsDetails
+              pd={printer}
+              id={printer._id}
+              collection={props.collection}
+              formData={PrintersDataForm}
+              editor={setEdit}
+            />
+          </Grid>
+        ))
+      )}
     </Grid>
   );
 };

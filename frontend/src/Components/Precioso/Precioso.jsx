@@ -15,10 +15,12 @@ import {
   formDefault,
 } from "./updateService";
 import Grid from "@mui/material/Unstable_Grid2"; // Grid version 2
+import Spinner from "../General/Spinner";
 
 const Precioso = (props) => {
   const [priceList, setPriceList] = useState([]);
   const [useEdit, setEdit] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const formulaCLC = (item) => {
     let formula;
@@ -56,6 +58,7 @@ const Precioso = (props) => {
       );
       setPriceList(prices.data);
       setEdit(false);
+      setLoading(false);
       console.log(prices);
     };
 
@@ -72,19 +75,25 @@ const Precioso = (props) => {
   return (
     <>
       <Grid container spacing={3}>
-        {/* Renderiza la lista de Formatos */}
-        {priceList.map((price) => (
-          <Grid xs={12} md={4} key={price._id}>
-            <PriceTable
-              pd={price}
-              collection={props.collection}
-              id={price._id}
-              formCLC={formulaCLC(price)}
-              formData={PricesDataForm}
-              editor={setEdit}
-            />
-          </Grid>
-        ))}
+        {loading ? (
+          <Spinner color="primary" /> // Asegúrate de importar el componente Spinner si lo tienes
+        ) : (
+          // Renderiza la lista de Formatos
+          priceList.map((price) => (
+            <Grid item xs={12} md={4} key={price._id}>
+              {" "}
+              {/* Debes usar 'item' en lugar de 'Grid' */}
+              <PriceTable
+                pd={price}
+                collection={props.collection}
+                id={price._id}
+                formCLC={formulaCLC(price)}
+                formData={PricesDataForm}
+                editor={setEdit}
+              />
+            </Grid>
+          ))
+        )}
       </Grid>
     </>
   );

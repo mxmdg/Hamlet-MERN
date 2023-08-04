@@ -249,27 +249,27 @@ const Form = (props) => {
               >
                 {dataForm.map((inp) => typeOfInput(inp))}
               </Grid>
+              <CardActions sx={{ display: "flex", justifyContent: "flex-end" }}>
+                <Button
+                  variant="outlined"
+                  id="submitBTN"
+                  color="primary"
+                  type="submit"
+                >
+                  Enviar
+                </Button>
+                <Button
+                  variant="outlined"
+                  id="cancelBTN"
+                  color="warning"
+                  onClick={() => navigate(-1)}
+                >
+                  Cancelar
+                </Button>
+              </CardActions>
             </form>
           </div>
         </CardContent>
-        <CardActions sx={{ display: "flex", justifyContent: "flex-end" }}>
-          <Button
-            variant="outlined"
-            id="submitBTN"
-            color="primary"
-            type="submit"
-          >
-            Enviar
-          </Button>
-          <Button
-            variant="outlined"
-            id="cancelBTN"
-            color="warning"
-            onClick={() => navigate(-1)}
-          >
-            Cancelar
-          </Button>
-        </CardActions>
       </Card>
     </Container>
   );
