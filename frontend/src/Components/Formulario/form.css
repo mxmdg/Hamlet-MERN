@@ -19,30 +19,32 @@
 
 .formulario input, .formulario select, input.gridjs-input {
 	color: #eee;
-	background: #55555533;
-	border-radius: 10px;
+	background: #6663;
+	border:none;
+	border-radius: 5px;
 	height: 35px;
 	margin: 0 auto 13px 10%;
 	padding: 10px;
 	transition: all .3s ease-out;
 }
 
-.formulario input:focus, .formulario select:focus, input.gridjs-input:focus {
+.formulario input:focus, .formulario select:focus, input.gridjs-input:focus{
 	color: #59e3ea;
-	background: #444;
+	background: #888;
 }
 
 .formulario input:hover, .formulario select:hover, input.gridjs-input:hover {
-	background: #666;
+	color: #59e3ea;
+	background: #555;
 }
 
 .formulario label {
 	padding: 0 5px;
-	font-size: 16px;
-	color: #bbb;
+	font-size: 18px;
+	color: #999;
 	margin-left: 20%;
 	margin-bottom: 2px;
-	text-transform: capitalize;
+	
 }
 
 .formulario label[for="impresion"] {
@@ -51,8 +53,7 @@
 
 .formulario input[type="number"] {
 	display: inline;
-	width: 50%;
-	margin-left: 20%;
+	width: 80%;
 
 } 
 

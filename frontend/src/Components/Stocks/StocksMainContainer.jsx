@@ -6,6 +6,7 @@ import Container from '@mui/material/Container'
 import Box from '@mui/material/Box';
 import { Typography, Button, Grid, Card, CardContent, CardActions, CardHeader } from '@mui/material'
 import { useNavigate } from 'react-router-dom';
+import AddFloatButton from '../General/AddFloatButton';
 
 const StocksMainContainer = ()=> {
     const collection= 'materiales'
@@ -18,7 +19,7 @@ const StocksMainContainer = ()=> {
                     <Stocks collection={collection}/>
                   </CardContent>
                   <CardActions>
-                    <Button variant="outlined" size="small" color="info" onClick={()=>navigate(`/hamlet/${collection}/add`)}>Agregar {collection}</Button>
+                    <AddFloatButton text={"Agregar " + collection} onclick={()=>navigate(`/hamlet/${collection}/add`)}/>
                   </CardActions>    
                 </Card>
             </Container>)

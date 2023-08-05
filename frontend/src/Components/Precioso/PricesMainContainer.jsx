@@ -15,6 +15,7 @@ import {
   Container,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import AddFloatButton from '../General/AddFloatButton';
 
 const PricesMainContainer = () => {
   const [useNewPrice, setNewPrice] = useState(false);
@@ -30,14 +31,9 @@ const PricesMainContainer = () => {
           <Precioso collection="precios" priceState={useNewPrice} />
         </CardContent>
         <CardActions>
-          <Button
-            variant="outlined"
-            color="info"
-            onClick={() => navigate(`/hamlet/precios/add`)}
-          >
-            Agregar Precios
-          </Button>
-        </CardActions>
+                    <AddFloatButton text={"Agregar " + collection} onclick={() => navigate(`/hamlet/precios/add`)}/>
+        </CardActions>   
+        
       </Card>
     </Container>
   );

@@ -5,7 +5,7 @@ import React, { useState } from 'react'
 import Container from '@mui/material/Container'
 import { Typography, Button, Grid, Card, CardContent, CardActions, CardHeader } from '@mui/material'
 import { useNavigate } from 'react-router-dom';
-
+import AddFloatButton from '../General/AddFloatButton';
 
 const PrintersMainContainer = ()=> {
   const collection= 'impresoras'
@@ -19,8 +19,8 @@ const PrintersMainContainer = ()=> {
                       <Printers collection={collection} />
                     </CardContent>
                     <CardActions>
-                      <Button variant="outlined" size="small" color="info" onClick={()=>navigate(`/hamlet/${collection}/add`)}>Agregar {collection}</Button>
-                    </CardActions>    
+                    <AddFloatButton text={"Agregar " + collection} onclick={()=>navigate(`/hamlet/${collection}/add`)}/>
+                  </CardActions>      
                   </Card>
                 </Container>)
 }

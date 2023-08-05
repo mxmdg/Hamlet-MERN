@@ -85,7 +85,7 @@ export default function Historial(props) {
             component="h4"
             color="info"
           >
-            Historial!
+            Historial {props.process}!
           </Typography>
           <TableContainer component={Paper}>
             <Table

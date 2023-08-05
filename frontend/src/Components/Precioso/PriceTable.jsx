@@ -225,6 +225,8 @@ const PriceTable = (props) => {
               data={props.pd.Historial}
               btnText="ver"
               stateHistory={setShowHistory}
+              collection={props.collection}
+              process={props.pd.Proceso}
             />
           </>
         )}

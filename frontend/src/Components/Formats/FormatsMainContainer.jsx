@@ -15,6 +15,7 @@ import {
   CardHeader,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import AddFloatButton from '../General/AddFloatButton';
 
 const FormatsMainContainer = () => {
   const collection = "formatos";
@@ -28,15 +29,8 @@ const FormatsMainContainer = () => {
           <Formats collection={collection} />
         </CardContent>
         <CardActions>
-          <Button
-            variant="outlined"
-            size="small"
-            color="info"
-            onClick={() => navigate(`/hamlet/${collection}/add`)}
-          >
-            Agregar {collection}
-          </Button>
-        </CardActions>
+                    <AddFloatButton text={"Agregar " + collection} onclick={() => navigate(`/hamlet/precios/add`)}/>
+        </CardActions>   
       </Card>
     </Container>
   );
