@@ -23,6 +23,7 @@ import Modal from "./Modal";
 import Historial from "./Historial";
 import LastSeen from "./LastUpdate";
 import { useNavigate } from "react-router-dom";
+import MyLineChart from "./LineChart";
 
 const PriceTable = (props) => {
   const [useView, setView] = useState("viewer");
@@ -113,15 +114,16 @@ const PriceTable = (props) => {
     <>
       <Grid
         container
+        background="#023"
         direction="column"
         justifyContent="space-between"
         alignItems="baseline"
+        sx={{ width: "100%", background: "#023" }}
       >
         <Card
           sx={{
-            maxWidth: 350,
             minHeight: 400,
-            height: "100%",
+            width: "100%",
           }}
           direction="column"
           color="secondary"
@@ -129,7 +131,7 @@ const PriceTable = (props) => {
         >
           <CardContent
             sx={{
-              maxWidth: 350,
+              maxWidth: "100%",
               minHeight: 400,
               height: "100%",
             }}
@@ -188,6 +190,7 @@ const PriceTable = (props) => {
                 </TableBody>
               </Table>
             </TableContainer>
+            <MyLineChart data={props.pd.Historial} />
           </CardContent>
 
           <CardActions

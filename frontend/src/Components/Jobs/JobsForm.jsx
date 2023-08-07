@@ -19,12 +19,31 @@ import { Grid } from "@mui/material";
 import JobTypes from "./JobTypes";
 
 const JobsForm = (props) => {
+  console.log(props);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
   const handleChange = (e) => {
     e.preventDefault();
     props.setJob(e);
   };
 
-  const onSubmit = (values) => console.log(values);
+  const onSubmit = (values) => {
+    console.log(values);
+    const jt = JobTypes.find((item) => {
+      if (item.id === values.JobType) {
+        return item;
+      }
+    });
+    console.log(jt);
+    values.JobType = jt;
+    props.setJob(values);
+    console.log(values);
+  };
 
   return (
     <Box
@@ -39,48 +58,52 @@ const JobsForm = (props) => {
         />
         <CardContent>
           <FormControl sx={{ width: "90%" }}>
-            <form name="form1" action="" onChange={onSubmit}>
+            <form name="form1" onBlur={handleSubmit(onSubmit)}>
               <Grid
                 container
                 spacing={{ xs: 2, md: 3 }}
                 columns={{ xs: 1, sm: 4, md: 8 }}
               >
                 <Grid item xs={1} sm={2} md={4}>
-                  <InputLabel id="demo-simple-select-label">
-                    Tipo de trabajo
-                  </InputLabel>
-                  <Select
-                    id="JobTypeSelector"
-                    {...(props.jobType
-                      ? { value: props.jobType }
-                      : { displayEmpty: true })}
+                  <TextField
+                    select
+                    defaultValue={
+                      props.data.JobType == undefined
+                        ? ""
+                        : props.data.JobType.id
+                    }
+                    id="JobType"
                     inputProps={{
-                      name: "JobTypeSelector",
-                      id: "JobTypeSelector",
+                      name: "JobType",
+                      id: "JobType",
                     }}
                     controlled={"true"}
                     variant="outlined"
                     color="primary"
                     label="Tipo de trabajo"
                     name="JobType"
-                    sx={{ width: "100%" }}
-                    onChange={props.onChange}
+                    onChange={(e) => console.log(e.target.value)}
+                    fullWidth
+                    {...register("JobType")}
                   >
                     {JobTypes.map((jt) => {
                       return (
-                        <MenuItem value={jt} key={jt.id}>
+                        <MenuItem value={jt.id} key={jt.id}>
                           {jt.name}
                         </MenuItem>
                       );
                     })}
-                  </Select>
+                  </TextField>
                 </Grid>
                 <Grid item xs={1} sm={2} md={4}>
                   <TextField
                     id="jobName"
                     label="Nombre del Trabajo"
                     variant="outlined"
+                    defaultValue={props.data.jobName || ""}
                     name="jobName"
+                    {...register("jobName")}
+                    fullWidth
                   />
                 </Grid>
                 <Grid item xs={1} sm={2} md={4}>
@@ -89,7 +112,10 @@ const JobsForm = (props) => {
                     type="number"
                     label="Cantidad"
                     variant="outlined"
+                    defaultValue={props.data.quantity || ""}
                     name="quantity"
+                    {...register("quantity")}
+                    fullWidth
                   />
                 </Grid>
                 <Grid item xs={1} sm={2} md={4}>
@@ -98,7 +124,9 @@ const JobsForm = (props) => {
                     type="date"
                     label="Fecha de entrega"
                     variant="outlined"
+                    defaultValue={props.data.endDate || ""}
                     name="endDate"
+                    {...register("endDate")}
                     InputLabelProps={{
                       shrink: true,
                     }}
@@ -107,6 +135,7 @@ const JobsForm = (props) => {
                         placeholder: " ",
                       },
                     }}
+                    fullWidth
                   />
                 </Grid>
               </Grid>

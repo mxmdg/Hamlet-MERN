@@ -11,7 +11,8 @@ import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
-import { parts } from "./JobsParts"
+import { Divider } from "@mui/material";
+import { parts } from "./JobsParts";
 
 export default function MyStepper() {
   const [activeStep, setActiveStep] = React.useState(0);
@@ -20,37 +21,23 @@ export default function MyStepper() {
   const [useJobType, setJobType] = React.useState({});
   const [useJob, setJob] = React.useState({});
 
-  const handlePartsChange = (e) => {
-    const parts = useParts;
-    //parts.push(e.target.value);
-    setParts(parts);
-    console.table(useParts);
-  };
-
   const handleJobTypeChange = (e) => {
     setJobType(e.target.value);
-    console.table(e.target.value);
+    console.table(e.value);
     console.table(useJobType);
+  };
+
+  const addParts = (newPart) => {
+    console.log("adding part...");
+    console.log(newPart);
+    const parts = useParts;
+    parts.push(newPart);
+    setParts(parts);
+    console.table(parts);
   };
 
   // El siguiente array contiene los componentes
   // que se rendarizan en cada paso del stepper:
-
-  const steps = [
-    [
-      "Defina el tipo de producto",
-      <JobsForm
-        onChange={handleJobTypeChange}
-        jobType={useJobType}
-        setJob={setJob}
-      />,
-    ],
-    [
-      "Agregue las partes",
-      <JobParts onChange={handlePartsChange} jobType={useJobType} />,
-    ],
-    ["Confirme el pedido", <div>FIN</div>],
-  ];
 
   const isStepOptional = (step) => {
     return step === 1;
@@ -66,7 +53,6 @@ export default function MyStepper() {
       newSkipped = new Set(newSkipped.values());
       newSkipped.delete(activeStep);
     }
-
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
     setSkipped(newSkipped);
   };
@@ -94,6 +80,23 @@ export default function MyStepper() {
     setActiveStep(0);
   };
 
+  const steps = [
+    [
+      "Defina el tipo de producto",
+      <JobsForm
+        jobType={useJobType}
+        data={useJob}
+        setJob={setJob}
+        continue={handleNext}
+      />,
+    ],
+    [
+      "Agregue las partes",
+      <JobParts jobType={useJobType} job={useJob} addParts={addParts} />,
+    ],
+    ["Confirme el pedido", <div>FIN</div>],
+  ];
+
   return (
     <Box
       sx={{
@@ -102,9 +105,12 @@ export default function MyStepper() {
     >
       <Card raised sx={{ gap: "20px", maxWidth: "600px" }} color="info">
         <CardHeader
-          title="Nuevo Trabajo"
-          subheader="Solicita tu presupuesto!"
+          title={useJob.jobName || "Nuevo Trabajo"}
+          subheader={useJob.quantity || "Solicita tu presupuesto!"}
         />
+        <Divider />
+        <div>Partes</div>
+        <Divider />
         <CardContent>
           <Box sx={{ width: "100%" }}>
             <Stepper activeStep={activeStep}>
@@ -127,6 +133,7 @@ export default function MyStepper() {
                   </Step>
                 );
               })}
+              <Divider />
             </Stepper>
             {activeStep === steps.length ? (
               <React.Fragment>

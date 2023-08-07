@@ -7,7 +7,8 @@ import Modal from "@mui/material/Modal";
 import IconChips from "./Chip";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
+import { styled } from "@mui/material/styles";
+import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
@@ -63,6 +64,16 @@ export default function Historial(props) {
     setPage(0);
   };
 
+  const StyledTableCell = styled(TableCell)(({ theme }) => ({
+    [`&.${tableCellClasses.head}`]: {
+      backgroundColor: "#111",
+      color: "#eee",
+    },
+    [`&.${tableCellClasses.body}`]: {
+      fontSize: 14,
+    },
+  }));
+
   return (
     <div>
       {/* <IconChips
@@ -96,9 +107,9 @@ export default function Historial(props) {
               <TableHead>
                 <TableRow>
                   {tableHead.slice(0, -1).map((title, index) => (
-                    <TableCell align="left" key={title + index}>
+                    <StyledTableCell align="left" key={title + index}>
                       {title}
-                    </TableCell>
+                    </StyledTableCell>
                   ))}
                 </TableRow>
               </TableHead>

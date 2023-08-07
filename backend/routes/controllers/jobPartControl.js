@@ -8,8 +8,8 @@ jobPartsControl.getJobParts = async (req,res) => {{
 }}
 
 jobPartsControl.addJobPart = async (req,res)=>{{
-    const {Type, PageRange, PrintModAllowed, StockWeightRange} = req.body;
-    const newJobPart = new jobParts.esquema({Type, PageRange, PrintModAllowed, StockWeightRange});
+    const {Type, minPages, maxPages, PrintModAllowed, minStockWeight, maxStockWeight} = req.body;
+    const newJobPart = new jobParts.esquema({Type, minPages, maxPages, PrintModAllowed, minStockWeight, maxStockWeight});
     await newJobPart.save();
     res.json({"message": newJobPart.Type + " guardado OK"});
     
@@ -30,8 +30,8 @@ jobPartsControl.getJobPart = async (req, res)=> {
 }
     
 jobPartsControl.updateJobPart = async (req, res)=> {
-    const {Type, PageRange, PrintModAllowed, StockWeightRange} = req.body;
-    const JobPart = await jobParts.esquema.findOneAndUpdate({ _id: req.params.id },{Type, PageRange, PrintModAllowed, StockWeightRange})
+    const {Type, minPages, maxPages, PrintModAllowed, minStockWeight, maxStockWeight} = req.body;
+    const JobPart = await jobParts.esquema.findOneAndUpdate({ _id: req.params.id },{Type, minPages, maxPages, PrintModAllowed, minStockWeight, maxStockWeight})
     res.json({"Message": "JobPart actualizado " + JobPart.Type})
 }
 jobPartsControl.deleteJobPart = async (req, res)=> {

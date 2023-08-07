@@ -8,24 +8,16 @@ import { Divider } from "@mui/material";
 
 const ConfigMainContainer = () => {
   return (
-    <Grid 
-      container spacing={6} 
+    <Grid
+      container
+      spacing={6}
       direction="row"
       justifyContent="center"
       alignItems="flex-start"
     >
-      <Grid item xs={12} sm={8} md={6}>
+      <Grid item xs={12} sm={12} md={12}>
         <PricesMainContainer />
       </Grid>
-      <Grid item xs={12} sm={8} md={6}>
-        <FormatsMainContainer />
-      </Grid >
-      <Grid item xs={12} sm={8} md={6}>
-        <StocksMainContainer />
-      </Grid >
-      <Grid item xs={12} sm={8} md={6}>
-        <PrintersMainContainer />{" "}
-      </Grid >
     </Grid>
   );
 };

@@ -3,11 +3,12 @@ const { Schema, model } = require('mongoose');
 const jobPartSchema = new Schema(
     { 
         'Type': {type: String, required: true},
-        'PageRange': {type: Array, required: true},
-        'PrintModAllowed': {type: Array, required: true},
-        'StockWeightRange': {type: Array, required: false},
+        'minPages': {type: Number, required: true},
+        'maxPages': {type: Number, required: true},
+        'PrintModAllowed': {type: String, required: true},
+        'minStockWeight': {type: Number, required: true},
+        'maxStockWeight': {type: Number, required: true},
         'Fecha': {type: Date, default: Date.now},
-        
     });
 
 module.exports.esquema = model('JobPart', jobPartSchema);

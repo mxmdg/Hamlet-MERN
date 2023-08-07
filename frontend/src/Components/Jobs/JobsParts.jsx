@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import Input from "@mui/material/Input";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
@@ -20,6 +20,7 @@ import { fechtData } from "../customHooks/FetchDataHook";
 
 export const parts = [
   {
+    id: "part001",
     type: "Tapa",
     pageRange: [1, 2],
     printModAllowed: "duplex",
@@ -28,6 +29,7 @@ export const parts = [
     jobTypes: ["Libro", "Revista", "Anillado", "Cosido a Hilo"],
   },
   {
+    id: "part002",
     type: "Contratapa",
     pageRange: [1, 2],
     printModAllowed: "duplex",
@@ -36,6 +38,7 @@ export const parts = [
     jobTypes: ["Libro", "Revista", "Anillado", "Cosido a Hilo"],
   },
   {
+    id: "part003",
     type: "Interior Binder",
     pageRange: [20, 1200],
     printModAllowed: "duplex",
@@ -44,6 +47,7 @@ export const parts = [
     jobTypes: ["Libro"],
   },
   {
+    id: "part004",
     type: "Interior Cosido",
     pageRange: [24, 1200],
     printModAllowed: "duplex",
@@ -52,6 +56,7 @@ export const parts = [
     jobTypes: ["Cosido a Hilo"],
   },
   {
+    id: "part005",
     type: "Interior Anillado",
     pageRange: [8, 900],
     printModAllowed: "duplex",
@@ -60,6 +65,7 @@ export const parts = [
     jobTypes: ["Anillado"],
   },
   {
+    id: "part006",
     type: "Interior Revista",
     pageRange: [4, 72],
     printModAllowed: "duplex",
@@ -68,6 +74,7 @@ export const parts = [
     jobTypes: ["Revista"],
   },
   {
+    id: "part007",
     type: "Hojas sueltas",
     pageRange: [1, 1000000],
     printModAllowed: "duplex",
@@ -76,6 +83,7 @@ export const parts = [
     jobTypes: ["Sin Encuadernacion", "Multipagina"],
   },
   {
+    id: "part008",
     type: "Afiche",
     pageRange: [1, 1000],
     printModAllowed: "simplex",
@@ -84,6 +92,7 @@ export const parts = [
     jobTypes: ["Sin Encuadernacion", "Multipagina"],
   },
   {
+    id: "part009",
     type: "Señalador",
     pageRange: [1, 1000],
     printModAllowed: "duplex",
@@ -92,6 +101,7 @@ export const parts = [
     jobTypes: ["Sin Encuadernacion", "Multipagina", "Libro"],
   },
   {
+    id: "part010",
     type: "Tarjeta",
     pageRange: [1, 1000],
     printModAllowed: "duplex",
@@ -100,6 +110,7 @@ export const parts = [
     jobTypes: ["Sin Encuadernacion", "Multipagina"],
   },
   {
+    id: "part011",
     type: "Etiqueta",
     pageRange: [1, 1000],
     printModAllowed: "simplex",
@@ -108,6 +119,7 @@ export const parts = [
     jobTypes: ["Sin Encuadernacion", "Multipagina"],
   },
   {
+    id: "part012",
     type: "Insert",
     pageRange: [1, 1000],
     printModAllowed: "duplex",
@@ -116,6 +128,7 @@ export const parts = [
     jobTypes: ["Libro", "Revista", "Anillado", "Cosido a Hilo"],
   },
   {
+    id: "part013",
     type: "Diptico",
     pageRange: [1, 1000],
     printModAllowed: "duplex",
@@ -124,6 +137,7 @@ export const parts = [
     jobTypes: ["Sin Encuadernacion", "Multipagina"],
   },
   {
+    id: "part014",
     type: "Triptico",
     pageRange: [1, 1000],
     printModAllowed: "duplex",
@@ -132,6 +146,7 @@ export const parts = [
     jobTypes: ["Sin Encuadernacion", "Multipagina"],
   },
   {
+    id: "part015",
     type: "Folleto",
     pageRange: [1, 1000],
     printModAllowed: "duplex",
@@ -140,6 +155,7 @@ export const parts = [
     jobTypes: ["Sin Encuadernacion", "Multipagina"],
   },
   {
+    id: "part016",
     type: "Cubierta",
     pageRange: [1, 1000],
     printModAllowed: "duplex",
@@ -148,6 +164,7 @@ export const parts = [
     jobTypes: ["Sin Encuadernacion", "Multipagina"],
   },
   {
+    id: "part017",
     type: "Guardas",
     pageRange: [1, 1000],
     printModAllowed: "duplex",
@@ -162,6 +179,13 @@ const JobParts = (props) => {
   const [filteredStocks, setFilteredStocks] = useState([]);
   const [partsList, setPartsList] = useState(null);
   const [currentPart, setCurrentPart] = useState({});
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    control,
+  } = useForm();
 
   const filterStocks = () => {
     const res = stocks.filter((stock) => {
@@ -182,10 +206,11 @@ const JobParts = (props) => {
     setFilteredStocks(res);
   };
 
-  const onChangeHandler = (e) => {
-    setCurrentPart(e.target.value);
+  const handleChange = (selectedValue) => {
+    const part = partsList.find((item) => item.id === selectedValue);
+    setCurrentPart(part);
+    console.log("Current Part:");
     console.log(currentPart);
-    props.onChange(e.target.value);
   };
 
   useEffect(() => {
@@ -194,8 +219,8 @@ const JobParts = (props) => {
       filterStocks();
     };
 
-    const filteredParts = props.jobType
-      ? parts.filter((part) => part.jobTypes.includes(props.jobType.name))
+    const filteredParts = props.job.JobType
+      ? parts.filter((part) => part.jobTypes.includes(props.job.JobType.name))
       : parts;
 
     try {
@@ -210,7 +235,7 @@ const JobParts = (props) => {
   return (
     <Card raised sx={{ gap: "20px", maxWidth: "600px" }} color="secondary">
       <CardContent>
-        <form name="form2" action="">
+        <form name="form2" action="" onSubmit={handleSubmit(props.addParts)}>
           <Grid
             container
             spacing={{ xs: 2, md: 3 }}
@@ -220,34 +245,27 @@ const JobParts = (props) => {
               <Grid item xs={1} sm={2} md={4}>
                 <FormControl sx={{ width: "90%" }}>
                   <InputLabel id="demo-simple-select-label">Partes</InputLabel>
-                  <Select
-                    id="jobParts"
-                    inputProps={{
-                      name: "jobParts",
-                      id: "jobParts",
-                    }}
-                    controlled={"true"}
-                    variant="outlined"
-                    color="primary"
-                    label="Partes"
-                    sx={{ width: "100%" }}
-                    onChange={onChangeHandler}
-                  >
-                    {partsList.map((part) => (
-                      <MenuItem
-                        value={part}
-                        id={`${partsList.indexOf(part)}_jobPart`}
-                        key={part.type}
+                  <Controller // Usamos Controller de react-hook-form para el Select
+                    name="jobParts"
+                    control={control} // Proporcionamos el control del formulario
+                    defaultValue={partsList[0].id}
+                    render={({ field }) => (
+                      <Select
+                        {...field} // Aseguramos que las propiedades del campo sean manejadas por react-hook-form
+                        onChange={(e) => {
+                          handleChange(e.target.value); // Llamamos a nuestra función handleChange
+                          field.onChange(e); // Importante llamar esto para que react-hook-form actualice los valores internamente
+                        }}
                       >
-                        {part.type}
-                      </MenuItem>
-                    ))}
-                  </Select>
+                        {partsList.map((part) => (
+                          <MenuItem value={part.id} key={part.id}>
+                            {part.type}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    )}
+                  />
                 </FormControl>
-
-                {/* <FormHelperText color="warning">
-                Defini la parte del trabajo!
-              </FormHelperText> */}
               </Grid>
             )}
             <Grid item xs={1} sm={2} md={4}>
@@ -257,6 +275,52 @@ const JobParts = (props) => {
                 label="Paginas"
                 variant="outlined"
                 name="pages"
+                color="warning"
+                {...register("pages")}
+              />
+            </Grid>
+            <Grid item xs={1} sm={2} md={4}>
+              <TextField
+                variant="outlined"
+                type="number"
+                name="Ancho"
+                id="Ancho"
+                label="Ancho"
+                color="info"
+                {...register("Ancho")}
+              />
+            </Grid>
+            <Grid item xs={1} sm={2} md={4}>
+              <TextField
+                variant="outlined"
+                type="number"
+                name="Alto"
+                id="Alto"
+                label="Alto"
+                color="error"
+                {...register("Alto")}
+              />
+            </Grid>
+            <Grid item xs={1} sm={2} md={4}>
+              <TextField
+                variant="outlined"
+                type="number"
+                name="coloresFrente"
+                id="coloresFrente"
+                label="Colores Frente"
+                color="secondary"
+                {...register("coloresFrente")}
+              />
+            </Grid>
+            <Grid item xs={1} sm={2} md={4}>
+              <TextField
+                variant="outlined"
+                type="number"
+                name="coloresDorso"
+                id="coloresDorso"
+                label="Colores Dorso"
+                color="warning"
+                {...register("coloresDorso")}
               />
             </Grid>
             <Grid item xs={1} sm={2} md={4}>
@@ -264,18 +328,33 @@ const JobParts = (props) => {
                 <InputLabel id="demo-simple-select-label">Material</InputLabel>
                 <Select
                   name="partStock"
+                  id="partStock"
                   label="Material"
                   onChange={props.onChange}
                   defaultValue={""}
                   variant="outlined"
-                  sx={{ width: "100%" }}
+                  sx={{ width: "95%" }}
+                  color="primary"
+                  {...register("partStock")}
                 >
                   {filteredStocks.map((Stock) => (
-                    <MenuItem value={Stock} id={Stock._id} key={Stock._id}>
+                    <MenuItem value={Stock._id} id={Stock._id} key={Stock._id}>
                       {Stock.Nombre_Material}
                     </MenuItem>
                   ))}
                 </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={1} sm={2} md={4}>
+              <FormControl sx={{ width: "85%" }}>
+                <Button
+                  type="submit"
+                  size="large"
+                  variant="outlined"
+                  color="secondary"
+                >
+                  Agregar Parte
+                </Button>
               </FormControl>
             </Grid>
           </Grid>
