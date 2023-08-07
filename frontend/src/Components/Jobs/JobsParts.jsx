@@ -247,10 +247,12 @@ const JobParts = (props) => {
                   <InputLabel id="demo-simple-select-label">Partes</InputLabel>
                   <Controller // Usamos Controller de react-hook-form para el Select
                     name="jobParts"
+                    {...register("jobParts")}
                     control={control} // Proporcionamos el control del formulario
                     defaultValue={partsList[0].id}
                     render={({ field }) => (
                       <Select
+                        label="Partes"
                         {...field} // Aseguramos que las propiedades del campo sean manejadas por react-hook-form
                         onChange={(e) => {
                           handleChange(e.target.value); // Llamamos a nuestra función handleChange

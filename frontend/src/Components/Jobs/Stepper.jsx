@@ -1,4 +1,5 @@
 import * as React from "react";
+import {useEffect} from "react"
 import Box from "@mui/material/Box";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
@@ -11,13 +12,13 @@ import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
-import { Divider } from "@mui/material";
+import { Divider , Chip , Stack } from "@mui/material";
 import { parts } from "./JobsParts";
 
 export default function MyStepper() {
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set());
-  const [useParts, setParts] = React.useState([]);
+  const [useParts , setParts] = React.useState([]);
   const [useJobType, setJobType] = React.useState({});
   const [useJob, setJob] = React.useState({});
 
@@ -30,10 +31,17 @@ export default function MyStepper() {
   const addParts = (newPart) => {
     console.log("adding part...");
     console.log(newPart);
-    const parts = useParts;
-    parts.push(newPart);
-    setParts(parts);
-    console.table(parts);
+    let partes = useParts
+    partes.push(newPart)
+    try {
+      setParts(partes);
+    } catch (e) {
+      console.log(e)
+    }
+    
+    console.log("____________________")
+    console.log(useParts)
+    
   };
 
   // El siguiente array contiene los componentes
@@ -94,8 +102,24 @@ export default function MyStepper() {
       "Agregue las partes",
       <JobParts jobType={useJobType} job={useJob} addParts={addParts} />,
     ],
-    ["Confirme el pedido", <div>FIN</div>],
+    ["Confirme el pedido", <Box>
+    {useParts.map((part)=>{
+      return (<div key={part.jobParts}>{part.jobParts}</div>)
+    })}
+  </Box>],
   ];
+
+  let renderParts
+
+  useEffect(()=>{
+    try{
+      renderParts = useParts[0].map((part)=>{
+        return (<div>Alto {part.Alto}</div>)
+      })
+    } catch (e) {
+      console.log(e)
+    }
+  },[setParts])
 
   return (
     <Box
@@ -108,10 +132,11 @@ export default function MyStepper() {
           title={useJob.jobName || "Nuevo Trabajo"}
           subheader={useJob.quantity || "Solicita tu presupuesto!"}
         />
-        <Divider />
-        <div>Partes</div>
-        <Divider />
         <CardContent>
+        <Box>{useParts.map((part)=>{
+                return (<div key={part.jobParts}>{part.Ancho}</div>)
+              })}
+        </Box>   
           <Box sx={{ width: "100%" }}>
             <Stepper activeStep={activeStep}>
               {steps.map((label, index) => {
