@@ -14,6 +14,7 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import { Divider , Chip , Stack } from "@mui/material";
 import { parts } from "./JobsParts";
+import { getElement } from "../General/DBServices";
 
 export default function MyStepper() {
   const [activeStep, setActiveStep] = React.useState(0);
@@ -31,6 +32,22 @@ export default function MyStepper() {
   const addParts = (newPart) => {
     console.log("adding part...");
     console.log(newPart);
+    try {
+      const getStock = async (id)=> {
+        const stock = await getElement(id, "materiales")
+        newPart.partStock = stock.data
+      }
+      getStock(newPart.partStock)
+     /*  const part = parts.find((parte)=>{
+        parte.id == newPart.jobParts ?
+        parte :
+        console.log("No encuentro " + parte.id)
+      }) */
+      //newPart.jobParts = part
+    } catch (e) {
+      console.log(e)
+    }
+    
     let partes = useParts
     partes.push(newPart)
     try {
@@ -134,7 +151,10 @@ export default function MyStepper() {
         />
         <CardContent>
         <Box>{useParts.map((part)=>{
-                return (<div key={part.jobParts}>{part.Ancho}</div>)
+                return (<div key={part.jobParts}>
+                          Formato: {part.Ancho} x {part.Alto} Impresion: {part.coloresFrente}/{part.coloresDorso}
+                           Material: {part.partStock.Nombre_Material}
+                        </div>)
               })}
         </Box>   
           <Box sx={{ width: "100%" }}>
