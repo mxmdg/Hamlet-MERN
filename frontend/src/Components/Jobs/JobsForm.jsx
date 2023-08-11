@@ -77,7 +77,6 @@ const JobsForm = (props) => {
                       name: "JobType",
                       id: "JobType",
                     }}
-                    controlled={"true"}
                     variant="outlined"
                     color="primary"
                     label="Tipo de trabajo"

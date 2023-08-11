@@ -1,5 +1,5 @@
 import * as React from "react";
-import {useEffect} from "react"
+import { useEffect } from "react";
 import Box from "@mui/material/Box";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
@@ -12,14 +12,14 @@ import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
-import { Divider , Chip , Stack } from "@mui/material";
+import { Divider, Chip, Stack, Container } from "@mui/material";
 import { parts } from "./JobsParts";
 import { getElement } from "../General/DBServices";
 
 export default function MyStepper() {
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set());
-  const [useParts , setParts] = React.useState([]);
+  const [useParts, setParts] = React.useState([]);
   const [useJobType, setJobType] = React.useState({});
   const [useJob, setJob] = React.useState({});
 
@@ -33,32 +33,33 @@ export default function MyStepper() {
     console.log("adding part...");
     console.log(newPart);
     try {
-      const getStock = async (id)=> {
-        const stock = await getElement(id, "materiales")
-        newPart.partStock = stock.data
-      }
-      getStock(newPart.partStock)
-     /*  const part = parts.find((parte)=>{
+      const getStock = async (id) => {
+        const stock = await getElement(id, "materiales");
+        newPart.partStock = stock.data;
+      };
+      getStock(newPart.partStock);
+      /*  const part = parts.find((parte)=>{
         parte.id == newPart.jobParts ?
         parte :
         console.log("No encuentro " + parte.id)
       }) */
       //newPart.jobParts = part
     } catch (e) {
-      console.log(e)
+      console.log(e);
     }
-    
-    let partes = useParts
-    partes.push(newPart)
+    const part = parts.filter((part) => part.id.includes(newPart.jobParts));
+    newPart.jobParts = part;
+
+    let partes = useParts;
+    partes.push(newPart);
     try {
       setParts(partes);
     } catch (e) {
-      console.log(e)
+      console.log(e);
     }
-    
-    console.log("____________________")
-    console.log(useParts)
-    
+
+    console.log("____________________");
+    console.log(useParts);
   };
 
   // El siguiente array contiene los componentes
@@ -103,6 +104,9 @@ export default function MyStepper() {
 
   const handleReset = () => {
     setActiveStep(0);
+    setParts([]);
+    setJobType({});
+    setJob({});
   };
 
   const steps = [
@@ -119,24 +123,15 @@ export default function MyStepper() {
       "Agregue las partes",
       <JobParts jobType={useJobType} job={useJob} addParts={addParts} />,
     ],
-    ["Confirme el pedido", <Box>
-    {useParts.map((part)=>{
-      return (<div key={part.jobParts}>{part.jobParts}</div>)
-    })}
-  </Box>],
+    [
+      "Confirme el pedido",
+      <Box>
+        {useParts.map((part) => {
+          return <div key={part.jobParts.id}>{part.jobParts.type}</div>;
+        })}
+      </Box>,
+    ],
   ];
-
-  let renderParts
-
-  useEffect(()=>{
-    try{
-      renderParts = useParts[0].map((part)=>{
-        return (<div>Alto {part.Alto}</div>)
-      })
-    } catch (e) {
-      console.log(e)
-    }
-  },[setParts])
 
   return (
     <Box
@@ -150,13 +145,22 @@ export default function MyStepper() {
           subheader={useJob.quantity || "Solicita tu presupuesto!"}
         />
         <CardContent>
-        <Box>{useParts.map((part)=>{
-                return (<div key={part.jobParts}>
-                          Formato: {part.Ancho} x {part.Alto} Impresion: {part.coloresFrente}/{part.coloresDorso}
-                           Material: {part.partStock.Nombre_Material}
-                        </div>)
-              })}
-        </Box>   
+          <Box>
+            {useParts.map((part) => {
+              return (
+                <Container key={part.id}>
+                  <h4>{part.jobParts[0].type}</h4>
+                  Paginas: {part.pages}
+                  <br />
+                  Formato: {part.Ancho} x {part.Alto}
+                  <br />
+                  Impresion: {part.coloresFrente}/{part.coloresDorso}
+                  <br />
+                  Material: {part.partStock.Nombre_Material}
+                </Container>
+              );
+            })}
+          </Box>
           <Box sx={{ width: "100%" }}>
             <Stepper activeStep={activeStep}>
               {steps.map((label, index) => {
@@ -178,7 +182,6 @@ export default function MyStepper() {
                   </Step>
                 );
               })}
-              <Divider />
             </Stepper>
             {activeStep === steps.length ? (
               <React.Fragment>
