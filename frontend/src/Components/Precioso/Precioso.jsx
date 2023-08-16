@@ -78,7 +78,7 @@ const Precioso = (props) => {
         {loading ? (
           <Spinner color="primary" /> // Asegúrate de importar el componente Spinner si lo tienes
         ) : (
-          // Renderiza la lista de Formatos
+          // Renderiza la lista de Precios
           priceList.map((price) => (
             <Grid item xs={12} md={4} key={price._id}>
               {" "}

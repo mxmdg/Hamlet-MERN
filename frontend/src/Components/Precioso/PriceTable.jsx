@@ -29,6 +29,7 @@ const PriceTable = (props) => {
   const [useView, setView] = useState("viewer");
   const [useItemToEdit, setItemToEdit] = useState({});
   const [useTask, setTask] = useState("new");
+  const [isThereHistory, setIsThereHistory] = useState();
   const [showHistory, setShowHistory] = useState(false);
   const navigate = useNavigate();
 
@@ -83,19 +84,31 @@ const PriceTable = (props) => {
     }
   };
 
+  const checkHistory = () => {
+    if (props.pd.Historial.length === 0) {
+      setIsThereHistory(false);
+    } else {
+      setIsThereHistory(true);
+    }
+  };
+
   const handleHistory = () => {
     try {
-      if (props.Historial !== undefined || props.Historial !== null) {
-        setShowHistory(true);
-      } else {
+      console.log(props.pd.Historial);
+      if (props.pd.Historial.length === 0) {
+        setShowHistory(false);
         alert("No hay datos en el historial");
+      } else {
+        setShowHistory(true);
       }
     } catch (e) {
       alert(e.message);
     }
   };
 
-  useEffect(() => {}, [useView, useTask, useItemToEdit]);
+  useEffect(() => {
+    checkHistory();
+  }, [useView, useTask, useItemToEdit]);
   // const rows: GridRowsProp = props.pd
 
   const editor = (
@@ -190,7 +203,7 @@ const PriceTable = (props) => {
                 </TableBody>
               </Table>
             </TableContainer>
-            <MyLineChart data={props.pd.Historial} />
+            {isThereHistory && <MyLineChart data={props.pd.Historial} />}
           </CardContent>
 
           <CardActions
@@ -201,7 +214,11 @@ const PriceTable = (props) => {
             }}
           >
             <ButtonGroup variant="text" aria-label="text button group">
-              <Button color="info" onClick={handleHistory}>
+              <Button
+                color="info"
+                onClick={handleHistory}
+                {...(isThereHistory ? "" : { disabled: true })}
+              >
                 Historial
               </Button>
               <Button

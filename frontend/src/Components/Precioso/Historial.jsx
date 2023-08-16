@@ -106,7 +106,7 @@ export default function Historial(props) {
             >
               <TableHead>
                 <TableRow>
-                  {tableHead.slice(0, -1).map((title, index) => (
+                  {tableHead.map((title, index) => (
                     <StyledTableCell align="left" key={title + index}>
                       {title}
                     </StyledTableCell>
@@ -126,6 +126,9 @@ export default function Historial(props) {
                       </TableCell>
                       <TableCell component="th" scope="row" align="left">
                         {row.Minimo}
+                      </TableCell>
+                      <TableCell component="th" scope="row" align="left">
+                        {Math.round(row.Porcentaje * 100) / 100 || 0} %
                       </TableCell>
                       <TableCell component="th" scope="row" align="left">
                         {handleDate(row.Fecha)}
