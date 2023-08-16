@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, trigger } from "react-hook-form";
 import Input from "@mui/material/Input";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
@@ -25,7 +25,10 @@ const JobsForm = (props) => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+    trigger,
+  } = useForm({
+    mode: "onBlur", // "onChange"
+  });
 
   const handleChange = (e) => {
     e.preventDefault();
@@ -42,6 +45,7 @@ const JobsForm = (props) => {
     console.log(jt);
     values.JobType = jt;
     props.setJob(values);
+    props.continue();
     console.log(values);
   };
 
@@ -52,13 +56,10 @@ const JobsForm = (props) => {
       }}
     >
       <Card raised sx={{ gap: "20px", maxWidth: "600px" }} color="main">
-        <CardHeader
-          title="Completa el formulario"
-          subheader="y solicita tu presupuesto!"
-        />
+        <CardHeader title="+ Nuevo Trabajo" />
         <CardContent>
           <FormControl sx={{ width: "90%" }}>
-            <form name="form1" onBlur={handleSubmit(onSubmit)}>
+            <form name="form1" onSubmit={handleSubmit(onSubmit)}>
               <Grid
                 container
                 spacing={{ xs: 2, md: 3 }}
@@ -83,7 +84,10 @@ const JobsForm = (props) => {
                     name="JobType"
                     onChange={(e) => console.log(e.target.value)}
                     fullWidth
-                    {...register("JobType")}
+                    {...register("JobType", { required: true })}
+                    onBlur={() => {
+                      trigger("JobType");
+                    }}
                   >
                     {JobTypes.map((jt) => {
                       return (
@@ -93,6 +97,11 @@ const JobsForm = (props) => {
                       );
                     })}
                   </TextField>
+                  {errors.JobType?.type === "required" && (
+                    <FormHelperText>
+                      Seleccione un tipo de trabajo
+                    </FormHelperText>
+                  )}
                 </Grid>
                 <Grid item xs={1} sm={2} md={4}>
                   <TextField
@@ -101,9 +110,29 @@ const JobsForm = (props) => {
                     variant="outlined"
                     defaultValue={props.data.jobName || ""}
                     name="jobName"
-                    {...register("jobName")}
+                    {...register("jobName", {
+                      required: true,
+                      minLength: 3,
+                      maxLength: 40,
+                    })}
+                    onBlur={() => {
+                      trigger("jobName");
+                    }}
                     fullWidth
                   />
+                  {errors.jobName?.type === "minLength" && (
+                    <FormHelperText>
+                      Este campo debe tener al menos de 3 caracteres.
+                    </FormHelperText>
+                  )}
+                  {errors.jobName?.type === "maxLength" && (
+                    <FormHelperText>
+                      Este campo debe tener menos de 40 caracteres.
+                    </FormHelperText>
+                  )}
+                  {errors.jobName?.type === "required" && (
+                    <FormHelperText>Este campo es requerido</FormHelperText>
+                  )}
                 </Grid>
                 <Grid item xs={1} sm={2} md={4}>
                   <TextField
@@ -113,9 +142,25 @@ const JobsForm = (props) => {
                     variant="outlined"
                     defaultValue={props.data.quantity || ""}
                     name="quantity"
-                    {...register("quantity")}
+                    {...register("quantity", {
+                      required: true,
+                      min: 1,
+                      max: 99999,
+                    })}
+                    onBlur={() => {
+                      trigger("quantity");
+                    }}
                     fullWidth
                   />
+                  {errors.quantity?.type === "required" && (
+                    <FormHelperText>Este campo es requerido</FormHelperText>
+                  )}
+                  {errors.quantity?.type === "min" && (
+                    <FormHelperText>La cantidad minima es 1</FormHelperText>
+                  )}
+                  {errors.quantity?.type === "max" && (
+                    <FormHelperText>La cantidad máxima es 99999</FormHelperText>
+                  )}
                 </Grid>
                 <Grid item xs={1} sm={2} md={4}>
                   <TextField
@@ -125,7 +170,7 @@ const JobsForm = (props) => {
                     variant="outlined"
                     defaultValue={props.data.endDate || ""}
                     name="endDate"
-                    {...register("endDate")}
+                    {...register("endDate", { required: true })}
                     InputLabelProps={{
                       shrink: true,
                     }}
@@ -134,8 +179,21 @@ const JobsForm = (props) => {
                         placeholder: " ",
                       },
                     }}
+                    onBlur={() => {
+                      trigger("endDate");
+                    }}
                     fullWidth
                   />
+                  {errors.endDate?.type === "required" && (
+                    <FormHelperText>
+                      Establezca la fecha de entrega
+                    </FormHelperText>
+                  )}
+                </Grid>
+                <Grid item xs={1} sm={2} md={4}>
+                  {/* <Button type="submit" variant="outlined" color="warning">
+                    Agregar Trabajo
+                  </Button> */}
                 </Grid>
               </Grid>
             </form>

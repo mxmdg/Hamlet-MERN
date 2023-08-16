@@ -249,7 +249,7 @@ const JobParts = (props) => {
                     name="jobParts"
                     {...register("jobParts")}
                     control={control} // Proporcionamos el control del formulario
-                    defaultValue={partsList[0].id}
+                    value={partsList[0].id}
                     render={({ field }) => (
                       <Select
                         label="Partes"

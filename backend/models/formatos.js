@@ -2,22 +2,16 @@ const { Schema, model } = require('mongoose');
 
 const formatoSchema = new Schema(
     { 
-        'Nombre': {type: String, default: (this.Ancho + " x " + this.Alto),required: true},
+        'Nombre': {type: String, default: (this.Ancho + " x " + this.Alto),required: false},
         'Ancho': {type: Number, required: true},
         'Alto': {type: Number, required: true},
-    },
-    {
-        virtuals: {
-            Superficie: {
-                get() {
-                    return (this.Ancho * this.Alto)
-                }
-            }
-        }
-    }, {
-        toJSON: { virtuals: true } // <-- include virtuals in `JSON.stringify()`
-      }
+    }
     );
 
+formatoSchema.virtual('Superficie')
+    .get(function () { return ((this.Alto * this.Ancho) + ' mm2')})
+
+
+formatoSchema.set('toJSON', {virtuals: true})
 module.exports.esquema = model('Formatos', formatoSchema);
 module.exports.clase = formatoSchema;
