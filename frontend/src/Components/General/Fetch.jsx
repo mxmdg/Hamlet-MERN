@@ -3,7 +3,7 @@ import axios from "axios";
 import ItemsDetails from "./itemsDetails";
 import "../../Styles/hamlet.css";
 import "../Stocks/Stocks.css";
-import { serverURL } from "../Config/config";
+import { databaseURL } from "../Config/config";
 import ItemsTable from "./ItemsTable";
 import CircularColor from "./Spinner";
 import { Container } from "@mui/material";
@@ -14,17 +14,17 @@ const Fetch = (props) => {
   const [useSelected, setSelected] = useState([]);
   const [useLoading, setLoading] = useState(true);
   const [useHeaders, setHeaders] = useState([]);
-  const [useDeleted, setDeleted] = useState([])
+  const [useDeleted, setDeleted] = useState([]);
 
   const getElements = async () => {
-    const elements = await axios.get(
-      `${serverURL}/hamlet/${props.collection}/`
-    );
+    const elements = await axios.get(`${databaseURL + props.collection}/`);
     console.table(elements.data);
     setList(Object.values(elements.data));
     setHeaders(() => {
       const arr = [];
-      const labels = elements.data.length ? Object.getOwnPropertyNames(elements.data[0]).slice(1, -1) : ['Error','Datos inexistentes'];
+      const labels = elements.data.length
+        ? Object.getOwnPropertyNames(elements.data[0]).slice(1, -1)
+        : ["Error", "Datos inexistentes"];
       labels.map((e) => {
         const obj = {
           id: e,

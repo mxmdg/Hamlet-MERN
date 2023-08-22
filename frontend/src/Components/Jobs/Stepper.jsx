@@ -218,9 +218,11 @@ export default function MyStepper() {
                     </Button>
                   )}
 
-                  <Button onClick={handleNext} variant="filled">
-                    {activeStep === steps.length - 1 ? "Finish" : "Next"}
-                  </Button>
+                  {useJob.length == 0 && (
+                    <Button onClick={handleNext} variant="filled">
+                      {activeStep === steps.length - 1 ? "Finish" : "Next"}
+                    </Button>
+                  )}
                 </Box>
               </React.Fragment>
             )}

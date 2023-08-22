@@ -1,6 +1,6 @@
 import "../../Styles/hamlet.css";
 import axios from "axios";
-import { serverURL } from "../Config/config";
+import { databaseURL } from "../Config/config";
 import Form from "../Formulario/Form";
 import { useState, useEffect } from "react";
 import { Grid } from "@mui/material";
@@ -34,7 +34,7 @@ const PriceTable = (props) => {
   const navigate = useNavigate();
 
   const getElements = async () => {
-    const items = await axios.get(`${serverURL}/hamlet/${props.collection}/`);
+    const items = await axios.get(`${databaseURL + props.collection}/`);
   };
 
   const deleteClickHandler = async (id) => {
@@ -49,7 +49,7 @@ const PriceTable = (props) => {
       )
     ) {
       try {
-        await axios.delete(`${serverURL}/hamlet/${props.collection}/${id}`);
+        await axios.delete(`${databaseURL + props.collection}/${id}`);
         getElements();
         props.editor(true);
       } catch (e) {
@@ -61,7 +61,7 @@ const PriceTable = (props) => {
   const editClickHandler = async (id) => {
     try {
       const itemToEdit = await axios.get(
-        `${serverURL}/hamlet/${props.collection}/${id}`
+        `${databaseURL + props.collection}/${id}`
       );
       /* let history = [
         {

@@ -4,7 +4,9 @@ const formatControl= {}
 
 formatControl.getFormats = async (req,res)=>{{
     const formato = await formatos.esquema.find()
-    res.json(formato)}}
+    res.json(formato)
+    //return formato
+  }}
 
 formatControl.addFormat = async (req,res)=>{{
     try {

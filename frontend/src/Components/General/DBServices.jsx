@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { serverURL } from "../Config/config";
+import { databaseURL } from "../Config/config";
 
 export const deleteClickHandler = async (id, collection) => {
   try {
-    await axios.delete(`${serverURL}/hamlet/${collection}/${id}`);
+    await axios.delete(`${databaseURL + collection}/${id}`);
   } catch (e) {
     alert(e);
   }
@@ -42,7 +42,7 @@ export const addElement = (data) => {};
 
 export const getElement = async (id, collection) => {
   try {
-    const item = await axios.get(`${serverURL}/hamlet/${collection}/${id}`);
+    const item = await axios.get(`${databaseURL + collection}/${id}`);
     return item;
   } catch (e) {
     console.log(e);
@@ -52,7 +52,7 @@ export const getElement = async (id, collection) => {
 
 export const getElements = async (collection) => {
   try {
-    const items = await axios.get(`${serverURL}/hamlet/${collection}`);
+    const items = await axios.get(`${databaseURL + collection}`);
     console.log(items.data);
     return items;
   } catch (e) {

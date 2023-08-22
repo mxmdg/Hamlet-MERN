@@ -1,4 +1,5 @@
-const { Schema, model } = require('mongoose');
+const { Schema, model, default: mongoose } = require('mongoose');
+const { getFormats } = require('../routes/controllers/formatControl')
 
 const printerSchema = new Schema(
     { 
@@ -14,6 +15,37 @@ const printerSchema = new Schema(
         'Fecha': {type: Date, default: Date.now, required: false}
         
     });
+
+//const formatos = await formatos.find()    
+
+printerSchema.virtual("AdmitedFormats")
+    .get(async function() {
+        const xMax = this.MaxFormatLength;
+        const xMin = this.MinFormatLength;
+        const yMax = this.MaxFormatWidth;
+        const yMin = this.MinFormatWidth;
+        const admitedFormats = [];
+        try {
+            const allFormats = await getFormats();
+            
+            for (const format of allFormats) {
+                if (Math.max(format.Length, format.Width) <= xMax &&
+                    Math.min(format.Length, format.Width) >= xMin &&
+                    Math.min(format.Length, format.Width) <= yMax &&
+                    Math.max(format.Length, format.Width) >= yMin) {
+                    admitedFormats.push(format._id);
+                }
+            }
+        } catch (e) {
+            console.log(e);
+            return [];
+        } 
+        console.log("Formatos admitidos: ", admitedFormats);
+        return admitedFormats;
+    }); 
+
+    printerSchema.set('toObject', {virtuals: true, getters: true})
+    printerSchema.set('toJSON', {virtuals: false, getters: true})    
 
 module.exports.esquema = model('Printers', printerSchema);
 module.exports.clase = printerSchema;

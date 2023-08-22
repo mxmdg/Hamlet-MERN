@@ -190,10 +190,10 @@ const JobsForm = (props) => {
                     </FormHelperText>
                   )}
                 </Grid>
-                <Grid item xs={1} sm={2} md={4}>
-                  {/* <Button type="submit" variant="outlined" color="warning">
+                <Grid item xs={1} sm={2} md={4} sx={{ alignSelf: "center" }}>
+                  <Button type="submit" variant="outlined" color="warning">
                     Agregar Trabajo
-                  </Button> */}
+                  </Button>
                 </Grid>
               </Grid>
             </form>

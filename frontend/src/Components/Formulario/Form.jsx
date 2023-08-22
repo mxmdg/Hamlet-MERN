@@ -73,7 +73,7 @@ const Form = (props) => {
       const fetchItem = async () => {
         try {
           const itemToEdit = await axios.get(
-            `${serverURL}/hamlet/${props.collection}/${id}`
+            `${databaseURL + props.collection}/${id}`
           );
           setItem(itemToEdit);
           console.log("id: " + itemToEdit.data._id);

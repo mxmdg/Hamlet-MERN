@@ -5,7 +5,7 @@ import ItemsDetails from "../General/itemsDetails";
 import PriceTable from "./PriceTable";
 import "../../Styles/hamlet.css";
 import "../Stocks/Stocks.css";
-import { serverURL } from "../Config/config";
+import { databaseURL } from "../Config/config";
 import {
   formNuvera,
   formIgenColor,
@@ -53,9 +53,7 @@ const Precioso = (props) => {
 
   useEffect(() => {
     const getElements = async () => {
-      const prices = await axios.get(
-        `${serverURL}/hamlet/${props.collection}/`
-      );
+      const prices = await axios.get(`${databaseURL + props.collection}/`);
       setPriceList(prices.data);
       setEdit(false);
       setLoading(false);
