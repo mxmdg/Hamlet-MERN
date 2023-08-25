@@ -8,6 +8,11 @@ formatControl.getFormats = async (req,res)=>{{
     //return formato
   }}
 
+  formatControl.leanFormats = async (req,res)=>{{
+    const formato = await formatos.esquema.find().lean({ virtuals: true });
+    return formato
+  }}  
+
 formatControl.addFormat = async (req,res)=>{{
     try {
         const {Nombre, Alto, Ancho} = req.body;

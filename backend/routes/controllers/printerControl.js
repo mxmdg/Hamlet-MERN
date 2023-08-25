@@ -7,6 +7,7 @@ printerControl.getPrinters = async (req,res) => {{
     res.json(printer);
 }}
 
+
 printerControl.addPrinter = async (req,res)=>{{
     const {Modelo, Fabricante, Colores, X_Minimo, X_Maximo, Y_Minimo, Y_Maximo, Paginas_por_minuto, Costo_impresion} = req.body;
     const newPrinter = new printers.esquema({Modelo, Fabricante, Colores, X_Minimo, X_Maximo, Y_Minimo, Y_Maximo, Paginas_por_minuto, Costo_impresion});

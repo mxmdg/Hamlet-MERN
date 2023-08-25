@@ -3,7 +3,7 @@ const routerPrinter = Router();
 const fsExtra = require('fs-extra');
 const path = require('path');
 
-const { getPrinters , addPrinter, getPrinter, updatePrinter, deletePrinter } = require('./controllers/printerControl')
+const { getPrinters , addPrinter, getPrinter, updatePrinter, deletePrinter, QueryPrinter} = require('./controllers/printerControl')
 
 routerPrinter.route('/')
 .get(getPrinters)
@@ -13,5 +13,6 @@ routerPrinter.route('/:id')
 .put(updatePrinter)
 .get(getPrinter)
 .delete(deletePrinter)
+
 
 module.exports = routerPrinter;

@@ -1,5 +1,6 @@
 const { Schema, model, default: mongoose } = require('mongoose');
-const { getFormats } = require('../routes/controllers/formatControl')
+const { leanFormats } = require('../routes/controllers/formatControl')
+const mongooseLeanVirtuals = require('mongoose-lean-virtuals');
 
 const printerSchema = new Schema(
     { 
@@ -18,21 +19,25 @@ const printerSchema = new Schema(
 
 //const formatos = await formatos.find()    
 
-printerSchema.virtual("AdmitedFormats")
-    .get(async function() {
-        const xMax = this.MaxFormatLength;
-        const xMin = this.MinFormatLength;
-        const yMax = this.MaxFormatWidth;
-        const yMin = this.MinFormatWidth;
+printerSchema.set('toObject', {virtuals: true, getters: true})
+printerSchema.set('toJSON', {virtuals: false, getters: true})   
+printerSchema.plugin(mongooseLeanVirtuals);
+
+printerSchema.virtual("admitedFormats")
+    .get(async function filterFormats() {
+        const xMax = this.X_Maximo;
+        const xMin = this.X_Minimo;
+        const yMax = this.Y_Maximo;
+        const yMin = this.Y_Minimo;
         const admitedFormats = [];
         try {
-            const allFormats = await getFormats();
-            
+            const allFormats = await leanFormats();
+                        
             for (const format of allFormats) {
-                if (Math.max(format.Length, format.Width) <= xMax &&
-                    Math.min(format.Length, format.Width) >= xMin &&
-                    Math.min(format.Length, format.Width) <= yMax &&
-                    Math.max(format.Length, format.Width) >= yMin) {
+                if (Math.max(format.Alto, format.Ancho) <= xMax &&
+                    Math.min(format.Alto, format.Ancho) >= xMin &&
+                    Math.min(format.Alto, format.Ancho) <= yMax &&
+                    Math.max(format.Alto, format.Ancho) >= yMin) {
                     admitedFormats.push(format._id);
                 }
             }
@@ -44,8 +49,10 @@ printerSchema.virtual("AdmitedFormats")
         return admitedFormats;
     }); 
 
-    printerSchema.set('toObject', {virtuals: true, getters: true})
-    printerSchema.set('toJSON', {virtuals: false, getters: true})    
+     
+
+    console.log("printerSchema.virtuals")
+    console.log(printerSchema.virtuals)
 
 module.exports.esquema = model('Printers', printerSchema);
 module.exports.clase = printerSchema;
