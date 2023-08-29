@@ -102,6 +102,8 @@ const Form = (props) => {
       }
     }
     const formData = convertirArrayAObjeto(datos);
+    console.log("Formato del POST");
+    console.log(formData);
 
     if (props.task === "new" || props.task === "copy") {
       try {

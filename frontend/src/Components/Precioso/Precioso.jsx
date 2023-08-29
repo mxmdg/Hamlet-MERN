@@ -22,6 +22,8 @@ const Precioso = (props) => {
   const [useEdit, setEdit] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  const token = localStorage.getItem("token");
+
   const formulaCLC = (item) => {
     let formula;
     switch (item.Proceso) {
@@ -53,11 +55,19 @@ const Precioso = (props) => {
 
   useEffect(() => {
     const getElements = async () => {
-      const prices = await axios.get(`${databaseURL + props.collection}/`);
-      setPriceList(prices.data);
-      setEdit(false);
-      setLoading(false);
-      console.log(prices);
+      try {
+        const prices = await axios.get(`${databaseURL + props.collection}/`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setPriceList(prices.data);
+        setEdit(false);
+        setLoading(false);
+        console.log(prices);
+      } catch (e) {
+        console.log(e);
+      }
     };
 
     const fetchData = async () => {

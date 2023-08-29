@@ -3,7 +3,7 @@ const prices = require('../../models/prices')
 const pricesControl= {}
 
 pricesControl.getPrices = async (req,res)=>{{
-    const gettedPrices = await prices.esquema.find()
+    const gettedPrices = await prices.esquema.find().sort({"Proceso": 1})
     res.json(gettedPrices)}
 }
 

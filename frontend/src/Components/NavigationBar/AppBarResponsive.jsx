@@ -22,8 +22,9 @@ const pages = [
   "Impresoras",
   "JobParts",
   "Materiales",
+  "Users",
 ];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+const settings = ["Login", "Profile", "Account", "Dashboard", "Logout"];
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -154,7 +155,7 @@ function ResponsiveAppBar() {
                 onClick={handleOpenUserMenu}
                 sx={{ p: 0, color: "#0ed" }}
               >
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar alt="Remy Sharp" src="../../img/mxm.jpg" />
               </IconButton>
             </Tooltip>
             <Menu
