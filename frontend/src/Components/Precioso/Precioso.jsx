@@ -16,13 +16,12 @@ import {
 } from "./updateService";
 import Grid from "@mui/material/Unstable_Grid2"; // Grid version 2
 import Spinner from "../General/Spinner";
+import { getPrivateElements } from "../customHooks/FetchDataHook";
 
 const Precioso = (props) => {
-  const [priceList, setPriceList] = useState([]);
+  const [priceList, setPriceList] = useState(null);
   const [useEdit, setEdit] = useState(false);
   const [loading, setLoading] = useState(true);
-
-  const token = localStorage.getItem("token");
 
   const formulaCLC = (item) => {
     let formula;
@@ -54,31 +53,32 @@ const Precioso = (props) => {
   };
 
   useEffect(() => {
-    const getElements = async () => {
+    /* const getElements = async () => {
       try {
         const prices = await axios.get(`${databaseURL + props.collection}/`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-        setPriceList(prices.data);
-        setEdit(false);
-        setLoading(false);
-        console.log(prices);
+        
       } catch (e) {
         console.log(e);
       }
-    };
+    }; */
 
     const fetchData = async () => {
       try {
-        getElements();
+        const prices = await getPrivateElements(props.collection);
+        setPriceList(prices);
+        setEdit(false);
+        setLoading(false);
+        console.log(prices);
       } catch (err) {
         console.log(err);
       }
     };
     fetchData();
-  }, [useEdit, props.priceState]);
+  }, [useEdit, setPriceList, props.priceState]);
 
   return (
     <>
@@ -87,6 +87,7 @@ const Precioso = (props) => {
           <Spinner color="primary" /> // Asegúrate de importar el componente Spinner si lo tienes
         ) : (
           // Renderiza la lista de Precios
+          priceList &&
           priceList.map((price) => (
             <Grid item xs={12} md={4} key={price._id}>
               {" "}

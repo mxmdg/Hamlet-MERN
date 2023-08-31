@@ -8,24 +8,22 @@ const AuthProvider = ({ children }) => {
     localStorage.getItem("login") ? true : false
   );
   const [useToken, setToken] = useState(
-    localStorage.getItem("token")
-      ? JSON.parse(localStorage.getItem("token"))
-      : {}
+    localStorage.getItem("token") ? localStorage.getItem("token") : {}
   );
   const Navigate = useNavigate();
 
   const handleLogin = (token) => {
     setLogin(true);
     localStorage.setItem("login", true);
-    setUserLogged(user);
-    localStorage.setItem("token", JSON.stringify(token));
+    setToken(token);
+    localStorage.setItem("token", token);
     Navigate("/perfil");
   };
 
   const handleLogout = () => {
     setLogin(false);
     localStorage.removeItem("login");
-    setUserLogged({});
+    setToken({});
     localStorage.removeItem("token");
     Navigate("/");
   };

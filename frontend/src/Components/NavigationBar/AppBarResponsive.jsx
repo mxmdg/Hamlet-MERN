@@ -14,6 +14,10 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
 import DropdownMenu from "./DropdownMenu";
+import { AuthContext } from "../context/AuthContext";
+import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { serverURL, databaseURL } from "../Config/config";
 
 const pages = [
   "Trabajos",
@@ -22,13 +26,15 @@ const pages = [
   "Impresoras",
   "JobParts",
   "Materiales",
-  "Users",
 ];
-const settings = ["Login", "Profile", "Account", "Dashboard", "Logout"];
+const settings = ["Login", "Register", "Users", "Logout"];
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const context = useContext(AuthContext);
+
+  const navigate = useNavigate();
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -41,7 +47,8 @@ function ResponsiveAppBar() {
     setAnchorElNav(null);
   };
 
-  const handleCloseUserMenu = () => {
+  const handleCloseUserMenu = (goTo) => {
+    navigate("/hamlet/" + goTo);
     setAnchorElUser(null);
   };
 
@@ -175,7 +182,11 @@ function ResponsiveAppBar() {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                <MenuItem
+                  key={setting}
+                  onClick={() => handleCloseUserMenu(setting)}
+                  href={`/${setting}`}
+                >
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
               ))}

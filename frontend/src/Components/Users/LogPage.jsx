@@ -6,9 +6,10 @@ import { Login } from "./Login";
 export const LogPage = () => {
   return (
     <Container>
-      {" "}
-      <h1>Log Page</h1>
+      <h1>Login:</h1>
       <Login />
+      <h1>Register:</h1>
+      <Register />
     </Container>
   );
 };

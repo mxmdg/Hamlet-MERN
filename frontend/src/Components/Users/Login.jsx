@@ -20,6 +20,8 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import { Grid } from "@mui/material";
 import { serverURL, databaseURL } from "../Config/config";
+import { AuthContext } from "../context/AuthContext";
+import { useContext } from "react";
 
 export const Login = () => {
   const {
@@ -32,13 +34,14 @@ export const Login = () => {
   });
 
   const navigate = useNavigate();
+  const context = useContext(AuthContext);
   //const params = useParams();
 
   const onSubmit = async (data) => {
     try {
       const token = await axios.post(databaseURL + "users/login", data);
       console.log(token.data.token);
-      localStorage.setItem("token", token.data.token);
+      context.handleLogin(token.data.token);
     } catch (e) {
       console.log("Fallo el login: " + e);
     }
