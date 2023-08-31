@@ -18,6 +18,7 @@ import { AuthContext } from "../context/AuthContext";
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { serverURL, databaseURL } from "../Config/config";
+import { ListItemButton } from "@mui/material";
 
 const pages = [
   "Trabajos",
@@ -27,7 +28,7 @@ const pages = [
   "JobParts",
   "Materiales",
 ];
-const settings = ["Login", "Register", "Users", "Logout"];
+const settings = ["Login", "Register", "Users"];
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -51,6 +52,17 @@ function ResponsiveAppBar() {
     navigate("/hamlet/" + goTo);
     setAnchorElUser(null);
   };
+
+  const handleLogOut = ()=> {
+    try {
+      if (window.confirm("Quiere cerrar la sesión?")) {
+        context.handleLogout()
+      }
+      handleCloseUserMenu('')
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   return (
     <AppBar position="static">
@@ -190,6 +202,14 @@ function ResponsiveAppBar() {
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
               ))}
+              <MenuItem>
+                <ListItemButton
+                  {...(context.useLogin ? "" : { disabled: true })}
+                  key='logout'
+                  onClick={handleLogOut}
+                >Cerrar Sesion</ListItemButton>
+              </MenuItem>
+              
             </Menu>
           </Box>
         </Toolbar>

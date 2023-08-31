@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 const URI = process.env.MONGODB_URI ? process.env.MONGODB_URI : 'mongodb://127.0.0.1:27017/'
-const DB_NAME = "ImprentaDorrego" /*"mxm"*/
+const DB_NAME = "test" /*"mxm"*/
 
 mongoose.connect((URI + DB_NAME),{
     useNewUrlParser: true,

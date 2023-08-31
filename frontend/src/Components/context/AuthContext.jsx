@@ -17,7 +17,8 @@ const AuthProvider = ({ children }) => {
     localStorage.setItem("login", true);
     setToken(token);
     localStorage.setItem("token", token);
-    Navigate("/perfil");
+    Navigate("/users");
+    console.log('Login exitoso')
   };
 
   const handleLogout = () => {
@@ -26,6 +27,7 @@ const AuthProvider = ({ children }) => {
     setToken({});
     localStorage.removeItem("token");
     Navigate("/");
+    console.log('Logout exitoso')
   };
   return (
     <AuthContext.Provider

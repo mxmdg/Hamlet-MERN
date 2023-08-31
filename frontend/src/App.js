@@ -34,15 +34,14 @@ function App() {
   return (
     <ThemeProv>
       <BrowserRouter> 
-        <Header />
         <AuthProvider>
+          <Header />
             <Box sx={{ 
               display: "flex", 
               width: "100vw",
               minHeight: "90vh",
               alignItems: "center",
-              justifyContent: "center",
-              border: "1px solid red"
+              justifyContent: "center"
               }}>
               <Routes>
                 <Route path="/" element={<Home />} />                
