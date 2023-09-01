@@ -24,6 +24,7 @@ import Historial from "./Historial";
 import LastSeen from "./LastUpdate";
 import { useNavigate } from "react-router-dom";
 import MyLineChart from "./LineChart";
+import { getPrivateElements, deletePrivateElement } from "../customHooks/FetchDataHook"
 
 const PriceTable = (props) => {
   const [useView, setView] = useState("viewer");
@@ -34,7 +35,7 @@ const PriceTable = (props) => {
   const navigate = useNavigate();
 
   const getElements = async () => {
-    const items = await axios.get(`${databaseURL + props.collection}/`);
+    const items = await getPrivateElements(`${props.collection}/`);
   };
 
   const deleteClickHandler = async (id) => {
@@ -49,7 +50,7 @@ const PriceTable = (props) => {
       )
     ) {
       try {
-        await axios.delete(`${databaseURL + props.collection}/${id}`);
+        await deletePrivateElement(props.collection, id);
         getElements();
         props.editor(true);
       } catch (e) {

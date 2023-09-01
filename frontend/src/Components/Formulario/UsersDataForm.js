@@ -20,7 +20,7 @@ let UsersDataForm = [{
 },
 {
     inputName: 'Password',
-    type: 'Password',
+    type: 'password',
     id: 'id_006'
 }
 ]

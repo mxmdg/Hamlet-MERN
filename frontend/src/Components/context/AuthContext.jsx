@@ -10,6 +10,7 @@ const AuthProvider = ({ children }) => {
   const [useToken, setToken] = useState(
     localStorage.getItem("token") ? localStorage.getItem("token") : {}
   );
+  const [userLogged, setUserLogged ] = useState({})
   const Navigate = useNavigate();
 
   const handleLogin = (token) => {
@@ -26,12 +27,13 @@ const AuthProvider = ({ children }) => {
     localStorage.removeItem("login");
     setToken({});
     localStorage.removeItem("token");
+    setUserLogged({})
     Navigate("/");
     console.log('Logout exitoso')
   };
   return (
     <AuthContext.Provider
-      value={{ useLogin, handleLogin, handleLogout, useToken }}
+      value={{ useLogin, handleLogin, handleLogout, useToken, userLogged, setUserLogged  }}
     >
       {children}
     </AuthContext.Provider>

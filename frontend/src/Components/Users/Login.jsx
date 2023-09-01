@@ -40,8 +40,9 @@ export const Login = () => {
   const onSubmit = async (data) => {
     try {
       const token = await axios.post(databaseURL + "users/login", data);
-      console.log(token.data.token);
+      console.log(token);
       context.handleLogin(token.data.token);
+      context.setUserLogged(token.data.document)
     } catch (e) {
       console.log("Fallo el login: " + e);
     }

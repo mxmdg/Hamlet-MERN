@@ -89,7 +89,7 @@ const Precioso = (props) => {
           // Renderiza la lista de Precios
           priceList &&
           priceList.map((price) => (
-            <Grid item xs={12} md={4} key={price._id}>
+            <Grid xs={12} md={4} key={price._id}>
               {" "}
               {/* Debes usar 'item' en lugar de 'Grid' */}
               <PriceTable

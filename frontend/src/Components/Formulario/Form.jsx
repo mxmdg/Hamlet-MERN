@@ -5,6 +5,7 @@ import axios from "axios";
 import { serverURL, databaseURL } from "../Config/config";
 import "./form.css";
 import { getElement } from "../General/DBServices";
+import { addPrivateElement, getPrivateElments, getPrivateElementByID, putPrivateElement, deletePrivateElement } from "../customHooks/FetchDataHook"
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormHelperText from "@mui/material/FormHelperText";
@@ -72,11 +73,11 @@ const Form = (props) => {
 
       const fetchItem = async () => {
         try {
-          const itemToEdit = await axios.get(
-            `${databaseURL + props.collection}/${id}`
-          );
+          const itemToEdit = await getPrivateElementByID(
+            `${props.collection}`, id );
+          console.log(itemToEdit)
           setItem(itemToEdit);
-          console.log("id: " + itemToEdit.data._id);
+          console.log("id: " + itemToEdit.data.id);
           console.log("Coleccion: " + props.collection);
         } catch (e) {
           console.log(e);
@@ -107,7 +108,7 @@ const Form = (props) => {
 
     if (props.task === "new" || props.task === "copy") {
       try {
-        await axios.post(databaseURL + collection, formData);
+        await addPrivateElement(collection, formData);
         setHidden(true);
         navigate(-1);
         props.setState !== undefined
@@ -118,10 +119,10 @@ const Form = (props) => {
       }
     } else {
       try {
-        await axios.put(`${databaseURL}${collection}/${id}`, formData);
+        await putPrivateElement(`${databaseURL}${collection}/${id}`, formData);
         setHidden(true);
         navigate(-1);
-        props.editor(true);
+        //props.editor(true);
       } catch (e) {
         console.log("No se pudo actualizar" + e);
       }

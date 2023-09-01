@@ -169,7 +169,7 @@ function ResponsiveAppBar() {
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
+            <Tooltip title={context.userLogged.Name}>
               <IconButton
                 onClick={handleOpenUserMenu}
                 sx={{ p: 0, color: "#0ed" }}
@@ -193,6 +193,9 @@ function ResponsiveAppBar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
+              <MenuItem>
+                <Typography textAlign="center">{context.userLogged.Name} {context.userLogged.LastName}</Typography>
+              </MenuItem>
               {settings.map((setting) => (
                 <MenuItem
                   key={setting}

@@ -27,7 +27,7 @@ const PricesMainContainer = () => {
   const context = useContext(AuthContext);
 
   return (
-    <Container fluid>
+    <Container >
       {context.useLogin &&(
         <Card variant="elevation" elevation={10} raised m={10} sx={{ p: "25px" }}>
         <CardHeader title={collection} />

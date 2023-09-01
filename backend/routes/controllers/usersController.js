@@ -65,7 +65,7 @@ const login = async (req, res, next)=> {
         }
         if (bcrypt.compareSync(req.body.password, document.password)) {
             const token = jwt.sign({userId: document._id},  req.app.get("secretKey"), {expiresIn: "1h"})
-            return res.json({token})
+            return res.json({token, document})
         } else {
             return res.json({message: "la contraseña es incorrecta"})
         }
