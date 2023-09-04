@@ -1,18 +1,21 @@
 import { useEffect, useState } from "react";
-import { Navigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Input from "./Input";
-import axios from "axios";
 import { serverURL, databaseURL } from "../Config/config";
 import "./form.css";
-import { getElement } from "../General/DBServices";
-import { addPrivateElement, getPrivateElments, getPrivateElementByID, putPrivateElement, deletePrivateElement } from "../customHooks/FetchDataHook"
+import {
+  addPrivateElement,
+  getPrivateElments,
+  getPrivateElementByID,
+  putPrivateElement,
+  deletePrivateElement,
+} from "../customHooks/FetchDataHook";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormHelperText from "@mui/material/FormHelperText";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Button from "@mui/material/Button";
-import ButtonGroup from "@mui/material/ButtonGroup";
 import {
   Container,
   Box,
@@ -74,8 +77,10 @@ const Form = (props) => {
       const fetchItem = async () => {
         try {
           const itemToEdit = await getPrivateElementByID(
-            `${props.collection}`, id );
-          console.log(itemToEdit)
+            `${props.collection}`,
+            id
+          );
+          console.log(itemToEdit);
           setItem(itemToEdit);
           console.log("id: " + itemToEdit.data.id);
           console.log("Coleccion: " + props.collection);

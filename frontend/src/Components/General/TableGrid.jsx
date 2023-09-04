@@ -22,7 +22,7 @@ import AddBoxIcon from "@mui/icons-material/AddBox";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
-import { deleteMultiple } from "./DBServices";
+import { deleteMultiple } from "../customHooks/FetchDataHook";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import { styled } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";

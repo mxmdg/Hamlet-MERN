@@ -38,9 +38,11 @@ function ResponsiveAppBar() {
   const navigate = useNavigate();
 
   const handleOpenNavMenu = (event) => {
+    console.log(event.currentTarget);
     setAnchorElNav(event.currentTarget);
   };
   const handleOpenUserMenu = (event) => {
+    console.log(event.currentTarget);
     setAnchorElUser(event.currentTarget);
   };
 
@@ -53,16 +55,16 @@ function ResponsiveAppBar() {
     setAnchorElUser(null);
   };
 
-  const handleLogOut = ()=> {
+  const handleLogOut = () => {
     try {
       if (window.confirm("Quiere cerrar la sesión?")) {
-        context.handleLogout()
+        context.handleLogout();
       }
-      handleCloseUserMenu('')
+      handleCloseUserMenu("/");
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
   return (
     <AppBar position="static">
@@ -174,7 +176,12 @@ function ResponsiveAppBar() {
                 onClick={handleOpenUserMenu}
                 sx={{ p: 0, color: "#0ed" }}
               >
-                <Avatar alt="Remy Sharp" src="../../img/mxm.jpg" />
+                <Avatar
+                  alt={
+                    context.userLogged.Name + " " + context.userLogged.LastName
+                  }
+                  src="../../img/mxm.jpg"
+                />
               </IconButton>
             </Tooltip>
             <Menu
@@ -194,7 +201,9 @@ function ResponsiveAppBar() {
               onClose={handleCloseUserMenu}
             >
               <MenuItem>
-                <Typography textAlign="center">{context.userLogged.Name} {context.userLogged.LastName}</Typography>
+                <Typography textAlign="center">
+                  {context.userLogged.Name} {context.userLogged.LastName}
+                </Typography>
               </MenuItem>
               {settings.map((setting) => (
                 <MenuItem
@@ -208,11 +217,12 @@ function ResponsiveAppBar() {
               <MenuItem>
                 <ListItemButton
                   {...(context.useLogin ? "" : { disabled: true })}
-                  key='logout'
+                  key="logout"
                   onClick={handleLogOut}
-                >Cerrar Sesion</ListItemButton>
+                >
+                  Cerrar Sesion
+                </ListItemButton>
               </MenuItem>
-              
             </Menu>
           </Box>
         </Toolbar>

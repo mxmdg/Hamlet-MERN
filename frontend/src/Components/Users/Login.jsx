@@ -41,8 +41,8 @@ export const Login = () => {
     try {
       const token = await axios.post(databaseURL + "users/login", data);
       console.log(token);
-      context.handleLogin(token.data.token);
-      context.setUserLogged(token.data.document)
+      context.handleLogin(token.data.token, token.data.expirationTime);
+      context.setUserLogged(token.data.document);
     } catch (e) {
       console.log("Fallo el login: " + e);
     }
