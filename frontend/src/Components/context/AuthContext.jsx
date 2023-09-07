@@ -36,7 +36,7 @@ const AuthProvider = ({ children }) => {
       localStorage.setItem("login", true);
       setToken(token);
       localStorage.setItem("token", token);
-      Navigate("/hamlet/users");
+      Navigate(-1);
       console.log("Login exitoso");
     } else {
       handleLogout();

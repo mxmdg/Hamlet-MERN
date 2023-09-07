@@ -46,12 +46,13 @@ function ResponsiveAppBar() {
     setAnchorElUser(event.currentTarget);
   };
 
-  const handleCloseNavMenu = () => {
+  const handleCloseNavMenu = (goTo) => {
+    navigate("/" + goTo);
     setAnchorElNav(null);
   };
 
   const handleCloseUserMenu = (goTo) => {
-    navigate("/hamlet/" + goTo);
+    navigate("/" + goTo);
     setAnchorElUser(null);
   };
 
@@ -122,13 +123,13 @@ function ResponsiveAppBar() {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography
-                    textAlign="center"
-                    component="a"
-                    href={`/Hamlet/${page}`}
-                    color={"#0ef"}
-                  >
+                <MenuItem
+                  key={page}
+                  onClick={() => {
+                    handleCloseNavMenu(page);
+                  }}
+                >
+                  <Typography textAlign="center" color={"#0ef"}>
                     {page}
                   </Typography>
                 </MenuItem>
@@ -160,9 +161,9 @@ function ResponsiveAppBar() {
             {pages.map((page) => (
               <Button
                 key={page}
-                onClick={handleCloseNavMenu}
-                component="a"
-                href={`/Hamlet/${page}`}
+                onClick={() => {
+                  handleCloseNavMenu(page);
+                }}
                 sx={{ my: 2, color: "#ddd", display: "block" }}
               >
                 {page}
@@ -209,7 +210,6 @@ function ResponsiveAppBar() {
                 <MenuItem
                   key={setting}
                   onClick={() => handleCloseUserMenu(setting)}
-                  href={`/${setting}`}
                 >
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>

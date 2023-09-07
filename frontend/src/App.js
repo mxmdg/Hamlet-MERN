@@ -26,6 +26,7 @@ import ThemeProv from "./Components/Config/theme";
 import { themeMxm } from './Components/Config/theme';
 import AuthProvider from './Components/context/AuthContext';
 import { AuthContext } from './Components/context/AuthContext';
+import { Container } from '@mui/material';
 
 
 function App() {
@@ -35,8 +36,10 @@ function App() {
     <ThemeProv>
       <BrowserRouter> 
         <AuthProvider>
-          <Header />
-            <Box sx={{ 
+          <Box>
+            <Header />
+          </Box>
+          <Box sx={{ 
               display: "flex", 
               width: "100vw",
               minHeight: "90vh",
@@ -45,35 +48,35 @@ function App() {
               }}>
               <Routes>
                 <Route path="/" element={<Home />} />                
-                <Route path="/hamlet/login" element={<Login />} />
-                <Route path="/hamlet/impresoras" element={<MainContainer entity={'impresoras'}/>} />
-                <Route path="/hamlet/impresoras/add" element={<Form form={PrintersDataForm} collection='impresoras' task="new"/>} />
-                <Route path="/hamlet/impresoras/copy/:id" element={<Form form={PrintersDataForm} collection='impresoras' task="copy"/>} />
-                <Route path="/hamlet/impresoras/edit/:id" element={<Form form={PrintersDataForm} collection='impresoras' task="edit"/>} />
-                <Route path="/hamlet/materiales" element={<MainContainer entity={'materiales'}/>} />
-                <Route path="/hamlet/materiales/add" element={<Form form={StockDataForm} collection='materiales' task="new"/>} />
-                <Route path="/hamlet/materiales/copy/:id" element={<Form form={StockDataForm} collection='materiales' task="copy"/>} />
-                <Route path="/hamlet/materiales/edit/:id" element={<Form form={StockDataForm} collection='materiales' task="edit"/>} />
-                <Route path="/hamlet/formatos" element={<MainContainer entity={'formatos'}/>} />
-                <Route path="/hamlet/formatos/add" element={<Form form={FormatDataForm} collection='formatos' task="new"/>} />
-                <Route path="/hamlet/formatos/copy/:id" element={<Form form={FormatDataForm} collection='formatos' task="copy"/>} />
-                <Route path="/hamlet/formatos/edit/:id" element={<Form form={FormatDataForm} collection='formatos' task="edit"/>} />
-                <Route path="/hamlet/JobParts" element={<MainContainer entity={'JobParts'}/>} />
-                <Route path="/hamlet/JobParts/add" element={<Form form={jobPartDataForm} collection='JobParts' task="new"/>} />
-                <Route path="/hamlet/JobParts/copy/:id" element={<Form form={jobPartDataForm} collection='JobParts' task="copy"/>} />
-                <Route path="/hamlet/JobParts/edit/:id" element={<Form form={jobPartDataForm} collection='JobParts' task="edit"/>} />
-                <Route path="/hamlet/users" element={<MainContainer entity={'users'}/>} />
-                <Route path="/hamlet/users/add" element={<Register/>} />
-                <Route path="/hamlet/register" element={<Register/>} />
-                <Route path="/hamlet/users/edit/:id" element={<Form form={UsersDataForm} collection='users' task="edit"/>} />
-                <Route path="/hamlet/trabajos" element={<MyStepper />} />
-                <Route path="/hamlet/precios" element={<MainContainer entity={'precios'}/>} />
-                <Route path="/hamlet/precios/edit/:id" element={<Form form={PricesDataForm} collection='precios' task="edit"/>} />
-                <Route path="/hamlet/precios/add" element={<Form form={PricesDataForm} collection='precios' task="new"/>} />
-                <Route path="/hamlet/configuracion" element={<ConfigMainContainer />} />
-                <Route path="/hamlet/configuracion/formatos" element={<FormatsMainContainer />} />
-                <Route path="/hamlet/configuracion/materiales" element={<StocksMainContainer />} />
-                <Route path="/hamlet/configuracion/impresoras" element={<PrintersMainContainer />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/impresoras" element={<MainContainer entity={'impresoras'}/>} />
+                <Route path="/impresoras/add" element={<Form form={PrintersDataForm} collection='impresoras' task="new"/>} />
+                <Route path="/impresoras/copy/:id" element={<Form form={PrintersDataForm} collection='impresoras' task="copy"/>} />
+                <Route path="/impresoras/edit/:id" element={<Form form={PrintersDataForm} collection='impresoras' task="edit"/>} />
+                <Route path="/materiales" element={<MainContainer entity={'materiales'}/>} />
+                <Route path="/materiales/add" element={<Form form={StockDataForm} collection='materiales' task="new"/>} />
+                <Route path="/materiales/copy/:id" element={<Form form={StockDataForm} collection='materiales' task="copy"/>} />
+                <Route path="/materiales/edit/:id" element={<Form form={StockDataForm} collection='materiales' task="edit"/>} />
+                <Route path="/formatos" element={<MainContainer entity={'formatos'}/>} />
+                <Route path="/formatos/add" element={<Form form={FormatDataForm} collection='formatos' task="new"/>} />
+                <Route path="/formatos/copy/:id" element={<Form form={FormatDataForm} collection='formatos' task="copy"/>} />
+                <Route path="/formatos/edit/:id" element={<Form form={FormatDataForm} collection='formatos' task="edit"/>} />
+                <Route path="/JobParts" element={<MainContainer entity={'JobParts'}/>} />
+                <Route path="/JobParts/add" element={<Form form={jobPartDataForm} collection='JobParts' task="new"/>} />
+                <Route path="/JobParts/copy/:id" element={<Form form={jobPartDataForm} collection='JobParts' task="copy"/>} />
+                <Route path="/JobParts/edit/:id" element={<Form form={jobPartDataForm} collection='JobParts' task="edit"/>} />
+                <Route path="/users" element={<MainContainer entity={'users'}/>} />
+                <Route path="/users/add" element={<Register/>} />
+                <Route path="/register" element={<Register/>} />
+                <Route path="/users/edit/:id" element={<Form form={UsersDataForm} collection='users' task="edit"/>} />
+                <Route path="/trabajos" element={<MyStepper />} />
+                <Route path="/precios" element={<MainContainer entity={'precios'}/>} />
+                <Route path="/precios/edit/:id" element={<Form form={PricesDataForm} collection='precios' task="edit"/>} />
+                <Route path="/precios/add" element={<Form form={PricesDataForm} collection='precios' task="new"/>} />
+                <Route path="/configuracion" element={<ConfigMainContainer />} />
+                <Route path="/configuracion/formatos" element={<FormatsMainContainer />} />
+                <Route path="/configuracion/materiales" element={<StocksMainContainer />} />
+                <Route path="/configuracion/impresoras" element={<PrintersMainContainer />} />
               </Routes>
             </Box>
             </AuthProvider>

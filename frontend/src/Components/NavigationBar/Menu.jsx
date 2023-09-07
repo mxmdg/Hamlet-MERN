@@ -9,43 +9,43 @@ const Menu = (props) => {
           <Link to="/">Hamlet</Link>
         </li>
         <li>
-          <Link id="trabajps" to="/Hamlet/trabajos">
+          <Link id="trabajps" to="/trabajos">
             Trabajos
           </Link>
         </li>
         <li>
-          <Link id="impresoras" to="/Hamlet/impresoras">
+          <Link id="impresoras" to="/impresoras">
             Impresoras
           </Link>
         </li>
         <li>
-          <Link id="materiales" to="/Hamlet/materiales">
+          <Link id="materiales" to="/materiales">
             Materiales
           </Link>
         </li>
         <li>
-          <Link id="formatos" to="/Hamlet/formatos">
+          <Link id="formatos" to="/formatos">
             Formatos
           </Link>
         </li>
         <li>
-          <Link id="jobParts" to="/Hamlet/jobParts">
+          <Link id="jobParts" to="/jobParts">
             Job Parts
           </Link>
         </li>
         <li>
-          <Link id="Precioso" to="/Hamlet/precios">
+          <Link id="Precioso" to="/precios">
             Precioso
           </Link>
         </li>
         <li>
           <DropdownMenu />
         </li>
-        {/* <li>
-          <Link id="Config" to="/hamlet/configuracion">
+        <li>
+          <Link id="Config" to="/configuracion">
             Configuracion
           </Link>
-        </li> */}
+        </li>
       </ul>
     </nav>
   );

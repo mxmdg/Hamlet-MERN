@@ -180,7 +180,7 @@ function EnhancedTableToolbar(props) {
       <StyledTooltip title="Agregar" arrow>
         <IconButton
           onClick={() => {
-            navigate(`/hamlet/${props.collection}/add`);
+            navigate(`/${props.collection}/add`);
           }}
           sx={{ alignSelf: "right" }}
         >
@@ -194,9 +194,7 @@ function EnhancedTableToolbar(props) {
               <StyledTooltip title="Copiar" arrow>
                 <IconButton
                   onClick={() => {
-                    navigate(
-                      `/hamlet/${props.collection}/copy/${props.idSelected}`
-                    );
+                    navigate(`/${props.collection}/copy/${props.idSelected}`);
                   }}
                   sx={{ alignSelf: "right" }}
                 >
@@ -206,9 +204,7 @@ function EnhancedTableToolbar(props) {
               <StyledTooltip title="Editar" arrow>
                 <IconButton
                   onClick={() => {
-                    navigate(
-                      `/hamlet/${props.collection}/edit/${props.idSelected}`
-                    );
+                    navigate(`/${props.collection}/edit/${props.idSelected}`);
                   }}
                   sx={{ alignSelf: "right" }}
                 >

@@ -1,12 +1,12 @@
-import Menu from './Menu'
-import AppBarResponsive from './AppBarResponsive'
+import Menu from "./Menu";
+import AppBarResponsive from "./AppBarResponsive";
 
-const Header = (props)=> {
-    
-    return (
+const Header = (props) => {
+  return (
     <header>
-        <AppBarResponsive />
-    </header>)
-   }         
+      <AppBarResponsive />
+    </header>
+  );
+};
 
 export default Header;

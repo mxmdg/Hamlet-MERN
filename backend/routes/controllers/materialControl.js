@@ -4,7 +4,6 @@ const materialControl= {}
 
 materialControl.getMaterials = async (req,res) => {{
     const material = await materials.esquema.find()
-        .select("Marca Tipo Gramaje Espesor_Resma")
     res.json(material);
 }}
 
