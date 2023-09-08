@@ -333,7 +333,7 @@ const JobParts = (props) => {
                   id="partStock"
                   label="Material"
                   onChange={props.onChange}
-                  defaultValue={""}
+                  //defaultValue={""}
                   variant="outlined"
                   sx={{ width: "95%" }}
                   color="primary"
@@ -342,7 +342,7 @@ const JobParts = (props) => {
                   {filteredStocks.map((Stock) => (
                     <MenuItem value={Stock._id} id={Stock._id} key={Stock._id}>
                       {Stock.Nombre_Material}
-                    </MenuItem>
+                    </MenuItem> 
                   ))}
                 </Select>
               </FormControl>

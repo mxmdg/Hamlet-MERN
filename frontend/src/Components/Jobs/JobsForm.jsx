@@ -19,8 +19,7 @@ import { Grid } from "@mui/material";
 import JobTypes from "./JobTypes";
 
 const JobsForm = (props) => {
-  console.log(props);
-
+  
   const {
     register,
     handleSubmit,
@@ -82,7 +81,6 @@ const JobsForm = (props) => {
                     color="primary"
                     label="Tipo de trabajo"
                     name="JobType"
-                    onChange={(e) => console.log(e.target.value)}
                     fullWidth
                     {...register("JobType", { required: true })}
                     onBlur={() => {

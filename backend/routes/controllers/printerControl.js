@@ -3,7 +3,7 @@ const printers = require('../../models/printers')
 const printerControl= {}
 
 printerControl.getPrinters = async (req,res) => {{
-    const printer = await printers.esquema.find().select("Modelo Fabricante Colores Paginas_por_minuto Costo_impresion")
+    const printer = await printers.esquema.find()
     res.json(printer);
 }}
 

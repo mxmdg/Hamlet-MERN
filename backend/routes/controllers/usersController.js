@@ -64,8 +64,8 @@ const login = async (req, res, next)=> {
             return res.json({message: "El correo no existe"})
         }
         if (bcrypt.compareSync(req.body.password, document.password)) {
-            const token = jwt.sign({userId: document._id},  req.app.get("secretKey"), {expiresIn: "1m"})
-            const expirationTime = (Date.now() + (60 * 1000))
+            const token = jwt.sign({userId: document._id},  req.app.get("secretKey"), {expiresIn: "15m"})
+            const expirationTime = (Date.now() + (15 * 60000))
             return res.json({token, document, expirationTime})
         } else {
             return res.json({message: "la contraseña es incorrecta"})

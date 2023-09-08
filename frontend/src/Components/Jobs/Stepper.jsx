@@ -14,7 +14,7 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import { Divider, Chip, Stack, Container } from "@mui/material";
 import { parts } from "./JobsParts";
-import { getPrivateElements } from "../customHooks/FetchDataHook";
+import { getPrivateElementByID } from "../customHooks/FetchDataHook";
 
 export default function MyStepper() {
   const [activeStep, setActiveStep] = React.useState(0);
@@ -34,7 +34,7 @@ export default function MyStepper() {
     console.log(newPart);
     try {
       const getStock = async (id) => {
-        const stock = await getPrivateElements(id, "materiales");
+        const stock = await getPrivateElementByID("materiales", id);
         newPart.partStock = stock.data;
       };
       getStock(newPart.partStock);
@@ -218,7 +218,7 @@ export default function MyStepper() {
                     </Button>
                   )}
 
-                  {useJob.length == 0 && (
+                  {useJob !== {} && (
                     <Button onClick={handleNext} variant="filled">
                       {activeStep === steps.length - 1 ? "Finish" : "Next"}
                     </Button>
