@@ -68,7 +68,7 @@ const JobsForm = (props) => {
                   <TextField
                     select
                     defaultValue={
-                      props.data.JobType == undefined
+                      props.data === null
                         ? ""
                         : props.data.JobType.id
                     }
@@ -106,7 +106,7 @@ const JobsForm = (props) => {
                     id="jobName"
                     label="Nombre del Trabajo"
                     variant="outlined"
-                    defaultValue={props.data.jobName || ""}
+                    defaultValue={props.data?.jobName || ""}
                     name="jobName"
                     {...register("jobName", {
                       required: true,
@@ -138,7 +138,7 @@ const JobsForm = (props) => {
                     type="number"
                     label="Cantidad"
                     variant="outlined"
-                    defaultValue={props.data.quantity || ""}
+                    defaultValue={props.data?.quantity || ""}
                     name="quantity"
                     {...register("quantity", {
                       required: true,
@@ -166,7 +166,7 @@ const JobsForm = (props) => {
                     type="date"
                     label="Fecha de entrega"
                     variant="outlined"
-                    defaultValue={props.data.endDate || ""}
+                    defaultValue={props.data?.endDate || ""}
                     name="endDate"
                     {...register("endDate", { required: true })}
                     InputLabelProps={{

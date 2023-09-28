@@ -62,6 +62,7 @@ pricesControl.updatePrice = async (req, res) => {
   try {
     const { Proceso, Valor, Minimo, Entrada, Historial } = req.body;
     const Fecha = Date.now();
+    const currentPrice = [Proceso, Valor, Minimo, Entrada, Fecha]
 
     const price = await prices.esquema.findById(req.params.id);
 
@@ -75,7 +76,13 @@ pricesControl.updatePrice = async (req, res) => {
       Entrada: price.Entrada,
       Fecha: price.Fecha
     };
-    price.Historial.push(historialItem);
+    const historialCurrent = {
+      Valor: Valor,
+      Minimo: Minimo,
+      Entrada: Entrada,
+      Fecha: Fecha
+    };
+    price.Historial.splice(price.Historial.length - 1,1,historialItem,historialCurrent);
     price.Valor = Valor;
     price.Minimo = Minimo;
     price.Entrada = Entrada;

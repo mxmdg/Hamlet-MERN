@@ -21,6 +21,7 @@ import Typography from "@mui/material/Typography";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Modal from "./Modal";
 import Historial from "./Historial";
+import Simulator from "./Simulator";
 import LastSeen from "./LastUpdate";
 import { useNavigate } from "react-router-dom";
 import MyLineChart from "./LineChart";
@@ -32,6 +33,7 @@ const PriceTable = (props) => {
   const [useTask, setTask] = useState("new");
   const [isThereHistory, setIsThereHistory] = useState();
   const [showHistory, setShowHistory] = useState(false);
+  const [showSim, setShowSim] = useState(false);
   const navigate = useNavigate();
 
   const getElements = async () => {
@@ -106,6 +108,10 @@ const PriceTable = (props) => {
       alert(e.message);
     }
   };
+
+  const handleSim = ()=> {
+    setShowSim(true)
+  }
 
   useEffect(() => {
     checkHistory();
@@ -225,10 +231,16 @@ const PriceTable = (props) => {
               <Button
                 color="success"
                 onClick={() => {
-                  navigate(`/hamlet/${props.collection}/edit/${props.id}`);
+                  navigate(`/${props.collection}/edit/${props.id}`);
                 }}
               >
                 Editar
+              </Button>
+              <Button
+                color="secondary"
+                onClick={handleSim}
+              >
+                Simular
               </Button>
               <Button
                 color="error"
@@ -247,6 +259,15 @@ const PriceTable = (props) => {
               btnText="ver"
               stateHistory={setShowHistory}
               collection={props.collection}
+              process={props.pd.Proceso}
+            />
+          </>
+        )}
+        {showSim && (
+          <>
+            <Simulator
+              data={props.pd}
+              stateSim={setShowSim}
               process={props.pd.Proceso}
             />
           </>

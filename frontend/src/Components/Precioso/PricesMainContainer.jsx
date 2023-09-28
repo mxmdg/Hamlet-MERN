@@ -35,7 +35,7 @@ const PricesMainContainer = () => {
           <Precioso collection="precios" priceState={useNewPrice} />
         </CardContent>
         <CardActions>
-                    <AddFloatButton text={"Agregar " + collection} onclick={() => navigate(`/hamlet/precios/add`)}/>
+                    <AddFloatButton text={"Agregar " + collection} onclick={() => navigate(`/precios/add`)}/>
         </CardActions>   
       </Card>
       )}

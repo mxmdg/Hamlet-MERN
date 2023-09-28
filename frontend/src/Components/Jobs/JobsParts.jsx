@@ -219,7 +219,7 @@ const JobParts = (props) => {
       filterStocks();
     };
 
-    const filteredParts = props.job.JobType
+    const filteredParts = props.job?.JobType
       ? parts.filter((part) => part.jobTypes.includes(props.job.JobType.name))
       : parts;
 

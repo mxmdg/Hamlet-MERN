@@ -12,16 +12,16 @@ import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
-import { Divider, Chip, Stack, Container } from "@mui/material";
+import { Divider, Chip, Stack, Container, ButtonGroup } from "@mui/material";
 import { parts } from "./JobsParts";
-import { getPrivateElementByID } from "../customHooks/FetchDataHook";
+import { getPrivateElementByID, addPrivateElement } from "../customHooks/FetchDataHook";
 
 export default function MyStepper() {
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set());
   const [useParts, setParts] = React.useState([]);
   const [useJobType, setJobType] = React.useState({});
-  const [useJob, setJob] = React.useState({});
+  const [useJob, setJob] = React.useState(null);
 
   const handleJobTypeChange = (e) => {
     setJobType(e.target.value);
@@ -102,6 +102,19 @@ export default function MyStepper() {
     });
   };
 
+  const handlePost = async ()=> {
+      const Job = useJob;
+      Job.Partes = useParts;
+      console.log(Job)
+      try {
+        console.log('Guardando...')
+        const res = await addPrivateElement('Jobs',Job);
+        console.log(`Trabajo ${Job.Orden} agregado`)
+      } catch (e) {
+        console.log('No funciono' + e)
+      }
+  }
+
   const handleReset = () => {
     setActiveStep(0);
     setParts([]);
@@ -141,26 +154,44 @@ export default function MyStepper() {
     >
       <Card raised sx={{ gap: "20px", maxWidth: "600px" }} color="info">
         <CardHeader
-          title={useJob.jobName || "Nuevo Trabajo"}
-          subheader={useJob.quantity || "Solicita tu presupuesto!"}
+          title={useJob?.jobName || "Nuevo Trabajo"}
+          subheader={useJob?.quantity || "Solicita tu presupuesto!"}
         />
         <CardContent>
-          <Box>
-            {useParts.map((part) => {
+          <Container>
+            <Stack direction={'row'}>
+              {useParts.map((part) => {
               return (
                 <Container key={part.id}>
-                  <h4>{part.jobParts[0].type}</h4>
-                  Paginas: {part.pages}
-                  <br />
-                  Formato: {part.Ancho} x {part.Alto}
-                  <br />
-                  Impresion: {part.coloresFrente}/{part.coloresDorso}
-                  <br />
-                  Material: {part.partStock.Nombre_Material}
+                  <Card>
+                    <CardHeader title={part.jobParts[0].type}>
+                    </CardHeader>
+                    <Container>
+                        
+                        Paginas: {part.pages}
+                        <br />
+                        Formato: {part.Ancho} x {part.Alto}
+                        <br />
+                        Impresion: {part.coloresFrente}/{part.coloresDorso}
+                        <br />
+                        Material: {part.partStock.Nombre_Material}
+                        
+                    </Container>
+                    <CardActions>
+                      <ButtonGroup size="small">
+                          <Button color="primary">Editar</Button>
+                          <Button color="error">Eliminar</Button>
+                        </ButtonGroup>
+                    </CardActions>
+                    
+                  </Card>
+                  
                 </Container>
               );
             })}
-          </Box>
+            </Stack>
+          </Container>
+          <Divider></Divider>
           <Box sx={{ width: "100%" }}>
             <Stepper activeStep={activeStep}>
               {steps.map((label, index) => {
@@ -217,12 +248,14 @@ export default function MyStepper() {
                       Skip
                     </Button>
                   )}
-
-                  {useJob !== {} && (
-                    <Button onClick={handleNext} variant="filled">
+                    <Button onClick={activeStep === steps.length - 1 ? handlePost : handleNext } variant="filled">
                       {activeStep === steps.length - 1 ? "Finish" : "Next"}
                     </Button>
-                  )}
+                  {/* {useJob !== null && (
+                      <Button onClick={handleNext} variant="filled">
+                        {activeStep === steps.length - 1 ? "Finish" : "Next"}
+                      </Button>
+                  )} */}
                 </Box>
               </React.Fragment>
             )}

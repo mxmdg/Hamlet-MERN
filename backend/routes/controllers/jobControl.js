@@ -8,10 +8,14 @@ jobControl.getJobs = async (req,res)=>{{
 
 jobControl.addJob = async (req,res)=>{{
     try {
-        const {Nombre, Tipo, Cantidad} = req.body;
+        const Nombre = req.body.jobName; 
+        const Tipo =  req.body.jobType;
+        const Cantidad = req.body.quantity
+        const Partes = req.body.Partes;
         //const Archivos = '/uploads/' + req.file.filename;
-        const newJob = new jobs.esquema({Nombre , Tipo, Cantidad});
+        const newJob = new jobs.esquema({Nombre , Tipo, Cantidad, Partes});
         await newJob.save();
+        console.log(`Trabajo agregado`)
         res.json({"message": newJob.Nombre + " guardado OK"});
     } catch (e) {
         console.log(e)

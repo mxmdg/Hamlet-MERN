@@ -216,7 +216,7 @@ const Form = (props) => {
             key={inp.id}
             type={inp.type}
             step={inp.step !== undefined ? inp.step : 1}
-            item={useItem !== {} ? useItem.data : ""}
+            item={(typeof useItem) !== Object ? useItem.data : ""}
             fullWidth
           ></Input>
         </Grid>
@@ -239,7 +239,7 @@ const Form = (props) => {
           subheader={props.Task}
         />
         <CardContent>
-          <div {...(props.task !== "new" ? (style = { style }) : "")}>
+          <div>
             <form
               onSubmit={(e) =>
                 submitHandler(
