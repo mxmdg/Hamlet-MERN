@@ -15,6 +15,7 @@ import { Register } from './Components/Users/Register';
 import { Login } from './Components/Users/Login';
 import JobsForm from './Components/Jobs/JobsForm'
 import MyStepper from './Components/Jobs/Stepper';
+import JobsContainer from './Components/Jobs/JobsContainer';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from './Components/home'
 import ConfigMainContainer from './Components/Config/ConfigMainContainer';
@@ -69,7 +70,8 @@ function App() {
                 <Route path="/users/add" element={<Register/>} />
                 <Route path="/register" element={<Register/>} />
                 <Route path="/users/edit/:id" element={<Form form={UsersDataForm} collection='users' task="edit"/>} />
-                <Route path="/trabajos" element={<MyStepper />} />
+                <Route path="/Jobs" element={<JobsContainer entity={'Jobs'} />} />
+                <Route path="/Jobs/edit/:id" element={<JobsContainer entity={'Jobs'} />} />
                 <Route path="/precios" element={<MainContainer entity={'precios'}/>} />
                 <Route path="/precios/edit/:id" element={<Form form={PricesDataForm} collection='precios' task="edit"/>} />
                 <Route path="/precios/add" element={<Form form={PricesDataForm} collection='precios' task="new"/>} />

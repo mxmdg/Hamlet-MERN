@@ -14,7 +14,10 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import { Divider, Chip, Stack, Container, ButtonGroup } from "@mui/material";
 import { parts } from "./JobsParts";
-import { getPrivateElementByID, addPrivateElement } from "../customHooks/FetchDataHook";
+import {
+  getPrivateElementByID,
+  addPrivateElement,
+} from "../customHooks/FetchDataHook";
 
 export default function MyStepper() {
   const [activeStep, setActiveStep] = React.useState(0);
@@ -102,18 +105,19 @@ export default function MyStepper() {
     });
   };
 
-  const handlePost = async ()=> {
-      const Job = useJob;
-      Job.Partes = useParts;
-      console.log(Job)
-      try {
-        console.log('Guardando...')
-        const res = await addPrivateElement('Jobs',Job);
-        console.log(`Trabajo ${Job.Orden} agregado`)
-      } catch (e) {
-        console.log('No funciono' + e)
-      }
-  }
+  const handlePost = async () => {
+    const Job = useJob;
+    Job.Partes = useParts;
+    console.log(Job);
+    try {
+      console.log("Guardando...");
+      const res = await addPrivateElement("Jobs", Job);
+      console.log(`Trabajo ${Job.Orden} agregado`);
+      handleNext();
+    } catch (e) {
+      console.log("No funciono" + e);
+    }
+  };
 
   const handleReset = () => {
     setActiveStep(0);
@@ -159,15 +163,13 @@ export default function MyStepper() {
         />
         <CardContent>
           <Container>
-            <Stack direction={'row'}>
+            <Stack direction={"row"}>
               {useParts.map((part) => {
-              return (
-                <Container key={part.id}>
-                  <Card>
-                    <CardHeader title={part.jobParts[0].type}>
-                    </CardHeader>
-                    <Container>
-                        
+                return (
+                  <Container key={part.id}>
+                    <Card>
+                      <CardHeader title={part.jobParts[0].type}></CardHeader>
+                      <Container>
                         Paginas: {part.pages}
                         <br />
                         Formato: {part.Ancho} x {part.Alto}
@@ -175,20 +177,17 @@ export default function MyStepper() {
                         Impresion: {part.coloresFrente}/{part.coloresDorso}
                         <br />
                         Material: {part.partStock.Nombre_Material}
-                        
-                    </Container>
-                    <CardActions>
-                      <ButtonGroup size="small">
+                      </Container>
+                      <CardActions>
+                        <ButtonGroup size="small">
                           <Button color="primary">Editar</Button>
                           <Button color="error">Eliminar</Button>
                         </ButtonGroup>
-                    </CardActions>
-                    
-                  </Card>
-                  
-                </Container>
-              );
-            })}
+                      </CardActions>
+                    </Card>
+                  </Container>
+                );
+              })}
             </Stack>
           </Container>
           <Divider></Divider>
@@ -248,9 +247,14 @@ export default function MyStepper() {
                       Skip
                     </Button>
                   )}
-                    <Button onClick={activeStep === steps.length - 1 ? handlePost : handleNext } variant="filled">
-                      {activeStep === steps.length - 1 ? "Finish" : "Next"}
-                    </Button>
+                  <Button
+                    onClick={
+                      activeStep === steps.length - 1 ? handlePost : handleNext
+                    }
+                    variant="filled"
+                  >
+                    {activeStep === steps.length - 1 ? "Finish" : "Next"}
+                  </Button>
                   {/* {useJob !== null && (
                       <Button onClick={handleNext} variant="filled">
                         {activeStep === steps.length - 1 ? "Finish" : "Next"}

@@ -61,7 +61,7 @@ export const themeMxm = createTheme({
 
 export const themeOptions = createTheme({
   palette: {
-    mode: "dark",
+    mode: "light",
     primary: {
       main: "#e06",
     },

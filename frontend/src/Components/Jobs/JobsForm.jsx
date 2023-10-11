@@ -19,7 +19,6 @@ import { Grid } from "@mui/material";
 import JobTypes from "./JobTypes";
 
 const JobsForm = (props) => {
-  
   const {
     register,
     handleSubmit,
@@ -68,9 +67,7 @@ const JobsForm = (props) => {
                   <TextField
                     select
                     defaultValue={
-                      props.data === null
-                        ? ""
-                        : props.data.JobType.id
+                      props.data === null ? "" : props.data.JobType?.id
                     }
                     id="JobType"
                     inputProps={{

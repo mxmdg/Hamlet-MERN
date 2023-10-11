@@ -272,13 +272,13 @@ const JobParts = (props) => {
             )}
             <Grid item xs={1} sm={2} md={4}>
               <TextField
-                id="pages"
+                id="Pages"
                 type="number"
                 label="Paginas"
                 variant="outlined"
-                name="pages"
+                name="Pages"
                 color="warning"
-                {...register("pages")}
+                {...register("Pages")}
               />
             </Grid>
             <Grid item xs={1} sm={2} md={4}>
@@ -307,22 +307,22 @@ const JobParts = (props) => {
               <TextField
                 variant="outlined"
                 type="number"
-                name="coloresFrente"
-                id="coloresFrente"
+                name="ColoresFrente"
+                id="ColoresFrente"
                 label="Colores Frente"
                 color="secondary"
-                {...register("coloresFrente")}
+                {...register("ColoresFrente")}
               />
             </Grid>
             <Grid item xs={1} sm={2} md={4}>
               <TextField
                 variant="outlined"
                 type="number"
-                name="coloresDorso"
-                id="coloresDorso"
+                name="ColoresDorso"
+                id="ColoresDorso"
                 label="Colores Dorso"
                 color="warning"
-                {...register("coloresDorso")}
+                {...register("ColoresDorso")}
               />
             </Grid>
             <Grid item xs={1} sm={2} md={4}>
@@ -342,7 +342,7 @@ const JobParts = (props) => {
                   {filteredStocks.map((Stock) => (
                     <MenuItem value={Stock._id} id={Stock._id} key={Stock._id}>
                       {Stock.Nombre_Material}
-                    </MenuItem> 
+                    </MenuItem>
                   ))}
                 </Select>
               </FormControl>

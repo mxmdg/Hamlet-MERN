@@ -3,17 +3,18 @@ const jobs = require('../../models/Jobs')
 const jobControl= {}
 
 jobControl.getJobs = async (req,res)=>{{
-    const jobList = await jobs.esquema.find()
+    const jobList = await jobs.esquema.find().select('Nombre Cantidad Fecha Entrega __v')
     res.json(jobList)}}
 
 jobControl.addJob = async (req,res)=>{{
     try {
         const Nombre = req.body.jobName; 
-        const Tipo =  req.body.jobType;
+        const Tipo =  req.body.JobType;
         const Cantidad = req.body.quantity
         const Partes = req.body.Partes;
+        const Entrega = req.body.endDate;
         //const Archivos = '/uploads/' + req.file.filename;
-        const newJob = new jobs.esquema({Nombre , Tipo, Cantidad, Partes});
+        const newJob = new jobs.esquema({Nombre , Tipo, Cantidad, Entrega, Partes});
         await newJob.save();
         console.log(`Trabajo agregado`)
         res.json({"message": newJob.Nombre + " guardado OK"});
@@ -24,7 +25,8 @@ jobControl.addJob = async (req,res)=>{{
 
 jobControl.getJob = async (req, res)=> {
     console.log(req.params.id)
-    res.json({"Message": "trabajo encontrado " + req.params.id})
+    const job = await jobs.esquema.findById(req.params.id)
+    res.json(job)
   }
 jobControl.updateJob = async (req, res)=> {
     const {Nombre, Alto, Ancho} = req.body;
@@ -32,8 +34,7 @@ jobControl.updateJob = async (req, res)=> {
     res.json({"Message": "Formato actualizado " + req.params.id})
   }
 jobControl.deleteJob =  async (req, res)=> {
-    const producto =  await job.findByIdAndDelete(req.params.id);
-    fsExtra.unlink(path.resolve('./BackEnd/public' + producto.Archivos));
+    const producto =  await jobs.esquema.findByIdAndDelete(req.params.id);
     res.json({"Message": "Trabajo borrado"})
   }
 

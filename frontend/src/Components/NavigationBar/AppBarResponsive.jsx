@@ -21,7 +21,7 @@ import { serverURL, databaseURL } from "../Config/config";
 import { ListItemButton } from "@mui/material";
 
 const pages = [
-  "Trabajos",
+  "Jobs",
   "Configuracion",
   "Formatos",
   "Impresoras",
