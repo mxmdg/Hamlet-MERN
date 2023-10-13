@@ -1,5 +1,7 @@
 import * as React from "react";
 import { useEffect } from "react";
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
 import Box from "@mui/material/Box";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
@@ -25,6 +27,7 @@ export default function MyStepper() {
   const [useParts, setParts] = React.useState([]);
   const [useJobType, setJobType] = React.useState({});
   const [useJob, setJob] = React.useState(null);
+  const context = useContext(AuthContext);
 
   const handleJobTypeChange = (e) => {
     setJobType(e.target.value);

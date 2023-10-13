@@ -13,8 +13,9 @@ jobControl.addJob = async (req,res)=>{{
         const Cantidad = req.body.quantity
         const Partes = req.body.Partes;
         const Entrega = req.body.endDate;
+        const Owner = req.body.Owner;
         //const Archivos = '/uploads/' + req.file.filename;
-        const newJob = new jobs.esquema({Nombre , Tipo, Cantidad, Entrega, Partes});
+        const newJob = new jobs.esquema({Nombre , Tipo, Cantidad, Entrega, Partes, Owner});
         await newJob.save();
         console.log(`Trabajo agregado`)
         res.json({"message": newJob.Nombre + " guardado OK"});
@@ -25,7 +26,7 @@ jobControl.addJob = async (req,res)=>{{
 
 jobControl.getJob = async (req, res)=> {
     console.log(req.params.id)
-    const job = await jobs.esquema.findById(req.params.id)
+    const job = await jobs.esquema.findById(req.params.id).populate('Owner')
     res.json(job)
   }
 jobControl.updateJob = async (req, res)=> {

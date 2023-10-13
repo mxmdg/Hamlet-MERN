@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
 import { useForm, trigger } from "react-hook-form";
 import Input from "@mui/material/Input";
 import Container from "@mui/material/Container";
@@ -27,6 +28,8 @@ const JobsForm = (props) => {
   } = useForm({
     mode: "onBlur", // "onChange"
   });
+  
+  const context = useContext(AuthContext);
 
   const handleChange = (e) => {
     e.preventDefault();
@@ -42,6 +45,8 @@ const JobsForm = (props) => {
     });
     console.log(jt);
     values.JobType = jt;
+    console.log(context.userLogged._id)
+    values.Owner = context.userLogged._id;
     props.setJob(values);
     props.continue();
     console.log(values);

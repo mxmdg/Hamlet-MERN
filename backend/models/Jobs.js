@@ -47,10 +47,7 @@ const jobSchema = new Schema(
         'Entrega': {type: Date, required: true},
         'Fecha': {type: Date, default: Date.now},
         'Partes': [partSchema],
-        timestamps: {
-              createdAt: 'created_at', // Use `created_at` to store the created date
-              updatedAt: 'updated_at' // and `updated_at` to store the last updated date
-            }
+        'Owner':{ type: mongoose.Schema.ObjectId, ref: "Users"},
     });
 
 module.exports.esquema = model('Job', jobSchema);
