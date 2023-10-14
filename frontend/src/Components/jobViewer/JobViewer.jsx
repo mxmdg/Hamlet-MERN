@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import Spinner from "../General/Spinner";
 
+import JobDetail from "./JobDetail";
+
 import {
   addPrivateElement,
   getPrivateElments,
@@ -43,17 +45,18 @@ export const JobViewer = (props) => {
     if (useLoading === false && useCurrentJob !== null) {
       return (
         <>
-          <div margin="10px">
+          {/* <div margin="10px">
             <h1>Trabajo {useCurrentJob.Nombre}</h1>
             <h2>Cantidad: {useCurrentJob.Cantidad}</h2>
             <h3>
-              {useCurrentJob.Owner.Name} {useCurrentJob.Owner.LastName}
+              {useCurrentJob.Owner?.Name} {useCurrentJob.Owner?.LastName}
             </h3>
-            <h6>{useCurrentJob.Owner.email}</h6>
+            <h6>{useCurrentJob.Owner?.email}</h6>
             <h3>{useCurrentJob.Fecha}</h3>
             <h3>{useCurrentJob.Entrega}</h3>
-          </div>
-          <div>
+          </div> */}
+          <JobDetail job={useCurrentJob} />
+          {/* <div>
             {useCurrentJob.Partes.map((part) => {
               return (
                 <>
@@ -71,7 +74,7 @@ export const JobViewer = (props) => {
                 </>
               );
             })}
-          </div>
+          </div> */}
         </>
       );
     } else {
