@@ -33,6 +33,7 @@ export const getPrivateElementByID = async (collection, id) => {
         Authorization: `Bearer ${token}`,
       },
     });
+    console.log(elements);
     return elements;
   } catch (e) {
     return { message: e };

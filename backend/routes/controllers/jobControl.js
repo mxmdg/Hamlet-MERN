@@ -1,4 +1,6 @@
-const jobs = require('../../models/Jobs')
+const jobs = require('../../models/Jobs');
+const users = require('../../models/usersSchema');
+const stocks = require('../../models/materiales')
 
 const jobControl= {}
 
@@ -26,7 +28,9 @@ jobControl.addJob = async (req,res)=>{{
 
 jobControl.getJob = async (req, res)=> {
     console.log(req.params.id)
-    const job = await jobs.esquema.findById(req.params.id).populate('Owner')
+    const job = await jobs.esquema.findById(req.params.id)
+      .populate({path: "Owner", model: users.esquema, select: 'Name LastName Role email'})
+      .populate({path: 'Partes.partStock', model: stocks.esquema})
     res.json(job)
   }
 jobControl.updateJob = async (req, res)=> {
