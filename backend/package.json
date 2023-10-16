@@ -19,6 +19,7 @@
     "jsonwebtoken": "^9.0.1",
     "mongoose": "^7.0.3",
     "mongoose-lean-virtuals": "^0.9.1",
+    "node-time-ago": "^1.0.0",
     "nodemon": "^2.0.22"
   },
   "devDependencies": {

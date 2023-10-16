@@ -43,40 +43,7 @@ export const JobViewer = (props) => {
 
   const output = () => {
     if (useLoading === false && useCurrentJob !== null) {
-      return (
-        <>
-          {/* <div margin="10px">
-            <h1>Trabajo {useCurrentJob.Nombre}</h1>
-            <h2>Cantidad: {useCurrentJob.Cantidad}</h2>
-            <h3>
-              {useCurrentJob.Owner?.Name} {useCurrentJob.Owner?.LastName}
-            </h3>
-            <h6>{useCurrentJob.Owner?.email}</h6>
-            <h3>{useCurrentJob.Fecha}</h3>
-            <h3>{useCurrentJob.Entrega}</h3>
-          </div> */}
-          <JobDetail job={useCurrentJob} />
-          {/* <div>
-            {useCurrentJob.Partes.map((part) => {
-              return (
-                <>
-                  <div>
-                    <h1>{part.jobParts[0].type}</h1>
-                    <h3>
-                      Formato: {part.Ancho} x {part.Alto}
-                    </h3>
-                    <h3>Paginas: {part.Pages}</h3>
-                    <h4>
-                      Impresion: {part.ColoresFrente} / {part.ColoresDorso}
-                    </h4>
-                    <h3>Material: {part.partStock.Nombre_Material}</h3>
-                  </div>
-                </>
-              );
-            })}
-          </div> */}
-        </>
-      );
+      return <JobDetail job={useCurrentJob} />;
     } else {
       return preloader;
     }

@@ -255,8 +255,8 @@ export default function EnhancedTable(props) {
   const [orderBy, setOrderBy] = React.useState("_id");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
-  const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [dense, setDense] = React.useState(true);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const rows = props.rows;
 
   const handleRequestSort = (event, property) => {
@@ -392,7 +392,7 @@ export default function EnhancedTable(props) {
                         return (
                           <TableCell
                             align="left"
-                            key={`${row.Tipo}_${row.Gramaje}-${element}_${i}`}
+                            key={`${row.Tipo}-${row.Gramaje}-${element}_${i}`}
                           >
                             {element}
                           </TableCell>

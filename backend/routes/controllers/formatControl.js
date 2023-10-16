@@ -3,14 +3,24 @@ const formatos = require('../../models/formatos')
 const formatControl= {}
 
 formatControl.getFormats = async (req,res)=>{{
-    const formato = await formatos.esquema.find()
-    res.json(formato)
-    //return formato
+  try {
+      const formato = await formatos.esquema.find()
+      res.json(formato)
+      //return formato
+  } catch (e) {
+    return e
+  }
+    
   }}
 
   formatControl.leanFormats = async (req,res)=>{{
-    const formato = await formatos.esquema.find().lean({ virtuals: true });
-    return formato
+    try {
+        const formato = await formatos.esquema.find().lean({ virtuals: true });
+        return formato
+    } catch (e) {
+      return e
+    }
+    
   }}  
 
 formatControl.addFormat = async (req,res)=>{{
@@ -20,7 +30,7 @@ formatControl.addFormat = async (req,res)=>{{
         await newFormat.save();
         res.json({"message": newFormat.Nombre + " ha sido agregado"});
     } catch (e) {
-        console.log(e)
+        return e
     }
 }}
 

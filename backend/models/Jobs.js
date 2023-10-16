@@ -1,5 +1,6 @@
 const { Schema, model, isValidObjectId } = require('mongoose');
 const mongoose = require('../dbConnection')
+const timeAgo = require('node-time-ago');
 
 const partTypeSchema = new Schema(
     {
@@ -49,6 +50,15 @@ const jobSchema = new Schema(
         'Partes': [partSchema],
         'Owner':{ type: mongoose.Schema.ObjectId, ref: "Users"},
     });
+
+jobSchema.virtual('Emision')
+.get(function () { return (timeAgo(this.Fecha))})
+
+jobSchema.virtual('DeadLine')
+.get(function () { return (timeAgo(this.Entrega))})
+
+
+jobSchema.set('toJSON', {virtuals: true})
 
 module.exports.esquema = model('Job', jobSchema);
 module.exports.clase = jobSchema;

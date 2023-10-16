@@ -6,6 +6,7 @@ import {
   Card,
   CardContent,
   CardActions,
+  Divider,
   CardHeader,
   Typography,
   Button,
@@ -16,6 +17,8 @@ import {
 import { useEffect, useState } from "react";
 
 import { styled } from "@mui/material/styles";
+import ReactTimeAgo from "react-time-ago";
+import ErrorMessage from "../ErrorMessage/ErrorMessage";
 
 // Acordion Imports:
 import Accordion from "@mui/material/Accordion";
@@ -33,12 +36,20 @@ const JobDetail = (props) => {
   };
 
   const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
+    backgroundColor: theme.palette.mode === "dark" ? "#111" : "#fff",
     ...theme.typography.body2,
-    padding: theme.spacing(1),
+    padding: theme.spacing(2),
     textAlign: "left",
     color: theme.palette.text.secondary,
   }));
+
+  // Date Format Options:
+  const options = {
+    weekday: "long",
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+  };
 
   const partDetail = (part) => {
     let myKey = part._id;
@@ -63,8 +74,8 @@ const JobDetail = (props) => {
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <Box sx={{ width: "25%" }}>
-            <Stack spacing={1}>
+          <Box sx={{ padding: "5px" }}>
+            <Stack spacing={2}>
               <Item>{part.jobParts[0].type}</Item>
               <Item>
                 Formato: {part.Ancho} x {part.Alto}
@@ -73,7 +84,10 @@ const JobDetail = (props) => {
               <Item>
                 Impresion: {part.ColoresFrente} / {part.ColoresDorso}
               </Item>
-              <Item>Material: {part.partStock.Nombre_Material}</Item>
+              <Item>
+                Material: {part.partStock.Marca}, {part.partStock.Tipo},{" "}
+                {part.partStock.Gramaje}
+              </Item>
             </Stack>
           </Box>
         </AccordionDetails>
@@ -93,11 +107,42 @@ const JobDetail = (props) => {
               {job.Cantidad}
             </Avatar>
           }
+          action={
+            <Box>
+              <Paper elevation={12} sx={{ background: "#39a" }}>
+                <Container sx={{ padding: "15px" }}>
+                  <Typography variant="caption" gutterBottom>
+                    Emision: <br />
+                    {new Date(job.Fecha).toLocaleDateString(undefined, options)}
+                    <br />
+                    <Divider />
+                    Entrega: <br />
+                    {new Date(job.Entrega).toLocaleDateString(
+                      undefined,
+                      options
+                    )}
+                  </Typography>
+                </Container>
+                <Container>
+                  <ErrorMessage
+                    message={
+                      <ReactTimeAgo
+                        date={Date.parse(job.Entrega)}
+                        locale="es-ES"
+                      />
+                    }
+                    severity="info"
+                  />
+                </Container>
+              </Paper>
+            </Box>
+          }
           title={job.Nombre}
-          subheader={job.Owner?.Name + " " + job.Owner?.LastName}
+          subheader={job.Owner ? job.Owner.Name + " " + job.Owner.LastName : ""}
         />
         <CardContent>
           <h4>Partes: </h4>
+          <Divider />
           {job.Partes.map((parte) => {
             return partDetail(parte);
           })}

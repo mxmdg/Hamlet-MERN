@@ -5,7 +5,7 @@ const stocks = require('../../models/materiales')
 const jobControl= {}
 
 jobControl.getJobs = async (req,res)=>{{
-    const jobList = await jobs.esquema.find().select('Nombre Cantidad Fecha Entrega __v')
+    const jobList = await jobs.esquema.find().select('Nombre Cantidad Fecha Entrega Emision Deadline')
     res.json(jobList)}}
 
 jobControl.addJob = async (req,res)=>{{

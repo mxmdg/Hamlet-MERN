@@ -8,6 +8,7 @@ import ItemsTable from "./ItemsTable";
 import CircularColor from "./Spinner";
 import { Container } from "@mui/material";
 import EnhancedTable from "./TableGrid";
+import ErrorMessage from "../ErrorMessage/ErrorMessage";
 
 const Fetch = (props) => {
   const [useList, setList] = useState([]);
@@ -15,6 +16,7 @@ const Fetch = (props) => {
   const [useLoading, setLoading] = useState(true);
   const [useHeaders, setHeaders] = useState([]);
   const [useDeleted, setDeleted] = useState([]);
+  const [useErrMessage, setErrMessage] = useState(null);
 
   const getElements = async () => {
     const elements = await axios.get(`${databaseURL + props.collection}/`);
@@ -44,7 +46,10 @@ const Fetch = (props) => {
         await getElements();
         setLoading(false);
       } catch (err) {
-        alert(err);
+        console.log(err);
+        setErrMessage(err);
+        setLoading(false);
+        return err;
       }
     };
     fetchData();
@@ -56,15 +61,12 @@ const Fetch = (props) => {
       <CircularColor />
     </Container>
   );
+
+  const AlertError = <ErrorMessage message={useErrMessage?.message} />;
+
   const TableLoaded = (
     <>
       <Container>
-        {/* <ItemsTable
-          itemList={useList}
-          collection={props.collection}
-          //formData={DataForm}
-          //editor={setEdit}
-        /> */}
         <EnhancedTable
           rows={useList}
           headCells={useHeaders}
@@ -77,7 +79,7 @@ const Fetch = (props) => {
     </>
   );
 
-  return useLoading ? Loading : TableLoaded;
+  return useLoading ? Loading : useErrMessage ? AlertError : TableLoaded;
 };
 
 export default Fetch;
