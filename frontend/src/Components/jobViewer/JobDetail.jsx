@@ -26,6 +26,10 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
+const calcularLomo = (pags, resma) => {
+  return Math.ceil(pags / 2) * (resma / 500);
+};
+
 const JobDetail = (props) => {
   const [expanded, setExpanded] = useState(false);
   const job = props.job;
@@ -80,6 +84,14 @@ const JobDetail = (props) => {
                 Formato: {part.Ancho} x {part.Alto}
               </Item>
               <Item>Paginas: {part.Pages}</Item>
+              {part.jobParts[0].type.includes("Interior") ? (
+                <Item>
+                  Lomo: {calcularLomo(part.Pages, part.partStock.Espesor_Resma)}{" "}
+                  mm.
+                </Item>
+              ) : (
+                ""
+              )}
               <Item>
                 Impresion: {part.ColoresFrente} / {part.ColoresDorso}
               </Item>

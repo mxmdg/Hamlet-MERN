@@ -72,6 +72,7 @@ function App() {
                 <Route path="/register" element={<Register/>} />
                 <Route path="/users/edit/:id" element={<Form form={UsersDataForm} collection='users' task="edit"/>} />
                 <Route path="/Jobs" element={<JobsContainer entity={'Jobs'} />} />
+                <Route path="/Jobs/add" element={<MyStepper />} />
                 <Route path="/Jobs/edit/:id" element={<JobViewer entity={'Jobs'} />} />
                 <Route path="/precios" element={<MainContainer entity={'precios'}/>} />
                 <Route path="/precios/edit/:id" element={<Form form={PricesDataForm} collection='precios' task="edit"/>} />
