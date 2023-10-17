@@ -22,16 +22,20 @@ jobControl.addJob = async (req,res)=>{{
         console.log(`Trabajo agregado`)
         res.json({"message": newJob.Nombre + " guardado OK"});
     } catch (e) {
-        console.log(e)
+        throw e
     }
  }}
 
 jobControl.getJob = async (req, res)=> {
-    console.log(req.params.id)
-    const job = await jobs.esquema.findById(req.params.id)
-      .populate({path: "Owner", model: users.esquema, select: 'Name LastName Role email'})
-      .populate({path: 'Partes.partStock', model: stocks.esquema})
-    res.json(job)
+    try {
+      const job = await jobs.esquema.findById(req.params.id)
+        .populate({path: "Owner", model: users.esquema, select: 'Name LastName Role email'})
+        .populate({path: 'Partes.partStock', model: stocks.esquema})
+      res.json(job)
+    } catch (e) {
+      res.status(404).json({ message: "Trabajo no encontrado: " + e.message })
+    }
+    
   }
 jobControl.updateJob = async (req, res)=> {
     const {Nombre, Alto, Ancho} = req.body;

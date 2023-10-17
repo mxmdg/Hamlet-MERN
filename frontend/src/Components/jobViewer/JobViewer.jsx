@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import Spinner from "../General/Spinner";
-
+import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import JobDetail from "./JobDetail";
 
 import {
@@ -16,6 +16,7 @@ import {
 export const JobViewer = (props) => {
   const [useCurrentJob, setCurrentJob] = useState(null);
   const [useLoading, setLoading] = useState(true);
+  const [useError, setError] = useState(null);
   //const navigate = useNavigate();
   const params = useParams();
   const { id } = params;
@@ -29,6 +30,8 @@ export const JobViewer = (props) => {
         setLoading(false);
         console.log(currentJob.data);
       } catch (e) {
+        setError(e);
+        setLoading(false);
         console.log(e);
       }
     };
@@ -48,5 +51,9 @@ export const JobViewer = (props) => {
       return preloader;
     }
   };
-  return output();
+  return useError ? (
+    <ErrorMessage message={setError.message} severity={"warning"} />
+  ) : (
+    output()
+  );
 };

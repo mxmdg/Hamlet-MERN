@@ -31,7 +31,6 @@ const JobDetail = (props) => {
   const job = props.job;
 
   const handleChange = (panel) => (event, isExpanded) => {
-    console.log("Panel: " + panel);
     setExpanded(isExpanded ? panel : false);
   };
 
