@@ -18,6 +18,7 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import { Grid } from "@mui/material";
 import JobTypes from "./JobTypes";
+import { fechtData } from "../customHooks/FetchDataHook";
 
 const JobsForm = (props) => {
   const {
@@ -29,12 +30,20 @@ const JobsForm = (props) => {
     mode: "onBlur", // "onChange"
   });
   
+  const [useUsersList, setUsersList ] = useState([]);
   const context = useContext(AuthContext);
 
   const handleChange = (e) => {
     e.preventDefault();
     props.setJob(e);
   };
+
+  const getUsers = async ()=> await fechtData('Users', setUsersList);
+
+  useEffect(()=>{
+    getUsers()
+  },
+  [setUsersList])
 
   const onSubmit = (values) => {
     console.log(values);
@@ -46,7 +55,7 @@ const JobsForm = (props) => {
     console.log(jt);
     values.JobType = jt;
     console.log(context.userLogged._id)
-    values.Owner = context.userLogged._id;
+    //values.Owner = context.userLogged._id;
     props.setJob(values);
     props.continue();
     console.log(values);
@@ -190,6 +199,42 @@ const JobsForm = (props) => {
                     </FormHelperText>
                   )}
                 </Grid>
+                <Grid item xs={1} sm={2} md={4}>
+                <TextField
+                    select
+                    defaultValue={
+                      !context.useLogin ? "" : context.userLogged._id
+                    }
+                    id="Owner"
+                    inputProps={{
+                      name: "Owner",
+                      id: "Owner",
+                    }}
+                    variant="outlined"
+                    color="primary"
+                    label="Usuario"
+                    name="Owner"
+                    fullWidth
+                    {...register("Owner", { required: true })}
+                    onBlur={() => {
+                      trigger("Owner");
+                    }}
+                  >
+                  { !context.useLogin ?
+                      useUsersList.map((u)=> {
+                        return (
+                            <MenuItem value={u._id} key={u._id}>
+                              {u.Name} {u.LastName}
+                            </MenuItem>
+                        )
+                      }) :
+                      <MenuItem value={context.userLogged._id} key={context.userLogged._id}>
+                        {context.userLogged.Name}
+                      </MenuItem>
+                  } 
+                  </TextField>
+                </Grid>
+                
                 <Grid item xs={1} sm={2} md={4} sx={{ alignSelf: "center" }}>
                   <Button type="submit" variant="outlined" color="warning">
                     Agregar Trabajo

@@ -20,6 +20,7 @@ import {
   getPrivateElementByID,
   addPrivateElement,
 } from "../customHooks/FetchDataHook";
+import { calcularLomo } from "../jobViewer/JobDetail";
 
 export default function MyStepper() {
   const [activeStep, setActiveStep] = React.useState(0);
@@ -115,7 +116,7 @@ export default function MyStepper() {
     try {
       console.log("Guardando...");
       const res = await addPrivateElement("Jobs", Job);
-      console.log(`Trabajo ${Job.Orden} agregado`);
+      console.log(`Trabajo ${Job.Nombre} agregado`);
       handleNext();
     } catch (e) {
       console.log("No funciono" + e);
@@ -173,13 +174,20 @@ export default function MyStepper() {
                     <Card>
                       <CardHeader title={part.jobParts[0].type}></CardHeader>
                       <Container>
-                        Paginas: {part.pages}
+                        Paginas: {part.Pages}
                         <br />
                         Formato: {part.Ancho} x {part.Alto}
                         <br />
-                        Impresion: {part.coloresFrente}/{part.coloresDorso}
+                        Impresion: {part.ColoresFrente}/{part.ColoresDorso}
                         <br />
                         Material: {part.partStock.Nombre_Material}
+                        <br />
+                        {part.jobParts[0].type.includes("Interior" || "Insert") ? (
+                           <>Lomo: {calcularLomo(part.Pages, part.partStock.Espesor_Resma)}{" "}
+                            mm.</> 
+                        ) : (
+                          ""
+                        )}
                       </Container>
                       <CardActions>
                         <ButtonGroup size="small">
