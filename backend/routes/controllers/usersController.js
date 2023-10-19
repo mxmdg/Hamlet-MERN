@@ -71,7 +71,7 @@ const login = async (req, res, next)=> {
             return res.json({message: "la contraseña es incorrecta"})
         }
     } catch (error) {
-        return res.json(error)
+        next(error)
     }
 }
 

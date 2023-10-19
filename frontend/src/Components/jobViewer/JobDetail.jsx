@@ -10,11 +10,13 @@ import {
   CardHeader,
   Typography,
   Button,
+  IconButton,
   Paper,
   Stack,
   Select,
 } from "@mui/material";
 import { useEffect, useState } from "react";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 import { styled } from "@mui/material/styles";
 import ReactTimeAgo from "react-time-ago";
@@ -25,6 +27,7 @@ import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { Navigate, useNavigate } from "react-router-dom";
 
 export const calcularLomo = (pags, resma) => {
   return Math.ceil(pags / 2) * (resma / 500);
@@ -33,6 +36,7 @@ export const calcularLomo = (pags, resma) => {
 const JobDetail = (props) => {
   const [expanded, setExpanded] = useState(false);
   const job = props.job;
+  const navigate = useNavigate();
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
@@ -83,15 +87,19 @@ const JobDetail = (props) => {
               <Item>
                 Formato: {part.Ancho} x {part.Alto}
               </Item>
-              <Item>Paginas: {part.Pages}{part.jobParts[0].type.includes("Interior" || "Insert") ? (
-                <>
-                  {" ("}Lomo: {calcularLomo(part.Pages, part.partStock.Espesor_Resma)}{" "}
-                  mm.{")"}
-                </>
-              ) : (
-                ""
-              )}</Item>
-              
+              <Item>
+                Paginas: {part.Pages}
+                {part.jobParts[0].type.includes("Interior" || "Insert") ? (
+                  <>
+                    {" ("}Lomo:{" "}
+                    {calcularLomo(part.Pages, part.partStock.Espesor_Resma)} mm.
+                    {")"}
+                  </>
+                ) : (
+                  ""
+                )}
+              </Item>
+
               <Item>
                 Impresion: {part.ColoresFrente} / {part.ColoresDorso}
               </Item>
@@ -142,7 +150,7 @@ const JobDetail = (props) => {
                         locale="es-ES"
                       />
                     }
-                    severity="info"
+                    severity="warning"
                   />
                 </Container>
               </Paper>
@@ -158,6 +166,22 @@ const JobDetail = (props) => {
             return partDetail(parte);
           })}
         </CardContent>
+        <Divider />
+        <CardActions>
+          <Container>
+            <Button
+              //icon={ArrowBackIcon}
+              onClick={() => {
+                navigate(-1);
+              }}
+              variant="outlined"
+              color="secondary"
+              startIcon={<ArrowBackIcon />}
+            >
+              Volver
+            </Button>
+          </Container>
+        </CardActions>
       </Card>
     </Container>
   );

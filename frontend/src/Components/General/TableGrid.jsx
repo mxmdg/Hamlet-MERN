@@ -258,6 +258,7 @@ export default function EnhancedTable(props) {
   const [dense, setDense] = React.useState(true);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const rows = props.rows;
+  const navigate = useNavigate();
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -360,6 +361,9 @@ export default function EnhancedTable(props) {
                   <TableRow
                     hover
                     onClick={(event) => handleClick(event, row._id)}
+                    onDoubleClick={() => {
+                      navigate(`/${props.collection}/edit/${row._id}`);
+                    }}
                     role="checkbox"
                     aria-checked={isItemSelected}
                     tabIndex={-1}
