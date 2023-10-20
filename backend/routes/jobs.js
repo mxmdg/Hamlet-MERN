@@ -13,4 +13,6 @@ routerJob.route('/:id')
 .get(getJob)
 .delete(deleteJob)
 
+routerJob.route('/:id&/partId')
+
 module.exports = routerJob;

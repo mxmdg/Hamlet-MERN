@@ -161,7 +161,7 @@ export const parts = [
     printModAllowed: "duplex",
     minStockWeight: 150,
     maxStockWeight: 350,
-    jobTypes: ["Sin Encuadernacion", "Multipagina"],
+    jobTypes: ["Sin Encuadernacion", "Multipagina", "Libro"],
   },
   {
     id: "part017",
