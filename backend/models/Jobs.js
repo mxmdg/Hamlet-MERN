@@ -57,13 +57,6 @@ jobSchema.virtual('Emision')
 jobSchema.virtual('DeadLine')
 .get(function () { return (timeAgo(this.Entrega))})
 
-jobSchema.virtual('Producto')
-.get(function () { 
-    const name = this.Tipo
-    console.log(name[0].name);
-    return name[0].name
-})
-
 jobSchema.set('toJSON', {virtuals: true})
 
 module.exports.esquema = model('Job', jobSchema);
