@@ -147,6 +147,7 @@ export const Register = () => {
                 <TextField
                   id="password"
                   label="password"
+                  type="password"
                   variant="outlined"
                   defaultValue={""}
                   name="password"

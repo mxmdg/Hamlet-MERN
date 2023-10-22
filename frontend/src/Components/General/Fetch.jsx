@@ -12,16 +12,18 @@ import ErrorMessage from "../ErrorMessage/ErrorMessage";
 
 const Fetch = (props) => {
   const [useList, setList] = useState([]);
+  const [useFilteredList, setFilteredList] = useState([]);
   const [useSelected, setSelected] = useState([]);
   const [useLoading, setLoading] = useState(true);
   const [useHeaders, setHeaders] = useState([]);
   const [useDeleted, setDeleted] = useState([]);
   const [useErrMessage, setErrMessage] = useState(null);
+  const [useColumn, setColumn] = useState("Todo");
 
   const getElements = async () => {
     const elements = await axios.get(`${databaseURL + props.collection}/`);
     console.table(elements.data);
-    setList(Object.values(elements.data));
+    setList(elements.data);
     setHeaders(() => {
       const arr = [];
       const labels = elements.data.length
@@ -38,6 +40,28 @@ const Fetch = (props) => {
       });
       return arr;
     });
+  };
+
+  const filterList = (query, column) => {
+    //Inicializar o reiniciar variables
+    setFilteredList([]);
+    const keys = Object.keys(useList[0]);
+    const results = [];
+
+    const findByColumn = (col) => {
+      for (let item of useList) {
+        const cellToString = item[col].toString();
+        if (cellToString.includes(query.toString())) {
+          console.log(item[col], query);
+          results.push(item);
+        }
+      }
+    };
+
+    console.log(results);
+
+    findByColumn(column);
+    setFilteredList(results);
   };
 
   useEffect(() => {
@@ -67,8 +91,30 @@ const Fetch = (props) => {
   const TableLoaded = (
     <>
       <Container>
+        <select
+          defaultValue={"Todo"}
+          onChange={(e) => setColumn(e.target.value)}
+        >
+          {useHeaders.map((item) => {
+            return (
+              <option value={item.label} key={item.id}>
+                {item.label}
+              </option>
+            );
+          })}
+          <option value={"Todo"} key="opt0">
+            Todo
+          </option>
+        </select>
+        <input
+          type="text"
+          onChange={(e) => {
+            filterList(e.target.value, useColumn);
+          }}
+          placeholder="Buscar"
+        ></input>
         <EnhancedTable
-          rows={useList}
+          rows={useFilteredList.length > 0 ? useFilteredList : useList}
           headCells={useHeaders}
           collection={props.collection}
           editor={setSelected}

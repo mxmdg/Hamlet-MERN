@@ -83,6 +83,7 @@ export const Login = () => {
                 label="password"
                 variant="outlined"
                 defaultValue={""}
+                type="password"
                 name="password"
                 {...register("password", {
                   required: true,
