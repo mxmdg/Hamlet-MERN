@@ -58,9 +58,15 @@ const Fetch = (props) => {
       }
     };
 
+    const findAll = () => {
+      for (let k of keys) {
+        findByColumn(k);
+      }
+    };
+
     console.log(results);
 
-    findByColumn(column);
+    column === "Todo" ? findAll() : findByColumn(column);
     setFilteredList(results);
   };
 
@@ -68,6 +74,7 @@ const Fetch = (props) => {
     const fetchData = async () => {
       try {
         await getElements();
+        setFilteredList([]);
         setLoading(false);
       } catch (err) {
         console.log(err);
