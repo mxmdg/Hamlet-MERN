@@ -329,7 +329,7 @@ export default function EnhancedTable(props) {
 
   return (
     <Box sx={{ width: "100%" }}>
-      <Paper elevation={8} sx={{ width: "100%", mb: 2 }}>
+      <Paper elevation={8} square sx={{ width: "100%", mb: 2, background: "#3697" }}>
         <EnhancedTableToolbar
           collection={props.collection}
           numSelected={selected.length}
@@ -396,7 +396,7 @@ export default function EnhancedTable(props) {
                         return (
                           <TableCell
                             align="left"
-                            key={`${row.Tipo}-${row.Gramaje}-${element}_${i}`}
+                            key={`${element}_${i}`}
                           >
                             {element}
                           </TableCell>
@@ -426,11 +426,12 @@ export default function EnhancedTable(props) {
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
-      </Paper>
-      <FormControlLabel
+        <FormControlLabel
         control={<Switch checked={dense} onChange={handleChangeDense} />}
         label="Dense padding"
       />
+      </Paper>
+      
     </Box>
   );
 }

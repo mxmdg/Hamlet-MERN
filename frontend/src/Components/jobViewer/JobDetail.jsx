@@ -157,7 +157,7 @@ const JobDetail = (props) => {
             </Box>
           }
           title={job.Nombre}
-          subheader={job.Owner ? job.Owner.Name + " " + job.Owner.LastName : ""}
+          subheader={job.Owner ? `${job.Owner.Name} ${job.Owner.LastName}` : ""}
         />
         <CardContent>
           <h4>Partes: </h4>
