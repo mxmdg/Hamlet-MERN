@@ -29,6 +29,9 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Navigate, useNavigate } from "react-router-dom";
 
+// Imposition imports
+import Canvas from "../utils/impo/Canvas";
+
 export const calcularLomo = (pags, resma) => {
   return Math.ceil(pags / 2) * (resma / 500);
 };
@@ -62,55 +65,74 @@ const JobDetail = (props) => {
     let myKey = part._id;
 
     return (
-      <Accordion
-        key={myKey}
-        id={myKey}
-        expanded={expanded === myKey}
-        onChange={handleChange(myKey)}
-      >
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1bh-content"
-          id="panel1bh-header"
+      <>
+        <Accordion
+          key={myKey}
+          id={myKey}
+          expanded={expanded === myKey}
+          onChange={handleChange(myKey)}
         >
-          <Typography sx={{ width: "33%", flexShrink: 0 }}>
-            {part.jobParts[0].type}
-          </Typography>
-          <Typography sx={{ color: "text.secondary" }}>
-            Material: {part.partStock.Nombre_Material}
-          </Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Box sx={{ padding: "5px" }}>
-            <Stack spacing={2}>
-              <Item>{part.jobParts[0].type}</Item>
-              <Item>
-                Formato: {part.Ancho} x {part.Alto}
-              </Item>
-              <Item>
-                Paginas: {part.Pages}
-                {part.jobParts[0].type.includes("Interior" || "Insert") ? (
-                  <>
-                    {" ("}Lomo:{" "}
-                    {calcularLomo(part.Pages, part.partStock.Espesor_Resma)} mm.
-                    {")"}
-                  </>
-                ) : (
-                  ""
-                )}
-              </Item>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel1bh-content"
+            id="panel1bh-header"
+          >
+            <Typography sx={{ width: "33%", flexShrink: 0 }}>
+              {part.jobParts[0].type}
+            </Typography>
+            <Typography sx={{ color: "text.secondary" }}>
+              Material: {part.partStock.Nombre_Material}
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Grid
+              sx={{ maxWidth: "100%", overflow: "auto" }}
+              container
+              direction={{ xs: "column", md: "row" }}
+              spacing={0}
+              alignItems={"start"}
+            >
+              <Grid xs={12} md={4}>
+                <Stack spacing={2}>
+                  <Item>{part.jobParts[0].type}</Item>
+                  <Item>
+                    Formato: {part.Ancho} x {part.Alto}
+                  </Item>
+                  <Item>
+                    Paginas: {part.Pages}
+                    {part.jobParts[0].type.includes("Interior" || "Insert") ? (
+                      <>
+                        {" ("}Lomo:{" "}
+                        {calcularLomo(part.Pages, part.partStock.Espesor_Resma)}{" "}
+                        mm.
+                        {")"}
+                      </>
+                    ) : (
+                      ""
+                    )}
+                  </Item>
 
-              <Item>
-                Impresion: {part.ColoresFrente} / {part.ColoresDorso}
-              </Item>
-              <Item>
-                Material: {part.partStock.Marca}, {part.partStock.Tipo},{" "}
-                {part.partStock.Gramaje}
-              </Item>
-            </Stack>
-          </Box>
-        </AccordionDetails>
-      </Accordion>
+                  <Item>
+                    Impresion: {part.ColoresFrente} / {part.ColoresDorso}
+                  </Item>
+                  <Item>
+                    Material: {part.partStock.Marca}, {part.partStock.Tipo},{" "}
+                    {part.partStock.Gramaje}
+                  </Item>
+                </Stack>
+              </Grid>
+              <Grid xs={12} md={8}>
+                <Canvas
+                  id={part._id}
+                  width={700}
+                  height={450}
+                  part={part}
+                ></Canvas>
+              </Grid>
+            </Grid>
+          </AccordionDetails>
+        </Accordion>
+      </>
     );
   };
 
