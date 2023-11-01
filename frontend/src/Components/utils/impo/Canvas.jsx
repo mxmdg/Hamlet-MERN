@@ -1,19 +1,23 @@
 import { useEffect, useState } from "react";
-import { drawBestCutting, cutOptimizer } from "./ImpositionService";
+import {
+  drawCutting,
+  cutOptimizer,
+  drawSimpleCutting,
+  drawOptimusCutting,
+} from "./ImpositionService";
 
 const Canvas = (props) => {
   useEffect(() => {
     const canvas = document.getElementById(props.id + "_canvas");
     console.log(canvas);
     const newContext = canvas.getContext("2d");
-    console.log(cutOptimizer(470, 320, props.part.Ancho, props.part.Alto));
-    drawBestCutting(
+    drawCutting(
       470,
       320,
       props.part.Ancho,
       props.part.Alto,
-      3,
-      3,
+      0,
+      0,
       newContext,
       props.width,
       props.height
@@ -26,9 +30,10 @@ const Canvas = (props) => {
         background: "#444",
         padding: "10px",
         margin: "0px 10px 5px 10px",
-        width: props.width,
+        width: "100%",
         borderRadius: "4px",
         boxShadow: "3px 3px 6px #000",
+        objectFit: "scale-down",
       }}
     >
       <canvas
