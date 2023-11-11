@@ -15,7 +15,7 @@ import {
   Stack,
   Select,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 import { styled } from "@mui/material/styles";
@@ -30,6 +30,8 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Navigate, useNavigate } from "react-router-dom";
 
 // Imposition imports
+import { ImpoContext } from "../utils/impo/ImpoContext";
+import ImpoProvider from "../utils/impo/ImpoContext";
 import Canvas from "../utils/impo/Canvas";
 
 export const calcularLomo = (pags, resma) => {
@@ -62,7 +64,13 @@ const JobDetail = (props) => {
   };
 
   const partDetail = (part) => {
-    let myKey = part._id;
+    let partNumber = job.Partes.indexOf(part) + 1;
+    let myKey = part._id + partNumber;
+
+    /* beasts.map((item)=>{
+      const i = beasts.indexOf(item) + 1
+      console.log(`${item} es el bicho ${i} de ${beasts.length}`)
+    }) */
 
     return (
       <>
@@ -80,6 +88,9 @@ const JobDetail = (props) => {
             <Typography sx={{ width: "33%", flexShrink: 0 }}>
               {part.jobParts[0].type}
             </Typography>
+            <Typography sx={{ width: "33%", flexShrink: 0 }}>
+              Parte {partNumber} de {job.Partes.length}
+            </Typography>
             <Typography sx={{ color: "text.secondary" }}>
               Material: {part.partStock.Nombre_Material}
             </Typography>
@@ -92,7 +103,7 @@ const JobDetail = (props) => {
               spacing={0}
               alignItems={"start"}
             >
-              <Grid xs={12} md={4}>
+              <Grid item xs={12} md={4}>
                 <Stack spacing={2}>
                   <Item>{part.jobParts[0].type}</Item>
                   <Item>
@@ -121,13 +132,10 @@ const JobDetail = (props) => {
                   </Item>
                 </Stack>
               </Grid>
-              <Grid xs={12} md={8}>
-                <Canvas
-                  id={part._id}
-                  width={700}
-                  height={450}
-                  part={part}
-                ></Canvas>
+              <Grid item xs={12} md={8}>
+                <ImpoProvider>
+                  <Canvas part={part}></Canvas>
+                </ImpoProvider>
               </Grid>
             </Grid>
           </AccordionDetails>

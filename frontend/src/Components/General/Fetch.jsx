@@ -6,7 +6,7 @@ import "../Stocks/Stocks.css";
 import { databaseURL } from "../Config/config";
 import ItemsTable from "./ItemsTable";
 import CircularColor from "./Spinner";
-import { Paper, Container, TextField, MenuItem, Stack  } from "@mui/material";
+import { Paper, Container, TextField, MenuItem, Stack } from "@mui/material";
 import EnhancedTable from "./TableGrid";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 
@@ -22,7 +22,7 @@ const Fetch = (props) => {
 
   const getElements = async () => {
     const elements = await axios.get(`${databaseURL + props.collection}/`);
-    console.table(elements.data);
+    console.log(elements.data.flat(Infinity));
     setList(elements.data);
     setHeaders(() => {
       const arr = [];
@@ -98,41 +98,44 @@ const Fetch = (props) => {
   const TableLoaded = (
     <>
       <Container>
-        <Paper elevation={8} sx={{background: "#258a", padding: "10px"}} square>
+        <Paper
+          elevation={8}
+          sx={{ background: "#258a", padding: "10px" }}
+          square
+        >
           <Stack direction="row" spacing={4}>
-          <TextField
-            select
-            defaultValue={"Todo"}
-            onChange={(e) => setColumn(e.target.value)}
-            variant="filled"
-            color="success"
-            size="small"
-          >
-            {useHeaders.map((item) => {
-              return (
-                <MenuItem value={item.label} key={item.id}>
-                  {item.label}
-                </MenuItem>
-              );
-            })}
-            <MenuItem value={"Todo"} key="opt0">
-              Todo
-            </MenuItem>
-          </TextField>
-          <TextField
-            variant="filled"
-            type="text"
-            onChange={(e) => {
-              filterList(e.target.value, useColumn);
-            }}
-            placeholder="Buscar"
-            color="success"
-            size="small"
-          ></TextField>
-        </Stack>
+            <TextField
+              select
+              defaultValue={"Todo"}
+              onChange={(e) => setColumn(e.target.value)}
+              variant="filled"
+              color="success"
+              size="small"
+            >
+              {useHeaders.map((item) => {
+                return (
+                  <MenuItem value={item.label} key={item.id}>
+                    {item.label}
+                  </MenuItem>
+                );
+              })}
+              <MenuItem value={"Todo"} key="opt0">
+                Todo
+              </MenuItem>
+            </TextField>
+            <TextField
+              variant="filled"
+              type="text"
+              onChange={(e) => {
+                filterList(e.target.value, useColumn);
+              }}
+              placeholder="Buscar"
+              color="success"
+              size="small"
+            ></TextField>
+          </Stack>
         </Paper>
-        
-        
+
         <EnhancedTable
           rows={useFilteredList.length > 0 ? useFilteredList : useList}
           headCells={useHeaders}

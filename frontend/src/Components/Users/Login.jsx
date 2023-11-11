@@ -57,14 +57,14 @@ export const Login = () => {
         <form name="Register" onSubmit={handleSubmit(onSubmit)}>
           <Grid
             container
-            spacing={{ xs: 2, md: 3 }}
-            columns={{ xs: 1, sm: 4, md: 8 }}
+            spacing={{ xs: 2, md: 5 }}
+            columns={{ xs: 1, sm: 4, md: 6 }}
           >
-            <Grid item xs={1} sm={2} md={4}>
+            <Grid item xs={1} sm={2} md={12}>
               <TextField
                 id="email"
                 label="email"
-                variant="outlined"
+                variant="filled"
                 defaultValue={""}
                 name="email"
                 {...register("email", {
@@ -77,11 +77,11 @@ export const Login = () => {
                 }}
               />
             </Grid>
-            <Grid item xs={1} sm={2} md={4}>
+            <Grid item xs={12} sm={6} md={12}>
               <TextField
                 id="password"
                 label="password"
-                variant="outlined"
+                variant="filled"
                 defaultValue={""}
                 type="password"
                 name="password"
@@ -95,8 +95,8 @@ export const Login = () => {
                 }}
               />
             </Grid>
-            <Grid item xs={1} sm={2} md={4} sx={{ alignSelf: "center" }}>
-              <Button type="submit" variant="outlined" color="warning">
+            <Grid item xs={12} sm={6} md={12} sx={{ alignSelf: "center" }}>
+              <Button type="submit" variant="contained" color="warning">
                 Ingresar
               </Button>
             </Grid>
