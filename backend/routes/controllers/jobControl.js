@@ -14,6 +14,20 @@ jobControl.getJobs = async (req, res) => {
   }
 };
 
+jobControl.getUrgentJobs = async (req, res) => {
+  const currentDate = new Date();
+  const daysLater = new Date();
+  daysLater.setDate(currentDate.getDate() + 5);
+
+  {
+    const queryText = req.query.Q || "";
+    const jobList = await jobs.esquema
+      .find({ Entrega: { $gte: currentDate, $lt: daysLater } })
+      .select("Nombre Cantidad Fecha Entrega Emision Deadline");
+    res.json(jobList);
+  }
+};
+
 jobControl.addJob = async (req, res) => {
   {
     try {
