@@ -17,11 +17,13 @@ import {
 import Grid from "@mui/material/Unstable_Grid2"; // Grid version 2
 import Spinner from "../General/Spinner";
 import { getPrivateElements } from "../customHooks/FetchDataHook";
+import ErrorMessage from "../ErrorMessage/ErrorMessage";
 
 const Precioso = (props) => {
   const [priceList, setPriceList] = useState(null);
   const [useEdit, setEdit] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [useErrorMessage, setErrorMessage] = useState();
 
   const formulaCLC = (item) => {
     let formula;
@@ -52,6 +54,8 @@ const Precioso = (props) => {
     return formula;
   };
 
+  const AlertError = <ErrorMessage message={priceList?.message} />;
+
   useEffect(() => {
     /* const getElements = async () => {
       try {
@@ -72,22 +76,25 @@ const Precioso = (props) => {
         setPriceList(prices);
         setEdit(false);
         setLoading(false);
-        console.log(prices);
-      } catch (err) {
-        console.log(err);
+      } catch (e) {
+        setErrorMessage(e);
+        console.log(useErrorMessage.message);
+        return;
       }
     };
     fetchData();
-  }, [useEdit, setPriceList, props.priceState]);
+  }, [useEdit, setErrorMessage, setPriceList, props.priceState]);
 
   return (
     <>
       <Grid container spacing={3}>
         {loading ? (
           <Spinner color="primary" /> // Asegúrate de importar el componente Spinner si lo tienes
+        ) : useErrorMessage !== undefined || priceList.message ? (
+          AlertError
         ) : (
           // Renderiza la lista de Precios
-          priceList &&
+          //priceList &&
           priceList.map((price) => (
             <Grid xs={12} md={4} key={price._id}>
               {" "}

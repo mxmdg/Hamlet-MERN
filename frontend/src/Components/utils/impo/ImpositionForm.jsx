@@ -18,17 +18,29 @@ import {
   Button,
   Divider,
   Typography,
+  CircularProgress,
 } from "@mui/material";
 
 // Hamlet Components
 import { getPrivateElements } from "../../customHooks/FetchDataHook";
 import { ImpoContext } from "./ImpoContext";
+import ErrorMessage from "../../ErrorMessage/ErrorMessage";
 
 export const ImpositionForm = (props) => {
   const context = useContext(ImpoContext);
   const [useFormats, setFormats] = useState([]);
   const [selectedFormat, setSelectedFormat] = useState("");
-  let [customFormat, setCustomFormat] = useState(false);
+  const [customFormat, setCustomFormat] = useState(false);
+  const [useErrorMessage, setErrorMessage] = useState(null);
+  const [useLoading, setLoading] = useState(true);
+
+  let useFormatsFiltered = useFormats.filter(
+    (f) =>
+      Math.max(f.Ancho, f.Alto) >
+        Math.max(props.part?.Ancho || 0, props.part?.Alto || 0) &&
+      Math.min(f.Ancho, f.Alto) >
+        Math.min(props.part?.Ancho || 0, props.part?.Alto || 0)
+  );
 
   const {
     register,
@@ -45,8 +57,11 @@ export const ImpositionForm = (props) => {
     try {
       const gettedFormats = await getPrivateElements("formatos");
       setFormats(gettedFormats);
+      setLoading(false);
     } catch (e) {
-      console.log(e);
+      setErrorMessage(e);
+      setLoading(false);
+      return e;
     }
   };
 
@@ -54,6 +69,8 @@ export const ImpositionForm = (props) => {
     context.setImpoData(values);
     props.doImposition(values);
   };
+
+  const AlertError = <ErrorMessage message={useErrorMessage?.message} />;
 
   useEffect(() => {
     fetchingData();
@@ -158,26 +175,31 @@ export const ImpositionForm = (props) => {
                 });
               }}
               onBlur={(e) => {
-                customFormat = false;
                 setSelectedFormat(e.target.value);
                 console.log(selectedFormat);
                 trigger("formatSelector");
               }}
             >
-              {useFormats?.map((Format) => (
-                <MenuItem
-                  value={Format}
-                  id={useFormats.indexOf(Format) + Format._id}
-                  key={useFormats.indexOf(Format) + Format._id}
-                >
-                  <Chip
-                    variant="outlined"
-                    color="primary"
-                    size="small"
-                    label={Format.Nombre}
-                  />
-                </MenuItem>
-              ))}
+              {useLoading ? (
+                <CircularProgress color="secondary" />
+              ) : useErrorMessage !== null ? (
+                AlertError
+              ) : (
+                useFormatsFiltered?.map((Format) => (
+                  <MenuItem
+                    value={Format}
+                    id={useFormats.indexOf(Format) + Format._id}
+                    key={useFormats.indexOf(Format) + Format._id}
+                  >
+                    <Chip
+                      variant="outlined"
+                      color="primary"
+                      size="small"
+                      label={Format.Nombre}
+                    />
+                  </MenuItem>
+                ))
+              )}
               <MenuItem
                 value={"Personalizado"}
                 id={"FormatoPersonalizado"}

@@ -7,7 +7,7 @@ export const fechtData = async (collection, setFunction) => {
     console.log(res.data);
     setFunction(res.data);
   } catch (e) {
-    return { message: e };
+    throw e;
   }
 };
 
@@ -21,7 +21,7 @@ export const getPrivateElements = async (collection) => {
     });
     return elements.data;
   } catch (e) {
-    return { message: e };
+    throw e;
   }
 };
 
@@ -36,7 +36,7 @@ export const getPrivateElementByID = async (collection, id) => {
     console.log(elements);
     return elements;
   } catch (e) {
-    return { message: e };
+    throw e;
   }
 };
 
@@ -50,7 +50,7 @@ export const addPrivateElement = async (collection, formData) => {
     });
     return elements;
   } catch (e) {
-    return { message: e };
+    throw e;
   }
 };
 
@@ -64,7 +64,7 @@ export const putPrivateElement = async (itemURL, formData) => {
     });
     return elements;
   } catch (e) {
-    return { message: e };
+    throw e;
   }
 };
 
@@ -78,7 +78,7 @@ export const deletePrivateElement = async (collection, id) => {
     });
     return { message: `Elemento eliminado` };
   } catch (e) {
-    return { message: e };
+    throw e;
   }
 };
 
@@ -86,7 +86,7 @@ export const deleteClickHandler = async (id, collection) => {
   try {
     await axios.delete(`${databaseURL + collection}/${id}`);
   } catch (e) {
-    alert(e);
+    throw e;
   }
 };
 
@@ -100,8 +100,8 @@ export const deleteMultiple = (id, collection) => {
       id.map((item) => {
         try {
           deleteClickHandler(item, collection);
-        } catch (error) {
-          console.log(error);
+        } catch (e) {
+          throw e;
         }
       });
     }
@@ -112,7 +112,7 @@ export const deleteMultiple = (id, collection) => {
       try {
         deleteClickHandler(id, collection);
       } catch (e) {
-        return { message: e };
+        throw e;
       }
     }
   }
