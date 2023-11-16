@@ -241,6 +241,17 @@ const JobParts = (props) => {
             spacing={{ xs: 2, md: 3 }}
             columns={{ xs: 1, sm: 4, md: 8 }}
           >
+            <Grid item xs={1} sm={4} md={8}>
+              <TextField
+                variant="outlined"
+                type="text"
+                name="Name"
+                id="Name"
+                label="Nombre / Descripcion"
+                color="info"
+                {...register("Name")}
+              />
+            </Grid>
             {partsList !== null && (
               <Grid item xs={1} sm={2} md={4}>
                 <FormControl sx={{ width: "90%" }}>

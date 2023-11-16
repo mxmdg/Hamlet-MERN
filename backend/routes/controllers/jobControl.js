@@ -1,5 +1,6 @@
 const jobs = require("../../models/Jobs");
 const users = require("../../models/usersSchema");
+const companies = require("../../models/empresas")
 const stocks = require("../../models/materiales");
 
 const jobControl = {};
@@ -37,6 +38,7 @@ jobControl.addJob = async (req, res) => {
       const Partes = req.body.Partes;
       const Entrega = req.body.endDate;
       const Owner = req.body.Owner;
+      const Company = req.body.Company;
       //const Archivos = '/uploads/' + req.file.filename;
       const newJob = new jobs.esquema({
         Nombre,
@@ -45,6 +47,7 @@ jobControl.addJob = async (req, res) => {
         Entrega,
         Partes,
         Owner,
+        Company,
       });
       await newJob.save();
       console.log(`Trabajo agregado`);
@@ -63,6 +66,11 @@ jobControl.getJob = async (req, res) => {
         path: "Owner",
         model: users.esquema,
         select: "Name LastName Role email",
+      })
+      .populate({
+        path: "Company",
+        model: companies.esquema,
+        select: "Nombre email",
       })
       .populate({ path: "Partes.partStock", model: stocks.esquema });
     res.json(job);

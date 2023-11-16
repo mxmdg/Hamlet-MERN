@@ -21,15 +21,16 @@ const Home = () => {
       <Typography variant="h3" color={"primary"} gutterBottom>
         Welcome to hamlet
       </Typography>
+      <Divider />
       <Typography variant="subtitle" color={"secondary"} gutterBottom>
         Token: {getToken() ? "Habilitado" : "Inhabilitado"}
       </Typography>
       <Divider />
-      <ImpoProvider>
-        <Canvas></Canvas>
-      </ImpoProvider>
+        <Fetch collection="jobs/urg" />
       <Divider />
-      <Fetch collection="jobs/urg" />
+        <ImpoProvider>
+          <Canvas></Canvas>
+        </ImpoProvider>
     </Container>
   );
 };

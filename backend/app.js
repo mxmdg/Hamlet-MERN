@@ -8,7 +8,7 @@ app.set("port", process.env.PORT || 5000);
 app.set("secretKey", "dorrego");
 
 // middlewares
-app.use(cors());
+app.use(cors({ origin: '*'}));
 app.use(express.json());
 
 const verifyToken = (req, res, next) => {
@@ -39,6 +39,7 @@ app.use("/Hamlet/jobs", require("./routes/jobs"));
 app.use("/Hamlet/jobs/urg", require("./routes/jobs"));
 app.use("/Hamlet/Impresoras", require("./routes/printers"));
 app.use("/Hamlet/formatos", require("./routes/formatos"));
+app.use("/Hamlet/empresas", require("./routes/empresas"));
 app.use(
   "/Hamlet/precios",
   (req, res, next) => req.app.verifyToken(req, res, next),

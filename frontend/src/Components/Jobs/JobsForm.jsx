@@ -31,6 +31,7 @@ const JobsForm = (props) => {
   });
   
   const [useUsersList, setUsersList ] = useState([]);
+  const [useCompaniesList, setCompaniesList ] = useState([]);
   const context = useContext(AuthContext);
 
   const handleChange = (e) => {
@@ -39,11 +40,13 @@ const JobsForm = (props) => {
   };
 
   const getUsers = async ()=> await fechtData('Users', setUsersList);
+  const getCompanies = async ()=> await fechtData('Empresas', setCompaniesList);
 
   useEffect(()=>{
     getUsers()
+    getCompanies()
   },
-  [setUsersList])
+  [setUsersList,setCompaniesList])
 
   const onSubmit = (values) => {
     console.log(values);
@@ -231,6 +234,36 @@ const JobsForm = (props) => {
                       <MenuItem value={context.userLogged._id} key={context.userLogged._id}>
                         {context.userLogged.Name}
                       </MenuItem>
+                  } 
+                  </TextField>
+                </Grid>
+                <Grid item xs={1} sm={2} md={4}>
+                <TextField
+                    select
+                    id="Company"
+                    defaultValue=''
+                    inputProps={{
+                      name: "Company",
+                      id: "Company",
+                    }}
+                    variant="outlined"
+                    color="primary"
+                    label="Empresa"
+                    name="Company"
+                    fullWidth
+                    {...register("Company", { required: true })}
+                    onBlur={() => {
+                      trigger("Company");
+                    }}
+                  >
+                  { 
+                      useCompaniesList.map((u)=> {
+                        return (
+                            <MenuItem value={u._id} key={u._id}>
+                              {u.Nombre}
+                            </MenuItem>
+                        )
+                      })
                   } 
                   </TextField>
                 </Grid>

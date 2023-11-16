@@ -2,7 +2,7 @@ const { Schema, model } = require('mongoose');
 
 const jobPartSchema = new Schema(
     { 
-        'Type': {type: String, required: true},
+      'Type': {type: String, required: true},
         'minPages': {type: Number, required: true},
         'maxPages': {type: Number, required: true},
         'PrintModAllowed': {

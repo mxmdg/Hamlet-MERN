@@ -27,6 +27,7 @@ const pages = [
   "Impresoras",
   "JobParts",
   "Materiales",
+  "Empresas"
 ];
 const settings = ["Login", "Register", "Users"];
 

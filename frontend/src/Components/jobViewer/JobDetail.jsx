@@ -86,7 +86,7 @@ const JobDetail = (props) => {
             id="panel1bh-header"
           >
             <Typography sx={{ width: "33%", flexShrink: 0 }}>
-              {part.jobParts[0].type}
+            {part.Name}<br/> {part.jobParts[0].type} 
             </Typography>
             <Typography sx={{ width: "33%", flexShrink: 0 }}>
               Parte {partNumber} de {job.Partes.length}
@@ -186,7 +186,7 @@ const JobDetail = (props) => {
               </Paper>
             </Box>
           }
-          title={job.Nombre}
+          title={job.Nombre + (job.Company ? ` - ${job.Company.Nombre}` : "")}
           subheader={job.Owner ? `${job.Owner.Name} ${job.Owner.LastName}` : ""}
         />
         <CardContent>

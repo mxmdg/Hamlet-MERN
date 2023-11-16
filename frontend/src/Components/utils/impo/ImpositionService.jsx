@@ -172,7 +172,10 @@ export const drawOptimusCutting = (
   let printAreaX = x1 - margen * 2;
   let printAreaY = y1 - margen * 2;
 
-  let resultado = cutOptimizer(x1, y1, x2, y2);
+  let resultado1 = cutOptimizer(x1, y1, x2, y2);
+  let resultado2 = cutOptimizer(x1, y1, y2, x2);
+
+  let resultado = resultado1.totalPoses > resultado2.totalPoses ? resultado1 : resultado2
 
   let xPoses = resultado.xPoses;
   let yPoses = resultado.yPoses;

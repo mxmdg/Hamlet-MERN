@@ -7,6 +7,7 @@ import StocksMainContainer from './Components/Stocks/StocksMainContainer';
 import StockDataForm from './Components/Formulario/StockDataForm'
 import FormatsMainContainer from './Components/Formats/FormatsMainContainer';
 import FormatDataForm from './Components/Formulario/FormatDataForm';
+import empresasDataForm from './Components/Formulario/empresasDataForm';
 import jobPartDataForm from './Components/Formulario/JobPartsDataForm';
 import PricesDataForm from './Components/Formulario/PricesDataForm';
 import UsersDataForm from './Components/Formulario/UsersDataForm';
@@ -63,6 +64,10 @@ function App() {
                 <Route path="/formatos/add" element={<Form form={FormatDataForm} collection='formatos' task="new"/>} />
                 <Route path="/formatos/copy/:id" element={<Form form={FormatDataForm} collection='formatos' task="copy"/>} />
                 <Route path="/formatos/edit/:id" element={<Form form={FormatDataForm} collection='formatos' task="edit"/>} />
+                <Route path="/empresas" element={<MainContainer entity={'empresas'}/>} />
+                <Route path="/empresas/add" element={<Form form={empresasDataForm} collection='empresas' task="new"/>} />
+                <Route path="/empresas/copy/:id" element={<Form form={empresasDataForm} collection='empresas' task="copy"/>} />
+                <Route path="/empresas/edit/:id" element={<Form form={empresasDataForm} collection='empresas' task="edit"/>} />
                 <Route path="/JobParts" element={<MainContainer entity={'JobParts'}/>} />
                 <Route path="/JobParts/add" element={<Form form={jobPartDataForm} collection='JobParts' task="new"/>} />
                 <Route path="/JobParts/copy/:id" element={<Form form={jobPartDataForm} collection='JobParts' task="copy"/>} />
