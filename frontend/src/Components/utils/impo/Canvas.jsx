@@ -1,10 +1,5 @@
 import { useEffect, useState, useRef, useContext } from "react";
-import {
-  drawCutting,
-  cutOptimizer,
-  drawSimpleCutting,
-  drawOptimusCutting,
-} from "./ImpositionService";
+import { drawOptimusCutting } from "./ImpositionService";
 
 import { ImpositionForm } from "./ImpositionForm";
 import { ImpoContext } from "./ImpoContext";

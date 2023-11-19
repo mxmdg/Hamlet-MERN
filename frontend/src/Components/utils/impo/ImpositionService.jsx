@@ -7,28 +7,26 @@ export const bestCut = (x1, y1, x2, y2) => {
   let n1 = xPoses1 * yPoses1;
   let n2 = xPoses2 * yPoses2;
   let n = Math.max(n1, n2);
-  //console.log(`Entran ${n}`);
-
   return n;
 };
 
-export const cutOptimizer = (x1, y1, x2, y2) => {
-  let xPoses = Math.floor(x1 / parseInt(x2));
+export const cutOptimizer = (x1, y1, x2, y2, margen = 0, calle = 0) => {
+  let xPoses = Math.floor(x1 / (x2 + calle));
 
-  let yPoses = Math.floor(y1 / parseInt(y2));
+  let yPoses = Math.floor(y1 / (y2 + calle));
 
   let poses = xPoses * yPoses;
 
-  let xResto = x1 % x2;
+  let xResto = x1 - x2 * xPoses - calle * (xPoses - 1); //((x1 - margen) % x2) - calle * xPoses;
 
-  let yResto = y1 % y2;
+  let yResto = y1 - y2 * yPoses - calle * (yPoses - 1); //((y1 - margen) % y2) - calle * yPoses;
 
   let masPoses;
 
   if (y2 <= xResto && x2 < y1) {
-    masPoses = bestCut(xResto, y1, x2, y2);
+    masPoses = bestCut(xResto, y1, x2 + calle, y2 + calle);
   } else if (x2 <= yResto && y2 < x1) {
-    masPoses = bestCut(yResto, x1, x2, y2);
+    masPoses = bestCut(yResto, x1, x2 + calle, y2 + calle);
   } else {
     masPoses = 0;
   }
@@ -112,44 +110,63 @@ export const drawCutting = (
   return n;
 };
 
-export const drawSimpleCutting = (x1, y1, x2, y2, x3, y3, ctx) => {
-  let xPoses1 = Math.floor(x1 / parseInt(x2));
-  let yPoses1 = Math.floor(y1 / parseInt(y2));
-  let xPoses2 = Math.floor(x1 / parseInt(y2));
-  let yPoses2 = Math.floor(y1 / parseInt(x2));
+export const drawSimpleCutting = (
+  x1,
+  y1,
+  x2,
+  y2,
+  x3,
+  y3,
+  calle = 0,
+  margen = 0,
+  ctx
+) => {
+  let xPoses1 = Math.floor(x1 / (x2 + calle));
+  let yPoses1 = Math.floor(y1 / (y2 + calle));
+  let xPoses2 = Math.floor(x1 / (y2 + calle));
+  let yPoses2 = Math.floor(y1 / (x2 + calle));
 
   let n1 = xPoses1 * yPoses1;
   let n2 = xPoses2 * yPoses2;
 
   let n = Math.max(n1, n2);
-  //console.log(`Entran ${n}`);
+  console.log(x1, y1, x2, y2);
+  console.log(`Entran ${n}`);
 
   let izq = x3;
   let top = y3;
 
+  ctx.strokeStyle = "#a20";
+
+  ctx.strokeRect(izq, top, x1, y1);
+
   ctx.strokeStyle = "#0ff";
 
   if (n1 >= n2 && n1 > 0) {
-    top = top - y2;
+    top = top - y2 - calle / 2;
     for (let h = 0; h < yPoses1; h++) {
-      top = top + y2;
+      top = top + y2 + calle;
       for (let i = 0; i < xPoses1; i++) {
         ctx.strokeRect(
-          izq + (x1 - x2 * xPoses1) / 2 + x2 * i,
-          top + (y1 - y2 * yPoses1) / 2,
+          izq +
+            (x1 - x2 * xPoses1 - calle * (xPoses1 - 1)) / 2 +
+            (x2 + calle) * i,
+          top + (y1 - y2 * yPoses1 - calle * (yPoses1 - 1)) / 2,
           x2,
           y2
         );
       }
     }
   } else if (n2 > n1 && n2 > 0) {
-    top = top - x2;
+    top = top - x2 - calle / 2;
     for (let h = 0; h < yPoses2; h++) {
-      top = top + x2;
+      top = top + x2 + calle;
       for (let i = 0; i < xPoses2; i++) {
         ctx.strokeRect(
-          izq + (x1 - y2 * xPoses2) / 2 + y2 * i,
-          top + (y1 - x2 * yPoses2) / 2,
+          izq +
+            (x1 - y2 * xPoses2 - calle * (xPoses2 - 1)) / 2 +
+            (y2 + calle) * i,
+          top + (y1 - x2 * yPoses2 - calle * (yPoses2 - 1)) / 2,
           y2,
           x2
         );
@@ -172,19 +189,40 @@ export const drawOptimusCutting = (
   let printAreaX = x1 - margen * 2;
   let printAreaY = y1 - margen * 2;
 
-  let resultado1 = cutOptimizer(x1, y1, x2, y2);
-  let resultado2 = cutOptimizer(x1, y1, y2, x2);
+  let resultado1 = cutOptimizer(printAreaX, printAreaY, x2, y2, margen, calle);
+  let resultado2 = cutOptimizer(printAreaX, printAreaY, y2, x2, margen, calle);
 
-  let resultado = resultado1.totalPoses > resultado2.totalPoses ? resultado1 : resultado2
+  console.log(resultado1);
+  console.log(resultado2);
 
-  let xPoses = resultado.xPoses;
-  let yPoses = resultado.yPoses;
-  let masPoses = resultado.masPoses;
-  let tPoses = resultado.totalPoses;
-  let xResto = resultado.xResto;
-  let yResto = resultado.yResto;
-  let x = resultado.x2 - calle;
-  let y = resultado.y2 - calle;
+  let resultado = () => {
+    if (resultado1.totalPoses > resultado2.totalPoses) {
+      return resultado1;
+    } else if (resultado1.totalPoses < resultado2.totalPoses) {
+      return resultado2;
+    } else if (
+      resultado1.totalPoses === resultado2.totalPoses &&
+      resultado1.masPoses >= resultado2.masPoses
+    ) {
+      return resultado2;
+    } else if (
+      resultado1.totalPoses === resultado2.totalPoses &&
+      resultado1.masPoses < resultado2.masPoses
+    ) {
+      return resultado1;
+    }
+  };
+
+  console.table(resultado());
+
+  let xPoses = resultado().xPoses;
+  let yPoses = resultado().yPoses;
+  let masPoses = resultado().masPoses;
+  let tPoses = resultado().totalPoses;
+  let xResto = resultado().xResto;
+  let yResto = resultado().yResto;
+  let x = resultado().x2;
+  let y = resultado().y2;
 
   ctx.clearRect(0, 0, xCtx, yCtx);
 
@@ -220,10 +258,30 @@ export const drawOptimusCutting = (
   }
 
   if (y < xResto) {
-    drawSimpleCutting(xResto, y1, x, y, xImpo, top2, ctx);
+    drawSimpleCutting(
+      xResto,
+      printAreaY,
+      x,
+      y,
+      xImpo,
+      top2,
+      calle,
+      margen,
+      ctx
+    );
     return { tPoses };
   } else if (x < yResto) {
-    drawSimpleCutting(x1, yResto, x, y, izq2, yImpo, ctx);
+    drawSimpleCutting(
+      printAreaX,
+      yResto,
+      x,
+      y,
+      izq2,
+      yImpo,
+      calle,
+      margen,
+      ctx
+    );
     return { tPoses };
   }
 
