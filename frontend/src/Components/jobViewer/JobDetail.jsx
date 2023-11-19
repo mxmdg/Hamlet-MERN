@@ -63,7 +63,8 @@ const JobDetail = (props) => {
     day: "numeric",
   };
 
-  const partDetail = (part) => {
+  const PartDetail = (part) => {
+    const [usePoses, setPoses] = useState(null);
     let partNumber = job.Partes.indexOf(part) + 1;
     let myKey = part._id + partNumber;
 
@@ -86,7 +87,8 @@ const JobDetail = (props) => {
             id="panel1bh-header"
           >
             <Typography sx={{ width: "33%", flexShrink: 0 }}>
-            {part.Name}<br/> {part.jobParts[0].type} 
+              {part.Name}
+              <br /> {part.jobParts[0].type}
             </Typography>
             <Typography sx={{ width: "33%", flexShrink: 0 }}>
               Parte {partNumber} de {job.Partes.length}
@@ -130,11 +132,23 @@ const JobDetail = (props) => {
                     Material: {part.partStock.Marca}, {part.partStock.Tipo},{" "}
                     {part.partStock.Gramaje}
                   </Item>
+                  {usePoses && (
+                    <>
+                      <Item>Poses: {usePoses}</Item>
+                      <Item>Tirada: {Math.ceil(job.Cantidad / usePoses)}</Item>
+                      <Item>
+                        Pliegos:
+                        {Math.ceil(
+                          part.Pages / (part.ColoresDorso > 0 ? 2 : 1)
+                        ) * Math.ceil(job.Cantidad / usePoses)}
+                      </Item>
+                    </>
+                  )}
                 </Stack>
               </Grid>
               <Grid item xs={12} md={8}>
                 <ImpoProvider>
-                  <Canvas part={part}></Canvas>
+                  <Canvas part={part} getPoses={setPoses}></Canvas>
                 </ImpoProvider>
               </Grid>
             </Grid>
@@ -193,7 +207,7 @@ const JobDetail = (props) => {
           <h4>Partes: </h4>
           <Divider />
           {job.Partes.map((parte) => {
-            return partDetail(parte);
+            return PartDetail(parte);
           })}
         </CardContent>
         <Divider />
