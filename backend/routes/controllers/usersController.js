@@ -71,9 +71,9 @@ const login = async (req, res, next) => {
         const token = jwt.sign(
           { userId: document._id },
           req.app.get("secretKey"),
-          { expiresIn: "2m" }
+          { expiresIn: "1d" }
         );
-        const expirationTime = Date.now() + 120000; // 24 * 60 * 60000;
+        const expirationTime = Date.now() + 24 * 60 * 60000;
         return res.json({ token, document, expirationTime });
       } catch (e) {
         next(e);
