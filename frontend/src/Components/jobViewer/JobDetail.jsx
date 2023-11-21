@@ -33,6 +33,7 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { ImpoContext } from "../utils/impo/ImpoContext";
 import ImpoProvider from "../utils/impo/ImpoContext";
 import Canvas from "../utils/impo/Canvas";
+import { bestCut } from "../utils/impo/ImpositionService";
 
 export const calcularLomo = (pags, resma) => {
   return Math.ceil(pags / 2) * (resma / 500);
@@ -65,13 +66,25 @@ const JobDetail = (props) => {
 
   const PartDetail = (part) => {
     const [usePoses, setPoses] = useState(null);
+    const [useSheet, setSheet] = useState(null);
     let partNumber = job.Partes.indexOf(part) + 1;
     let myKey = part._id + partNumber;
 
-    /* beasts.map((item)=>{
-      const i = beasts.indexOf(item) + 1
-      console.log(`${item} es el bicho ${i} de ${beasts.length}`)
-    }) */
+    const calculateStock = () => {
+      const pliegosPorHoja = bestCut(
+        part.partStock.Ancho_Resma,
+        part.partStock.Alto_Resma,
+        useSheet.width,
+        useSheet.height
+      );
+      const cantidadDePliegos =
+        Math.ceil(part.Pages / (part.ColoresDorso > 0 ? 2 : 1)) *
+        Math.ceil(job.Cantidad / usePoses);
+
+      const totalHojas = Math.ceil(cantidadDePliegos / pliegosPorHoja);
+
+      return { pliegosPorHoja, cantidadDePliegos, totalHojas };
+    };
 
     return (
       <>
@@ -137,18 +150,21 @@ const JobDetail = (props) => {
                       <Item>Poses: {usePoses}</Item>
                       <Item>Tirada: {Math.ceil(job.Cantidad / usePoses)}</Item>
                       <Item>
-                        Pliegos:
-                        {Math.ceil(
-                          part.Pages / (part.ColoresDorso > 0 ? 2 : 1)
-                        ) * Math.ceil(job.Cantidad / usePoses)}
+                        Pliegos: {calculateStock().cantidadDePliegos} - Salen:{" "}
+                        {calculateStock().pliegosPorHoja}
                       </Item>
+                      <Item>Total Papel: {calculateStock().totalHojas}</Item>
                     </>
                   )}
                 </Stack>
               </Grid>
               <Grid item xs={12} md={8}>
                 <ImpoProvider>
-                  <Canvas part={part} getPoses={setPoses}></Canvas>
+                  <Canvas
+                    part={part}
+                    getPoses={setPoses}
+                    getSheet={setSheet}
+                  ></Canvas>
                 </ImpoProvider>
               </Grid>
             </Grid>

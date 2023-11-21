@@ -264,7 +264,7 @@ export const ImpositionForm = (props) => {
               customFormat === true && (
                 <FormHelperText>Este campo es requerido</FormHelperText>
               )}
-            <Button variant="contained" type="submit">
+            <Button variant="contained" type="submit" color="secondary">
               Imponer
             </Button>
           </Stack>
