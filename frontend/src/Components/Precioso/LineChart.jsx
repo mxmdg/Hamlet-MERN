@@ -64,7 +64,7 @@ export default function MyLineChart(props) {
           animationDuration={750}
           animationEasing="ease-out"
           contentStyle={{
-            background: "#33333344",
+            background: "#00000088",
             backdropFilter: "blur(5px)",
             borderRadius: "5px",
             boxShadow: "7px 7px 10px #000000aa",
@@ -72,7 +72,7 @@ export default function MyLineChart(props) {
             padding: "15px",
           }}
           viewBox={{ x: 0, y: 0, width: 250, height: 600 }}
-          allowEscapeViewBox={{ x: true, y: true }}
+          allowEscapeViewBox={{ x: false, y: true }}
         />
         <Legend verticalAlign="top" height={36} />
       </LineChart>

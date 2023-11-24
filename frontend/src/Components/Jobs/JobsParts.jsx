@@ -352,7 +352,7 @@ const JobParts = (props) => {
                 >
                   {filteredStocks.map((Stock) => (
                     <MenuItem value={Stock._id} id={Stock._id} key={Stock._id}>
-                      {Stock.Nombre_Material}
+                      {Stock.Nombre_Material} - {Stock.Marca} {`(${Stock.Ancho_Resma} x ${Stock.Alto_Resma})`}
                     </MenuItem>
                   ))}
                 </Select>

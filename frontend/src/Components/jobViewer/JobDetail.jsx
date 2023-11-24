@@ -122,7 +122,7 @@ const JobDetail = (props) => {
                 <Stack spacing={2}>
                   <Item>{part.jobParts[0].type}</Item>
                   <Item>
-                    Formato: {part.Ancho} x {part.Alto}
+                    Formato: {part.Ancho} x {part.Alto} - Orientacion: {part.Orientacion}
                   </Item>
                   <Item>
                     Paginas: {part.Pages}

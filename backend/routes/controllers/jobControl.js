@@ -6,27 +6,36 @@ const stocks = require("../../models/materiales");
 const jobControl = {};
 
 jobControl.getJobs = async (req, res) => {
-  {
-    const queryText = req.query.Q || "";
-    const jobList = await jobs.esquema
+  { 
+    try {
+      const queryText = req.query.Q || "";
+      const jobList = await jobs.esquema
       .find({ Nombre: { $regex: queryText, $options: "i" } })
-      .select("Nombre Cantidad Fecha Entrega Emision Deadline");
-    res.json(jobList);
+      .select("Nombre Cantidad Fecha Entrega Emision Deadline")
+      .sort({"Nombre": -1});
+      res.json(jobList);
+    } catch (e) {
+      throw e;
+    }
+    
   }
 };
 
 jobControl.getUrgentJobs = async (req, res) => {
   const currentDate = new Date();
   const daysLater = new Date();
-  daysLater.setDate(currentDate.getDate() + 5);
-
-  {
-    const queryText = req.query.Q || "";
-    const jobList = await jobs.esquema
-      .find({ Entrega: { $gte: currentDate, $lt: daysLater } })
-      .select("Nombre Cantidad Fecha Entrega Emision Deadline");
-    res.json(jobList);
-  }
+  daysLater.setDate(currentDate.getDate() + 7);
+  try {
+    {
+      const queryText = req.query.Q || "";
+      const jobList = await jobs.esquema
+        .find({ Entrega: { $gte: currentDate, $lt: daysLater } })
+        .select("Nombre Cantidad Fecha Entrega Emision Deadline");
+      res.json(jobList);
+    }
+  } catch (e) {
+    throw e;}
+  
 };
 
 jobControl.addJob = async (req, res) => {

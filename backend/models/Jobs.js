@@ -5,7 +5,7 @@ function orientation(x, y) {
   let orientacion;
   console.log(x, y);
   if (x > y) {
-    orientacion = "Horizontal";
+    orientacion = "Apaisado";
   } else if (y > x) {
     orientacion = "Vertical";
   } else if (x === y) {
