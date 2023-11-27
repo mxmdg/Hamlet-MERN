@@ -25,10 +25,20 @@ import ErrorMessage from "../../ErrorMessage/ErrorMessage";
 export const ImpositionForm = (props) => {
   const context = useContext(ImpoContext);
   const [useFormats, setFormats] = useState([]);
+  const [usePrinters, setPrinters] = useState([]);
   const [selectedFormat, setSelectedFormat] = useState("");
   const [customFormat, setCustomFormat] = useState(false);
   const [useErrorMessage, setErrorMessage] = useState(null);
   const [useLoading, setLoading] = useState(true);
+
+  const filterPrinters = async (printersList) => {
+    const filteredPrinters = printersList.filter(
+      (impresora) =>
+        impresora.Colores ==
+        Math.max(props.part.ColoresFrente, props.part.ColoresDorso)
+    );
+    return filteredPrinters;
+  };
 
   let useFormatsFiltered = useFormats.filter(
     (f) =>
@@ -52,7 +62,10 @@ export const ImpositionForm = (props) => {
   const fetchingData = async () => {
     try {
       const gettedFormats = await getPrivateElements("formatos");
+      const getPrinters = await getPrivateElements("impresoras");
+
       setFormats(gettedFormats);
+      setPrinters(await filterPrinters(getPrinters));
       setLoading(false);
     } catch (e) {
       setErrorMessage(e);
