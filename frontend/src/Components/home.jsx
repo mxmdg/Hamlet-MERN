@@ -22,15 +22,15 @@ const Home = () => {
     
       <Grid container spacing="3">
         
-        <Grid item sm="12" md="4" xl="4">
+        <Grid item xs={12} sm={4} md={4}>
           <QuickSpinCalc />
         </Grid>
-        <Grid item sm="12" md="8" xl="8">
+        <Grid item xs={12} sm={8} md={8}>
           <ImpoProvider>
             <Canvas></Canvas>
           </ImpoProvider>
         </Grid>
-        <Grid item sm="12" md="8" xl="8">
+        <Grid item xs={12} sm={12} md={12}>
           <Fetch collection="jobs/urg" /> 
         </Grid>
       </Grid>

@@ -31,14 +31,14 @@ export const ImpositionForm = (props) => {
   const [useErrorMessage, setErrorMessage] = useState(null);
   const [useLoading, setLoading] = useState(true);
 
-  const filterPrinters = async (printersList) => {
+ /*  const filterPrinters = async (printersList) => {
     const filteredPrinters = printersList.filter(
       (impresora) =>
         impresora.Colores ==
         Math.max(props.part.ColoresFrente, props.part.ColoresDorso)
     );
     return filteredPrinters;
-  };
+  }; */
 
   let useFormatsFiltered = useFormats.filter(
     (f) =>
@@ -65,7 +65,7 @@ export const ImpositionForm = (props) => {
       const getPrinters = await getPrivateElements("impresoras");
 
       setFormats(gettedFormats);
-      setPrinters(await filterPrinters(getPrinters));
+      setPrinters(getPrinters);
       setLoading(false);
     } catch (e) {
       setErrorMessage(e);

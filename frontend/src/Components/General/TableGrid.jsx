@@ -174,13 +174,13 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          {props.collection}
+          {props.collection.replace("/urg", '')}
         </Typography>
       )}
       <StyledTooltip title="Agregar" arrow>
         <IconButton
           onClick={() => {
-            navigate(`/${props.collection}/add`);
+            navigate(`/${props.collection.replace("/urg", '')}/add`);
           }}
           sx={{ alignSelf: "right" }}
         >
@@ -194,7 +194,7 @@ function EnhancedTableToolbar(props) {
               <StyledTooltip title="Copiar" arrow>
                 <IconButton
                   onClick={() => {
-                    navigate(`/${props.collection}/copy/${props.idSelected}`);
+                    navigate(`/${props.collection.replace("/urg", '')}/copy/${props.idSelected}`);
                   }}
                   sx={{ alignSelf: "right" }}
                 >
@@ -204,7 +204,7 @@ function EnhancedTableToolbar(props) {
               <StyledTooltip title="Editar" arrow>
                 <IconButton
                   onClick={() => {
-                    navigate(`/${props.collection}/edit/${props.idSelected}`);
+                    navigate(`/${props.collection.replace("/urg", '')}/edit/${props.idSelected}`);
                   }}
                   sx={{ alignSelf: "right" }}
                 >
@@ -220,7 +220,7 @@ function EnhancedTableToolbar(props) {
                 const pasarBorrado = () => {
                   try {
                     props.deleted([props.idSelected]);
-                    deleteMultiple(props.idSelected, props.collection);
+                    deleteMultiple(props.idSelected, props.collection.replace("/urg", ''));
                     props.resetSelected([]);
                   } catch (e) {
                     console.log(e);
@@ -331,7 +331,7 @@ export default function EnhancedTable(props) {
     <Box sx={{ width: "100%" }}>
       <Paper elevation={8} square sx={{ width: "100%", mb: 2, background: "#3697" }}>
         <EnhancedTableToolbar
-          collection={props.collection}
+          collection={props.collection.replace("/urg", '')}
           numSelected={selected.length}
           idSelected={selected}
           deleted={props.deleted}
@@ -362,7 +362,7 @@ export default function EnhancedTable(props) {
                     hover
                     onClick={(event) => handleClick(event, row._id)}
                     onDoubleClick={() => {
-                      navigate(`/${props.collection}/edit/${row._id}`);
+                      navigate(`/${props.collection.replace("/urg", '')}/edit/${row._id}`);
                     }}
                     role="checkbox"
                     aria-checked={isItemSelected}

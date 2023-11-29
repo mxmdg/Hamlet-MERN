@@ -15,8 +15,9 @@ routerJob.route("/").get(getJobs).post(addJob);
 
 routerJob.route("/urg").get(getUrgentJobs);
 
-routerJob.route("/:id").put(updateJob).get(getJob).delete(deleteJob);
 routerJob.route("/urg/:id").put(updateJob).get(getJob).delete(deleteJob);
+routerJob.route("/:id").put(updateJob).get(getJob).delete(deleteJob);
+
 
 routerJob.route("/:id&/partId");
 

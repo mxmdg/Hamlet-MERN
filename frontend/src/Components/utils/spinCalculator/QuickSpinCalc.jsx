@@ -16,14 +16,14 @@ import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import { Grid } from "@mui/material";
-import { fechtData } from "../../customHooks/FetchDataHook";
+import { fechtData, getPrivateElementByID } from "../../customHooks/FetchDataHook";
 
 
 
 const QuickSpinCalc = (props) => {
   const [stocks, setStocks] = useState([]);
   const [usePages, setPages] = useState([]);
-  const [useStock, selectStock] = useState(0);
+  const [useStock, selectStock] = useState([]);
   const [useSpin, setSpin] = useState(0)
  
 
@@ -37,13 +37,21 @@ const QuickSpinCalc = (props) => {
 
   const handleSubmit = (e)=>{
     e.preventDefault()
-    const spin = Math.ceil(Math.ceil(usePages / 2) * (useStock / 500));
+    console.log(useStock)
+    const spin = Math.ceil(Math.ceil(usePages / 2) * (useStock.Espesor_Resma / 500));
     setSpin(spin)
   }
   
-  const handleChange = (e) => {
-    const espesorResma = e.target.value
-    selectStock(espesorResma)
+  const handleChange = async (e) => {
+    try {
+      console.log(e.target.value)
+      const stock = await getPrivateElementByID("materiales",e.target.value);
+      console.log(stock.data)
+      selectStock(stock.data)
+    } catch (e) {
+      return {error: e.message}
+    }
+    
   };
 
   const handlePageChange = (e) => {
@@ -98,7 +106,7 @@ const QuickSpinCalc = (props) => {
                   size="small"
                 >
                   {stocks.map((Stock) => (
-                    <MenuItem value={Stock.Espesor_Resma} id={Stock._id} key={Stock._id}>
+                    <MenuItem value={Stock._id} id={Stock._id} key={Stock._id}>
                       {Stock.Nombre_Material} - {Stock.Marca}
                     </MenuItem>
                   ))}

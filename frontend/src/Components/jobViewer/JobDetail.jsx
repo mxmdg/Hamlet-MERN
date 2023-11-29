@@ -36,7 +36,7 @@ import Canvas from "../utils/impo/Canvas";
 import { bestCut } from "../utils/impo/ImpositionService";
 
 export const calcularLomo = (pags, resma) => {
-  return Math.ceil(pags / 2) * (resma / 500);
+  return Math.round(Math.ceil(pags / 2) * (resma / 500));
 };
 
 const JobDetail = (props) => {
