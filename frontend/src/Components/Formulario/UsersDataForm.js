@@ -10,8 +10,12 @@ let UsersDataForm = [{
 },
 {
     inputName: 'Role',
-    type: 'Text',
-    id: 'id_003'
+    type: 'Select',
+    id: 'id_003',
+    options: [{text: "Administrador", value:"Admin"},
+    {text: "Vendedor", value: "Manager"},
+    {text: "Operador", value: "Operator"},
+    {text: "Cliente", value: "Custormer"}]
 },
 {
     inputName: 'E-mail',
