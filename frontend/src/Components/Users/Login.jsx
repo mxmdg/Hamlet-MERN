@@ -43,6 +43,7 @@ export const Login = () => {
       console.log(token);
       context.handleLogin(token.data.token, token.data.expirationTime);
       context.setUserLogged(token.data.document);
+      localStorage.setItem("user", JSON.stringify(token.data.document));
     } catch (e) {
       console.log("Fallo el login: " + e);
     }

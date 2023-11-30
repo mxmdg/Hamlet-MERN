@@ -10,7 +10,9 @@ const AuthProvider = ({ children }) => {
   const [useToken, setToken] = useState(
     localStorage.getItem("token") ? localStorage.getItem("token") : {}
   );
-  const [userLogged, setUserLogged] = useState({});
+  const [userLogged, setUserLogged] = useState(
+    localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : {}
+  );
   const Navigate = useNavigate();
 
   const handleLogout = () => {
@@ -18,6 +20,7 @@ const AuthProvider = ({ children }) => {
     localStorage.removeItem("login");
     setToken({});
     localStorage.removeItem("token");
+    localStorage.removeItem("user");
     setUserLogged({});
     Navigate("/");
     console.log("Logout exitoso");
