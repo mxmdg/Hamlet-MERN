@@ -20,8 +20,8 @@ export default function SimulationTable(props) {
           createData(
             q,
             p,
-            props.simCLC(props.data, q, p).Unitario,
-            props.simCLC(props.data, q, p).Total
+            props.simCLC(props.data.Proceso, q, p).Unitario,
+            props.simCLC(props.data.Proceso, q, p).Total
           )
         );
       }
@@ -43,7 +43,7 @@ export default function SimulationTable(props) {
         <TableBody>
           {rows().map((row) => (
             <TableRow
-              key={row.Cantidad}
+              key={row.Cantidad + row.Pliego.Ancho}
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
             >
               <TableCell component="th" scope="row">

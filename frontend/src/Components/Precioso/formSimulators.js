@@ -38,7 +38,7 @@ export const Nuvera = (valor, minimo, cantidad, entrada, largoPliego) => {
 };
 
 export const iGenBN = (valor, minimo, cantidad, entrada, largoPliego) => {
-  let resultado = entrada + cantidad * (largoPliego > 488 ? 1 : 1.25) * valor;
+  let resultado = entrada + cantidad * (largoPliego < 488 ? 1 : 1.25) * valor;
   resultado = resultado < minimo ? minimo : resultado;
 
   console.log(

@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { Grid } from "@mui/material";
 //import { DataGrid } from '@mui/x-data-grid';
 import Card from "@mui/material/Card";
+import CardHeader from "@mui/material/CardHeader";
 import Paper from "@mui/material/Paper";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -158,8 +159,8 @@ const PriceTable = (props) => {
           >
             <Typography
               gutterBottom
-              variant="h4"
-              color="text.secondary"
+              variant="h5"
+              color="primary"
               component="div"
             >
               {props.pd.Proceso}

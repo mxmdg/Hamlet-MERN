@@ -10,7 +10,7 @@ import {
 import { fechtData } from "../customHooks/FetchDataHook";
 import SimulationTable from "./SimulationTable";
 
-import { Button, Container, Typography, Card, Table } from "@mui/material";
+import { Button, Container, Typography, Card, CardHeader, CardContent, CardActions } from "@mui/material";
 import Modal from "@mui/material/Modal";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
@@ -24,6 +24,8 @@ const Simulator = (props) => {
   const [useFormats, setFormats] = React.useState([
     { Nombre: "A4", Ancho: "210", Alto: "297" },
   ]);
+  const [useQuantity, setQuantity] = React.useState(100);
+  const [useSheet, setSheet] = React.useState({ Nombre: "A4", Ancho: "210", Alto: "297" })
   const [useSimulation, setSimulation] = React.useState(null);
   const handleClose = () => {
     setOpen(false);
@@ -31,7 +33,8 @@ const Simulator = (props) => {
 
   const simCLC = (item, quantity, format) => {
     let simulation;
-    switch (item.Proceso) {
+    console.log(item)
+    switch (item) {
       case "nuvera":
         simulation = Nuvera(
           props.data.Valor,
@@ -66,8 +69,6 @@ const Simulator = (props) => {
           props.data.Valor,
           props.data.Minimo,
           quantity,
-          props.data.Entrada,
-          Math.max(format.Alto, format.Ancho)
         );
         break;
       case "igen b&n":
@@ -92,18 +93,10 @@ const Simulator = (props) => {
     return simulation;
   };
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    trigger,
-  } = useForm({
-    mode: "onBlur", // "onChange"
-  });
-
+  
   const onSubmit = (e) => {
     e.preventDefault();
-  };
+  }; 
 
   const getFormats = async () => {
     await fechtData("Formatos", setFormats);
@@ -117,85 +110,81 @@ const Simulator = (props) => {
   ];
 
   React.useEffect(() => {
-    simCLC(props.data, 500, { Ancho: 648, Alto: 315 });
     getFormats();
-  }, []);
+   
+  }, [setFormats]);
 
   const Form = () => {
     return (
       <Container>
-        {/* <FormControl sx={{ width: "90%" }}>
-        <form name="Simulador" onSubmit={handleSubmit(onSubmit)}>
-          <Grid
-            container
-            spacing={{ xs: 2, md: 3 }}
-            columns={{ xs: 1, sm: 4, md: 8 }}
-          >
-            <Grid item xs={1} sm={2} md={4}>
-              <TextField
-                id="Cantidad"
-                label="Cantidad"
-                variant="outlined"
-                defaultValue={1}
-                name="Cantidad"
-                {...register("Cantidad", {
-                  required: true,
-                  min: 0,
-                  max: 10000000,
-                })}
-                onBlur={() => {
-                  trigger("Cantidad");
-                }}
-              />
-            </Grid>
-            <Grid item xs={1} sm={2} md={4}>
-            <TextField
-                      select
-                      id="Pliego"
-                      inputProps={{
-                        name: "Pliego",
-                        id: "Pliego",
-                      }}
-                      variant="outlined"
-                      color="primary"
-                      label="Formato del pliego"
-                      name="Pliego"
-                      defaultValue=""
-                      fullWidth
-                      {...register("Pliego", { required: true })}
-                      onBlur={() => {
-                        trigger("Pliego");
-                      }}
-                    >
-                      {useFormats.map((jt) => {
-                        return (
-                          <MenuItem value={jt} key={jt.id}>
-                            {jt.Nombre}
-                          </MenuItem>
-                        );
-                      })}
-                    </TextField>
-            </Grid>
-            <Grid item >
-              <Typography>Unitario: {useSimulation?.Unitario}</Typography><br/>
-              <Typography>Cantidad: {useSimulation?.Cantidad}</Typography><br/>
-              <Typography>Total: {useSimulation?.Total}</Typography><br/>
-            </Grid>
-            <Grid item xs={1} sm={2} md={4} sx={{ alignSelf: "center" }}>
-              <Button type="submit" variant="outlined" color="warning">
-                Calcular
-              </Button>
-            </Grid>
-            {useSimulation && (
-              <Grid item >
-              <Typography>Unitario: {useSimulation.Unitario}</Typography><br/>
-              <Typography>Cantidad: {useSimulation.Cantidad}</Typography><br/>
-              <Typography>Total: {useSimulation.Total}</Typography><br/>
-            </Grid>
-            )}
-          </Grid>
-        </form>
-      </FormControl> */}
+        <Card>
+          <CardContent>
+            <form name="Simulador" >
+              <Grid
+                container
+                spacing={{ xs: 2, md: 3 }}
+                columns={{ xs: 12, sm: 12, md: 12 }}
+              >
+                <Grid item xs={1} sm={2} md={4}>
+                  <TextField
+                    type="number"
+                    id="Cantidad"
+                    label="Cantidad"
+                    variant="outlined"
+                    defaultValue={useQuantity}
+                    onBlur={(e)=>{
+                      e.preventDefault()
+                      setQuantity(e.target.value)
+                      setSimulation(null)
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6} md={4}>
+                <TextField
+                          select
+                          id="Pliego"
+                          variant="outlined"
+                          color="primary"
+                          label="Formato del pliego"
+                          name="Pliego"
+                          fullWidth
+                          defaultValue={useSheet}
+                          onChange={(e)=>{
+                            e.preventDefault()
+                            setSheet(e.target.value)
+                            setSimulation(null)
+                          }}
+                        >
+                          {useFormats.map((jt) => {
+                            return (
+                              <MenuItem key={jt._id} value={jt} >
+                                {jt.Nombre}
+                              </MenuItem>
+                            );
+                          })}
+                        </TextField>
+                </Grid>
+                
+                <Grid item xs={12} sm={6} md={4} sx={{ alignSelf: "center" }}>
+                  <Button variant="default" color="warning" onClick={()=>{
+                      console.log(props.data.Proceso,useQuantity,useSheet)
+                     setSimulation(simCLC(props.data.Proceso,useQuantity,useSheet))
+                  }}>
+                    Calcular
+                  </Button>
+                </Grid>
+                {useSimulation && (
+                <Grid item xs={12} sm={8} md={12}>
+                  <Typography>Unitario: {useSimulation.Unitario}</Typography><br/>
+                  <Typography>Cantidad: {useSimulation.Cantidad}</Typography><br/>
+                  <Typography>Total: {useSimulation.Total}</Typography><br/>
+                </Grid>
+                )}
+              </Grid>
+            </form>
+          </CardContent>
+        </Card>
+        
       </Container>
     );
   };
@@ -209,43 +198,29 @@ const Simulator = (props) => {
     >
       <Container>
         <Card sx={{ padding: "50px" }}>
-          <SimulationTable
+          <CardHeader title={props.data.Proceso}>
+
+          </CardHeader>
+          <CardContent>
+            <Form />
+            <SimulationTable
             data={props.data}
             pliegos={pliegos}
             cantidades={cantidades}
             simCLC={simCLC}
           />
-          {/* <h5>{props.process}</h5>
-          <p>
-            {props.data.Valor} - {props.data.Entrada} - {props.data.Minimo}
-          </p>
-          <div style={{ overflow: "scroll" }}>
-            <h5>Cantidades</h5>
-            {cantidades.map((q) => {
-              return (
-                <>
-                  <p>{q}</p>{" "}
-                  {pliegos.map((p) => {
-                    return (
-                      <p>
-                        {p.Ancho} x {p.Alto} ={" "}
-                        {simCLC(props.data, q, p).Unitario} -{" "}
-                        {simCLC(props.data, q, p).Total}
-                      </p>
-                    );
-                  })}
-                </>
-              );
-            })}
-          </div>
- */}
-          <Button
-            onClick={() => {
-              props.stateSim(false);
-            }}
-          >
-            Cerrar
-          </Button>
+          </CardContent>
+          
+          <CardActions>
+            <Button
+              onClick={() => {
+                props.stateSim(false);
+              }}
+            >
+              Cerrar
+            </Button>
+          </CardActions>
+          
         </Card>
       </Container>
     </Modal>
