@@ -1,9 +1,16 @@
 import * as React from "react";
 import { useForm } from "react-hook-form";
-import {Encuadernacion, Laminado, Nuvera,iGenBN,iGenColor} from "./formSimulators";
+import {
+  Encuadernacion,
+  Laminado,
+  Nuvera,
+  iGenBN,
+  iGenColor,
+} from "./formSimulators";
 import { fechtData } from "../customHooks/FetchDataHook";
+import SimulationTable from "./SimulationTable";
 
-import { Button, Container, Typography } from "@mui/material";
+import { Button, Container, Typography, Card, Table } from "@mui/material";
 import Modal from "@mui/material/Modal";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
@@ -12,12 +19,12 @@ import Grid from "@mui/material/Grid";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 
-
-
-const Simulator = (props)=>{
+const Simulator = (props) => {
   const [open, setOpen] = React.useState(true);
-  const [useFormats, setFormats] = React.useState([{Nombre: 'A4', Ancho: '210', Alto: '297'}])
-  const [useSimulation, setSimulation] = React.useState(null)
+  const [useFormats, setFormats] = React.useState([
+    { Nombre: "A4", Ancho: "210", Alto: "297" },
+  ]);
+  const [useSimulation, setSimulation] = React.useState(null);
   const handleClose = () => {
     setOpen(false);
   };
@@ -27,63 +34,62 @@ const Simulator = (props)=>{
     switch (item.Proceso) {
       case "nuvera":
         simulation = Nuvera(
-          props.data.Valor, 
-          props.data.Minimo, 
-          quantity, 
+          props.data.Valor,
+          props.data.Minimo,
+          quantity,
           props.data.Entrada,
-          Math.max(format.Alto, format.Ancho) 
+          Math.max(format.Alto, format.Ancho)
         );
         break;
       case "igen color":
         simulation = iGenColor(
-        props.data.Valor, 
-        props.data.Minimo, 
-        quantity, 
-        props.data.Entrada,
-        Math.max(format.Alto, format.Ancho) 
-      );
+          props.data.Valor,
+          props.data.Minimo,
+          quantity,
+          props.data.Entrada,
+          Math.max(format.Alto, format.Ancho)
+        );
         break;
       case "laminado":
         simulation = Laminado(
-        props.data.Valor, 
-        props.data.Minimo, 
-        quantity,
-        Math.max(format.Alto, format.Ancho)
-      );
+          props.data.Valor,
+          props.data.Minimo,
+          quantity,
+          Math.max(format.Alto, format.Ancho)
+        );
         break;
       case "acaballado":
       case "pur":
       case "eva":
       case "anillado":
         simulation = Encuadernacion(
-        props.data.Valor, 
-        props.data.Minimo, 
-        quantity, 
-        props.data.Entrada,
-        Math.max(format.Alto, format.Ancho) 
-      );
+          props.data.Valor,
+          props.data.Minimo,
+          quantity,
+          props.data.Entrada,
+          Math.max(format.Alto, format.Ancho)
+        );
         break;
       case "igen b&n":
         simulation = iGenBN(
-        props.data.Valor, 
-        props.data.Minimo, 
-        quantity, 
-        props.data.Entrada,
-        Math.max(format.Alto, format.Ancho) 
-      );
+          props.data.Valor,
+          props.data.Minimo,
+          quantity,
+          props.data.Entrada,
+          Math.max(format.Alto, format.Ancho)
+        );
         break;
       default:
         simulation = Encuadernacion(
-        props.data.Valor, 
-        props.data.Minimo, 
-        quantity, 
-        props.data.Entrada,
-        Math.max(format.Alto, format.Ancho) 
-      );
+          props.data.Valor,
+          props.data.Minimo,
+          quantity,
+          props.data.Entrada,
+          Math.max(format.Alto, format.Ancho)
+        );
         break;
     }
-    console.log(simulation)
-    setSimulation(simulation);
+    return simulation;
   };
 
   const {
@@ -95,23 +101,30 @@ const Simulator = (props)=>{
     mode: "onBlur", // "onChange"
   });
 
-  const onSubmit = (e)=>{
-    e.preventDefault()
-  }
+  const onSubmit = (e) => {
+    e.preventDefault();
+  };
 
-  const getFormats = async ()=> {
-    await fechtData('Formatos',setFormats)
-  }
+  const getFormats = async () => {
+    await fechtData("Formatos", setFormats);
+  };
 
-  React.useEffect(()=>{
-    simCLC(props.data,50,{Ancho: 648, Alto: 315})
-    getFormats()
-  },[])
+  const cantidades = [1, 100, 500];
+  const pliegos = [
+    { Ancho: 215, Alto: 315 },
+    { Ancho: 470, Alto: 320 },
+    { Ancho: 648, Alto: 315 },
+  ];
+
+  React.useEffect(() => {
+    simCLC(props.data, 500, { Ancho: 648, Alto: 315 });
+    getFormats();
+  }, []);
 
   const Form = () => {
     return (
-      <Container >
-      {/* <FormControl sx={{ width: "90%" }}>
+      <Container>
+        {/* <FormControl sx={{ width: "90%" }}>
         <form name="Simulador" onSubmit={handleSubmit(onSubmit)}>
           <Grid
             container
@@ -183,39 +196,62 @@ const Simulator = (props)=>{
           </Grid>
         </form>
       </FormControl> */}
-    </Container>
-    )
-  } 
+      </Container>
+    );
+  };
 
   const output = (
     <Modal
-        open={open}
-        //onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Container >
-          <Paper sx={{padding: "50px"}}>
-          <Form />
-          <div>
-            <Typography>Unitario: {useSimulation?.Unitario}</Typography><br/>
-            <Typography>Cantidad: {useSimulation?.Cantidad}</Typography><br/>
-            <Typography>Total: {useSimulation?.Total}</Typography><br/>
+      open={open}
+      //onClose={handleClose}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
+    >
+      <Container>
+        <Card sx={{ padding: "50px" }}>
+          <SimulationTable
+            data={props.data}
+            pliegos={pliegos}
+            cantidades={cantidades}
+            simCLC={simCLC}
+          />
+          {/* <h5>{props.process}</h5>
+          <p>
+            {props.data.Valor} - {props.data.Entrada} - {props.data.Minimo}
+          </p>
+          <div style={{ overflow: "scroll" }}>
+            <h5>Cantidades</h5>
+            {cantidades.map((q) => {
+              return (
+                <>
+                  <p>{q}</p>{" "}
+                  {pliegos.map((p) => {
+                    return (
+                      <p>
+                        {p.Ancho} x {p.Alto} ={" "}
+                        {simCLC(props.data, q, p).Unitario} -{" "}
+                        {simCLC(props.data, q, p).Total}
+                      </p>
+                    );
+                  })}
+                </>
+              );
+            })}
           </div>
-            
-          <h5>{props.process}</h5>
-          <p>{props.data.Valor} - {props.data.Entrada} - {props.data.Minimo}</p>
-
-        <Button onClick={()=>{props.stateSim(false)}}>Cerrar</Button>
-
-      </Paper>
-        </Container>
-        
+ */}
+          <Button
+            onClick={() => {
+              props.stateSim(false);
+            }}
+          >
+            Cerrar
+          </Button>
+        </Card>
+      </Container>
     </Modal>
-  )
+  );
 
-    return output
-}
+  return output;
+};
 
-export default Simulator
-
+export default Simulator;
