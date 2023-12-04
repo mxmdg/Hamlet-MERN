@@ -8,7 +8,7 @@ app.set("port", process.env.PORT || 5000);
 app.set("secretKey", "dorrego");
 
 // middlewares
-app.use(cors({ origin: '*'}));
+app.use(cors({ origin: "*" }));
 app.use(express.json());
 
 const verifyToken = (req, res, next) => {

@@ -3,7 +3,16 @@ import { drawOptimusCutting } from "./ImpositionService";
 
 import { ImpositionForm } from "./ImpositionForm";
 import { ImpoContext } from "./ImpoContext";
-import { Typography, Container, Box, Grid } from "@mui/material";
+import {
+  Typography,
+  Container,
+  Box,
+  Grid,
+  Card,
+  CardHeader,
+  CardContent,
+  CardActions,
+} from "@mui/material";
 
 const Canvas = (props) => {
   const context = useContext(ImpoContext);
@@ -91,29 +100,38 @@ const Canvas = (props) => {
   }, []);
 
   return (
-    <Container sx={{ marginTop: "10px", marginBottom: "10px" }}>
-      <Grid
-        container
-        spacing={2}
-        sx={{ background: "#353", padding: "5%", borderRadius: "5px" }}
-        minWidth={200}
-      >
-        <Grid item xs={12} sm={10}>
-          <canvas
-            ref={canvasRef}
-            width={useCanvasSize.x}
-            height={useCanvasSize.y}
-            style={{ boxShadow: "5px 5px 10px #00000055", padding: "15px" }}
-          ></canvas>
+    <>
+      <CardHeader title="Imposición" />
+      <CardContent>
+        <Grid
+          container
+          spacing={2}
+          columns={12}
+          sx={{
+            padding: "5%",
+            borderRadius: "5px",
+            margin: "3px",
+          }}
+          minWidth={200}
+        >
+          <Grid item xs={12} md={12} sm={12}>
+            <ImpositionForm
+              doImposition={handleImpoClick}
+              part={props.part || null}
+            ></ImpositionForm>
+          </Grid>
+
+          <Grid item xs={12} sm={12}>
+            <canvas
+              ref={canvasRef}
+              width={useCanvasSize.x}
+              height={useCanvasSize.y}
+              style={{ boxShadow: "5px 5px 10px #00000055", padding: "15px" }}
+            ></canvas>
+          </Grid>
         </Grid>
-        <Grid item xs={12} sm={2}>
-          <ImpositionForm
-            doImposition={handleImpoClick}
-            part={props.part || null}
-          ></ImpositionForm>
-        </Grid>
-      </Grid>
-    </Container>
+      </CardContent>
+    </>
   );
 };
 

@@ -34,6 +34,7 @@ import { ImpoContext } from "../utils/impo/ImpoContext";
 import ImpoProvider from "../utils/impo/ImpoContext";
 import Canvas from "../utils/impo/Canvas";
 import { bestCut } from "../utils/impo/ImpositionService";
+import DarkWoodCard from "../utils/DarkWoodCard";
 
 export const calcularLomo = (pags, resma) => {
   return Math.round(Math.ceil(pags / 2) * (resma / 500));
@@ -122,7 +123,8 @@ const JobDetail = (props) => {
                 <Stack spacing={2}>
                   <Item>{part.jobParts[0].type}</Item>
                   <Item>
-                    Formato: {part.Ancho} x {part.Alto} - Orientacion: {part.Orientacion}
+                    Formato: {part.Ancho} x {part.Alto} - Orientacion:{" "}
+                    {part.Orientacion}
                   </Item>
                   <Item>
                     Paginas: {part.Pages}
@@ -160,11 +162,13 @@ const JobDetail = (props) => {
               </Grid>
               <Grid item xs={12} md={8}>
                 <ImpoProvider>
-                  <Canvas
-                    part={part}
-                    getPoses={setPoses}
-                    getSheet={setSheet}
-                  ></Canvas>
+                  <DarkWoodCard>
+                    <Canvas
+                      part={part}
+                      getPoses={setPoses}
+                      getSheet={setSheet}
+                    ></Canvas>
+                  </DarkWoodCard>
                 </ImpoProvider>
               </Grid>
             </Grid>

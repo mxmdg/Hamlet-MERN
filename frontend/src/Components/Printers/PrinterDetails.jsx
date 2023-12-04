@@ -6,7 +6,6 @@ import { serverURL } from "../Config/config";
 
 const PrinterDetails = (props) => {
   const editClickHandler = (e) => {
-    e.preventDefault();
     setState(Edit);
   };
 
@@ -32,6 +31,8 @@ const PrinterDetails = (props) => {
       </div>
 
       <Cmyk colores={props.pd.Colores} />
+      <h5>Colores: {props.pd.Colores}</h5>
+      <h5></h5>
       <h5>PPM: {props.pd.Paginas_por_minuto}</h5>
       <h5>
         X: {props.pd.X_Minimo}-{props.pd.X_Maximo}
@@ -39,7 +40,10 @@ const PrinterDetails = (props) => {
       <h5>
         Y: {props.pd.Y_Minimo}-{props.pd.Y_Maximo}
       </h5>
-      <button onClick={() => deleteClickHandler(props.pd._id)}>Eliminar</button>
+      {/* <button onClick={(e) => editClickHandler(props.pd._id)}>Editar</button>
+      <button onClick={(e) => deleteClickHandler(props.pd._id)}>
+        Eliminar
+      </button> */}
     </div>
   );
 

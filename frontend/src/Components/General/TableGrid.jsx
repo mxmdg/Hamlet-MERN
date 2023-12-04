@@ -77,7 +77,7 @@ function EnhancedTableHead(props) {
       <TableRow>
         <TableCell padding="checkbox">
           <Checkbox
-            color="warning"
+            color="info"
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}
             onChange={onSelectAllClick}
@@ -174,13 +174,13 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          {props.collection.replace("/urg", '')}
+          {props.collection.replace("/urg", "")}
         </Typography>
       )}
       <StyledTooltip title="Agregar" arrow>
         <IconButton
           onClick={() => {
-            navigate(`/${props.collection.replace("/urg", '')}/add`);
+            navigate(`/${props.collection.replace("/urg", "")}/add`);
           }}
           sx={{ alignSelf: "right" }}
         >
@@ -194,7 +194,11 @@ function EnhancedTableToolbar(props) {
               <StyledTooltip title="Copiar" arrow>
                 <IconButton
                   onClick={() => {
-                    navigate(`/${props.collection.replace("/urg", '')}/copy/${props.idSelected}`);
+                    navigate(
+                      `/${props.collection.replace("/urg", "")}/copy/${
+                        props.idSelected
+                      }`
+                    );
                   }}
                   sx={{ alignSelf: "right" }}
                 >
@@ -204,7 +208,11 @@ function EnhancedTableToolbar(props) {
               <StyledTooltip title="Editar" arrow>
                 <IconButton
                   onClick={() => {
-                    navigate(`/${props.collection.replace("/urg", '')}/edit/${props.idSelected}`);
+                    navigate(
+                      `/${props.collection.replace("/urg", "")}/edit/${
+                        props.idSelected
+                      }`
+                    );
                   }}
                   sx={{ alignSelf: "right" }}
                 >
@@ -220,7 +228,10 @@ function EnhancedTableToolbar(props) {
                 const pasarBorrado = () => {
                   try {
                     props.deleted([props.idSelected]);
-                    deleteMultiple(props.idSelected, props.collection.replace("/urg", ''));
+                    deleteMultiple(
+                      props.idSelected,
+                      props.collection.replace("/urg", "")
+                    );
                     props.resetSelected([]);
                   } catch (e) {
                     console.log(e);
@@ -328,59 +339,60 @@ export default function EnhancedTable(props) {
   let i = 0;
 
   return (
-    <Box sx={{ width: "100%" }}>
-      <Paper elevation={8} square sx={{ width: "100%", mb: 2, background: "#3697" }}>
-        <EnhancedTableToolbar
-          collection={props.collection.replace("/urg", '')}
-          numSelected={selected.length}
-          idSelected={selected}
-          deleted={props.deleted}
-          resetSelected={setSelected}
-        />
-        <TableContainer>
-          <Table
-            sx={{ minWidth: 750 }}
-            aria-labelledby="tableTitle"
-            size={dense ? "small" : "medium"}
-          >
-            <EnhancedTableHead
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
-              onRequestSort={handleRequestSort}
-              rowCount={rows.length}
-              headCells={props.headCells}
-            />
-            <TableBody>
-              {visibleRows.map((row, index) => {
-                const isItemSelected = isSelected(row._id);
-                const labelId = `enhanced-table-checkbox-${index}`;
+    <>
+      <EnhancedTableToolbar
+        collection={props.collection.replace("/urg", "")}
+        numSelected={selected.length}
+        idSelected={selected}
+        deleted={props.deleted}
+        resetSelected={setSelected}
+      />
+      <TableContainer>
+        <Table
+          sx={{ minWidth: 750 }}
+          aria-labelledby="tableTitle"
+          size={dense ? "small" : "medium"}
+        >
+          <EnhancedTableHead
+            numSelected={selected.length}
+            order={order}
+            orderBy={orderBy}
+            onSelectAllClick={handleSelectAllClick}
+            onRequestSort={handleRequestSort}
+            rowCount={rows.length}
+            headCells={props.headCells}
+          />
+          <TableBody>
+            {visibleRows.map((row, index) => {
+              const isItemSelected = isSelected(row._id);
+              const labelId = `enhanced-table-checkbox-${index}`;
 
-                return (
-                  <TableRow
-                    hover
-                    onClick={(event) => handleClick(event, row._id)}
-                    onDoubleClick={() => {
-                      navigate(`/${props.collection.replace("/urg", '')}/edit/${row._id}`);
-                    }}
-                    role="checkbox"
-                    aria-checked={isItemSelected}
-                    tabIndex={-1}
-                    key={row._id}
-                    selected={isItemSelected}
-                    sx={{ cursor: "pointer" }}
-                  >
-                    <TableCell padding="checkbox">
-                      <Checkbox
-                        color="primary"
-                        checked={isItemSelected}
-                        inputProps={{
-                          "aria-labelledby": labelId,
-                        }}
-                      />
-                    </TableCell>
-                    {/* <TableCell
+              return (
+                <TableRow
+                  hover
+                  onClick={(event) => handleClick(event, row._id)}
+                  onDoubleClick={() => {
+                    navigate(
+                      `/${props.collection.replace("/urg", "")}/edit/${row._id}`
+                    );
+                  }}
+                  role="checkbox"
+                  aria-checked={isItemSelected}
+                  tabIndex={-1}
+                  key={row._id}
+                  selected={isItemSelected}
+                  sx={{ cursor: "pointer" }}
+                >
+                  <TableCell padding="checkbox">
+                    <Checkbox
+                      color="info"
+                      checked={isItemSelected}
+                      inputProps={{
+                        "aria-labelledby": labelId,
+                      }}
+                    />
+                  </TableCell>
+                  {/* <TableCell
                       component="th"
                       id={labelId}
                       scope="row"
@@ -389,49 +401,44 @@ export default function EnhancedTable(props) {
                       {row._id}
                     </TableCell> */}
 
-                    {Object.values(row)
-                      .slice(1, -1)
-                      .map((element) => {
-                        i++;
-                        return (
-                          <TableCell
-                            align="left"
-                            key={`${element}_${i}`}
-                          >
-                            {element}
-                          </TableCell>
-                        );
-                      })}
-                  </TableRow>
-                );
-              })}
-              {emptyRows > 0 && (
-                <TableRow
-                  style={{
-                    height: (dense ? 33 : 53) * emptyRows,
-                  }}
-                >
-                  <TableCell colSpan={6} />
+                  {Object.values(row)
+                    .slice(1, -1)
+                    .map((element) => {
+                      i++;
+                      return (
+                        <TableCell align="left" key={`${element}_${i}`}>
+                          {element}
+                        </TableCell>
+                      );
+                    })}
                 </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 15, 20]}
-          component="div"
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-        <FormControlLabel
+              );
+            })}
+            {emptyRows > 0 && (
+              <TableRow
+                style={{
+                  height: (dense ? 33 : 53) * emptyRows,
+                }}
+              >
+                <TableCell colSpan={6} />
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <TablePagination
+        rowsPerPageOptions={[5, 10, 15, 20]}
+        component="div"
+        count={rows.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
+      <FormControlLabel
         control={<Switch checked={dense} onChange={handleChangeDense} />}
         label="Dense padding"
       />
-      </Paper>
-      
-    </Box>
+    </>
   );
 }

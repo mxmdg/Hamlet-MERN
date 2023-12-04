@@ -107,8 +107,52 @@ export const themeGreen = createTheme({
   },
 });
 
+export const themeHamlet = createTheme({
+  palette: {
+    mode: "dark",
+    primary: {
+      main: "#00796b",
+      light: "#80cbc4",
+      dark: "#004d40",
+    },
+    secondary: {
+      main: "#0cb515",
+      light: "#33691e",
+      dark: "#18bf38",
+    },
+    background: {
+      light: "#eeeeee",
+      dark: "#010101",
+    },
+    error: {
+      main: "#f50057",
+      light: "#f32d72",
+      dark: "#85002c",
+      contrastText: "#ffffff",
+    },
+    warning: {
+      main: "#efc008",
+      light: "#e9f556",
+      dark: "#a78609",
+    },
+    info: {
+      main: "#00b0ff",
+      light: "#33bffe",
+      dark: "#007bb5",
+      contrastText: "#000000",
+    },
+    success: {
+      main: "#5d8509",
+      contrastText: "#ffffff",
+      light: "#7d9d3b",
+      dark: "#415d05",
+    },
+    divider: "#9a9a9a",
+  },
+});
+
 const ThemeProv = (props) => {
-  return <ThemeProvider theme={themeMxm}>{props.children}</ThemeProvider>;
+  return <ThemeProvider theme={themeHamlet}>{props.children}</ThemeProvider>;
 };
 
 export default ThemeProv;

@@ -26,7 +26,10 @@ import Simulator from "./Simulator";
 import LastSeen from "./LastUpdate";
 import { useNavigate } from "react-router-dom";
 import MyLineChart from "./LineChart";
-import { getPrivateElements, deletePrivateElement } from "../customHooks/FetchDataHook"
+import {
+  getPrivateElements,
+  deletePrivateElement,
+} from "../customHooks/FetchDataHook";
 
 const PriceTable = (props) => {
   const [useView, setView] = useState("viewer");
@@ -110,9 +113,9 @@ const PriceTable = (props) => {
     }
   };
 
-  const handleSim = ()=> {
-    setShowSim(true)
-  }
+  const handleSim = () => {
+    setShowSim(true);
+  };
 
   useEffect(() => {
     checkHistory();
@@ -135,11 +138,10 @@ const PriceTable = (props) => {
     <>
       <Grid
         container
-        background="#023"
         direction="column"
         justifyContent="space-between"
         alignItems="baseline"
-        sx={{ width: "100%", background: "#023" }}
+        sx={{ width: "100%" }}
       >
         <Card
           sx={{
@@ -221,7 +223,11 @@ const PriceTable = (props) => {
               alignContent: "center",
             }}
           >
-            <ButtonGroup variant="text" aria-label="text button group">
+            <ButtonGroup
+              variant="text"
+              aria-label="text button group"
+              size="small"
+            >
               <Button
                 color="info"
                 onClick={handleHistory}
@@ -237,10 +243,7 @@ const PriceTable = (props) => {
               >
                 Editar
               </Button>
-              <Button
-                color="secondary"
-                onClick={handleSim}
-              >
+              <Button color="secondary" onClick={handleSim}>
                 Simular
               </Button>
               <Button

@@ -9,6 +9,7 @@ import CircularColor from "./Spinner";
 import { Paper, Container, TextField, MenuItem, Stack } from "@mui/material";
 import EnhancedTable from "./TableGrid";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
+import DarkWoodCard from "../utils/DarkWoodCard";
 
 const Fetch = (props) => {
   const [useList, setList] = useState([]);
@@ -97,12 +98,8 @@ const Fetch = (props) => {
 
   const TableLoaded = (
     <>
-      <Container>
-        <Paper
-          elevation={8}
-          sx={{ background: "#258a", padding: "10px" }}
-          square
-        >
+      <DarkWoodCard>
+        <Paper elevation={4} fullwidth sx={{ padding: "10px" }}>
           <Stack direction="row" spacing={4}>
             <TextField
               select
@@ -135,7 +132,9 @@ const Fetch = (props) => {
             ></TextField>
           </Stack>
         </Paper>
+      </DarkWoodCard>
 
+      <DarkWoodCard>
         <EnhancedTable
           rows={useFilteredList.length > 0 ? useFilteredList : useList}
           headCells={useHeaders}
@@ -144,7 +143,7 @@ const Fetch = (props) => {
           selected={useSelected}
           deleted={setDeleted}
         />
-      </Container>
+      </DarkWoodCard>
     </>
   );
 

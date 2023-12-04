@@ -44,19 +44,19 @@ export default function MyLineChart(props) {
         <Line
           type="linear"
           dataKey="Valor"
-          stroke="#aef"
+          stroke="#69a"
           activeDot={{ r: 8 }}
         />
         <Line
           type="linear"
           dataKey="Entrada"
-          stroke="#eaf"
+          stroke="#96a"
           activeDot={{ r: 4 }}
         />
         <Line
           type="linear"
           dataKey="Minimo"
-          stroke="#fea"
+          stroke="#a96"
           activeDot={{ r: 2 }}
         />
         <Label />
@@ -64,7 +64,7 @@ export default function MyLineChart(props) {
           animationDuration={750}
           animationEasing="ease-out"
           contentStyle={{
-            background: "#00000088",
+            background: "#fff",
             backdropFilter: "blur(5px)",
             borderRadius: "5px",
             boxShadow: "7px 7px 10px #000000aa",

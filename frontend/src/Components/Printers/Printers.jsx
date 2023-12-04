@@ -39,7 +39,7 @@ const Printers = (props) => {
       ) : (
         printerList.map((printer) => (
           <Grid xs={12} md={4} key={printer._id}>
-            <ItemsDetails
+            <PrinterDetails
               pd={printer}
               id={printer._id}
               collection={props.collection}

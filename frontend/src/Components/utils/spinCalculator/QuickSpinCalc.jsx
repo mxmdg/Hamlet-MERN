@@ -16,16 +16,18 @@ import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import { Grid } from "@mui/material";
-import { fechtData, getPrivateElementByID } from "../../customHooks/FetchDataHook";
+import {
+  fechtData,
+  getPrivateElementByID,
+} from "../../customHooks/FetchDataHook";
 
-
+import DarkWoodBackground from "../../../img/Dark_Wood_Background.jpg";
 
 const QuickSpinCalc = (props) => {
   const [stocks, setStocks] = useState([]);
   const [usePages, setPages] = useState([]);
   const [useStock, selectStock] = useState([]);
-  const [useSpin, setSpin] = useState(0)
- 
+  const [useSpin, setSpin] = useState(0);
 
   /* const {
     register,
@@ -34,50 +36,49 @@ const QuickSpinCalc = (props) => {
     control,
   } = useForm(); */
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(useStock);
+    const spin = Math.ceil(
+      Math.ceil(usePages / 2) * (useStock.Espesor_Resma / 500)
+    );
+    setSpin(spin);
+  };
 
-  const handleSubmit = (e)=>{
-    e.preventDefault()
-    console.log(useStock)
-    const spin = Math.ceil(Math.ceil(usePages / 2) * (useStock.Espesor_Resma / 500));
-    setSpin(spin)
-  }
-  
   const handleChange = async (e) => {
     try {
-      console.log(e.target.value)
-      const stock = await getPrivateElementByID("materiales",e.target.value);
-      console.log(stock.data)
-      selectStock(stock.data)
+      console.log(e.target.value);
+      const stock = await getPrivateElementByID("materiales", e.target.value);
+      console.log(stock.data);
+      selectStock(stock.data);
     } catch (e) {
-      return {error: e.message}
+      return { error: e.message };
     }
-    
   };
 
   const handlePageChange = (e) => {
-    e.preventDefault()
-    setPages(e.target.value)
-  }
+    e.preventDefault();
+    setPages(e.target.value);
+  };
 
   useEffect(() => {
     const updateStocks = async () => {
       await fechtData("materiales", setStocks);
     };
 
-  updateStocks()
+    updateStocks();
   }, []);
 
   return (
-    <Card raised sx={{ gap: "20px", maxWidth: "600px" }} color="secondary">
+    <>
       <CardHeader title="Calculadora de lomo"></CardHeader>
       <CardContent>
-        <form name="form2" action="" onSubmit={handleSubmit} >
+        <form name="form2" action="" onSubmit={handleSubmit}>
           <Grid
             container
             spacing={{ xs: 3, md: 6 }}
             columns={{ xs: 1, sm: 4, md: 8 }}
           >
-            
             <Grid item xs={1} sm={2} md={4}>
               <TextField
                 id="Pages"
@@ -90,7 +91,7 @@ const QuickSpinCalc = (props) => {
                 onChange={handlePageChange}
               />
             </Grid>
-            
+
             <Grid item xs={1} sm={2} md={4}>
               <FormControl sx={{ width: "90%" }}>
                 <InputLabel id="demo-simple-select-label">Material</InputLabel>
@@ -134,18 +135,17 @@ const QuickSpinCalc = (props) => {
                 <Button
                   type="submit"
                   size="small"
-                  variant="outlined"
+                  variant="contained"
                   color="secondary"
                 >
                   Calcular Lomo
                 </Button>
               </FormControl>
             </Grid>
-            
           </Grid>
         </form>
       </CardContent>
-    </Card>
+    </>
   );
 };
 

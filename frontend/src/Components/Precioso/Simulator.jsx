@@ -10,8 +10,17 @@ import {
 import { fechtData } from "../customHooks/FetchDataHook";
 import SimulationTable from "./SimulationTable";
 
-import { Button, Container, Typography, Card, CardHeader, CardContent, CardActions } from "@mui/material";
+import {
+  Button,
+  Container,
+  Typography,
+  Card,
+  CardHeader,
+  CardContent,
+  CardActions,
+} from "@mui/material";
 import Modal from "@mui/material/Modal";
+import SendIcon from "@mui/icons-material/Send";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
@@ -25,7 +34,11 @@ const Simulator = (props) => {
     { Nombre: "A4", Ancho: "210", Alto: "297" },
   ]);
   const [useQuantity, setQuantity] = React.useState(100);
-  const [useSheet, setSheet] = React.useState({ Nombre: "A4", Ancho: "210", Alto: "297" })
+  const [useSheet, setSheet] = React.useState({
+    Nombre: "A4",
+    Ancho: "210",
+    Alto: "297",
+  });
   const [useSimulation, setSimulation] = React.useState(null);
   const handleClose = () => {
     setOpen(false);
@@ -33,7 +46,7 @@ const Simulator = (props) => {
 
   const simCLC = (item, quantity, format) => {
     let simulation;
-    console.log(item)
+    console.log(item);
     switch (item) {
       case "nuvera":
         simulation = Nuvera(
@@ -68,7 +81,7 @@ const Simulator = (props) => {
         simulation = Encuadernacion(
           props.data.Valor,
           props.data.Minimo,
-          quantity,
+          quantity
         );
         break;
       case "igen b&n":
@@ -93,10 +106,9 @@ const Simulator = (props) => {
     return simulation;
   };
 
-  
   const onSubmit = (e) => {
     e.preventDefault();
-  }; 
+  };
 
   const getFormats = async () => {
     await fechtData("Formatos", setFormats);
@@ -111,80 +123,89 @@ const Simulator = (props) => {
 
   React.useEffect(() => {
     getFormats();
-   
   }, [setFormats]);
 
   const Form = () => {
     return (
       <Container>
-        <Card>
+        <Card elevation={10}>
           <CardContent>
-            <form name="Simulador" >
+            <form name="Simulador">
               <Grid
                 container
                 spacing={{ xs: 2, md: 3 }}
                 columns={{ xs: 12, sm: 12, md: 12 }}
               >
-                <Grid item xs={1} sm={2} md={4}>
+                <Grid item xs={12} sm={8} md={4}>
                   <TextField
                     type="number"
                     id="Cantidad"
                     label="Cantidad"
                     variant="outlined"
                     defaultValue={useQuantity}
-                    onBlur={(e)=>{
-                      e.preventDefault()
-                      setQuantity(e.target.value)
-                      setSimulation(null)
+                    onBlur={(e) => {
+                      e.preventDefault();
+                      setQuantity(e.target.value);
+                      setSimulation(null);
                     }}
                   />
                 </Grid>
-                <Grid item xs={12} sm={6} md={4}>
-                <TextField
-                          select
-                          id="Pliego"
-                          variant="outlined"
-                          color="primary"
-                          label="Formato del pliego"
-                          name="Pliego"
-                          fullWidth
-                          defaultValue={useSheet}
-                          onChange={(e)=>{
-                            e.preventDefault()
-                            setSheet(e.target.value)
-                            setSimulation(null)
-                          }}
-                        >
-                          {useFormats.map((jt) => {
-                            return (
-                              <MenuItem key={jt._id} value={jt} >
-                                {jt.Nombre}
-                              </MenuItem>
-                            );
-                          })}
-                        </TextField>
+                <Grid item xs={12} sm={8} md={4}>
+                  <TextField
+                    select
+                    id="Pliego"
+                    variant="outlined"
+                    color="primary"
+                    label="Formato del pliego"
+                    name="Pliego"
+                    fullWidth
+                    defaultValue={useSheet}
+                    onChange={(e) => {
+                      e.preventDefault();
+                      setSheet(e.target.value);
+                      setSimulation(null);
+                    }}
+                  >
+                    {useFormats.map((jt) => {
+                      return (
+                        <MenuItem key={jt._id} value={jt}>
+                          {jt.Nombre}
+                        </MenuItem>
+                      );
+                    })}
+                  </TextField>
                 </Grid>
-                
-                <Grid item xs={12} sm={6} md={4} sx={{ alignSelf: "center" }}>
-                  <Button variant="default" color="warning" onClick={()=>{
-                      console.log(props.data.Proceso,useQuantity,useSheet)
-                     setSimulation(simCLC(props.data.Proceso,useQuantity,useSheet))
-                  }}>
+
+                <Grid item xs={12} sm={6} md={3} sx={{ alignSelf: "center" }}>
+                  <Button
+                    variant="contained"
+                    color="warning"
+                    endIcon={<SendIcon />}
+                    size="large"
+                    onClick={() => {
+                      console.log(props.data.Proceso, useQuantity, useSheet);
+                      setSimulation(
+                        simCLC(props.data.Proceso, useQuantity, useSheet)
+                      );
+                    }}
+                  >
                     Calcular
                   </Button>
                 </Grid>
                 {useSimulation && (
-                <Grid item xs={12} sm={8} md={12}>
-                  <Typography>Unitario: {useSimulation.Unitario}</Typography><br/>
-                  <Typography>Cantidad: {useSimulation.Cantidad}</Typography><br/>
-                  <Typography>Total: {useSimulation.Total}</Typography><br/>
-                </Grid>
+                  <Grid item xs={12} sm={8} md={12}>
+                    <Typography>Unitario: {useSimulation.Unitario}</Typography>
+                    <br />
+                    <Typography>Cantidad: {useSimulation.Cantidad}</Typography>
+                    <br />
+                    <Typography>Total: {useSimulation.Total}</Typography>
+                    <br />
+                  </Grid>
                 )}
               </Grid>
             </form>
           </CardContent>
         </Card>
-        
       </Container>
     );
   };
@@ -197,20 +218,18 @@ const Simulator = (props) => {
       aria-describedby="modal-modal-description"
     >
       <Container>
-        <Card sx={{ padding: "50px" }}>
-          <CardHeader title={props.data.Proceso}>
-
-          </CardHeader>
+        <Card sx={{ padding: "20px" }} elevation={4}>
+          <CardHeader title={props.data.Proceso}></CardHeader>
           <CardContent>
             <Form />
             <SimulationTable
-            data={props.data}
-            pliegos={pliegos}
-            cantidades={cantidades}
-            simCLC={simCLC}
-          />
+              data={props.data}
+              pliegos={pliegos}
+              cantidades={cantidades}
+              simCLC={simCLC}
+            />
           </CardContent>
-          
+
           <CardActions>
             <Button
               onClick={() => {
@@ -220,7 +239,6 @@ const Simulator = (props) => {
               Cerrar
             </Button>
           </CardActions>
-          
         </Card>
       </Container>
     </Modal>
