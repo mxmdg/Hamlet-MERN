@@ -33,7 +33,7 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { ImpoContext } from "../utils/impo/ImpoContext";
 import ImpoProvider from "../utils/impo/ImpoContext";
 import Canvas from "../utils/impo/Canvas";
-import { bestCut } from "../utils/impo/ImpositionService";
+import { bestCut, cutOptimizer } from "../utils/impo/ImpositionService";
 import DarkWoodCard from "../utils/DarkWoodCard";
 
 export const calcularLomo = (pags, resma) => {
@@ -71,13 +71,27 @@ const JobDetail = (props) => {
     let partNumber = job.Partes.indexOf(part) + 1;
     let myKey = part._id + partNumber;
 
+    console.log(useSheet)
+    
     const calculateStock = () => {
-      const pliegosPorHoja = bestCut(
+      const straightCut = cutOptimizer(
         part.partStock.Ancho_Resma,
         part.partStock.Alto_Resma,
         useSheet.width,
         useSheet.height
       );
+
+      const rotatedtCut = cutOptimizer(
+        part.partStock.Ancho_Resma,
+        part.partStock.Alto_Resma,
+        useSheet.height,
+        useSheet.width
+      );
+      
+      console.table(straightCut, rotatedtCut)
+      
+      const pliegosPorHoja = Math.max(parseInt(straightCut.totalPoses), parseInt(rotatedtCut.totalPoses))
+        
       const cantidadDePliegos =
         Math.ceil(part.Pages / (part.ColoresDorso > 0 ? 2 : 1)) *
         Math.ceil(job.Cantidad / usePoses);

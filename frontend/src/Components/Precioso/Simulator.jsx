@@ -123,7 +123,7 @@ const Simulator = (props) => {
 
   React.useEffect(() => {
     getFormats();
-  }, [setFormats]);
+  }, []);
 
   const Form = () => {
     return (
@@ -222,12 +222,12 @@ const Simulator = (props) => {
           <CardHeader title={props.data.Proceso}></CardHeader>
           <CardContent>
             <Form />
-            <SimulationTable
+            {/* <SimulationTable
               data={props.data}
               pliegos={pliegos}
               cantidades={cantidades}
               simCLC={simCLC}
-            />
+            /> */}
           </CardContent>
 
           <CardActions>

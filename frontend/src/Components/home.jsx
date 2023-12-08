@@ -21,15 +21,15 @@ const Home = () => {
 
   return (
     <>
-      <Grid container columns={12} spacing={5}>
-        <Grid item sm={12} md={8}>
+      <Grid container columns={{xs: 1,sm: 12, md: 12}} spacing={4}>
+        <Grid item xs={1} sm={12} md={8}>
           <Container>
-            <Grid container spacing="3" columns={12}>
-              <Grid item xs={12} sm={12} md={12}>
+            <Grid container spacing="3" columns={{xs: 1,sm: 12, md: 12}}>
+              <Grid item xs={1} sm={12} md={12}>
                 <Fetch collection="jobs/urg" />
               </Grid>
 
-              <Grid item xs={12} sm={6} md={8}>
+              <Grid item xs={1} sm={6} md={8}>
                 <ImpoProvider>
                   <DarkWoodCard>
                     <Canvas />
@@ -37,7 +37,7 @@ const Home = () => {
                 </ImpoProvider>
               </Grid>
 
-              <Grid item xs={12} sm={6} md={4}>
+              <Grid item xs={1} sm={6} md={4}>
                 <DarkWoodCard>
                   <QuickSpinCalc />
                 </DarkWoodCard>
@@ -50,7 +50,7 @@ const Home = () => {
             </Typography>
           </Container>
         </Grid>
-        <Grid item sm={12} md={4}>
+        <Grid item xs= {1} sm={12} md={3}>
           <DarkWoodCard>
             <PrintersMainContainer />
           </DarkWoodCard>

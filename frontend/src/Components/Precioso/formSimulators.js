@@ -3,22 +3,22 @@ const roundCents = (value) => {
 };
 
 export const Encuadernacion = (valor, minimo, cantidad) => {
-  let resultado = valor * (minimo + cantidad);
-
+  let resultado = valor * (parseFloat(minimo) + parseFloat(cantidad));
+  console.log("Formula Encuadernacion")
   console.log(`${valor} * (${minimo} + ${cantidad}) `);
   console.log(`Resultado: ${roundCents(resultado)}`);
 
   let valorUnitario = roundCents(resultado / cantidad);
-  return { Unitario: valorUnitario, Cantidad: cantidad, Total: resultado };
+  return { Unitario: valorUnitario, Cantidad: cantidad, Total: roundCents(resultado) };
 };
 
 export const Laminado = (valor, minimo, cantidad, largoPliego, duplex) => {
   let resultado =
     valor *
     (cantidad *
-      (largoPliego > 520 ? (largoPliego / 10) * 1.15 : largoPliego / 10));
-  resultado = resultado < minimo ? minimo : roundCents(resultado);
-
+      (parseFloat(largoPliego) > 520 ? (parseFloat(largoPliego) / 10) * 1.15 : parseFloat(largoPliego) / 10));
+  resultado = resultado < parseFloat(minimo) ? parseFloat(minimo) : roundCents(resultado);
+  console.log("Formula Laminado")
   console.log(
     `${valor} * (${cantidad} * ((${largoPliego}>520)?${largoPliego} * 1.15)) * ${largoPliego}`
   );
@@ -29,9 +29,9 @@ export const Laminado = (valor, minimo, cantidad, largoPliego, duplex) => {
 };
 
 export const Nuvera = (valor, minimo, cantidad, entrada, largoPliego) => {
-  let resultado = entrada + (cantidad / (largoPliego > 355 ? 1 : 1.6)) * valor;
+  let resultado = parseFloat(entrada) + (parseFloat(cantidad) / (parseFloat(largoPliego) > 355 ? 1 : 1.6)) * parseFloat(valor);
   resultado = resultado < minimo ? minimo : resultado;
-
+  console.log("Formula Nuvera")
   console.log(
     `${entrada} + (${cantidad}*((${largoPliego}>355)?1:(1.6))) * ${valor}`
   );
@@ -42,9 +42,9 @@ export const Nuvera = (valor, minimo, cantidad, entrada, largoPliego) => {
 };
 
 export const iGenBN = (valor, minimo, cantidad, entrada, largoPliego) => {
-  let resultado = entrada + cantidad * (largoPliego < 488 ? 1 : 1.25) * valor;
-  resultado = resultado < minimo ? minimo : roundCents(resultado);
-
+  let resultado = parseFloat(entrada) + parseFloat(cantidad) * (parseFloat(largoPliego) < 488 ? 1 : 1.25) * parseFloat(valor);
+  resultado = resultado < parseFloat(minimo) ? parseFloat(minimo) : roundCents(resultado);
+  console.log("Formula igen BN")
   console.log(
     `${entrada} + (${cantidad}*((${largoPliego}>488)?1:(1.25))) * ${valor}`
   );
@@ -55,10 +55,10 @@ export const iGenBN = (valor, minimo, cantidad, entrada, largoPliego) => {
 };
 
 export const iGenColor = (valor, minimo, cantidad, entrada, largoPliego) => {
-  let resultado = entrada + cantidad * (largoPliego < 488 ? 1 : 1.25) * valor;
+  let resultado = parseFloat(entrada) + parseFloat(cantidad) * (parseFloat(largoPliego) < 488 ? 1 : 1.25) * parseFloat(valor);
 
   resultado = resultado < minimo ? minimo : roundCents(resultado);
-
+  console.log("Formula igenColor")
   console.log(
     `${entrada} + (${cantidad}*((${largoPliego}>488)?1:(1.25))) * ${valor}`
   );

@@ -6,7 +6,7 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 // #3f51b5,#f50057,#ff1744,#29b6f8,#66bb6a,#222222
 
 export const themeMxm = createTheme({
-  spacing: 4,
+  spacing: 6,
   palette: {
     mode: "dark",
     primary: {
@@ -60,6 +60,7 @@ export const themeMxm = createTheme({
 });
 
 export const themeOptions = createTheme({
+  spacing: 6,
   palette: {
     mode: "light",
     primary: {
@@ -76,6 +77,7 @@ export const themeOptions = createTheme({
 });
 
 export const themeGreen = createTheme({
+  spacing: 6,
   palette: {
     mode: "light",
     primary: {
@@ -152,7 +154,7 @@ export const themeHamlet = createTheme({
 });
 
 const ThemeProv = (props) => {
-  return <ThemeProvider theme={themeHamlet}>{props.children}</ThemeProvider>;
+  return <ThemeProvider theme={themeMxm}>{props.children}</ThemeProvider>;
 };
 
 export default ThemeProv;
