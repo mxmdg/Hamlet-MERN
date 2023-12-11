@@ -7,6 +7,7 @@ import Fetch from "./General/Fetch";
 import QuickSpinCalc from "./utils/spinCalculator/QuickSpinCalc";
 import DarkWoodCard from "./utils/DarkWoodCard";
 import PrintersMainContainer from "./Printers/PrintersMainContainer";
+import ToggleColorMode from "./Config/Theme/ToggleMode";
 
 //MUI Material Imports
 import { Container, Grid, Typography, Divider, Box } from "@mui/material";
@@ -21,10 +22,10 @@ const Home = () => {
 
   return (
     <>
-      <Grid container columns={{xs: 1,sm: 12, md: 12}} spacing={4}>
+      <Grid container columns={{ xs: 1, sm: 12, md: 12 }} spacing={4}>
         <Grid item xs={1} sm={12} md={8}>
           <Container>
-            <Grid container spacing="3" columns={{xs: 1,sm: 12, md: 12}}>
+            <Grid container spacing="3" columns={{ xs: 1, sm: 12, md: 12 }}>
               <Grid item xs={1} sm={12} md={12}>
                 <Fetch collection="jobs/urg" />
               </Grid>
@@ -50,7 +51,7 @@ const Home = () => {
             </Typography>
           </Container>
         </Grid>
-        <Grid item xs= {1} sm={12} md={3}>
+        <Grid item xs={1} sm={12} md={3}>
           <DarkWoodCard>
             <PrintersMainContainer />
           </DarkWoodCard>

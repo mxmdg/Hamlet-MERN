@@ -136,147 +136,134 @@ const PriceTable = (props) => {
 
   const viewer = (
     <>
-      <Grid
-        container
+      <Card
+        sx={{
+          minHeight: 400,
+          width: "100%",
+        }}
         direction="column"
-        justifyContent="space-between"
-        alignItems="baseline"
-        sx={{ width: "100%" }}
+        color="secondary"
+        elevation={6}
       >
-        <Card
+        <CardContent
           sx={{
+            maxWidth: "100%",
             minHeight: 400,
-            width: "100%",
+            height: "100%",
           }}
-          direction="column"
-          color="secondary"
-          square={true}
         >
-          <CardContent
-            sx={{
-              maxWidth: "100%",
-              minHeight: 400,
-              height: "100%",
-            }}
+          <Typography gutterBottom variant="h5" color="info" component="div">
+            {props.pd.Proceso}
+          </Typography>
+          <Typography
+            gutterBottom
+            variant="p"
+            color="text.secondary"
+            component="p"
           >
-            <Typography
-              gutterBottom
-              variant="h5"
-              color="primary"
-              component="div"
-            >
-              {props.pd.Proceso}
-            </Typography>
-            <Typography
-              gutterBottom
-              variant="p"
-              color="text.secondary"
-              component="p"
-            >
-              <LastSeen date={props.pd.Fecha} />
-            </Typography>
+            <LastSeen date={props.pd.Fecha} />
+          </Typography>
 
-            <TableContainer component={Paper} elevation={8}>
-              <Table
-                sx={{ maxWidth: 350 }}
-                size="small"
-                aria-label="a dense table"
-              >
-                <TableHead>
-                  <TableRow>
-                    <TableCell align="left">Proceso</TableCell>
-                    <TableCell align="left">Valor</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {Object.entries(props.formCLC)?.map(([key, value]) => (
-                    <TableRow
-                      key={key}
-                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                    >
-                      <TableCell component="th" align="left">
-                        {key}
-                      </TableCell>
-                      <TableCell align="left">
-                        {key === "formula" ? (
-                          <Modal
-                            btnText={`ver ${key}`}
-                            modalTitle={`${props.pd.Proceso} ${key}`}
-                            modalText={value}
-                          />
-                        ) : (
-                          value
-                        )}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-            {isThereHistory && <MyLineChart data={props.pd.Historial} />}
-          </CardContent>
-
-          <CardActions
-            sx={{
-              marginTop: "auto",
-              marginBottom: "15px",
-              alignContent: "center",
-            }}
-          >
-            <ButtonGroup
-              variant="text"
-              aria-label="text button group"
+          <TableContainer component={Paper} elevation={0}>
+            <Table
+              sx={{ maxWidth: 350 }}
               size="small"
+              aria-label="a dense table"
             >
-              <Button
-                color="info"
-                onClick={handleHistory}
-                {...(isThereHistory ? "" : { disabled: true })}
-              >
-                Historial
-              </Button>
-              <Button
-                color="success"
-                onClick={() => {
-                  navigate(`/${props.collection}/edit/${props.id}`);
-                }}
-              >
-                Editar
-              </Button>
-              <Button color="secondary" onClick={handleSim}>
-                Simular
-              </Button>
-              <Button
-                color="error"
-                startIcon={<DeleteIcon />}
-                onClick={() => deleteClickHandler(props.id)}
-              >
-                Eliminar
-              </Button>
-            </ButtonGroup>
-          </CardActions>
-        </Card>
-        {showHistory && (
-          <>
-            <Historial
-              data={props.pd.Historial}
-              btnText="ver"
-              stateHistory={setShowHistory}
-              collection={props.collection}
-              process={props.pd.Proceso}
-            />
-          </>
-        )}
-        {showSim && (
-          <>
-            <Simulator
-              data={props.pd}
-              stateSim={setShowSim}
-              process={props.pd.Proceso}
-            />
-          </>
-        )}
-      </Grid>
+              <TableHead>
+                <TableRow>
+                  <TableCell align="left">Proceso</TableCell>
+                  <TableCell align="left">Valor</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {Object.entries(props.formCLC)?.map(([key, value]) => (
+                  <TableRow
+                    key={key}
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  >
+                    <TableCell component="th" align="left">
+                      {key}
+                    </TableCell>
+                    <TableCell align="left">
+                      {key === "formula" ? (
+                        <Modal
+                          btnText={`ver ${key}`}
+                          modalTitle={`${props.pd.Proceso} ${key}`}
+                          modalText={value}
+                        />
+                      ) : (
+                        value
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          {isThereHistory && <MyLineChart data={props.pd.Historial} />}
+        </CardContent>
+
+        <CardActions
+          sx={{
+            marginTop: "auto",
+            marginBottom: "15px",
+            alignContent: "center",
+          }}
+        >
+          <ButtonGroup
+            variant="text"
+            aria-label="text button group"
+            size="small"
+          >
+            <Button
+              color="info"
+              onClick={handleHistory}
+              {...(isThereHistory ? "" : { disabled: true })}
+            >
+              Historial
+            </Button>
+            <Button
+              color="info"
+              onClick={() => {
+                navigate(`/${props.collection}/edit/${props.id}`);
+              }}
+            >
+              Editar
+            </Button>
+            <Button color="info" onClick={handleSim}>
+              Simular
+            </Button>
+            <Button
+              color="error"
+              startIcon={<DeleteIcon />}
+              onClick={() => deleteClickHandler(props.id)}
+            >
+              Eliminar
+            </Button>
+          </ButtonGroup>
+        </CardActions>
+      </Card>
+      {showHistory && (
+        <>
+          <Historial
+            data={props.pd.Historial}
+            btnText="ver"
+            stateHistory={setShowHistory}
+            collection={props.collection}
+            process={props.pd.Proceso}
+          />
+        </>
+      )}
+      {showSim && (
+        <>
+          <Simulator
+            data={props.pd}
+            stateSim={setShowSim}
+            process={props.pd.Proceso}
+          />
+        </>
+      )}
     </>
   );
 

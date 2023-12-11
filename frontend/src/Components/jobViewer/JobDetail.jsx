@@ -71,8 +71,8 @@ const JobDetail = (props) => {
     let partNumber = job.Partes.indexOf(part) + 1;
     let myKey = part._id + partNumber;
 
-    console.log(useSheet)
-    
+    console.log(useSheet);
+
     const calculateStock = () => {
       const straightCut = cutOptimizer(
         part.partStock.Ancho_Resma,
@@ -87,11 +87,14 @@ const JobDetail = (props) => {
         useSheet.height,
         useSheet.width
       );
-      
-      console.table(straightCut, rotatedtCut)
-      
-      const pliegosPorHoja = Math.max(parseInt(straightCut.totalPoses), parseInt(rotatedtCut.totalPoses))
-        
+
+      console.table(straightCut, rotatedtCut);
+
+      const pliegosPorHoja = Math.max(
+        parseInt(straightCut.totalPoses),
+        parseInt(rotatedtCut.totalPoses)
+      );
+
       const cantidadDePliegos =
         Math.ceil(part.Pages / (part.ColoresDorso > 0 ? 2 : 1)) *
         Math.ceil(job.Cantidad / usePoses);
@@ -252,8 +255,8 @@ const JobDetail = (props) => {
               onClick={() => {
                 navigate(-1);
               }}
-              variant="outlined"
-              color="secondary"
+              variant="contained"
+              color="primary"
               startIcon={<ArrowBackIcon />}
             >
               Volver

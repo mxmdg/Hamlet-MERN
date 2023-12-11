@@ -54,56 +54,61 @@ export const Login = () => {
 
   return (
     <Box>
-      <FormControl sx={{ width: "90%" }}>
-        <form name="Register" onSubmit={handleSubmit(onSubmit)}>
-          <Grid
-            container
-            spacing={{ xs: 2, md: 5 }}
-            columns={{ xs: 1, sm: 4, md: 6 }}
-          >
-            <Grid item xs={1} sm={2} md={12}>
-              <TextField
-                id="email"
-                label="email"
-                variant="filled"
-                defaultValue={""}
-                name="email"
-                {...register("email", {
-                  required: true,
-                  minLength: 3,
-                  maxLength: 40,
-                })}
-                onBlur={() => {
-                  trigger("email");
-                }}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6} md={12}>
-              <TextField
-                id="password"
-                label="password"
-                variant="filled"
-                defaultValue={""}
-                type="password"
-                name="password"
-                {...register("password", {
-                  required: true,
-                  minLength: 3,
-                  maxLength: 40,
-                })}
-                onBlur={() => {
-                  trigger("password");
-                }}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6} md={12} sx={{ alignSelf: "center" }}>
-              <Button type="submit" variant="contained" color="warning">
-                Ingresar
-              </Button>
-            </Grid>
-          </Grid>
-        </form>
-      </FormControl>
+      <Card elevation={6}>
+        <CardHeader title="Login"></CardHeader>
+        <CardContent>
+          <FormControl sx={{ width: "90%" }}>
+            <form name="Register" onSubmit={handleSubmit(onSubmit)}>
+              <Grid
+                container
+                spacing={{ xs: 2, md: 5 }}
+                columns={{ xs: 1, sm: 4, md: 6 }}
+              >
+                <Grid item xs={6} sm={6} md={3}>
+                  <TextField
+                    id="email"
+                    label="email"
+                    variant="filled"
+                    defaultValue={""}
+                    name="email"
+                    {...register("email", {
+                      required: true,
+                      minLength: 3,
+                      maxLength: 40,
+                    })}
+                    onBlur={() => {
+                      trigger("email");
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={6} sm={6} md={3}>
+                  <TextField
+                    id="password"
+                    label="password"
+                    variant="filled"
+                    defaultValue={""}
+                    type="password"
+                    name="password"
+                    {...register("password", {
+                      required: true,
+                      minLength: 3,
+                      maxLength: 40,
+                    })}
+                    onBlur={() => {
+                      trigger("password");
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={6} sm={6} md={3} sx={{ alignSelf: "center" }}>
+                  <Button type="submit" variant="contained" color="secondary">
+                    Ingresar
+                  </Button>
+                </Grid>
+              </Grid>
+            </form>
+          </FormControl>
+        </CardContent>
+      </Card>
     </Box>
   );
 };

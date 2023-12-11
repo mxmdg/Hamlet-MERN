@@ -49,127 +49,134 @@ export const Register = () => {
 
   return (
     <Box>
-      <FormControl sx={{ width: "90%" }}>
-        <form name="Register" onSubmit={handleSubmit(onSubmit)}>
-          <Grid
-            container
-            spacing={{ xs: 2, md: 5 }}
-            columns={{ xs: 1, sm: 4, md: 6 }}
-          >
-            <Grid item xs={12} sm={12} md={3}>
-              <TextField
-                id="Name"
-                label="Nombre"
-                variant="filled"
-                defaultValue={""}
-                name="Name"
-                {...register("Name", {
-                  required: true,
-                  minLength: 3,
-                  maxLength: 40,
-                })}
-                onBlur={() => {
-                  trigger("Name");
-                }}
-              />
-            </Grid>
-            <Grid item xs={12} sm={12} md={6}>
-              <TextField
-                id="LastName"
-                label="Apellido"
-                variant="filled"
-                defaultValue={""}
-                name="LastName"
-                {...register("LastName", {
-                  required: true,
-                  minLength: 3,
-                  maxLength: 40,
-                })}
-                onBlur={() => {
-                  trigger("LastName");
-                }}
-              />
-            </Grid>
-            <Grid item xs={12} sm={12} md={1}>
-              <TextField
-                select
-                defaultValue="Customer"
-                id="Role"
-                inputProps={{
-                  name: "Role",
-                  id: "Role",
-                }}
-                variant="filled"
-                color="primary"
-                label="Rol"
-                name="Role"
-                onChange={(e) => console.log(e.target.value)}
-                fullWidth
-                {...register("Role", { required: true })}
-                onBlur={() => {
-                  trigger("Role");
-                }}
+      <Card>
+        <CardHeader title="Registrate!"></CardHeader>
+        <CardContent>
+          <FormControl sx={{ width: "90%" }}>
+            <form name="Register" onSubmit={handleSubmit(onSubmit)}>
+              <Grid
+                container
+                spacing={{ xs: 2, md: 5 }}
+                columns={{ xs: 1, sm: 4, md: 6 }}
               >
-                <MenuItem value="Admin" key="role01">
-                  Administrado
-                </MenuItem>
-                <MenuItem value="Manager" key="role02">
-                  Vendedor
-                </MenuItem>
-                <MenuItem value="Operator" key="role03">
-                  Operador
-                </MenuItem>
-                <MenuItem value="Customer" key="role04">
-                  Cliente
-                </MenuItem>
-              </TextField>
-              {errors.JobType?.type === "required" && (
-                <FormHelperText>Seleccione un tipo de usuario</FormHelperText>
-              )}
-            </Grid>
-            <Grid item xs={6} sm={6} md={6}>
-              <TextField
-                id="email"
-                label="email"
-                variant="filled"
-                defaultValue={""}
-                name="email"
-                {...register("email", {
-                  required: true,
-                  minLength: 3,
-                  maxLength: 40,
-                })}
-                onBlur={() => {
-                  trigger("email");
-                }}
-              />
-            </Grid>
-            <Grid item xs={12} sm={12} md={6}>
-              <TextField
-                id="password"
-                label="password"
-                type="password"
-                variant="filled"
-                defaultValue={""}
-                name="password"
-                {...register("password", {
-                  required: true,
-                  minLength: 3,
-                  maxLength: 40,
-                })}
-                onBlur={() => {
-                  trigger("password");
-                }}
-              />
-            </Grid>
-            <Grid item xs={12} sm={12} md={6} sx={{ alignSelf: "center" }}>
-              <Button type="submit" variant="contained" color="warning">
-                Registrarse
-              </Button>
-            </Grid>
-          </Grid>
-        </form>
-      </FormControl>
+                <Grid item xs={6} sm={6} md={3}>
+                  <TextField
+                    id="Name"
+                    label="Nombre"
+                    variant="filled"
+                    defaultValue={""}
+                    name="Name"
+                    {...register("Name", {
+                      required: true,
+                      minLength: 3,
+                      maxLength: 40,
+                    })}
+                    onBlur={() => {
+                      trigger("Name");
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={6} sm={6} md={3}>
+                  <TextField
+                    id="LastName"
+                    label="Apellido"
+                    variant="filled"
+                    defaultValue={""}
+                    name="LastName"
+                    {...register("LastName", {
+                      required: true,
+                      minLength: 3,
+                      maxLength: 40,
+                    })}
+                    onBlur={() => {
+                      trigger("LastName");
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={6} sm={6} md={3}>
+                  <TextField
+                    select
+                    defaultValue="Customer"
+                    id="Role"
+                    inputProps={{
+                      name: "Role",
+                      id: "Role",
+                    }}
+                    variant="filled"
+                    color="primary"
+                    label="Rol"
+                    name="Role"
+                    onChange={(e) => console.log(e.target.value)}
+                    fullWidth
+                    {...register("Role", { required: true })}
+                    onBlur={() => {
+                      trigger("Role");
+                    }}
+                  >
+                    <MenuItem value="Admin" key="role01">
+                      Administrado
+                    </MenuItem>
+                    <MenuItem value="Manager" key="role02">
+                      Vendedor
+                    </MenuItem>
+                    <MenuItem value="Operator" key="role03">
+                      Operador
+                    </MenuItem>
+                    <MenuItem value="Customer" key="role04">
+                      Cliente
+                    </MenuItem>
+                  </TextField>
+                  {errors.JobType?.type === "required" && (
+                    <FormHelperText>
+                      Seleccione un tipo de usuario
+                    </FormHelperText>
+                  )}
+                </Grid>
+                <Grid item xs={6} sm={6} md={3}>
+                  <TextField
+                    id="email"
+                    label="email"
+                    variant="filled"
+                    defaultValue={""}
+                    name="email"
+                    {...register("email", {
+                      required: true,
+                      minLength: 3,
+                      maxLength: 40,
+                    })}
+                    onBlur={() => {
+                      trigger("email");
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={6} sm={6} md={3}>
+                  <TextField
+                    id="password"
+                    label="password"
+                    type="password"
+                    variant="filled"
+                    defaultValue={""}
+                    name="password"
+                    {...register("password", {
+                      required: true,
+                      minLength: 3,
+                      maxLength: 40,
+                    })}
+                    onBlur={() => {
+                      trigger("password");
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={6} sm={6} md={3} sx={{ alignSelf: "center" }}>
+                  <Button type="submit" variant="contained" color="warning">
+                    Registrarse
+                  </Button>
+                </Grid>
+              </Grid>
+            </form>
+          </FormControl>
+        </CardContent>
+      </Card>
     </Box>
   );
 };

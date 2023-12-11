@@ -27,7 +27,10 @@ const PricesMainContainer = () => {
   const context = useContext(AuthContext);
 
   const validateAdminUser = () => {
-    if (context.useLogin === true && context.userLogged.Role === "admin") {
+    if (
+      context.useLogin === true &&
+      context.userLogged.Role.toLowerCase() === "admin"
+    ) {
       return true;
     } else {
       return false;
@@ -37,13 +40,7 @@ const PricesMainContainer = () => {
   return (
     <Container>
       {validateAdminUser() && (
-        <Card
-          variant="elevation"
-          elevation={10}
-          raised
-          m={10}
-          sx={{ p: "25px" }}
-        >
+        <Card>
           <CardHeader title={collection} />
           <CardContent>
             <Precioso collection="precios" priceState={useNewPrice} />

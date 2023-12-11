@@ -89,7 +89,7 @@ export const ImpositionForm = (props) => {
   return (
     <FormControl sx={{ width: "100%" }}>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Grid container columns={12} spacing={2}>
+        <Grid container columns={12} spacing={1}>
           <Grid item xs={12} md={3}>
             <FormControl>
               <TextField
@@ -119,7 +119,6 @@ export const ImpositionForm = (props) => {
                 label="Alto Pagina"
                 variant="filled"
                 name="heightPage"
-                color="error"
                 defaultValue={props.part?.Alto || ""}
                 {...register("heightPage", {
                   required: true,
@@ -184,6 +183,7 @@ export const ImpositionForm = (props) => {
                 defaultValue={""}
                 label="Formato"
                 size="small"
+                margin="dense"
                 {...register("formatSelector", { required: false })}
                 onChange={(e) => {
                   console.log(e.target.value);
@@ -233,7 +233,12 @@ export const ImpositionForm = (props) => {
                   onBlur={() => setCustomFormat(true)}
                   dense={true}
                 >
-                  <Chip variant="filled" size="small" label="Personalizado" />
+                  <Chip
+                    variant="outlined"
+                    size="small"
+                    label="Personalizado"
+                    color="secondary"
+                  />
                 </MenuItem>
               </TextField>
             </FormControl>
@@ -301,7 +306,7 @@ export const ImpositionForm = (props) => {
           </Grid>
           <Grid item xs={12} md={12}>
             <FormControl>
-              <Button variant="contained" type="submit" color="secondary">
+              <Button variant="outlined" type="submit" color="primary">
                 Imponer
               </Button>
             </FormControl>

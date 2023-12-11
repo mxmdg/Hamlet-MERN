@@ -99,7 +99,7 @@ const Fetch = (props) => {
   const TableLoaded = (
     <>
       <DarkWoodCard>
-        <Paper elevation={4} fullwidth sx={{ padding: "10px" }}>
+        <Paper elevation={4} color="info" sx={{ padding: "10px" }}>
           <Stack direction="row" spacing={4}>
             <TextField
               select

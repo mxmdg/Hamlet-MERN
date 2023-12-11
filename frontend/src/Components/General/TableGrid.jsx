@@ -184,7 +184,7 @@ function EnhancedTableToolbar(props) {
           }}
           sx={{ alignSelf: "right" }}
         >
-          <AddBoxIcon />
+          <AddBoxIcon color="primary" />
         </IconButton>
       </StyledTooltip>
       {numSelected > 0 ? (
@@ -202,7 +202,7 @@ function EnhancedTableToolbar(props) {
                   }}
                   sx={{ alignSelf: "right" }}
                 >
-                  <ContentCopyIcon />
+                  <ContentCopyIcon color="secondary" />
                 </IconButton>
               </StyledTooltip>
               <StyledTooltip title="Editar" arrow>
@@ -216,7 +216,7 @@ function EnhancedTableToolbar(props) {
                   }}
                   sx={{ alignSelf: "right" }}
                 >
-                  <EditIcon />
+                  <EditIcon color="info" />
                 </IconButton>
               </StyledTooltip>
             </>

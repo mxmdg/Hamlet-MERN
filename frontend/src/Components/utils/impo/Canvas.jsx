@@ -12,6 +12,7 @@ import {
   CardHeader,
   CardContent,
   CardActions,
+  Divider,
 } from "@mui/material";
 
 const Canvas = (props) => {
@@ -101,16 +102,16 @@ const Canvas = (props) => {
 
   return (
     <>
-      <CardHeader title="Imposición" />
+      <CardHeader subheader="Imposición" />
+      <Divider />
       <CardContent>
         <Grid
           container
-          spacing={2}
+          spacing={0}
           columns={12}
           sx={{
-            padding: "5%",
+            padding: "1%",
             borderRadius: "5px",
-            margin: "3px",
           }}
           minWidth={200}
         >

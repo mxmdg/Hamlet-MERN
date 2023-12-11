@@ -18,7 +18,10 @@ import { AuthContext } from "../context/AuthContext";
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { serverURL, databaseURL } from "../Config/config";
-import { ListItemButton } from "@mui/material";
+import { ListItemButton, Paper } from "@mui/material";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Switch from "@mui/material/Switch";
+import LightModeIcon from "@mui/icons-material/LightMode";
 
 const pages = [
   "Jobs",
@@ -27,11 +30,11 @@ const pages = [
   "Impresoras",
   "JobParts",
   "Materiales",
-  "Empresas"
+  "Empresas",
 ];
 const settings = ["Login", "Register", "Users"];
 
-function ResponsiveAppBar() {
+function ResponsiveAppBar(props) {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const context = useContext(AuthContext);
@@ -48,12 +51,16 @@ function ResponsiveAppBar() {
   };
 
   const handleCloseNavMenu = (goTo) => {
-    navigate("/" + goTo);
+    console.log("handleCloseNavMenu ");
+    console.log(goTo);
+    goTo ? navigate("/" + goTo) : console.log("Me quedo aca");
     setAnchorElNav(null);
   };
 
   const handleCloseUserMenu = (goTo) => {
-    navigate("/" + goTo);
+    console.log("handleCloseUserMenu ");
+    console.log(goTo);
+    goTo ? navigate("/" + goTo) : console.log("Me quedo aca");
     setAnchorElUser(null);
   };
 
@@ -68,31 +75,12 @@ function ResponsiveAppBar() {
     }
   };
 
-  return (
-    <AppBar position="static">
-      <Container maxWidth="xl" color="primary">
-        <Toolbar disableGutters>
-          <LocalLibraryIcon
-            sx={{ display: { xs: "none", md: "flex" }, mr: 1, color: "#ddd" }}
-          />
-          <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            href="/"
-            sx={{
-              mr: 2,
-              display: { xs: "none", md: "flex" },
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              color: "#ddd",
-              textDecoration: "none",
-            }}
-          >
-            HAMLET
-          </Typography>
+  const Navigate = useNavigate();
 
+  return (
+    <AppBar position="fixed">
+      <Container maxWidth="xl">
+        <Toolbar disableGutters>
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
@@ -100,7 +88,7 @@ function ResponsiveAppBar() {
               aria-controls="menu-appbar"
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
-              color="#ddd"
+              color="warning"
             >
               <MenuIcon />
             </IconButton>
@@ -117,10 +105,10 @@ function ResponsiveAppBar() {
                 horizontal: "left",
               }}
               open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
+              onClose={() => handleCloseNavMenu()}
+              color="secondary"
               sx={{
                 display: { xs: "block", md: "none" },
-                color: "#0ed",
               }}
             >
               {pages.map((page) => (
@@ -130,42 +118,41 @@ function ResponsiveAppBar() {
                     handleCloseNavMenu(page);
                   }}
                 >
-                  <Typography textAlign="center" color={"#0ef"}>
-                    {page}
-                  </Typography>
+                  <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
               ))}
             </Menu>
           </Box>
-          <LocalLibraryIcon
-            sx={{ color: "#0ed", display: { xs: "flex", md: "none" }, mr: 1 }}
-          />
-          <Typography
-            variant="h5"
-            noWrap
-            component="a"
-            href=""
-            sx={{
-              mr: 2,
-              display: { xs: "flex", md: "none" },
-              flexGrow: 1,
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              color: "#ddd",
-              textDecoration: "none",
-            }}
-          >
-            HAMLET
-          </Typography>
+          <Box sx={{ flexGrow: 2, display: { xs: "flex", md: "flex" } }}>
+            <Button
+              startIcon={<LocalLibraryIcon />}
+              variant="h5"
+              color="primary"
+              onClick={() => Navigate("/")}
+              /* sx={{
+                    mr: 2,
+                    display: { xs: "flex", md: "none" },
+                    flexGrow: 1,
+                    fontFamily: "monospace",
+                    fontWeight: 700,
+                    letterSpacing: ".3rem",
+                    textDecoration: "none",
+                  }} */
+            >
+              HAMLET
+            </Button>
+          </Box>
+
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
               <Button
+                variant="standard"
                 key={page}
+                color="primary"
                 onClick={() => {
                   handleCloseNavMenu(page);
                 }}
-                sx={{ my: 2, color: "#ddd", display: "block" }}
+                sx={{ my: 2, display: "block" }}
               >
                 {page}
               </Button>
@@ -173,16 +160,23 @@ function ResponsiveAppBar() {
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
+            <FormControlLabel
+              control={
+                <Switch
+                  color="warning"
+                  onChange={() => props.toogle()}
+                  size="small"
+                ></Switch>
+              }
+              label="Dark Mode"
+            />
+
             <Tooltip title={context.userLogged.Name}>
-              <IconButton
-                onClick={handleOpenUserMenu}
-                sx={{ p: 0, color: "#0ed" }}
-              >
+              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar
                   alt={
                     context.userLogged.Name + " " + context.userLogged.LastName
                   }
-                  src="../../img/mxm.jpg"
                 />
               </IconButton>
             </Tooltip>
@@ -200,7 +194,7 @@ function ResponsiveAppBar() {
                 horizontal: "right",
               }}
               open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
+              onClose={() => handleCloseUserMenu()}
             >
               <MenuItem>
                 <Typography textAlign="center">

@@ -86,32 +86,29 @@ const Precioso = (props) => {
   }, [useEdit, setErrorMessage, setPriceList, props.priceState]);
 
   return (
-    <>
-      <Grid container spacing={3}>
-        {loading ? (
-          <Spinner color="primary" /> // Asegúrate de importar el componente Spinner si lo tienes
-        ) : useErrorMessage !== undefined || priceList.message ? (
-          AlertError
-        ) : (
-          // Renderiza la lista de Precios
-          //priceList &&
-          priceList.map((price) => (
-            <Grid xs={12} md={4} key={price._id}>
-              {" "}
-              {/* Debes usar 'item' en lugar de 'Grid' */}
-              <PriceTable
-                pd={price}
-                collection={props.collection}
-                id={price._id}
-                formCLC={formulaCLC(price)}
-                formData={PricesDataForm}
-                editor={setEdit}
-              />
-            </Grid>
-          ))
-        )}
-      </Grid>
-    </>
+    <Grid container columns={{ xs: 2, sm: 12, md: 12 }} spacing={2}>
+      {loading ? (
+        <Spinner color="primary" /> // Asegúrate de importar el componente Spinner si lo tienes
+      ) : useErrorMessage !== undefined || priceList.message ? (
+        AlertError
+      ) : (
+        // Renderiza la lista de Precios
+        //priceList &&
+        priceList.map((price) => (
+          <Grid item xs={12} sm={6} md={4}>
+            <PriceTable
+              key={price._id}
+              pd={price}
+              collection={props.collection}
+              id={price._id}
+              formCLC={formulaCLC(price)}
+              formData={PricesDataForm}
+              editor={setEdit}
+            />
+          </Grid>
+        ))
+      )}
+    </Grid>
   );
 };
 

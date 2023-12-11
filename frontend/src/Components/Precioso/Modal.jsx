@@ -4,6 +4,7 @@ import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
+import { Card, CardHeader, CardContent } from "@mui/material";
 import IconChips from "./Chip";
 
 const style = {
@@ -42,19 +43,18 @@ export default function BasicModal(props) {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Paper elevation={12} sx={style}>
-          <Typography
-            id="modal-modal-title"
-            variant="h6"
-            component="h2"
-            color="success"
-          >
-            {props.modalTitle}
-          </Typography>
-          <Typography id="modal-modal-description" color="info" sx={{ mt: 2 }}>
-            {props.modalText}
-          </Typography>
-        </Paper>
+        <Card elevation={12}>
+          <CardHeader title={props.modalTitle} />
+          <CardContent>
+            <Typography
+              id="modal-modal-description"
+              color="info"
+              sx={{ mt: 2 }}
+            >
+              {props.modalText}
+            </Typography>
+          </CardContent>
+        </Card>
       </Modal>
     </Box>
   );

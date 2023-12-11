@@ -4,7 +4,7 @@ body {
   height: 100vh;
  /*  background-image: url('./img/Dark_Wood_Background.jpg'); */
  /* background-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%); */
- background-image: linear-gradient(15deg, #13547a 0%, #80d0c7 100%);
+ /* background-image: radial-gradient(circle, #b0eaf6, #b3f3ee, #c3f9e1, #dcfed4, #fbffcb); */
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;

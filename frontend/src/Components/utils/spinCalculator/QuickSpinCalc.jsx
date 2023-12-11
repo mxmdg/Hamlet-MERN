@@ -15,7 +15,7 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
-import { Grid } from "@mui/material";
+import { Grid, Divider } from "@mui/material";
 import {
   fechtData,
   getPrivateElementByID,
@@ -71,12 +71,13 @@ const QuickSpinCalc = (props) => {
 
   return (
     <>
-      <CardHeader title="Calculadora de lomo"></CardHeader>
+      <CardHeader subheader="Calculadora de lomo"></CardHeader>
+      <Divider />
       <CardContent>
         <form name="form2" action="" onSubmit={handleSubmit}>
           <Grid
             container
-            spacing={{ xs: 3, md: 6 }}
+            spacing={{ xs: 1, md: 2 }}
             columns={{ xs: 1, sm: 4, md: 8 }}
           >
             <Grid item xs={1} sm={2} md={4}>
@@ -84,7 +85,7 @@ const QuickSpinCalc = (props) => {
                 id="Pages"
                 type="number"
                 label="Paginas"
-                variant="outlined"
+                variant="filled"
                 name="Pages"
                 color="warning"
                 size="small"
@@ -101,7 +102,7 @@ const QuickSpinCalc = (props) => {
                   label="Material"
                   onChange={handleChange}
                   defaultValue={""}
-                  variant="outlined"
+                  variant="filled"
                   sx={{ width: "95%" }}
                   color="primary"
                   size="small"
@@ -120,7 +121,7 @@ const QuickSpinCalc = (props) => {
                 id="Spin"
                 type="number"
                 label="Lomo"
-                variant="outlined"
+                variant="filled"
                 name="Spin"
                 value={useSpin}
                 color="success"
@@ -134,11 +135,11 @@ const QuickSpinCalc = (props) => {
               <FormControl sx={{ width: "85%" }}>
                 <Button
                   type="submit"
-                  size="small"
-                  variant="contained"
-                  color="secondary"
+                  size="large"
+                  variant="outlined"
+                  color="primary"
                 >
-                  Calcular Lomo
+                  Lomo
                 </Button>
               </FormControl>
             </Grid>
