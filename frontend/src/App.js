@@ -38,7 +38,7 @@ function App() {
 
   return (
     <ThemeProv mode={useMode}>
-      <Paper>
+      <Paper sx={{width: "100%", height: "100%"}}>
         <BrowserRouter>
           <AuthProvider>
             <Box>
