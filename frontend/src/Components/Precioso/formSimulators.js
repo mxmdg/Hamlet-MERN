@@ -42,7 +42,7 @@ export const Nuvera = (valor, minimo, cantidad, entrada, largoPliego) => {
 };
 
 export const iGenBN = (valor, minimo, cantidad, entrada, largoPliego) => {
-  let resultado = parseFloat(entrada) + parseFloat(cantidad) * (parseFloat(largoPliego) > 488 ? 1 : 1.25) * parseFloat(valor);
+  let resultado = parseFloat(entrada) + parseFloat(cantidad) / (parseFloat(largoPliego) > 488 ? 1 : 1.25) * parseFloat(valor);
   resultado = resultado < parseFloat(minimo) ? parseFloat(minimo) : roundCents(resultado);
   console.log("Formula igen BN")
   console.log(
@@ -55,7 +55,7 @@ export const iGenBN = (valor, minimo, cantidad, entrada, largoPliego) => {
 };
 
 export const iGenColor = (valor, minimo, cantidad, entrada, largoPliego) => {
-  let resultado = parseFloat(entrada) + parseFloat(cantidad) * (parseFloat(largoPliego) < 488 ? 1 : 1.25) * parseFloat(valor);
+  let resultado = parseFloat(entrada) + parseFloat(cantidad) / (parseFloat(largoPliego) > 488 ? 1 : 1.4) * parseFloat(valor);
 
   resultado = resultado < minimo ? minimo : roundCents(resultado);
   console.log("Formula igenColor")
