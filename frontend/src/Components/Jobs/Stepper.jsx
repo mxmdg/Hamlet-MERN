@@ -172,7 +172,10 @@ export default function MyStepper() {
                 return (
                   <Container key={part.id}>
                     <Card>
-                      <CardHeader title={part.jobParts[0].type}></CardHeader>
+                      <CardHeader
+                        title={part.Name}
+                        subheader={part.jobParts[0].type}
+                      ></CardHeader>
                       <Container>
                         Paginas: {part.Pages}
                         <br />
@@ -182,9 +185,17 @@ export default function MyStepper() {
                         <br />
                         Material: {part.partStock.Nombre_Material}
                         <br />
-                        {part.jobParts[0].type.includes("Interior" || "Insert") ? (
-                           <>Lomo: {calcularLomo(part.Pages, part.partStock.Espesor_Resma)}{" "}
-                            mm.</> 
+                        {part.jobParts[0].type.includes(
+                          "Interior" || "Insert"
+                        ) ? (
+                          <>
+                            Lomo:{" "}
+                            {calcularLomo(
+                              part.Pages,
+                              part.partStock.Espesor_Resma
+                            )}{" "}
+                            mm.
+                          </>
                         ) : (
                           ""
                         )}

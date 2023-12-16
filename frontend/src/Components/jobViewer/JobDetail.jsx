@@ -57,6 +57,17 @@ const JobDetail = (props) => {
     color: theme.palette.text.secondary,
   }));
 
+  const Item2 = styled(Paper)(({ theme }) => ({
+    backgroundColor:
+      theme.palette.mode === "dark"
+        ? theme.palette.success.dark
+        : theme.palette.success.light,
+    ...theme.typography.subtitle2,
+    padding: theme.spacing(2),
+    textAlign: "left",
+    color: theme.palette.success.contrastText,
+  }));
+
   // Date Format Options:
   const options = {
     weekday: "long",
@@ -166,13 +177,17 @@ const JobDetail = (props) => {
                   </Item>
                   {usePoses && (
                     <>
-                      <Item>Poses: {usePoses}</Item>
-                      <Item>Tirada: {Math.ceil(job.Cantidad / usePoses)}</Item>
-                      <Item>
+                      <Item2 elevation={4}>Poses: {usePoses}</Item2>
+                      <Item2 elevation={4}>
+                        Tirada: {Math.ceil(job.Cantidad / usePoses)}
+                      </Item2>
+                      <Item2 elevation={4}>
                         Pliegos: {calculateStock().cantidadDePliegos} - Salen:{" "}
                         {calculateStock().pliegosPorHoja}
-                      </Item>
-                      <Item>Total Papel: {calculateStock().totalHojas}</Item>
+                      </Item2>
+                      <Item2 elevation={4}>
+                        Total Papel: {calculateStock().totalHojas}
+                      </Item2>
                     </>
                   )}
                 </Stack>
