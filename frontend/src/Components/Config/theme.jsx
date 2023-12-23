@@ -60,7 +60,7 @@ export const themeMxm = createTheme({
   },
 });
 
-export const themeOptions = createTheme({
+const themeOptions = createTheme({
   palette: {
     mode: "dark",
     primary: {
@@ -97,6 +97,22 @@ export const themeOptions = createTheme({
       dark: "#388e3c",
     },
   },
+  typography: {
+    fontFamily:'Open Sans, sans-serif',
+    button: {
+      fontWeight: 500,
+      fontSize: '0.9rem',
+      fontFamily: 'Open Sans, sans-serif',
+    },
+    h1: {
+      fontFamily: 'Open Sans, sans-serif',
+      fontWeight: 700,
+    },
+    fontWeightLight: 100,
+    fontWeightRegular: 500,
+    fontWeightMedium: 700,
+    fontWeightBold: 900,
+  },
 });
 
 /* const ThemeProv = (props) => {
@@ -118,11 +134,12 @@ const ThemeProv = (props) => {
       disabled: "#888888",
       hint: "#000000",
     };
+    
   } else {
     themeOptions.palette.mode = "light";
     themeOptions.palette.background = {
-      default: "#ddd",
-      paper: "#eee",
+      default: "#e9edc9",
+      paper: "#f4f1de",
     };
     themeOptions.palette.text = {
       primary: "#222",
@@ -134,5 +151,5 @@ const ThemeProv = (props) => {
 
   return <ThemeProvider theme={themeOptions}>{props.children}</ThemeProvider>;
 };
-
+export {themeOptions}
 export default ThemeProv;

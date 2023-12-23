@@ -27,6 +27,7 @@ import ThemeProv from "./Components/Config/theme";
 import AuthProvider from "./Components/context/AuthContext";
 import { AuthContext } from "./Components/context/AuthContext";
 import { Container } from "@mui/material";
+import { themeOptions } from "./Components/Config/theme";
 
 function App() {
   const [useMode, setMode] = useState(false);
@@ -38,7 +39,7 @@ function App() {
 
   return (
     <ThemeProv mode={useMode}>
-      <Paper sx={{width: "100%", height: "100%"}}>
+      <Box sx={{width: "100%", minHeight: "100vh", maxHeight: "100%", background: themeOptions.palette.background.default}}>
         <BrowserRouter>
           <AuthProvider>
             <Box>
@@ -292,7 +293,7 @@ function App() {
             </Box>
           </AuthProvider>
         </BrowserRouter>
-      </Paper>
+      </Box>
     </ThemeProv>
   );
 }
