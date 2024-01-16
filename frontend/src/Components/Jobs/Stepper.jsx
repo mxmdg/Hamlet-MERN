@@ -15,19 +15,24 @@ import CardHeader from "@mui/material/CardHeader";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import { Divider, Chip, Stack, Container, ButtonGroup } from "@mui/material";
-import { parts } from "./JobsParts";
+//import { parts } from "./JobsParts";
 import {
   getPrivateElementByID,
   addPrivateElement,
+  fechtData,
 } from "../customHooks/FetchDataHook";
 import { calcularLomo } from "../jobViewer/JobDetail";
+import ErrorMessage from "../ErrorMessage/ErrorMessage";
 
 export default function MyStepper() {
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set());
+  const [allParts, setAllParts] = React.useState([]);
   const [useParts, setParts] = React.useState([]);
+  const [usePartToEdit, setPartToEdit] = React.useState(null);
   const [useJobType, setJobType] = React.useState({});
   const [useJob, setJob] = React.useState(null);
+  const [useError, setError] = React.useState(null);
   const context = useContext(AuthContext);
 
   const handleJobTypeChange = (e) => {
@@ -35,6 +40,8 @@ export default function MyStepper() {
     console.table(e.value);
     console.table(useJobType);
   };
+
+  const parts = allParts;
 
   const addParts = (newPart) => {
     console.log("adding part...");
@@ -53,20 +60,44 @@ export default function MyStepper() {
       //newPart.jobParts = part
     } catch (e) {
       console.log(e);
+      setError(e);
     }
     const part = parts.filter((part) => part.id.includes(newPart.jobParts));
     newPart.jobParts = part;
 
     let partes = useParts;
     partes.push(newPart);
+
     try {
       setParts(partes);
+      handleNext();
     } catch (e) {
       console.log(e);
+      setError(e);
     }
 
     console.log("____________________");
     console.log(useParts);
+  };
+
+  const removePart = (n) => {
+    const partsOk = useParts.splice(n, 1);
+    console.log(`Eliminar la parte ${n} de ${partsOk}`);
+    console.log(partsOk);
+  };
+
+  const replacePart = (n, replace) => {
+    console.table(useParts);
+    const partsOk = useParts.splice(n, 1, replace);
+    console.table(partsOk);
+    console.log(`Reemplazar la parte ${n} de ${partsOk}`);
+    setParts(partsOk);
+  };
+
+  const editPart = (n) => {
+    console.log(`Editar la parte ${n} de ${useParts}`);
+    const res = setPartToEdit({ part: useParts[n], index: n });
+    return res;
   };
 
   // El siguiente array contiene los componentes
@@ -119,7 +150,8 @@ export default function MyStepper() {
       console.log(`Trabajo ${Job.Nombre} agregado`);
       handleNext();
     } catch (e) {
-      console.log("No funciono" + e);
+      console.log(e);
+      setError(e);
     }
   };
 
@@ -142,7 +174,14 @@ export default function MyStepper() {
     ],
     [
       "Agregue las partes",
-      <JobParts jobType={useJobType} job={useJob} addParts={addParts} />,
+      <JobParts
+        jobType={useJobType}
+        job={useJob}
+        addParts={addParts}
+        replacePart={replacePart}
+        editPart={usePartToEdit}
+        parts={allParts}
+      />,
     ],
     [
       "Confirme el pedido",
@@ -154,7 +193,16 @@ export default function MyStepper() {
     ],
   ];
 
-  return (
+  useEffect(() => {
+    try {
+      fechtData("jobParts", setAllParts);
+      console.log(allParts);
+    } catch (error) {
+      setError(error);
+    }
+  }, [useJob]);
+
+  const statusOk = (
     <Box
       sx={{
         width: "fit-content",
@@ -168,7 +216,7 @@ export default function MyStepper() {
         <CardContent>
           <Container>
             <Stack direction={"row"}>
-              {useParts.map((part) => {
+              {useParts.map((part, index) => {
                 return (
                   <Container key={part.id}>
                     <Card>
@@ -202,8 +250,24 @@ export default function MyStepper() {
                       </Container>
                       <CardActions>
                         <ButtonGroup size="small">
-                          <Button color="primary">Editar</Button>
-                          <Button color="error">Eliminar</Button>
+                          <Button
+                            color="primary"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              editPart(index);
+                              setActiveStep(1);
+                            }}
+                          >
+                            Editar
+                          </Button>
+                          <Button
+                            color="error"
+                            onClick={() => {
+                              removePart(index);
+                            }}
+                          >
+                            Eliminar
+                          </Button>
                         </ButtonGroup>
                       </CardActions>
                     </Card>
@@ -278,10 +342,10 @@ export default function MyStepper() {
                     {activeStep === steps.length - 1 ? "Finish" : "Next"}
                   </Button>
                   {/* {useJob !== null && (
-                      <Button onClick={handleNext} variant="filled">
-                        {activeStep === steps.length - 1 ? "Finish" : "Next"}
-                      </Button>
-                  )} */}
+                    <Button onClick={handleNext} variant="filled">
+                      {activeStep === steps.length - 1 ? "Finish" : "Next"}
+                    </Button>
+                )} */}
                 </Box>
               </React.Fragment>
             )}
@@ -290,4 +354,10 @@ export default function MyStepper() {
       </Card>
     </Box>
   );
+
+  const statusError = (
+    <ErrorMessage message={useError?.response.data.message} />
+  );
+
+  return useError !== null ? statusError : statusOk;
 }

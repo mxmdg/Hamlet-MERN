@@ -1,6 +1,11 @@
+//React Imports
+
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import Input from "./Input";
+import { useNavigate } from "react-router-dom";
+
+//Hamlet services imports
+
 import { serverURL, databaseURL } from "../Config/config";
 import "./form.css";
 import {
@@ -10,12 +15,15 @@ import {
   putPrivateElement,
   deletePrivateElement,
 } from "../customHooks/FetchDataHook";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormHelperText from "@mui/material/FormHelperText";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
-import Button from "@mui/material/Button";
+import ErrorMessage from "../ErrorMessage/ErrorMessage";
+
+//Input Components Imports
+
+import Select from "./Select";
+import Input from "./Input";
+
+//MUI Material Imports
+
 import {
   Container,
   Box,
@@ -25,15 +33,26 @@ import {
   CardActions,
   CardHeader,
   Typography,
+  Checkbox,
+  FormControlLabel,
+  FormControl,
+  FormGroup,
+  Button,
+  FormHelperText,
+  InputLabel,
+  MenuItem,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+
+//Auxiliar Functions:
 
 function convertirArrayAObjeto(arr) {
   return arr.reduce((obj, item) => {
     const propName =
       item.nombre || item.Nombre_material || item.Modelo || item.Proceso;
     const propValue = isNaN(item.value)
-      ? item.value.toLowerCase()
+      ? typeof item.value !== String
+        ? item.value
+        : item.value.toLowerCase()
       : Number(item.value);
 
     obj[propName] = propValue;
@@ -41,6 +60,8 @@ function convertirArrayAObjeto(arr) {
     return obj;
   }, {});
 }
+
+// CSS Style (Never read...)
 
 let style = {
   position: "relative",
@@ -57,14 +78,32 @@ let style = {
   zIndex: "10",
 };
 
+//  ¡¡¡Form Maker Component!!!
+
 const Form = (props) => {
   const [useHidden, setHidden] = useState(
     props.task === "copy" || props.task === "edit" ? false : true
   );
+
+  // This state defines form's action: "copy", "edit" or "new"
   const [useItem, setItem] = useState(props.item || "new");
+
+  // This state stores checkbox's selections
+  const [selectedCheckboxItems, setSelectedCheckboxItems] = useState({});
+
+  // This state intializes chebox value
+
+  const [useValue, setValue] = useState({ value: "" });
+
+  // These states are used for navigation.
   const navigate = useNavigate();
   const params = useParams();
 
+  // Error Manager State
+
+  const [useErrorMessage, setErrorMessage] = useState(null);
+
+  // In props.form you must provide the object model for the form
   let dataForm = props.form;
 
   useEffect(() => {
@@ -80,12 +119,9 @@ const Form = (props) => {
             `${props.collection}`,
             id
           );
-          console.log(itemToEdit);
           setItem(itemToEdit);
-          console.log("id: " + itemToEdit.data.id);
-          console.log("Coleccion: " + props.collection);
         } catch (e) {
-          console.log(e);
+          setErrorMessage(e);
         }
       };
       fetchItem();
@@ -100,14 +136,23 @@ const Form = (props) => {
     e.preventDefault();
 
     const datos = [];
+
+    // Collect data from inputs
     for (let element of e.target.elements) {
       if (element.tagName === "INPUT" || element.tagName === "SELECT") {
-        let nombre = element.placeholder;
+        let nombre = element.id;
         let value = element.value;
         datos.push({ nombre, value });
       }
     }
+
+    // Collct data from checkBox
+    for (const [nombre, value] of Object.entries(selectedCheckboxItems)) {
+      const res = { nombre, value };
+      datos.push(res);
+    }
     const formData = convertirArrayAObjeto(datos);
+    //formData.checkboxItems = selectedCheckboxItems;
     console.log("Formato del POST");
     console.log(formData);
 
@@ -120,7 +165,7 @@ const Form = (props) => {
           ? props.setState(true)
           : console.log("No es nuevo");
       } catch (e) {
-        console.log("No se pudo guardar " + e);
+        setErrorMessage("No se pudo guardar " + e);
       }
     } else {
       try {
@@ -129,17 +174,15 @@ const Form = (props) => {
         navigate(-1);
         //props.editor(true);
       } catch (e) {
-        console.log("No se pudo actualizar" + e);
+        setErrorMessage("No se pudo actualizar" + e);
       }
     }
-    console.log("View Prop of Form: " + props.view);
     try {
       typeof props.view === "function"
         ? props.view("viewer")
         : props.view("editor");
     } catch (e) {
-      console.log("There is no props.view");
-      console.log(e);
+      setErrorMessage("There is no props.view" + e);
     }
   };
 
@@ -153,8 +196,7 @@ const Form = (props) => {
         ? props.view("viewer")
         : props.view("editor");
     } catch (e) {
-      console.log("There is no props.view");
-      console.log(e);
+      setErrorMessage("There is no props.view" + e);
     }
   };
 
@@ -168,16 +210,17 @@ const Form = (props) => {
       return (
         <Grid item xs={1} sm={2} md={4}>
           <FormControl sx={{ m: 1, minWidth: 120 }}>
-            <InputLabel id={inp.id}>{inp.inputName}</InputLabel>
-            <Select
-              labelId={inp.id}
-              color="primary"
-              id={inp.id}
-              value={value}
-              label={value}
-              onChange={changeHandler}
-              fullWidth
-            >
+            {/*<InputLabel id={inp.id}>{inp.inputName}</InputLabel>
+              <Select
+                  labelId={inp.id}
+                  placeholder={inp.inputName}
+                  color="primary"
+                  id={inp.id}
+                  value={value}
+                  label={value}
+                  onChange={changeHandler}
+                  fullWidth
+                >
               {inp.options.map((opt) => {
                 return (
                   <MenuItem value={opt.value}>
@@ -185,7 +228,13 @@ const Form = (props) => {
                   </MenuItem>
                 );
               })}
-            </Select>
+            </Select>*/}
+            <Select
+              inputName={inp.inputName}
+              changeHandler={changeHandler}
+              options={inp.options}
+              value={value}
+            />
             <FormHelperText>Elija una opción</FormHelperText>
           </FormControl>
         </Grid>
@@ -207,6 +256,64 @@ const Form = (props) => {
           </Button>
         </Grid>
       );
+    } else if (inp.type === "checkbox") {
+      const changeHandler = (e, opt, checkboxSetKey) => {
+        e.preventDefault();
+        setValue({ value: e.target.value });
+        setSelectedCheckboxItems((prevItems) => {
+          const selectedItemsForSet = prevItems[checkboxSetKey] || [];
+
+          if (e.target.checked) {
+            // Agregar elemento a la lista de elementos seleccionados para el conjunto
+            return {
+              ...prevItems,
+              [checkboxSetKey]: [...selectedItemsForSet, opt],
+            };
+          } else {
+            // Remover elemento de la lista de elementos seleccionados para el conjunto
+            return {
+              ...prevItems,
+              [checkboxSetKey]: selectedItemsForSet.filter(
+                (item) => item !== opt
+              ),
+            };
+          }
+        });
+      };
+      return (
+        <Grid item xs={1} sm={4} md={8}>
+          <FormControl
+            label={inp.inputName}
+            inputname={inp.inputName}
+            id={inp.inputName}
+          >
+            <FormGroup>
+              {inp.options.map((opt, index) => {
+                return (
+                  <FormControlLabel
+                    key={inp.inputName + index}
+                    control={
+                      <Checkbox
+                        color="primary"
+                        value={useValue}
+                        key={inp.inputName + index}
+                        id={inp.inputName + index} // Asegúrate de que cada checkbox tenga un ID único
+                        //defaultChecked={false}
+                        checked={
+                          selectedCheckboxItems[inp.inputName] &&
+                          selectedCheckboxItems[inp.inputName].includes(opt)
+                        }
+                        onChange={(e) => changeHandler(e, opt, inp.inputName)}
+                      />
+                    }
+                    label={opt}
+                  />
+                );
+              })}
+            </FormGroup>
+          </FormControl>
+        </Grid>
+      );
     } else {
       return (
         <Grid item xs={12} sm={3} md={3}>
@@ -216,7 +323,7 @@ const Form = (props) => {
             key={inp.id}
             type={inp.type}
             step={inp.step !== undefined ? inp.step : 1}
-            item={(typeof useItem) !== Object ? useItem.data : ""}
+            item={typeof useItem !== Object ? useItem.data : ""}
             fullWidth
           ></Input>
         </Grid>
@@ -282,8 +389,10 @@ const Form = (props) => {
     </Container>
   );
 
+  const alertError = <ErrorMessage message={useErrorMessage} />;
+
   //return useHidden ? hiddenTrue : hiddenFalse;
-  return hiddenFalse;
+  return useErrorMessage !== null ? alertError : hiddenFalse;
 };
 
 export default Form;

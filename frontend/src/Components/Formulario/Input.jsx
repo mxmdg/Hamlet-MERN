@@ -35,6 +35,7 @@ const Input = (props) => {
       <input
         type={props.type}
         placeholder={props.inputName}
+        id={props.inputName}
         step={props.step}
         defaultValue={valor}
       ></input>

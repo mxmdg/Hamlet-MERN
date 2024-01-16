@@ -45,7 +45,7 @@ export const Login = () => {
       context.setUserLogged(token.data.document);
       localStorage.setItem("user", JSON.stringify(token.data.document));
     } catch (e) {
-      console.log("Fallo el login: " + e);
+      throw "Fallo el login: " + e;
     }
     console.log("JSON.stringify(data)", JSON.stringify(data));
   };

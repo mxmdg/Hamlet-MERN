@@ -8,6 +8,7 @@ import QuickSpinCalc from "./utils/spinCalculator/QuickSpinCalc";
 import DarkWoodCard from "./utils/DarkWoodCard";
 import PrintersMainContainer from "./Printers/PrintersMainContainer";
 import ToggleColorMode from "./Config/Theme/ToggleMode";
+import MyStepper from "./Jobs/Stepper";
 
 //MUI Material Imports
 import { Container, Grid, Typography, Divider, Box } from "@mui/material";
@@ -51,9 +52,9 @@ const Home = () => {
             </Typography>
           </Container>
         </Grid>
-        <Grid item xs={1} sm={12} md={3}>
+        <Grid item xs={1} sm={12} md={4}>
           <DarkWoodCard>
-            <PrintersMainContainer />
+            <MyStepper />
           </DarkWoodCard>
         </Grid>
       </Grid>

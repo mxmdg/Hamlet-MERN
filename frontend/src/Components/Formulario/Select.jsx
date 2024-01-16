@@ -1,14 +1,26 @@
-const Select = (props)=> {
-    return <div>
-                <label>{props.inputName}</label>
-                <select onChange={props.changeHandler}>
-                        <option>Elija una opcion</option>
-                        {props.options.map((option) => (
-                                <option value={option.value} id={"id_" + option.value} key={"key_" + option.value}>{option.text}</option>
-                ))}
-                </select>
-                <div className='value' id={props.inputName + "_id"}>{props.value}</div>
-        </div>
-   }         
+const Select = (props) => {
+  // Props: inputName(String) changeHandler(function) options(array[{value: x, text: equis}]) value(String || Number)
+
+  return (
+    <div>
+      <label>{props.inputName}</label>
+      <select onChange={(e) => props.changeHandler(e)} id={props.inputName}>
+        <option>Elija una opcion</option>
+        {props.options.map((option) => (
+          <option
+            value={option.value}
+            id={"id_" + option.value}
+            key={"key_" + option.value}
+          >
+            {option.text}
+          </option>
+        ))}
+      </select>
+      <div className="value" id={props.inputName + "_id"}>
+        {props.value}
+      </div>
+    </div>
+  );
+};
 
 export default Select;

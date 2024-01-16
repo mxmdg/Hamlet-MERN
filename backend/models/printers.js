@@ -19,7 +19,7 @@ const printerSchema = new Schema(
 
 //const formatos = await formatos.find()    
 
-printerSchema.set('toObject', {virtuals: true, getters: true})
+/* printerSchema.set('toObject', {virtuals: true, getters: true})
 printerSchema.set('toJSON', {virtuals: false, getters: true})   
 printerSchema.plugin(mongooseLeanVirtuals);
 
@@ -52,7 +52,7 @@ printerSchema.virtual("admitedFormats")
      
 
     console.log("printerSchema.virtuals")
-    console.log(printerSchema.virtuals)
+    console.log(printerSchema.virtuals) */
 
 module.exports.esquema = model('Printers', printerSchema);
 module.exports.clase = printerSchema;

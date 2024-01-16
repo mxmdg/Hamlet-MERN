@@ -1,23 +1,36 @@
 const jobs = require("../../models/Jobs");
 const users = require("../../models/usersSchema");
-const companies = require("../../models/empresas")
+const companies = require("../../models/empresas");
 const stocks = require("../../models/materiales");
 
 const jobControl = {};
 
 jobControl.getJobs = async (req, res) => {
-  { 
+  {
     try {
       const queryText = req.query.Q || "";
       const jobList = await jobs.esquema
-      .find({ Nombre: { $regex: queryText, $options: "i" } })
-      .select("Nombre Cantidad Fecha Entrega Emision Deadline")
-      .sort({"Nombre": -1});
+        .find({
+          Nombre: { $regex: queryText, $options: "i" },
+        })
+        .select("Nombre Cantidad Fecha Entrega Emision Deadline")
+        .sort({ Nombre: -1 });
       res.json(jobList);
     } catch (e) {
       throw e;
     }
-    
+  }
+};
+
+jobControl.getJobsParts = async (req, res) => {
+  {
+    try {
+      const queryText = req.query.Q || "";
+      const jobPartsList = await jobs.esquema.find().select("Partes");
+      res.json(jobPartsList);
+    } catch (e) {
+      throw e;
+    }
   }
 };
 
@@ -34,8 +47,8 @@ jobControl.getUrgentJobs = async (req, res) => {
       res.json(jobList);
     }
   } catch (e) {
-    throw e;}
-  
+    throw e;
+  }
 };
 
 jobControl.addJob = async (req, res) => {
@@ -62,7 +75,7 @@ jobControl.addJob = async (req, res) => {
       console.log(`Trabajo agregado`);
       res.json({ message: newJob.Nombre + " guardado OK" });
     } catch (e) {
-      throw e;
+      res.status(404).json({ message: "Error: " + e.message });
     }
   }
 };

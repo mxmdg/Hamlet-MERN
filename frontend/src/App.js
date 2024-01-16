@@ -39,7 +39,14 @@ function App() {
 
   return (
     <ThemeProv mode={useMode}>
-      <Box sx={{width: "100%", minHeight: "100vh", maxHeight: "100%", background: themeOptions.palette.background.default}}>
+      <Box
+        sx={{
+          width: "100%",
+          minHeight: "100vh",
+          maxHeight: "100%",
+          background: themeOptions.palette.background.default,
+        }}
+      >
         <BrowserRouter>
           <AuthProvider>
             <Box>

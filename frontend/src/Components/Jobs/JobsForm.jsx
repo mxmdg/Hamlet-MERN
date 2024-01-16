@@ -29,9 +29,9 @@ const JobsForm = (props) => {
   } = useForm({
     mode: "onBlur", // "onChange"
   });
-  
-  const [useUsersList, setUsersList ] = useState([]);
-  const [useCompaniesList, setCompaniesList ] = useState([]);
+
+  const [useUsersList, setUsersList] = useState([]);
+  const [useCompaniesList, setCompaniesList] = useState([]);
   const context = useContext(AuthContext);
 
   const handleChange = (e) => {
@@ -39,14 +39,14 @@ const JobsForm = (props) => {
     props.setJob(e);
   };
 
-  const getUsers = async ()=> await fechtData('Users', setUsersList);
-  const getCompanies = async ()=> await fechtData('Empresas', setCompaniesList);
+  const getUsers = async () => await fechtData("Users", setUsersList);
+  const getCompanies = async () =>
+    await fechtData("Empresas", setCompaniesList);
 
-  useEffect(()=>{
-    getUsers()
-    getCompanies()
-  },
-  [setUsersList,setCompaniesList])
+  useEffect(() => {
+    getUsers();
+    getCompanies();
+  }, [setUsersList, setCompaniesList]);
 
   const onSubmit = (values) => {
     console.log(values);
@@ -57,7 +57,7 @@ const JobsForm = (props) => {
     });
     console.log(jt);
     values.JobType = jt;
-    console.log(context.userLogged._id)
+    console.log(context.userLogged._id);
     //values.Owner = context.userLogged._id;
     props.setJob(values);
     props.continue();
@@ -125,7 +125,7 @@ const JobsForm = (props) => {
                     {...register("jobName", {
                       required: true,
                       minLength: 3,
-                      maxLength: 40,
+                      maxLength: 50,
                     })}
                     onBlur={() => {
                       trigger("jobName");
@@ -139,7 +139,7 @@ const JobsForm = (props) => {
                   )}
                   {errors.jobName?.type === "maxLength" && (
                     <FormHelperText>
-                      Este campo debe tener menos de 40 caracteres.
+                      Este campo debe tener menos de 50 caracteres.
                     </FormHelperText>
                   )}
                   {errors.jobName?.type === "required" && (
@@ -157,7 +157,7 @@ const JobsForm = (props) => {
                     {...register("quantity", {
                       required: true,
                       min: 1,
-                      max: 99999,
+                      max: 50000,
                     })}
                     onBlur={() => {
                       trigger("quantity");
@@ -171,7 +171,7 @@ const JobsForm = (props) => {
                     <FormHelperText>La cantidad minima es 1</FormHelperText>
                   )}
                   {errors.quantity?.type === "max" && (
-                    <FormHelperText>La cantidad máxima es 99999</FormHelperText>
+                    <FormHelperText>La cantidad máxima es 50000</FormHelperText>
                   )}
                 </Grid>
                 <Grid item xs={1} sm={2} md={4}>
@@ -203,7 +203,7 @@ const JobsForm = (props) => {
                   )}
                 </Grid>
                 <Grid item xs={1} sm={2} md={4}>
-                <TextField
+                  <TextField
                     select
                     defaultValue={
                       !context.useLogin ? "" : context.userLogged._id
@@ -223,25 +223,32 @@ const JobsForm = (props) => {
                       trigger("Owner");
                     }}
                   >
-                  { !context.useLogin ?
-                      useUsersList.map((u)=> {
+                    {!context.useLogin ? (
+                      useUsersList.map((u) => {
                         return (
-                            <MenuItem value={u._id} key={u._id}>
-                              {u.Name} {u.LastName}
-                            </MenuItem>
-                        )
-                      }) :
-                      <MenuItem value={context.userLogged._id} key={context.userLogged._id}>
+                          <MenuItem value={u._id} key={u._id}>
+                            {u.Name} {u.LastName}
+                          </MenuItem>
+                        );
+                      })
+                    ) : (
+                      <MenuItem
+                        value={context.userLogged._id}
+                        key={context.userLogged._id}
+                      >
                         {context.userLogged.Name}
                       </MenuItem>
-                  } 
+                    )}
                   </TextField>
+                  {errors.Owner?.type === "required" && (
+                    <FormHelperText>Seleccione un usuario</FormHelperText>
+                  )}
                 </Grid>
                 <Grid item xs={1} sm={2} md={4}>
-                <TextField
+                  <TextField
                     select
                     id="Company"
-                    defaultValue=''
+                    defaultValue={props.data?.Company?._id || ""}
                     inputProps={{
                       name: "Company",
                       id: "Company",
@@ -256,18 +263,19 @@ const JobsForm = (props) => {
                       trigger("Company");
                     }}
                   >
-                  { 
-                      useCompaniesList.map((u)=> {
-                        return (
-                            <MenuItem value={u._id} key={u._id}>
-                              {u.Nombre}
-                            </MenuItem>
-                        )
-                      })
-                  } 
+                    {useCompaniesList.map((u) => {
+                      return (
+                        <MenuItem value={u._id} key={u._id}>
+                          {u.Nombre}
+                        </MenuItem>
+                      );
+                    })}
                   </TextField>
+                  {errors.Company?.type === "required" && (
+                    <FormHelperText>Seleccione una empresa</FormHelperText>
+                  )}
                 </Grid>
-                
+
                 <Grid item xs={1} sm={2} md={4} sx={{ alignSelf: "center" }}>
                   <Button type="submit" variant="outlined" color="warning">
                     Agregar Trabajo

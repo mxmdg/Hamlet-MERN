@@ -16,13 +16,13 @@ import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import { Grid } from "@mui/material";
-import { fechtData } from "../customHooks/FetchDataHook";
+import { fechtData, getPrivateElements } from "../customHooks/FetchDataHook";
 
-export const parts = [
+/* export const parts = [
   {
     id: "part001",
     type: "Tapa",
-    pageRange: [1, 2],
+    pageRange: [1, 4],
     printModAllowed: "duplex",
     minStockWeight: 170,
     maxStockWeight: 350,
@@ -70,7 +70,7 @@ export const parts = [
     pageRange: [4, 72],
     printModAllowed: "duplex",
     minStockWeight: 65,
-    maxStockWeight: 300,
+    maxStockWeight: 170,
     jobTypes: ["Revista"],
   },
   {
@@ -172,56 +172,60 @@ export const parts = [
     maxStockWeight: 350,
     jobTypes: ["Libro", "Revista", "Anillado", "Cosido a Hilo"],
   },
-];
+]; */
 
 const JobParts = (props) => {
   const [stocks, setStocks] = useState([]);
   const [filteredStocks, setFilteredStocks] = useState([]);
+  const [allParts, useAllParts] = useState([]);
+  const [parts, setParts] = useState([]);
   const [partsList, setPartsList] = useState(null);
-  const [currentPart, setCurrentPart] = useState({});
+  const [currentPart, setCurrentPart] = useState(null);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
+    trigger,
     control,
-  } = useForm();
+  } = useForm({
+    mode: "onBlur", // "onChange"
+  });
 
   const filterStocks = () => {
     const res = stocks.filter((stock) => {
-      console.log(`Gramaje del papel: ${stock.Gramaje}`);
       if (
         stock.Gramaje >= currentPart.minStockWeight &&
         stock.Gramaje <= currentPart.maxStockWeight
       ) {
-        console.log(
-          ` ${stock.Gramaje} esta entre ${currentPart.minStockWeight} y ${currentPart.maxStockWeight}`
-        );
         return stock;
       }
-      console.log();
     });
-    console.log("Resultado del filtro:");
-    console.table(res);
     setFilteredStocks(res);
   };
 
   const handleChange = (selectedValue) => {
-    const part = partsList.find((item) => item.id === selectedValue);
+    const part = partsList.find((item) => item._id === selectedValue);
     setCurrentPart(part);
     console.log("Current Part:");
     console.log(currentPart);
   };
 
   useEffect(() => {
+    console.log(props.jobType);
+    console.log(props.editPart);
     const updateStocks = async () => {
       await fechtData("materiales", setStocks);
       filterStocks();
     };
 
+    console.log(props.parts);
+
     const filteredParts = props.job?.JobType
-      ? parts.filter((part) => part.jobTypes.includes(props.job.JobType.name))
-      : parts;
+      ? props.parts.filter((part) =>
+          part.jobTypesAllowed.includes(props.job.JobType.name)
+        )
+      : props.parts;
 
     try {
       console.table(filteredParts);
@@ -235,7 +239,18 @@ const JobParts = (props) => {
   return (
     <Card raised sx={{ gap: "20px", maxWidth: "600px" }} color="secondary">
       <CardContent>
-        <form name="form2" action="" onSubmit={handleSubmit(props.addParts)}>
+        <form
+          name="form2"
+          onSubmit={handleSubmit(
+            props.editPart === null
+              ? props.addParts
+              : () =>
+                  props.replacePart(
+                    props.editPart?.indice,
+                    props.editPart?.part
+                  )
+          )}
+        >
           <Grid
             container
             spacing={{ xs: 2, md: 3 }}
@@ -247,10 +262,32 @@ const JobParts = (props) => {
                 type="text"
                 name="Name"
                 id="Name"
+                defaultValue={
+                  props.editPart === null ? "" : props.editPart.part?.Name
+                }
                 label="Nombre / Descripcion"
                 color="info"
-                {...register("Name")}
+                required
+                {...register("Name", {
+                  required: true,
+                  maxLength: 85,
+                  minLength: 3,
+                })}
+                onBlur={() => {
+                  trigger("Name");
+                }}
               />
+              {errors.Name?.type === "required" && (
+                <FormHelperText>
+                  Agregue una descripcion o titulo a la parte
+                </FormHelperText>
+              )}
+              {errors.Name?.type === "maxLength" && (
+                <FormHelperText>Maximo 85 caracteres</FormHelperText>
+              )}
+              {errors.Name?.type === "minLength" && (
+                <FormHelperText>Minimo 3 caracteres</FormHelperText>
+              )}
             </Grid>
             {partsList !== null && (
               <Grid item xs={1} sm={2} md={4}>
@@ -258,12 +295,17 @@ const JobParts = (props) => {
                   <InputLabel id="demo-simple-select-label">Partes</InputLabel>
                   <Controller // Usamos Controller de react-hook-form para el Select
                     name="jobParts"
-                    {...register("jobParts")}
+                    {...register("jobParts", { required: true })}
                     control={control} // Proporcionamos el control del formulario
-                    value={partsList[0].id}
+                    value={partsList[0]?._id}
                     render={({ field }) => (
                       <Select
                         label="Partes"
+                        defaultValue={
+                          props.editPart === null
+                            ? ""
+                            : props.editPart.part?.jobParts._id
+                        }
                         {...field} // Aseguramos que las propiedades del campo sean manejadas por react-hook-form
                         onChange={(e) => {
                           handleChange(e.target.value); // Llamamos a nuestra función handleChange
@@ -271,14 +313,17 @@ const JobParts = (props) => {
                         }}
                       >
                         {partsList.map((part) => (
-                          <MenuItem value={part.id} key={part.id}>
-                            {part.type}
+                          <MenuItem value={part._id} key={part._id}>
+                            {part.Type}
                           </MenuItem>
                         ))}
                       </Select>
                     )}
                   />
                 </FormControl>
+                {errors.jobParts?.type === "required" && (
+                  <FormHelperText>Seleccione el tipo de parte</FormHelperText>
+                )}
               </Grid>
             )}
             <Grid item xs={1} sm={2} md={4}>
@@ -289,8 +334,39 @@ const JobParts = (props) => {
                 variant="outlined"
                 name="Pages"
                 color="warning"
-                {...register("Pages")}
+                defaultValue={
+                  props.editPart === null ? "" : props.editPart.part?.Pages
+                }
+                {...register("Pages", {
+                  required: true,
+                  min:
+                    currentPart !== null
+                      ? currentPart?.minPages
+                      : props.job?.JobType?.pagMin,
+                  max:
+                    currentPart !== null
+                      ? currentPart?.maxPages
+                      : props.job?.JobType?.pagMax,
+                })}
+                onBlur={() => {
+                  trigger("Pages");
+                }}
               />
+              {errors.Pages?.type === "required" && (
+                <FormHelperText>Ingrese la cantidad de paginas</FormHelperText>
+              )}
+              {errors.Pages?.type === "min" && (
+                <FormHelperText>
+                  Cantidad minima de paginas{" "}
+                  {currentPart?.minPages || props.job.JobType.pagMin}
+                </FormHelperText>
+              )}
+              {errors.Pages?.type === "max" && (
+                <FormHelperText>
+                  Cantidad maxima de paginas{" "}
+                  {currentPart?.maxPages || props.job.JobType.pagMax}
+                </FormHelperText>
+              )}
             </Grid>
             <Grid item xs={1} sm={2} md={4}>
               <TextField
@@ -300,8 +376,33 @@ const JobParts = (props) => {
                 id="Ancho"
                 label="Ancho"
                 color="info"
-                {...register("Ancho")}
+                defaultValue={
+                  props.editPart === null ? "" : props.editPart.part?.Ancho
+                }
+                {...register("Ancho", {
+                  required: true,
+                  min: currentPart?.minWidth,
+                  max: currentPart?.maxWidth,
+                })}
+                onBlur={() => {
+                  trigger("Ancho");
+                }}
               />
+              {errors.Ancho?.type === "required" && (
+                <FormHelperText>
+                  Ingrese la medida horizontal del producto
+                </FormHelperText>
+              )}
+              {errors.Ancho?.type === "min" && (
+                <FormHelperText>
+                  El ancho minimo debe ser mayor a {currentPart?.minWidth}mm
+                </FormHelperText>
+              )}
+              {errors.Ancho?.type === "max" && (
+                <FormHelperText>
+                  El ancho máximo debe ser menor a {currentPart?.maxWidth}mm
+                </FormHelperText>
+              )}
             </Grid>
             <Grid item xs={1} sm={2} md={4}>
               <TextField
@@ -310,9 +411,31 @@ const JobParts = (props) => {
                 name="Alto"
                 id="Alto"
                 label="Alto"
+                defaultValue={
+                  props.editPart === null ? "" : props.editPart.part?.Alto
+                }
                 color="error"
-                {...register("Alto")}
+                {...register("Alto", {
+                  required: true,
+                  min: currentPart?.minHeight,
+                  max: currentPart?.maxHeight,
+                })}
               />
+              {errors.Alto?.type === "required" && (
+                <FormHelperText>
+                  Ingrese la medida horizontal del producto
+                </FormHelperText>
+              )}
+              {errors.Alto?.type === "min" && (
+                <FormHelperText>
+                  El ancho minimo debe ser mayor a {currentPart?.minHeight}mm
+                </FormHelperText>
+              )}
+              {errors.Alto?.type === "max" && (
+                <FormHelperText>
+                  El ancho máximo debe ser menor a {currentPart?.maxHeight}mm
+                </FormHelperText>
+              )}
             </Grid>
             <Grid item xs={1} sm={2} md={4}>
               <TextField
@@ -321,9 +444,33 @@ const JobParts = (props) => {
                 name="ColoresFrente"
                 id="ColoresFrente"
                 label="Colores Frente"
+                defaultValue={
+                  props.editPart === null
+                    ? ""
+                    : props.editPart.part?.ColoresFrente
+                }
                 color="secondary"
-                {...register("ColoresFrente")}
+                {...register("ColoresFrente", {
+                  required: true,
+                  min: 1,
+                  max: 4,
+                })}
               />
+              {errors.ColoresFrente?.type === "required" && (
+                <FormHelperText>
+                  Ingrese el numero de tintas para la impresión
+                </FormHelperText>
+              )}
+              {errors.ColoresFrente?.type === "min" && (
+                <FormHelperText>
+                  Como mínimo puede utilizarse 1 tinta
+                </FormHelperText>
+              )}
+              {errors.ColoresFrente?.type === "max" && (
+                <FormHelperText>
+                  Como maximo podemos utilizar 4 tintas
+                </FormHelperText>
+              )}
             </Grid>
             <Grid item xs={1} sm={2} md={4}>
               <TextField
@@ -333,8 +480,22 @@ const JobParts = (props) => {
                 id="ColoresDorso"
                 label="Colores Dorso"
                 color="warning"
-                {...register("ColoresDorso")}
+                defaultValue={
+                  props.editPart === null
+                    ? ""
+                    : props.editPart.part?.ColoresDorso
+                }
+                {...register("ColoresDorso", {
+                  required: false,
+                  min: 0,
+                  max: 4,
+                })}
               />
+              {errors.ColoresDorso?.type === "max" && (
+                <FormHelperText>
+                  Como maximo podemos utilizar 4 tintas
+                </FormHelperText>
+              )}
             </Grid>
             <Grid item xs={1} sm={2} md={4}>
               <FormControl sx={{ width: "90%" }}>
@@ -348,14 +509,22 @@ const JobParts = (props) => {
                   variant="outlined"
                   sx={{ width: "95%" }}
                   color="primary"
-                  {...register("partStock")}
+                  {...register("partStock", {
+                    required: true,
+                  })}
                 >
                   {filteredStocks.map((Stock) => (
                     <MenuItem value={Stock._id} id={Stock._id} key={Stock._id}>
-                      {Stock.Nombre_Material} - {Stock.Marca} {`(${Stock.Ancho_Resma} x ${Stock.Alto_Resma})`}
+                      {Stock.Nombre_Material} - {Stock.Marca}{" "}
+                      {`(${Stock.Ancho_Resma} x ${Stock.Alto_Resma})`}
                     </MenuItem>
                   ))}
                 </Select>
+                {errors.ColoresDorso?.type === "required" && (
+                  <FormHelperText>
+                    Seleccione el material para la impresión.
+                  </FormHelperText>
+                )}
               </FormControl>
             </Grid>
             <Grid item xs={1} sm={2} md={4}>
@@ -366,7 +535,9 @@ const JobParts = (props) => {
                   variant="outlined"
                   color="secondary"
                 >
-                  Agregar Parte
+                  {props.editPart === null
+                    ? "Agregar Parte"
+                    : "Guardar cambios"}
                 </Button>
               </FormControl>
             </Grid>

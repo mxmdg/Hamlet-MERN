@@ -8,13 +8,12 @@ import MyStepper from "./Stepper";
 import Fetch from "../General/Fetch";
 
 const JobsContainer = (props) => {
-  /*return  (
+  /* return (
     <Grid
       container
       spacing={{ xs: 2, md: 3 }}
       columns={{ xs: 1, sm: 4, md: 8 }}
     >
-      
       <Grid item xs={1} sm={2} md={3}>
         <MyStepper />
       </Grid>
@@ -22,14 +21,11 @@ const JobsContainer = (props) => {
         <Fetch collection={props.entity} />
       </Grid>
     </Grid>
-  ); */
+  );*/
 
   return (
     <Grid container spacing={10} justifyContent="center" alignItems="center">
-      {/* <Grid item >
-        <MyStepper />
-      </Grid> */}
-      <Grid item xs={12} sm={6} md={12}>
+      <Grid item xs={12} sm={6} md={9}>
         <Fetch collection={props.entity} />
       </Grid>
     </Grid>
