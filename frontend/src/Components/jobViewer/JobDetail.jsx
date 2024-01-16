@@ -130,7 +130,7 @@ const JobDetail = (props) => {
           >
             <Typography sx={{ width: "33%", flexShrink: 0 }}>
               {part.Name}
-              <br /> {part.jobParts[0].type}
+              <br /> {part.jobParts[0].Type}
             </Typography>
             <Typography sx={{ width: "33%", flexShrink: 0 }}>
               Parte {partNumber} de {job.Partes.length}
@@ -149,14 +149,14 @@ const JobDetail = (props) => {
             >
               <Grid item xs={12} md={4}>
                 <Stack spacing={2}>
-                  <Item>{part.jobParts[0].type}</Item>
+                  <Item>{part.jobParts[0].Type}</Item>
                   <Item>
                     Formato: {part.Ancho} x {part.Alto} - Orientacion:{" "}
                     {part.Orientacion}
                   </Item>
                   <Item>
                     Paginas: {part.Pages}
-                    {part.jobParts[0].type.includes("Interior" || "Insert") ? (
+                    {part.jobParts[0].Type.includes("Interior" || "Insert") ? (
                       <>
                         {" ("}Lomo:{" "}
                         {calcularLomo(part.Pages, part.partStock.Espesor_Resma)}{" "}

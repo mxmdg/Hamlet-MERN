@@ -19,7 +19,7 @@ const partTypeSchema = new Schema({
   maxStockWeight: { type: Number, required: false },
   minStockWeight: { type: Number, required: false },
   maxStockWeight: { type: Number, required: false },
-  type: { type: String, required: true },
+  Type: { type: String, required: true },
   pageRange: [],
   printModeAllowed: { type: String, required: false },
 });

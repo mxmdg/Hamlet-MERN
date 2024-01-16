@@ -62,7 +62,7 @@ export default function MyStepper() {
       console.log(e);
       setError(e);
     }
-    const part = parts.filter((part) => part.id.includes(newPart.jobParts));
+    const part = parts.filter((part) => part._id === newPart.jobParts);
     newPart.jobParts = part;
 
     let partes = useParts;
@@ -233,7 +233,7 @@ export default function MyStepper() {
                         <br />
                         Material: {part.partStock.Nombre_Material}
                         <br />
-                        {part.jobParts[0].type.includes(
+                        {part.jobParts[0].Type.includes(
                           "Interior" || "Insert"
                         ) ? (
                           <>
