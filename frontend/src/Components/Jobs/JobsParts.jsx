@@ -204,6 +204,12 @@ const JobParts = (props) => {
     setFilteredStocks(res);
   };
 
+  const isMultipleOfFour = (value) => {
+    return props.job?.JobType === "Revista" && value % 4 !== 0
+      ? "El número de páginas debe ser un múltiplo de 4"
+      : true;
+  };
+
   const handleChange = (selectedValue) => {
     const part = partsList.find((item) => item._id === selectedValue);
     setCurrentPart(part);

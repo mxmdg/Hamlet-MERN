@@ -14,7 +14,14 @@ import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
-import { Divider, Chip, Stack, Container, ButtonGroup } from "@mui/material";
+import {
+  Divider,
+  Chip,
+  Stack,
+  Container,
+  ButtonGroup,
+  Grid,
+} from "@mui/material";
 //import { parts } from "./JobsParts";
 import {
   getPrivateElementByID,
@@ -208,21 +215,26 @@ export default function MyStepper() {
         width: "fit-content",
       }}
     >
-      <Card raised sx={{ gap: "20px", maxWidth: "600px" }} color="info">
+      <Card raised sx={{ gap: "20px" }} color="info">
         <CardHeader
           title={useJob?.jobName || "Nuevo Trabajo"}
           subheader={useJob?.quantity || "Solicita tu presupuesto!"}
         />
         <CardContent>
           <Container>
-            <Stack direction={"row"}>
+            <Grid
+              container
+              columns={{ xs: 4, sm: 8, md: 12 }}
+              spacing={1}
+              overflow={"auto"}
+            >
               {useParts.map((part, index) => {
                 return (
-                  <Container key={part.id}>
-                    <Card>
+                  <Grid item xs={4} sm={4} md={6} key={part.id}>
+                    <Card elevation={12} square={true}>
                       <CardHeader
                         title={part.Name}
-                        subheader={part.jobParts[0].type}
+                        subheader={part.jobParts[0].Type}
                       ></CardHeader>
                       <Container>
                         Paginas: {part.Pages}
@@ -271,10 +283,10 @@ export default function MyStepper() {
                         </ButtonGroup>
                       </CardActions>
                     </Card>
-                  </Container>
+                  </Grid>
                 );
               })}
-            </Stack>
+            </Grid>
           </Container>
           <Divider></Divider>
           <Box sx={{ width: "100%" }}>
