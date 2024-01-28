@@ -30,7 +30,7 @@ import { Container } from "@mui/material";
 import { themeOptions } from "./Components/Config/theme";
 
 function App() {
-  const [useMode, setMode] = useState(false);
+  const [useMode, setMode] = useState("dark");
 
   const toogleMode = () => {
     console.log(useMode);

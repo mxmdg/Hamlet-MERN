@@ -46,7 +46,7 @@ const updateUser = async (req, res, next) => {
     console.log(error);
     next(error);
   }
-};
+}; 
 
 const deleteUser = async (req, res, next) => {
   try {

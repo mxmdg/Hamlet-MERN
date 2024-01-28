@@ -64,35 +64,35 @@ const themeOptions = createTheme({
   palette: {
     mode: "dark",
     primary: {
-      main: "#009688",
+      main: "#00eeaf",
       light: "#64ffda",
       dark: "#006056",
       contrastText: "#000000",
     },
     secondary: {
-      main: "#d500f9",
+      main: "#ea00fe",
       light: "#ea80fc",
       dark: "#7b1fa2",
       contrastText: "#f3e5f5",
     },
     error: {
-      main: "#ec407a",
+      main: "#ff6099",
       light: "#f48fb1",
       dark: "#880e4f",
     },
     warning: {
-      main: "#f9a825",
-      light: "#ffff00",
-      dark: "#ffab00",
+      main: "#fb4",
+      light: "#f00",
+      dark: "#fa0",
       contrastText: "rgba(2,2,2,0.87)",
     },
     info: {
-      main: "#00b8d4",
+      main: "#00bbff",
       light: "#18ffff",
-      dark: "#0097a7",
+      dark: "#09f",
     },
     success: {
-      main: "#64dd17",
+      main: "#6f2",
       light: "#00e676",
       dark: "#388e3c",
     },
@@ -125,8 +125,8 @@ const ThemeProv = (props) => {
   if (props.mode) {
     themeOptions.palette.mode = "dark";
     themeOptions.palette.background = {
-      default: "#121212",
-      paper: "#212121",
+      default: "#fff",
+      paper: "#000000",
     };
     themeOptions.palette.text = {
       primary: "#cccccc",
@@ -138,8 +138,8 @@ const ThemeProv = (props) => {
   } else {
     themeOptions.palette.mode = "light";
     themeOptions.palette.background = {
-      default: "#e9edc9",
-      paper: "#f4f1de",
+      default: "#000",
+      paper: "#fff",
     };
     themeOptions.palette.text = {
       primary: "#222",

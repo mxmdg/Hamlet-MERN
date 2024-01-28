@@ -20,6 +20,7 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import { Grid } from "@mui/material";
 import { serverURL, databaseURL } from "../Config/config";
+import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import { AuthContext } from "../context/AuthContext";
 import { useContext } from "react";
 
@@ -33,9 +34,15 @@ export const Login = () => {
     mode: "onBlur", // "onChange"
   });
 
+  const [error, setError] = React.useState(null)
+
   const navigate = useNavigate();
   const context = useContext(AuthContext);
   //const params = useParams();
+
+  const resetError = ()=> {
+    setError(null)
+  }
 
   const onSubmit = async (data) => {
     try {
@@ -45,14 +52,20 @@ export const Login = () => {
       context.setUserLogged(token.data.document);
       localStorage.setItem("user", JSON.stringify(token.data.document));
     } catch (e) {
-      throw "Fallo el login: " + e;
+      setError("Fallo el login: " + e);
+      return e
     }
-    console.log("JSON.stringify(data)", JSON.stringify(data));
   };
 
   //axios.post(url[, data[, config]])
 
-  return (
+  React.useEffect(()=>{},[setError])
+
+  const errorRender = (
+    <ErrorMessage message={error} action={resetError}/>
+  )
+
+  const success = (
     <Box>
       <Card elevation={6}>
         <CardHeader title="Login"></CardHeader>
@@ -111,4 +124,7 @@ export const Login = () => {
       </Card>
     </Box>
   );
+  return (error === null ? success : errorRender)
 };
+
+
