@@ -23,11 +23,6 @@ const Canvas = (props) => {
     y: 200,
   });
 
-  props.part ? console.log("hay parte") : console.log("NO hay parte");
-
-  if (props.part) {
-  }
-
   const handleResize = () => {
     const canvas = canvasRef.current;
     const Parent = canvas.parentNode;

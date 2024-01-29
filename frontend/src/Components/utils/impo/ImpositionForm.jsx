@@ -27,6 +27,7 @@ export const ImpositionForm = (props) => {
   const context = useContext(ImpoContext);
   const [useFormats, setFormats] = useState([]);
   const [usePrinters, setPrinters] = useState([]);
+  const [useSelectedPrinter, setSelectedPrinter] = useState([]);
   const [selectedFormat, setSelectedFormat] = useState("");
   const [customFormat, setCustomFormat] = useState(false);
   const [useErrorMessage, setErrorMessage] = useState(null);
@@ -46,7 +47,11 @@ export const ImpositionForm = (props) => {
       Math.max(f.Ancho, f.Alto) >
         Math.max(props.part?.Ancho || 0, props.part?.Alto || 0) &&
       Math.min(f.Ancho, f.Alto) >
-        Math.min(props.part?.Ancho || 0, props.part?.Alto || 0)
+        Math.min(props.part?.Ancho || 0, props.part?.Alto || 0) &&
+      Math.max(f.Ancho, f.Alto) <
+        Math.max(useSelectedPrinter.X_Maximo || 0, useSelectedPrinter.Y_Maximo ||0) &&
+      Math.min(f.Ancho, f.Alto) >
+        Math.min(useSelectedPrinter.X_Minimo || 0, useSelectedPrinter.Y_Minimo ||0)  
   );
 
   const {
@@ -90,6 +95,56 @@ export const ImpositionForm = (props) => {
     <FormControl sx={{ width: "100%" }}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Grid container columns={12} spacing={1}>
+        <Grid item xs={12} md={12}>
+            <FormControl fullWidth>
+              <TextField
+                select
+                name={"printerSelector"}
+                variant="filled"
+                color="primary"
+                defaultValue={""}
+                label="Impresora"
+                size="small"
+                margin="dense"
+                {...register("printerSelector", { required: false })}
+                onChange={(e) => {
+                  console.log(e.target.value);
+                }}
+                onBlur={(e) => {
+                  setSelectedPrinter(e.target.value);
+                  console.log(useSelectedPrinter);
+                  trigger("printerSelector");
+                }}
+              >
+                {useLoading ? (
+                  <CircularProgress color="secondary" />
+                ) : useErrorMessage !== null ? (
+                  AlertError
+                ) : (
+                  usePrinters?.map((Printer) => (
+                    <MenuItem
+                      value={Printer}
+                      id={usePrinters.indexOf(Printer) + Printer._id}
+                      key={usePrinters.indexOf(Printer) + Printer._id}
+                    >
+                      {/* <Chip
+                        variant="filled"
+                        color="success"
+                        size="large"
+                        label={Printer.Nombre}
+                      /> */}
+                      <Typography variant="button">{Printer.Modelo} - {Printer.Fabricante}</Typography>
+                    </MenuItem>
+                  ))
+                )}
+                
+              </TextField>
+            </FormControl>
+
+            {errors.printerSelector?.type === "required" && (
+              <FormHelperText>Seleccione una impresora</FormHelperText>
+            )}
+          </Grid>
           <Grid item xs={12} md={3}>
             <FormControl>
               <TextField

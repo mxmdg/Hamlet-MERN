@@ -99,8 +99,6 @@ const JobDetail = (props) => {
         useSheet.width
       );
 
-      console.table(straightCut, rotatedtCut);
-
       const pliegosPorHoja = Math.max(
         parseInt(straightCut.totalPoses),
         parseInt(rotatedtCut.totalPoses)
@@ -183,10 +181,10 @@ const JobDetail = (props) => {
                       </Item2>
                       <Item2 elevation={4}>
                         Pliegos: {calculateStock().cantidadDePliegos} - Salen:{" "}
-                        {calculateStock().pliegosPorHoja}
+                        {calculateStock().pliegosPorHoja} del {part.partStock.Ancho_Resma} x {part.partStock.Alto_Resma} 
                       </Item2>
                       <Item2 elevation={4}>
-                        Total Papel: {calculateStock().totalHojas}
+                        Cantidad de resmas: {(Math.ceil((calculateStock().totalHojas /500) * 100)) / 100} {`(${calculateStock().totalHojas} hojas)`}
                       </Item2>
                     </>
                   )}
