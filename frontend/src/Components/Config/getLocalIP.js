@@ -23,7 +23,8 @@ function getLocalIPAddress(callback) {
       pc.setLocalDescription(sdp);
     }).catch((error) => {
       // Ocurrió un error al obtener la IP
-      callback(null);
+      console.log(error)
+      callback(error);
     });
   }
   

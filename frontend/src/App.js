@@ -28,6 +28,7 @@ import AuthProvider from "./Components/context/AuthContext";
 import { AuthContext } from "./Components/context/AuthContext";
 import { Container } from "@mui/material";
 import { themeOptions } from "./Components/Config/theme";
+import { ipLocal } from "./Components/Config/getLocalIP";
 
 function App() {
   const [useMode, setMode] = useState("dark");
@@ -36,6 +37,12 @@ function App() {
     console.log(useMode);
     useMode ? setMode(false) : setMode(true);
   };
+
+  try {
+    console.log(ipLocal)
+  } catch (error) {
+    console.log(error)
+  }
 
   return (
     <ThemeProv mode={useMode}>

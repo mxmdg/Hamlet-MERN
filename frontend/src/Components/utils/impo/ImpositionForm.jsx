@@ -33,24 +33,26 @@ export const ImpositionForm = (props) => {
   const [useErrorMessage, setErrorMessage] = useState(null);
   const [useLoading, setLoading] = useState(true);
 
-  /*  const filterPrinters = async (printersList) => {
+  const filterPrinters = (printersList) => {
     const filteredPrinters = printersList.filter(
       (impresora) =>
-        impresora.Colores ==
-        Math.max(props.part.ColoresFrente, props.part.ColoresDorso)
+        impresora.Colores >=
+        Math.max(props.part?.ColoresFrente || 0, props.part?.ColoresDorso || 0)
     );
     return filteredPrinters;
-  }; */
+  };
 
   let useFormatsFiltered = useFormats.filter(
     (f) =>
-      Math.max(f.Ancho, f.Alto) >
+      Math.max(f.Ancho, f.Alto) >=
         Math.max(props.part?.Ancho || 0, props.part?.Alto || 0) &&
-      Math.min(f.Ancho, f.Alto) >
+      Math.min(f.Ancho, f.Alto) >=
         Math.min(props.part?.Ancho || 0, props.part?.Alto || 0) &&
-      Math.max(f.Ancho, f.Alto) <
+      Math.max(f.Ancho, f.Alto) <=
         Math.max(useSelectedPrinter.X_Maximo || 0, useSelectedPrinter.Y_Maximo ||0) &&
-      Math.min(f.Ancho, f.Alto) >
+      Math.min(f.Ancho, f.Alto) <=
+          Math.min(useSelectedPrinter.X_Maximo || 0, useSelectedPrinter.Y_Maximo ||0) &&
+      Math.min(f.Ancho, f.Alto) >=
         Math.min(useSelectedPrinter.X_Minimo || 0, useSelectedPrinter.Y_Minimo ||0)  
   );
 
@@ -70,8 +72,12 @@ export const ImpositionForm = (props) => {
       const gettedFormats = await getPrivateElements("formatos");
       const getPrinters = await getPrivateElements("impresoras");
 
+      const filteredPrinters = filterPrinters(await getPrinters)
+
+      console.table(filteredPrinters)
+
       setFormats(gettedFormats);
-      setPrinters(getPrinters);
+      setPrinters(filteredPrinters);
       setLoading(false);
     } catch (e) {
       setErrorMessage(e);
@@ -133,7 +139,7 @@ export const ImpositionForm = (props) => {
                         size="large"
                         label={Printer.Nombre}
                       /> */}
-                      <Typography variant="button">{Printer.Modelo} - {Printer.Fabricante}</Typography>
+                      <Typography variant="button">{Printer.Fabricante} {Printer.Modelo} {Printer.Colores===4?"(cmyk)":Printer.Colores===1?"(k)":"Error"} </Typography>
                     </MenuItem>
                   ))
                 )}
