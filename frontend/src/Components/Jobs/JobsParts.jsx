@@ -271,7 +271,7 @@ const JobParts = (props) => {
                 defaultValue={
                   props.editPart === null ? "" : props.editPart.part?.Name
                 }
-                label="Nombre / Descripcion"
+                label="Nombre de la parte"
                 color="info"
                 required
                 {...register("Name", {

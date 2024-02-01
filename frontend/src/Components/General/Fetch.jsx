@@ -60,15 +60,28 @@ const Fetch = (props) => {
     };
 
     const findAll = () => {
-      for (let k of keys) {
-        findByColumn(k);
+      for (let item of useList) {
+        for (let key of keys) {
+          console.log(key + " -> Problema en impresoras")
+          const cellToString = item[key].toString();
+          if (cellToString.includes(query.toString())) {
+            console.log(item[key], query);
+            results.push(item);
+            break; // Evitar duplicados al encontrar coincidencia en cualquier columna
+          }
+        }
       }
     };
 
     console.log(results);
 
+    
     column === "Todo" ? findAll() : findByColumn(column);
     setFilteredList(results);
+
+    if(query.length > 0 && results.length < 1) {
+      setFilteredList([,])
+    }
   };
 
   useEffect(() => {
@@ -94,7 +107,7 @@ const Fetch = (props) => {
     </Container>
   );
 
-  const AlertError = <ErrorMessage message={useErrMessage?.message} />;
+  const AlertError = <ErrorMessage message={useErrMessage?.message} severity={"warning"} />;
 
   const TableLoaded = (
     <>

@@ -82,7 +82,7 @@ const themeOptions = createTheme({
     },
     warning: {
       main: "#fb4",
-      light: "#f00",
+      light: "#D36308",
       dark: "#fa0",
       contrastText: "rgba(2,2,2,0.87)",
     },

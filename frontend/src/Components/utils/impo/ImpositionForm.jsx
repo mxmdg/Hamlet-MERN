@@ -139,7 +139,7 @@ export const ImpositionForm = (props) => {
                         size="large"
                         label={Printer.Nombre}
                       /> */}
-                      <Typography variant="button">{Printer.Fabricante} {Printer.Modelo} {Printer.Colores===4?"(cmyk)":Printer.Colores===1?"(k)":"Error"} </Typography>
+                      <Typography variant="button">{Printer.Fabricante} {Printer.Modelo} <b>{Printer.Colores===4?"(cmyk)":Printer.Colores===1?"(k)":"Error"} </b></Typography>
                     </MenuItem>
                   ))
                 )}

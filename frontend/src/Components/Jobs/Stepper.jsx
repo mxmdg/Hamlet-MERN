@@ -217,7 +217,7 @@ export default function MyStepper() {
     >
       <Card raised sx={{ gap: "20px" }} color="info">
         <CardHeader
-          title={useJob?.jobName || "Nuevo Trabajo"}
+          title={useJob?.jobName || "Nuevo Pedido"}
           subheader={useJob?.quantity || "Solicita tu presupuesto!"}
         />
         <CardContent>
@@ -297,7 +297,7 @@ export default function MyStepper() {
                 if (isStepOptional(index)) {
                   labelProps.optional = (
                     <Typography variant="caption" key={index}>
-                      Optional
+                      Opcional
                     </Typography>
                   );
                 }
@@ -314,7 +314,7 @@ export default function MyStepper() {
             {activeStep === steps.length ? (
               <React.Fragment>
                 <Typography sx={{ mt: 2, mb: 1 }}>
-                  All steps completed - you&apos;re finished
+                 Todos los pasos completados, 
                 </Typography>
                 <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
                   <Box sx={{ flex: "1 1 auto" }} />
