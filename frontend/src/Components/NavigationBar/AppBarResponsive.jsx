@@ -24,15 +24,14 @@ import Switch from "@mui/material/Switch";
 import LightModeIcon from "@mui/icons-material/LightMode";
 
 const pages = [
-  "Jobs",
-  "Configuracion",
-  "Formatos",
-  "Impresoras",
-  "JobParts",
-  "Materiales",
-  "Empresas",
+  { text: "Pedidos", path: "jobs" },
+  { text: "Costos", path: "configuracion" },
+  { text: "Formatos", path: "formatos" },
+  { text: "Impresoras", path: "impresoras" },
+  { text: "Partes de trabajo", path: "jobparts" },
+  { text: "Materiales", path: "materiales" },
+  { text: "Clientes", path: "empresas" },
 ];
-const settings = ["Login", "Register", "Users"];
 
 function ResponsiveAppBar(props) {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -40,6 +39,19 @@ function ResponsiveAppBar(props) {
   const context = useContext(AuthContext);
 
   const navigate = useNavigate();
+
+  // Menu del usuario logeado y sin loguear
+  // {Texto: "texto a mostrar", path: "ruta a donde me lleva"}
+  const settings = [
+    { text: "Ingresar", path: "login" },
+    { text: "Registrarse", path: "register" },
+    { text: "usuarios", path: "users" },
+  ];
+  const userMenu = [
+    { text: "Perfil", path: "users/edit/" + context.userLogged?._id },
+    { text: "Trabajo Nuevo", path: "jobs/add" },
+    { text: "Mensajes", path: "messages" },
+  ];
 
   const handleOpenNavMenu = (event) => {
     console.log(event.currentTarget);
@@ -74,6 +86,8 @@ function ResponsiveAppBar(props) {
       console.log(error);
     }
   };
+
+  const dropMenu = context.useLogin ? userMenu : settings;
 
   const Navigate = useNavigate();
 
@@ -113,12 +127,12 @@ function ResponsiveAppBar(props) {
             >
               {pages.map((page) => (
                 <MenuItem
-                  key={page}
+                  key={page.path}
                   onClick={() => {
-                    handleCloseNavMenu(page);
+                    handleCloseNavMenu(page.path);
                   }}
                 >
-                  <Typography textAlign="center">{page}</Typography>
+                  <Typography textAlign="center">{page.text}</Typography>
                 </MenuItem>
               ))}
             </Menu>
@@ -147,14 +161,14 @@ function ResponsiveAppBar(props) {
             {pages.map((page) => (
               <Button
                 variant="standard"
-                key={page}
+                key={page.path}
                 color="primary"
                 onClick={() => {
-                  handleCloseNavMenu(page);
+                  handleCloseNavMenu(page.path);
                 }}
                 sx={{ my: 2, display: "block" }}
               >
-                {page}
+                {page.text}
               </Button>
             ))}
           </Box>
@@ -198,19 +212,20 @@ function ResponsiveAppBar(props) {
               open={Boolean(anchorElUser)}
               onClose={() => handleCloseUserMenu()}
             >
-              <MenuItem>
-                {context.userLogged && (
+              {context.userLogged && (
+                <MenuItem>
                   <Typography textAlign="center">
-                    {context.userLogged.Name} {context.userLogged.LastName}
+                    {context.userLogged.Name} {context.userLogged.LastName}{" "}
                   </Typography>
-                )}
-              </MenuItem>
-              {settings.map((setting) => (
+                </MenuItem>
+              )}
+
+              {dropMenu.map((setting) => (
                 <MenuItem
-                  key={setting}
-                  onClick={() => handleCloseUserMenu(setting)}
+                  key={setting.text}
+                  onClick={() => handleCloseUserMenu(setting.path)}
                 >
-                  <Typography textAlign="center">{setting}</Typography>
+                  <Typography textAlign="center">{setting.text}</Typography>
                 </MenuItem>
               ))}
               <MenuItem>

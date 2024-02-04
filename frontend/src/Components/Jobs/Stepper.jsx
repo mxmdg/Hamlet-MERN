@@ -132,6 +132,11 @@ export default function MyStepper() {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
+  const resetError = () => {
+    setError(null);
+    handleBack();
+  };
+
   const handleSkip = () => {
     if (!isStepOptional(activeStep)) {
       // You probably want to guard against something like this,
@@ -187,6 +192,7 @@ export default function MyStepper() {
         addParts={addParts}
         replacePart={replacePart}
         editPart={usePartToEdit}
+        useParts={useParts}
         parts={allParts}
       />,
     ],
@@ -314,7 +320,7 @@ export default function MyStepper() {
             {activeStep === steps.length ? (
               <React.Fragment>
                 <Typography sx={{ mt: 2, mb: 1 }}>
-                 Todos los pasos completados, 
+                  Todos los pasos completados,
                 </Typography>
                 <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
                   <Box sx={{ flex: "1 1 auto" }} />
@@ -368,7 +374,10 @@ export default function MyStepper() {
   );
 
   const statusError = (
-    <ErrorMessage message={useError?.response.data.message} />
+    <ErrorMessage
+      message={useError?.response.data.message}
+      action={resetError}
+    />
   );
 
   return useError !== null ? statusError : statusOk;

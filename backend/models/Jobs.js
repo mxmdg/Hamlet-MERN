@@ -36,13 +36,13 @@ const jobTypeSchema = new Schema({
 const partSchema = new Schema({
   jobParts: [partTypeSchema],
   //'Type': {type: String, required: true},
-  Name: {type: String, required: true},
+  Name: { type: String, required: true },
   Pages: { type: Number, required: true },
   Ancho: { type: Number, required: true },
   Alto: { type: Number, required: true },
   Orientacion: { type: String },
   ColoresFrente: { type: Number, required: true },
-  ColoresDorso: { type: Number, required: true },
+  ColoresDorso: { type: Number, required: false, default: 0 },
   partStock: { type: mongoose.Schema.ObjectId, ref: "Category" },
 });
 
@@ -55,7 +55,7 @@ const jobSchema = new Schema({
   Fecha: { type: Date, default: Date.now },
   Partes: [partSchema],
   Owner: { type: mongoose.Schema.ObjectId, ref: "Users" },
-  Company:  { type: mongoose.Schema.ObjectId, ref: "Empresas" }
+  Company: { type: mongoose.Schema.ObjectId, ref: "Empresas" },
 });
 
 // Definimos una función que se ejecutará antes de guardar cada parte

@@ -177,10 +177,11 @@ import { fechtData, getPrivateElements } from "../customHooks/FetchDataHook";
 const JobParts = (props) => {
   const [stocks, setStocks] = useState([]);
   const [filteredStocks, setFilteredStocks] = useState([]);
-  const [allParts, useAllParts] = useState([]);
-  const [parts, setParts] = useState([]);
   const [partsList, setPartsList] = useState(null);
   const [currentPart, setCurrentPart] = useState(null);
+
+  // Estado para inhabilitar ColoresDorso cuando el trabajo es una sola cara
+  const [useSimplex, setSimplex] = useState(false);
 
   const {
     register,
@@ -213,8 +214,12 @@ const JobParts = (props) => {
   const handleChange = (selectedValue) => {
     const part = partsList.find((item) => item._id === selectedValue);
     setCurrentPart(part);
-    console.log("Current Part:");
-    console.log(currentPart);
+    console.log(part);
+    if (part.PrintModAllowed === "Simplex") {
+      setSimplex(true);
+    } else {
+      setSimplex(false);
+    }
   };
 
   useEffect(() => {
@@ -240,7 +245,7 @@ const JobParts = (props) => {
     } catch (e) {
       console.log(e);
     }
-  }, [setFilteredStocks, setPartsList, currentPart]);
+  }, [setFilteredStocks, setPartsList, currentPart, setSimplex]);
 
   return (
     <Card raised sx={{ gap: "20px", maxWidth: "600px" }} color="secondary">
@@ -354,7 +359,8 @@ const JobParts = (props) => {
                       ? currentPart?.maxPages
                       : props.job?.JobType?.pagMax,
                 })}
-                onBlur={() => {
+                onBlur={(e) => {
+                  e.target.value < 2 ? setSimplex(true) : setSimplex(false);
                   trigger("Pages");
                 }}
               />
@@ -381,9 +387,11 @@ const JobParts = (props) => {
                 name="Ancho"
                 id="Ancho"
                 label="Ancho"
-                color="info"
+                color="secondary"
                 defaultValue={
-                  props.editPart === null ? "" : props.editPart.part?.Ancho
+                  props.editPart === null
+                    ? props.useParts[0]?.Ancho
+                    : props.editPart.part?.Ancho
                 }
                 {...register("Ancho", {
                   required: true,
@@ -418,9 +426,11 @@ const JobParts = (props) => {
                 id="Alto"
                 label="Alto"
                 defaultValue={
-                  props.editPart === null ? "" : props.editPart.part?.Alto
+                  props.editPart === null
+                    ? props.useParts[0]?.Alto
+                    : props.editPart.part?.Alto
                 }
-                color="error"
+                color="secondary"
                 {...register("Alto", {
                   required: true,
                   min: currentPart?.minHeight,
@@ -485,10 +495,13 @@ const JobParts = (props) => {
                 name="ColoresDorso"
                 id="ColoresDorso"
                 label="Colores Dorso"
-                color="warning"
+                color="secondary"
+                disabled={useSimplex}
                 defaultValue={
                   props.editPart === null
-                    ? ""
+                    ? useSimplex
+                      ? 0
+                      : ""
                     : props.editPart.part?.ColoresDorso
                 }
                 {...register("ColoresDorso", {
@@ -511,10 +524,10 @@ const JobParts = (props) => {
                   id="partStock"
                   label="Material"
                   onChange={props.onChange}
-                  //defaultValue={""}
+                  defaultValue={""}
                   variant="outlined"
                   sx={{ width: "95%" }}
-                  color="primary"
+                  color="secondary"
                   {...register("partStock", {
                     required: true,
                   })}

@@ -57,7 +57,7 @@ const JobsForm = (props) => {
     });
     console.log(jt);
     values.JobType = jt;
-    console.log(context.userLogged._id);
+    //console.log(context.userLogged?._id);
     //values.Owner = context.userLogged._id;
     props.setJob(values);
     props.continue();

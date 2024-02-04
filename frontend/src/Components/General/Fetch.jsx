@@ -26,7 +26,7 @@ const Fetch = (props) => {
   const navigate = useNavigate();
 
   const getElements = async () => {
-    const elements = await getPrivateElements(`${props.collection}/`);
+    const elements = await getPrivateElements(`${props.collection}`);
     console.log(elements.flat(Infinity));
     setList(elements);
     setHeaders(() => {

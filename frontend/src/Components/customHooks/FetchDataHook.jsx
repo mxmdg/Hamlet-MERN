@@ -19,6 +19,7 @@ export const getPrivateElements = async (collection) => {
         Authorization: `Bearer ${token}`,
       },
     });
+    console.log(`${databaseURL + collection}/`);
     return elements.data;
   } catch (e) {
     throw e;
