@@ -16,7 +16,8 @@ const usersSchema = new Schema(
         },
     email: {
         type: String, 
-        required: [true, 'Ingrese su email'], 
+        required: [true, 'Ingrese su email'],
+        unique: true, 
         match: (/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)}, 
     password: {type: String, required: true}
 });

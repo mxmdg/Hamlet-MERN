@@ -8,29 +8,28 @@ const AuthProvider = ({ children }) => {
     localStorage.getItem("login") ? true : false
   );
   const [useToken, setToken] = useState(
-    localStorage.getItem("token") ? localStorage.getItem("token") : {}
+    localStorage.getItem("token") ? localStorage.getItem("token") : null
   );
   const [userLogged, setUserLogged] = useState(
-    localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : {}
+    localStorage.getItem("user")
+      ? JSON.parse(localStorage.getItem("user"))
+      : null
   );
   const Navigate = useNavigate();
 
   const handleLogout = () => {
     setLogin(false);
     localStorage.removeItem("login");
-    setToken({});
+    setToken(null);
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-    setUserLogged({});
+    setUserLogged(null);
     Navigate("/");
     console.log("Logout exitoso");
   };
 
   const handleLogin = (token, expirationTime) => {
-    console.log(expirationTime, Date.now());
-    console.log(expirationTime - Date.now());
     setTimeout(() => {
-      console.log("El tiempo se terminó");
       handleLogout();
     }, expirationTime - Date.now());
 

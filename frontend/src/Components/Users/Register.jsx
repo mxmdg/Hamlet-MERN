@@ -1,10 +1,7 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { Navigate, useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import Input from "@mui/material/Input";
-import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
@@ -20,6 +17,7 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import { Grid } from "@mui/material";
 import { serverURL, databaseURL } from "../Config/config";
+import ErrorMessage from "../ErrorMessage/ErrorMessage";
 
 export const Register = () => {
   const {
@@ -31,6 +29,7 @@ export const Register = () => {
     mode: "onBlur", // "onChange"
   });
 
+  const [useErrorMessage, setErrorMessage] = React.useState(null);
   const navigate = useNavigate();
   //const params = useParams();
 
@@ -40,14 +39,27 @@ export const Register = () => {
       console.log(data);
       navigate(-1);
     } catch (e) {
-      console.log("No se pudo guardar " + e);
+      setErrorMessage(e.response.data);
     }
     console.log("JSON.stringify(data)", JSON.stringify(data));
   };
 
-  //axios.post(url[, data[, config]])
+  const resetError = () => {
+    console.log("resetError");
+    setErrorMessage(null);
+    navigate(-1);
+  };
 
-  return (
+  //axios.post(url[, data[, config]])
+  const alertError = (
+    <ErrorMessage
+      message={useErrorMessage}
+      severity={"error"}
+      action={resetError}
+    />
+  );
+
+  const success = (
     <Box>
       <Card>
         <CardHeader title="Registrate!"></CardHeader>
@@ -179,4 +191,6 @@ export const Register = () => {
       </Card>
     </Box>
   );
+
+  return useErrorMessage !== null ? alertError : success;
 };

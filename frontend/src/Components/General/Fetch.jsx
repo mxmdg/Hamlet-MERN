@@ -10,6 +10,8 @@ import { Paper, Container, TextField, MenuItem, Stack } from "@mui/material";
 import EnhancedTable from "./TableGrid";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import DarkWoodCard from "../utils/DarkWoodCard";
+import { useNavigate } from "react-router-dom";
+import { fechtData, getPrivateElements } from "../customHooks/FetchDataHook";
 
 const Fetch = (props) => {
   const [useList, setList] = useState([]);
@@ -21,14 +23,16 @@ const Fetch = (props) => {
   const [useErrMessage, setErrMessage] = useState(null);
   const [useColumn, setColumn] = useState("Todo");
 
+  const navigate = useNavigate();
+
   const getElements = async () => {
-    const elements = await axios.get(`${databaseURL + props.collection}/`);
-    console.log(elements.data.flat(Infinity));
-    setList(elements.data);
+    const elements = await getPrivateElements(`${props.collection}/`);
+    console.log(elements.flat(Infinity));
+    setList(elements);
     setHeaders(() => {
       const arr = [];
-      const labels = elements.data.length
-        ? Object.getOwnPropertyNames(elements.data[0]).slice(1, -1)
+      const labels = elements.length
+        ? Object.getOwnPropertyNames(elements[0]).slice(1, -1)
         : ["Error", "Datos inexistentes"];
       labels.map((e) => {
         const obj = {
@@ -62,7 +66,7 @@ const Fetch = (props) => {
     const findAll = () => {
       for (let item of useList) {
         for (let key of keys) {
-          console.log(key + " -> Problema en impresoras")
+          console.log(key + " -> Problema en impresoras");
           const cellToString = item[key].toString();
           if (cellToString.includes(query.toString())) {
             console.log(item[key], query);
@@ -75,12 +79,11 @@ const Fetch = (props) => {
 
     console.log(results);
 
-    
     column === "Todo" ? findAll() : findByColumn(column);
     setFilteredList(results);
 
-    if(query.length > 0 && results.length < 1) {
-      setFilteredList([,])
+    if (query.length > 0 && results.length < 1) {
+      setFilteredList([,]);
     }
   };
 
@@ -92,7 +95,7 @@ const Fetch = (props) => {
         setLoading(false);
       } catch (err) {
         console.log(err);
-        setErrMessage(err);
+        setErrMessage(err.response?.data?.message || err.message);
         setLoading(false);
         return err;
       }
@@ -107,7 +110,15 @@ const Fetch = (props) => {
     </Container>
   );
 
-  const AlertError = <ErrorMessage message={useErrMessage?.message} severity={"warning"} />;
+  const AlertError = (
+    <ErrorMessage
+      message={useErrMessage}
+      severity={"warning"}
+      action={() => {
+        navigate(-1);
+      }}
+    />
+  );
 
   const TableLoaded = (
     <>

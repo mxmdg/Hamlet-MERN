@@ -21,7 +21,7 @@ empresasControl.leanCompanies = async (req, res, next) => {
       const empresa = await empresas.esquema.find().lean({ virtuals: true });
       return empresa;
     } catch (e) {
-      console.error(e);
+      console.log(e);
       next(e);
     }
   }
@@ -30,12 +30,40 @@ empresasControl.leanCompanies = async (req, res, next) => {
 empresasControl.addCompany = async (req, res, next) => {
   {
     try {
-      const { Nombre, email, Calle, Ciudad, Codigo_Postal, Provincia, Pais, Telefono } = req.body;
-      const newCompany = new empresas.esquema({ Nombre, email, Calle, Ciudad, Codigo_Postal, Provincia, Pais, Telefono });
+      const {
+        Nombre,
+        email,
+        Calle,
+        Ciudad,
+        Codigo_Postal,
+        Provincia,
+        Pais,
+        Telefono,
+      } = req.body;
+      const newCompany = new empresas.esquema({
+        Nombre,
+        email,
+        Calle,
+        Ciudad,
+        Codigo_Postal,
+        Provincia,
+        Pais,
+        Telefono,
+      });
+      const companyExists = await empresas.esquema.findOne({
+        Nombre: Nombre,
+      });
+
+      if (companyExists) {
+        throw Error(
+          `La empresa ${Nombre} ya se encuentra en nuestra base de datos.`
+        );
+      }
+
       await newCompany.save();
       res.json({ message: newCompany.Nombre + " ha sido agregado" });
     } catch (e) {
-      console.error(e);
+      console.log(e);
       next(e);
     }
   }
@@ -49,8 +77,8 @@ empresasControl.getCompany = async (req, res, next) => {
     } else {
       res.status(404).json({ message: "Empresa no encontrado" });
     }
-  } catch (error) {
-    console.error(e);
+  } catch (e) {
+    console.log(e);
     next(e);
   }
 };
@@ -61,18 +89,37 @@ empresasControl.getCompany = async (req, res, next) => {
   } */
 empresasControl.updateCompany = async (req, res, next) => {
   try {
-    const { Nombre, email, Calle, Ciudad, Codigo_Postal, Provincia, Pais, Telefono } = req.body;
+    const {
+      Nombre,
+      email,
+      Calle,
+      Ciudad,
+      Codigo_Postal,
+      Provincia,
+      Pais,
+      Telefono,
+    } = req.body;
     const empresa = await empresas.esquema.findByIdAndUpdate(
       req.params.id,
-      { Nombre, email, Calle, Ciudad, Codigo_Postal, Provincia, Pais, Telefono },
+      {
+        Nombre,
+        email,
+        Calle,
+        Ciudad,
+        Codigo_Postal,
+        Provincia,
+        Pais,
+        Telefono,
+      },
       { new: false }
     );
+
     if (!empresa) {
-      return res.status(404).json({ message: "Empresa no encontrada" });
+      throw Error("Empresa no encontrada");
     }
     res.json({ message: "Empresa actualizado", empresa });
-  } catch (error) {
-    console.error(e);
+  } catch (e) {
+    console.log(e);
     next(e);
   }
 };
@@ -80,8 +127,8 @@ empresasControl.deleteCompany = async (req, res, next) => {
   try {
     const empresa = await empresas.esquema.findByIdAndDelete(req.params.id);
     res.json({ Message: "empresa eliminada" });
-  } catch (error) {
-    console.error(e);
+  } catch (e) {
+    console.log(e);
     next(e);
   }
 };

@@ -171,13 +171,15 @@ function ResponsiveAppBar(props) {
               label="Dark Mode"
             />
 
-            <Tooltip title={context.userLogged.Name}>
+            <Tooltip
+              title={
+                context.userLogged !== null
+                  ? context.userLogged.Name
+                  : "Registrarse"
+              }
+            >
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar
-                  alt={
-                    context.userLogged.Name + " " + context.userLogged.LastName
-                  }
-                />
+                <Avatar alt={"Nada"} />
               </IconButton>
             </Tooltip>
             <Menu
@@ -197,9 +199,11 @@ function ResponsiveAppBar(props) {
               onClose={() => handleCloseUserMenu()}
             >
               <MenuItem>
-                <Typography textAlign="center">
-                  {context.userLogged.Name} {context.userLogged.LastName}
-                </Typography>
+                {context.userLogged && (
+                  <Typography textAlign="center">
+                    {context.userLogged.Name} {context.userLogged.LastName}
+                  </Typography>
+                )}
               </MenuItem>
               {settings.map((setting) => (
                 <MenuItem

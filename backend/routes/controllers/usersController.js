@@ -13,8 +13,6 @@ const getAll = async (req, res, next) => {
 };
 
 const addUser = async (req, res, next) => {
-  console.log("req.body");
-  console.log(req.body);
   const newUser = new usersModel.esquema(req.body);
   try {
     await newUser.save();
@@ -46,12 +44,12 @@ const updateUser = async (req, res, next) => {
     console.log(error);
     next(error);
   }
-}; 
+};
 
 const deleteUser = async (req, res, next) => {
   try {
     const user = await usersModel.esquema.findByIdAndDelete(req.params.id);
-    res.json({ message: `Usuario ${user.Name} eliminado` });
+    ({ message: `Usuario ${user.Name} eliminado` });
   } catch (error) {
     console.error("Error:" + error);
     next(e);
@@ -64,7 +62,7 @@ const login = async (req, res, next) => {
       email: req.body.email,
     });
     if (!document) {
-      return res.json({ message: "El correo no existe" });
+      res.json({ message: "El correo no existe" });
     }
     if (bcrypt.compareSync(req.body.password, document.password)) {
       try {

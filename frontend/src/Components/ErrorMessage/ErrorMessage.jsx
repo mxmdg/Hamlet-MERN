@@ -6,15 +6,22 @@ import { useNavigate } from "react-router-dom";
 const ErrorMessage = (props) => {
   const navigate = useNavigate();
 
-  const actionButton = (<Button color="inherit" size="small" onClick={() => props.action}>
-          OK
-        </Button>)
+  const actionButton = (
+    <Button
+      variant="outlined"
+      color="inherit"
+      size="small"
+      onClick={() => props.action()}
+    >
+      OK
+    </Button>
+  );
 
   const alert = (
     <Alert
       variant="filled"
       severity={props.severity || "error"}
-      action={ props.action ? actionButton : ""}
+      action={props.action ? actionButton : ""}
     >
       {props.message}
     </Alert>

@@ -165,16 +165,20 @@ const Form = (props) => {
           ? props.setState(true)
           : console.log("No es nuevo");
       } catch (e) {
-        setErrorMessage("No se pudo guardar " + e);
+        console.log(e);
+        setErrorMessage(e.response.data);
+        return e;
       }
     } else {
       try {
         await putPrivateElement(`${databaseURL}${collection}/${id}`, formData);
         setHidden(true);
         navigate(-1);
-        //props.editor(true);
+        props.editor(true);
       } catch (e) {
-        setErrorMessage("No se pudo actualizar" + e);
+        console.log(e);
+        setErrorMessage("No se pudo actualizar: " + e.response?.data);
+        return e;
       }
     }
     try {
@@ -182,7 +186,8 @@ const Form = (props) => {
         ? props.view("viewer")
         : props.view("editor");
     } catch (e) {
-      setErrorMessage("There is no props.view" + e);
+      console.log(e);
+      setErrorMessage(e.message);
     }
   };
 
@@ -196,8 +201,14 @@ const Form = (props) => {
         ? props.view("viewer")
         : props.view("editor");
     } catch (e) {
-      setErrorMessage("There is no props.view" + e);
+      setErrorMessage(e.message);
     }
+  };
+
+  const resetError = () => {
+    console.log("resetError");
+    setErrorMessage(null);
+    //navigate(-1);
   };
 
   const typeOfInput = (inp) => {
@@ -389,7 +400,13 @@ const Form = (props) => {
     </Container>
   );
 
-  const alertError = <ErrorMessage message={useErrorMessage} />;
+  const alertError = (
+    <ErrorMessage
+      message={useErrorMessage}
+      severity={"error"}
+      action={resetError}
+    />
+  );
 
   //return useHidden ? hiddenTrue : hiddenFalse;
   return useErrorMessage !== null ? alertError : hiddenFalse;
