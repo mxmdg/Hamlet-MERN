@@ -61,8 +61,8 @@ const JobDetail = (props) => {
   const Item2 = styled(Paper)(({ theme }) => ({
     backgroundColor:
       theme.palette.mode === "dark"
-        ? theme.palette.success.dark
-        : theme.palette.success.light,
+        ? theme.palette.info.dark
+        : theme.palette.info.light,
     ...theme.typography.subtitle2,
     padding: theme.spacing(2),
     textAlign: "left",
@@ -90,9 +90,13 @@ const JobDetail = (props) => {
       Pliego: useSheet,
     };
 
-    const saveImpo = () => {
-      partCosts.totalSignatures = calculateStock().cantidadDePliegos;
-      partCosts.totalSheets = calculateStock().totalHojas;
+    const saveImpoData = () => {
+      partCosts.totalPliegos = calculateStock().cantidadDePliegos;
+      partCosts.totalHojas = calculateStock().totalHojas;
+      partCosts.tirada = Math.ceil(job.Cantidad / usePoses);
+      partCosts.impresiones =
+        Math.ceil(part.Pages * (job.coloresDorso > 0 ? 2 : 1)) *
+        Math.ceil(job.Cantidad / usePoses);
       console.log(partCosts);
     };
 
@@ -222,7 +226,7 @@ const JobDetail = (props) => {
                 <Button
                   //icon={ArrowBackIcon}
                   onClick={() => {
-                    saveImpo();
+                    saveImpoData();
                   }}
                   variant="contained"
                   color="primary"

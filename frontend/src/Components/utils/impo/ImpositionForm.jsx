@@ -49,11 +49,20 @@ export const ImpositionForm = (props) => {
       Math.min(f.Ancho, f.Alto) >=
         Math.min(props.part?.Ancho || 0, props.part?.Alto || 0) &&
       Math.max(f.Ancho, f.Alto) <=
-        Math.max(useSelectedPrinter.X_Maximo || 0, useSelectedPrinter.Y_Maximo ||0) &&
+        Math.max(
+          useSelectedPrinter.X_Maximo || 0,
+          useSelectedPrinter.Y_Maximo || 0
+        ) &&
       Math.min(f.Ancho, f.Alto) <=
-          Math.min(useSelectedPrinter.X_Maximo || 0, useSelectedPrinter.Y_Maximo ||0) &&
+        Math.min(
+          useSelectedPrinter.X_Maximo || 0,
+          useSelectedPrinter.Y_Maximo || 0
+        ) &&
       Math.min(f.Ancho, f.Alto) >=
-        Math.min(useSelectedPrinter.X_Minimo || 0, useSelectedPrinter.Y_Minimo ||0)  
+        Math.min(
+          useSelectedPrinter.X_Minimo || 0,
+          useSelectedPrinter.Y_Minimo || 0
+        )
   );
 
   const {
@@ -72,9 +81,9 @@ export const ImpositionForm = (props) => {
       const gettedFormats = await getPrivateElements("formatos");
       const getPrinters = await getPrivateElements("impresoras");
 
-      const filteredPrinters = filterPrinters(await getPrinters)
+      const filteredPrinters = filterPrinters(await getPrinters);
 
-      console.table(filteredPrinters)
+      console.table(filteredPrinters);
 
       setFormats(gettedFormats);
       setPrinters(filteredPrinters);
@@ -101,12 +110,12 @@ export const ImpositionForm = (props) => {
     <FormControl sx={{ width: "100%" }}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Grid container columns={12} spacing={1}>
-        <Grid item xs={12} md={12}>
+          <Grid item xs={12} md={12}>
             <FormControl fullWidth>
               <TextField
                 select
                 name={"printerSelector"}
-                variant="filled"
+                variant="outlined"
                 color="primary"
                 defaultValue={""}
                 label="Impresora"
@@ -139,11 +148,19 @@ export const ImpositionForm = (props) => {
                         size="large"
                         label={Printer.Nombre}
                       /> */}
-                      <Typography variant="button">{Printer.Fabricante} {Printer.Modelo} <b>{Printer.Colores===4?"(cmyk)":Printer.Colores===1?"(k)":"Error"} </b></Typography>
+                      <Typography variant="button">
+                        {Printer.Fabricante} {Printer.Modelo}{" "}
+                        <b>
+                          {Printer.Colores === 4
+                            ? "(cmyk)"
+                            : Printer.Colores === 1
+                            ? "(k)"
+                            : "Error"}{" "}
+                        </b>
+                      </Typography>
                     </MenuItem>
                   ))
                 )}
-                
               </TextField>
             </FormControl>
 
@@ -156,7 +173,7 @@ export const ImpositionForm = (props) => {
               <TextField
                 type="number"
                 label="Ancho Pagina"
-                variant="filled"
+                variant="outlined"
                 name="widthPage"
                 defaultValue={props.part?.Ancho || ""}
                 {...register("widthPage", {
@@ -178,7 +195,7 @@ export const ImpositionForm = (props) => {
               <TextField
                 type="number"
                 label="Alto Pagina"
-                variant="filled"
+                variant="outlined"
                 name="heightPage"
                 defaultValue={props.part?.Alto || ""}
                 {...register("heightPage", {
@@ -201,7 +218,7 @@ export const ImpositionForm = (props) => {
               <TextField
                 type="number"
                 label="Calle"
-                variant="filled"
+                variant="outlined"
                 name="Calle"
                 defaultValue={0}
                 {...register("Calle", {
@@ -220,7 +237,7 @@ export const ImpositionForm = (props) => {
               <TextField
                 type="number"
                 label="Margenes"
-                variant="filled"
+                variant="outlined"
                 name="margenes"
                 defaultValue={0}
                 {...register("margenes", {
@@ -239,7 +256,7 @@ export const ImpositionForm = (props) => {
               <TextField
                 select
                 name={"formatSelector"}
-                variant="filled"
+                variant="outlined"
                 color="primary"
                 defaultValue={""}
                 label="Formato"
@@ -314,7 +331,7 @@ export const ImpositionForm = (props) => {
                 type="number"
                 label={!customFormat ? "" : "Ancho Pliego"}
                 disabled={customFormat ? false : true}
-                variant="filled"
+                variant="outlined"
                 name="widthSheet"
                 onChange={() => {
                   setCustomFormat(true);
@@ -346,7 +363,7 @@ export const ImpositionForm = (props) => {
                 type="number"
                 label={!customFormat ? "" : "Alto Pliego"}
                 disabled={customFormat ? false : true}
-                variant="filled"
+                variant="outlined"
                 name="heightSheet"
                 onChange={() => setCustomFormat(true)}
                 {...register("heightSheet", {
