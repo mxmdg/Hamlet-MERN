@@ -89,10 +89,16 @@ function ResponsiveAppBar(props) {
 
   const dropMenu = context.useLogin ? userMenu : settings;
 
+  const colorList = ["primary", "secondary", "info", "warning", "error"];
+
   const Navigate = useNavigate();
 
   return (
-    <AppBar position="fixed">
+    <AppBar
+      color={colorList[Math.round(Math.random() * 5)]}
+      enableColorOnDark={false}
+      position="fixed"
+    >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
