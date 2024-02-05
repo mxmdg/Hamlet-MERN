@@ -17,6 +17,7 @@ import {
 } from "@mui/material";
 import { useEffect, useState, useContext } from "react";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import SaveIcon from "@mui/icons-material/Save";
 
 import { styled } from "@mui/material/styles";
 import ReactTimeAgo from "react-time-ago";
@@ -83,6 +84,17 @@ const JobDetail = (props) => {
     let myKey = part._id + partNumber;
 
     console.log(useSheet);
+
+    const partCosts = {
+      Poses: usePoses,
+      Pliego: useSheet,
+    };
+
+    const saveImpo = () => {
+      partCosts.totalSignatures = calculateStock().cantidadDePliegos;
+      partCosts.totalSheets = calculateStock().totalHojas;
+      console.log(partCosts);
+    };
 
     const calculateStock = () => {
       const straightCut = cutOptimizer(
@@ -181,10 +193,15 @@ const JobDetail = (props) => {
                       </Item2>
                       <Item2 elevation={4}>
                         Pliegos: {calculateStock().cantidadDePliegos} - Salen:{" "}
-                        {calculateStock().pliegosPorHoja} del {part.partStock.Ancho_Resma} x {part.partStock.Alto_Resma} 
+                        {calculateStock().pliegosPorHoja} del{" "}
+                        {part.partStock.Ancho_Resma} x{" "}
+                        {part.partStock.Alto_Resma}
                       </Item2>
                       <Item2 elevation={4}>
-                        Cantidad de resmas: {(Math.ceil((calculateStock().totalHojas /500) * 100)) / 100} {`(${calculateStock().totalHojas} hojas)`}
+                        Cantidad de resmas:{" "}
+                        {Math.ceil((calculateStock().totalHojas / 500) * 100) /
+                          100}{" "}
+                        {`(${calculateStock().totalHojas} hojas)`}
                       </Item2>
                     </>
                   )}
@@ -200,6 +217,19 @@ const JobDetail = (props) => {
                     ></Canvas>
                   </DarkWoodCard>
                 </ImpoProvider>
+              </Grid>
+              <Grid item xs={6} md={4}>
+                <Button
+                  //icon={ArrowBackIcon}
+                  onClick={() => {
+                    saveImpo();
+                  }}
+                  variant="contained"
+                  color="primary"
+                  startIcon={<SaveIcon />}
+                >
+                  Guardar
+                </Button>
               </Grid>
             </Grid>
           </AccordionDetails>
