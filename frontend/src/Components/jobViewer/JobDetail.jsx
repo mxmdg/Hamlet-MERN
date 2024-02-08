@@ -38,7 +38,7 @@ import { bestCut, cutOptimizer } from "../utils/impo/ImpositionService";
 import DarkWoodCard from "../utils/DarkWoodCard";
 
 export const calcularLomo = (pags, resma) => {
-  return Math.round(Math.ceil(pags / 2) * (resma / 500));
+  return Math.ceil(Math.ceil(pags / 2) * (resma / 500));
 };
 
 const JobDetail = (props) => {
@@ -100,19 +100,20 @@ const JobDetail = (props) => {
       console.log(partCosts);
     };
 
-    const calculateStock = () => {
+    const calculateStock = (signnatureWidth,signatureHeight,sheetWidth,sheetHeight) => {
+
       const straightCut = cutOptimizer(
-        part.partStock.Ancho_Resma,
-        part.partStock.Alto_Resma,
-        useSheet.width,
-        useSheet.height
+        sheetWidth, //part.partStock.Ancho_Resma,
+        sheetHeight, //part.partStock.Alto_Resma,
+        parseInt(signnatureWidth), //useSheet.width,
+        parseInt(signatureHeight), //useSheet.height
       );
 
       const rotatedtCut = cutOptimizer(
-        part.partStock.Ancho_Resma,
-        part.partStock.Alto_Resma,
-        useSheet.height,
-        useSheet.width
+        sheetWidth, //part.partStock.Ancho_Resma,
+        sheetHeight, //part.partStock.Alto_Resma,
+        parseInt(signatureHeight), //useSheet.height,
+        parseInt(signnatureWidth), //useSheet.width
       );
 
       const pliegosPorHoja = Math.max(
@@ -196,17 +197,48 @@ const JobDetail = (props) => {
                         Tirada: {Math.ceil(job.Cantidad / usePoses)}
                       </Item2>
                       <Item2 elevation={4}>
-                        Pliegos: {calculateStock().cantidadDePliegos} - Salen:{" "}
-                        {calculateStock().pliegosPorHoja} del{" "}
+                        Pliegos: {calculateStock(
+                          useSheet.width,
+                          useSheet.height,
+                          part.partStock.Ancho_Resma,
+                          part.partStock.Alto_Resma,
+                          ).cantidadDePliegos} - Salen:{" "}
+                        {calculateStock(
+                          useSheet.width,
+                          useSheet.height,
+                          part.partStock.Ancho_Resma,
+                          part.partStock.Alto_Resma,
+                          ).pliegosPorHoja} del{" "}
                         {part.partStock.Ancho_Resma} x{" "}
                         {part.partStock.Alto_Resma}
                       </Item2>
                       <Item2 elevation={4}>
                         Cantidad de resmas:{" "}
-                        {Math.ceil((calculateStock().totalHojas / 500) * 100) /
+                        {Math.ceil((calculateStock(
+                          useSheet.width,
+                          useSheet.height,
+                          part.partStock.Ancho_Resma,
+                          part.partStock.Alto_Resma,
+                          ).totalHojas / 500) * 100) /
                           100}{" "}
-                        {`(${calculateStock().totalHojas} hojas)`}
+                        {`(${calculateStock(
+                          useSheet.width,
+                          useSheet.height,
+                          part.partStock.Ancho_Resma,
+                          part.partStock.Alto_Resma,
+                          ).totalHojas} hojas)`}
                       </Item2>
+                        <Button
+                            //icon={ArrowBackIcon}
+                            onClick={() => {
+                              saveImpoData();
+                            }}
+                            variant="contained"
+                            color="success"
+                            startIcon={<SaveIcon />}
+                          >
+                            Guardar Imposicion
+                        </Button>
                     </>
                   )}
                 </Stack>
@@ -222,19 +254,7 @@ const JobDetail = (props) => {
                   </DarkWoodCard>
                 </ImpoProvider>
               </Grid>
-              <Grid item xs={6} md={4}>
-                <Button
-                  //icon={ArrowBackIcon}
-                  onClick={() => {
-                    saveImpoData();
-                  }}
-                  variant="contained"
-                  color="primary"
-                  startIcon={<SaveIcon />}
-                >
-                  Guardar
-                </Button>
-              </Grid>
+              
             </Grid>
           </AccordionDetails>
         </Accordion>
@@ -258,16 +278,14 @@ const JobDetail = (props) => {
             <Box>
               <Paper elevation={12} sx={{ background: "#39a" }}>
                 <Container sx={{ padding: "15px" }}>
-                  <Typography variant="caption" gutterBottom>
-                    Emision: <br />
-                    {new Date(job.Fecha).toLocaleDateString(undefined, options)}
+                  <Typography variant="title" gutterBottom>
+                    <b>Emision: {new Date(job.Fecha).toLocaleDateString(undefined, options)}</b>
                     <br />
                     <Divider />
-                    Entrega: <br />
-                    {new Date(job.Entrega).toLocaleDateString(
+                    <b>Entrega: {new Date(job.Entrega).toLocaleDateString(
                       undefined,
                       options
-                    )}
+                    )}</b>
                   </Typography>
                 </Container>
                 <Container>

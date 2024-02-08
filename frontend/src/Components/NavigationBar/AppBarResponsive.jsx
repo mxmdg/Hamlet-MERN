@@ -95,7 +95,7 @@ function ResponsiveAppBar(props) {
 
   return (
     <AppBar
-      color={colorList[Math.round(Math.random() * 5)]}
+      color= "primary" //{colorList[Math.round(Math.random() * 5)]}
       enableColorOnDark={false}
       position="fixed"
     >

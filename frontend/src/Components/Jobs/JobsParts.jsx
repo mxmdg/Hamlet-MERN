@@ -178,7 +178,7 @@ const JobParts = (props) => {
   const [stocks, setStocks] = useState([]);
   const [filteredStocks, setFilteredStocks] = useState([]);
   const [partsList, setPartsList] = useState(null);
-  const [currentPart, setCurrentPart] = useState(null);
+  const [currentPart, setCurrentPart] = useState(props.editPart || null);
 
   // Estado para inhabilitar ColoresDorso cuando el trabajo es una sola cara
   const [useSimplex, setSimplex] = useState(false);
@@ -255,11 +255,13 @@ const JobParts = (props) => {
           onSubmit={handleSubmit(
             props.editPart === null
               ? props.addParts
-              : () =>
-                  props.replacePart(
-                    props.editPart?.indice,
+              : () => {
+                    props.replacePart(
+                    props.editPart?.index,
                     props.editPart?.part
-                  )
+                    );
+                    props.setEditPart(null)
+                }
           )}
         >
           <Grid

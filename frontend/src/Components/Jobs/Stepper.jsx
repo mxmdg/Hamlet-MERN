@@ -95,14 +95,14 @@ export default function MyStepper() {
 
   const replacePart = (n, replace) => {
     console.table(useParts);
-    const partsOk = useParts.splice(n, 1, replace);
+    const partsOk = [useParts.splice(n, 1, replace)];
     console.table(partsOk);
-    console.log(`Reemplazar la parte ${n} de ${partsOk}`);
+    console.log(`Reemplazar la parte ${n + 1} de ${partsOk.length}`);
     setParts(partsOk);
   };
 
   const editPart = (n) => {
-    console.log(`Editar la parte ${n} de ${useParts}`);
+    console.log(`Editar la parte ${n + 1} de ${useParts.length}`);
     const res = setPartToEdit({ part: useParts[n], index: n });
     return res;
   };
@@ -192,6 +192,7 @@ export default function MyStepper() {
         addParts={addParts}
         replacePart={replacePart}
         editPart={usePartToEdit}
+        setEditPart={setPartToEdit}
         useParts={useParts}
         parts={allParts}
       />,
@@ -200,7 +201,7 @@ export default function MyStepper() {
       "Confirme el pedido",
       <Box>
         {useParts.map((part) => {
-          return <div key={part.jobParts.id}>{part.jobParts.type}</div>;
+          return <div key={part.jobParts?.id}>{part.jobParts?.type}</div>;
         })}
       </Box>,
     ],

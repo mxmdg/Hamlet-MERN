@@ -38,7 +38,7 @@ const Canvas = (props) => {
       const newContext = canvasRef.current.getContext("2d");
       const canvasWidth = useCanvasSize.x;
       const canvasHeight = useCanvasSize.y;
-      const sheet = { width: data.widthSheet, height: data.heightSheet };
+      const sheet = { width: data.widthSheet, height: data.heightSheet }; 
 
       // Verifica si el tamaño de la hoja es mayor que el tamaño del canvas
       if (
