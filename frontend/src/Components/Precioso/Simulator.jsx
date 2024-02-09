@@ -49,6 +49,7 @@ const Simulator = (props) => {
     console.log(item);
     switch (item) {
       case "nuvera":
+      case "nuvera (LP)":
         simulation = Nuvera(
           props.data.Valor,
           props.data.Minimo,
@@ -58,6 +59,7 @@ const Simulator = (props) => {
         );
         break;
       case "igen color":
+      case "igen color (LP)":
         simulation = iGenColor(
           props.data.Valor,
           props.data.Minimo,

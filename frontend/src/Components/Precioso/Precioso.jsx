@@ -29,9 +29,11 @@ const Precioso = (props) => {
     let formula;
     switch (item.Proceso) {
       case "nuvera":
+      case "nuvera (LP)":
         formula = formNuvera(item.Valor, item.Minimo, item.Entrada);
         break;
       case "igen color":
+      case "igen color (LP)":
         formula = formIgenColor(item.Valor, item.Minimo, item.Entrada);
         break;
       case "laminado":

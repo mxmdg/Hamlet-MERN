@@ -11,9 +11,9 @@ export const bestCut = (x1, y1, x2, y2) => {
 };
 
 export const cutOptimizer = (x1, y1, x2, y2, margen = 0, calle = 0) => {
-  x1 = x1 - (2 * margen);
+  x1 = x1 - 1 * margen;
 
-  y1 = y1 - (2 * margen);
+  y1 = y1 - 1 * margen;
 
   let xPoses = Math.floor(x1 / (x2 + calle));
 
