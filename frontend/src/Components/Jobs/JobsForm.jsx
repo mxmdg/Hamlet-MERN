@@ -223,22 +223,13 @@ const JobsForm = (props) => {
                       trigger("Owner");
                     }}
                   >
-                    {!context.useLogin ? (
-                      useUsersList.map((u) => {
-                        return (
-                          <MenuItem value={u._id} key={u._id}>
-                            {u.Name} {u.LastName}
-                          </MenuItem>
-                        );
-                      })
-                    ) : (
-                      <MenuItem
-                        value={context.userLogged._id}
-                        key={context.userLogged._id}
-                      >
-                        {context.userLogged.Name}
-                      </MenuItem>
-                    )}
+                    {useUsersList.map((u) => {
+                      return (
+                        <MenuItem value={u._id} key={u._id}>
+                          {u.Name} {u.LastName}
+                        </MenuItem>
+                      );
+                    })}
                   </TextField>
                   {errors.Owner?.type === "required" && (
                     <FormHelperText>Seleccione un usuario</FormHelperText>
