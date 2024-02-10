@@ -84,4 +84,41 @@ const login = async (req, res, next) => {
   }
 };
 
-module.exports = { getAll, addUser, getUser, updateUser, deleteUser, login };
+const changePassword = async (req, res, next) => {
+  try {
+    const userId = req.params.id;
+    const { oldPassword, newPassword } = req.body;
+
+    // Buscar el usuario por su ID
+    const user = await usersModel.esquema.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "Usuario no encontrado" });
+    }
+
+    // Verificar la contraseña actual
+    if (!bcrypt.compareSync(oldPassword, user.password)) {
+      return res
+        .status(400)
+        .json({ message: "La contraseña actual es incorrecta" });
+    }
+
+    // Actualizar la contraseña
+    user.password = newPassword; //bcrypt.hashSync(newPassword, 10);
+    await user.save();
+
+    res.json({ message: "Contraseña actualizada exitosamente" });
+  } catch (error) {
+    console.error("Error al cambiar la contraseña:", error);
+    next(error);
+  }
+};
+
+module.exports = {
+  getAll,
+  addUser,
+  getUser,
+  updateUser,
+  deleteUser,
+  login,
+  changePassword,
+};

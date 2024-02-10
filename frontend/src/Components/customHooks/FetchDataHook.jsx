@@ -58,6 +58,7 @@ export const addPrivateElement = async (collection, formData) => {
 export const putPrivateElement = async (itemURL, formData) => {
   const token = localStorage.getItem("token");
   try {
+    console.log("URL from FetchDataHook: " + itemURL);
     const elements = await axios.put(itemURL, formData, {
       headers: {
         Authorization: `Bearer ${token}`,

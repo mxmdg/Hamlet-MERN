@@ -71,7 +71,7 @@ export const Login = () => {
 
   const success = (
     <Box>
-      <Card elevation={6}>
+      <Card elevation={2}>
         {context.userLogged === null && <CardHeader title="Login"></CardHeader>}
         {context.userLogged !== null && (
           <CardHeader

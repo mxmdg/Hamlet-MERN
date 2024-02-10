@@ -344,7 +344,9 @@ export default function MyStepper() {
                     onClick={handleBack}
                     sx={{ mr: 1 }}
                   >
-                    Back
+                    {activeStep < steps.length - 1
+                      ? "Modificar Datos del Trabajo"
+                      : "Agregar más partes"}
                   </Button>
                   <Box sx={{ flex: "1 1 auto" }} />
                   {isStepOptional(activeStep) && (

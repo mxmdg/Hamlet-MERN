@@ -48,7 +48,8 @@ function ResponsiveAppBar(props) {
     { text: "usuarios", path: "users" },
   ];
   const userMenu = [
-    { text: "Perfil", path: "users/edit/" + context.userLogged?._id },
+    { text: "Perfil", path: "users/profile" },
+    { text: "Cambiar Contraseña", path: "users/ChangePassword" },
     { text: "Trabajo Nuevo", path: "jobs/add" },
     { text: "Mensajes", path: "messages" },
   ];
@@ -95,7 +96,7 @@ function ResponsiveAppBar(props) {
 
   return (
     <AppBar
-      color= "primary" //{colorList[Math.round(Math.random() * 5)]}
+      color="primary" //{colorList[Math.round(Math.random() * 5)]}
       enableColorOnDark={false}
       position="fixed"
     >

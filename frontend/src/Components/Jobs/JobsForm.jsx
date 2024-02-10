@@ -277,7 +277,7 @@ const JobsForm = (props) => {
                 </Grid>
 
                 <Grid item xs={1} sm={2} md={4} sx={{ alignSelf: "center" }}>
-                  <Button type="submit" variant="outlined" color="warning">
+                  <Button type="submit" variant="contained" color="primary">
                     Agregar Trabajo
                   </Button>
                 </Grid>

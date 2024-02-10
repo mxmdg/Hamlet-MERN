@@ -38,7 +38,7 @@ const AuthProvider = ({ children }) => {
       localStorage.setItem("login", true);
       setToken(token);
       localStorage.setItem("token", token);
-      Navigate(-1);
+      Navigate("/users/profile");
       console.log("Login exitoso");
     } else {
       handleLogout();

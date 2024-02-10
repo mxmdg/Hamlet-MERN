@@ -256,11 +256,11 @@ const JobParts = (props) => {
             props.editPart === null
               ? props.addParts
               : () => {
-                    props.replacePart(
+                  props.replacePart(
                     props.editPart?.index,
                     props.editPart?.part
-                    );
-                    props.setEditPart(null)
+                  );
+                  props.setEditPart(null);
                 }
           )}
         >
@@ -553,8 +553,8 @@ const JobParts = (props) => {
                 <Button
                   type="submit"
                   size="large"
-                  variant="outlined"
-                  color="secondary"
+                  variant="contained"
+                  color="primary"
                 >
                   {props.editPart === null
                     ? "Agregar Parte"

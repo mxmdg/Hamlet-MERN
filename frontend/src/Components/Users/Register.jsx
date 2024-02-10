@@ -61,7 +61,7 @@ export const Register = () => {
 
   const success = (
     <Box>
-      <Card>
+      <Card elevation={2}>
         <CardHeader title="Registrate!"></CardHeader>
         <CardContent>
           <FormControl sx={{ width: "90%" }}>

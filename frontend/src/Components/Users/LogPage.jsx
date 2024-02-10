@@ -1,15 +1,21 @@
 import React from "react";
-import Container from "@mui/material/Container";
+import { Container, Grid } from "@mui/material/";
 import { Register } from "./Register";
 import { Login } from "./Login";
 
 export const LogPage = () => {
   return (
     <Container>
-      <h1>Login:</h1>
-      <Login />
-      <h1>Register:</h1>
-      <Register />
+      <Grid container spacing={4}>
+        <Grid item>
+          <title>Login:</title>
+          <Login />
+        </Grid>
+        <Grid item>
+          <title>Register:</title>
+          <Register />
+        </Grid>
+      </Grid>
     </Container>
   );
 };

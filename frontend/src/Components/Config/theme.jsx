@@ -98,14 +98,14 @@ const themeOptions = createTheme({
     },
   },
   typography: {
-    fontFamily:'Open Sans, sans-serif',
+    fontFamily: "Open Sans, sans-serif",
     button: {
       fontWeight: 500,
-      fontSize: '0.9rem',
-      fontFamily: 'Open Sans, sans-serif',
+      fontSize: "0.9rem",
+      fontFamily: "Open Sans, sans-serif",
     },
     h1: {
-      fontFamily: 'Open Sans, sans-serif',
+      fontFamily: "Open Sans, sans-serif",
       fontWeight: 700,
     },
     fontWeightLight: 100,
@@ -125,7 +125,7 @@ const ThemeProv = (props) => {
   if (props.mode) {
     themeOptions.palette.mode = "dark";
     themeOptions.palette.background = {
-      default: "#fff",
+      default: "#EEF5DB",
       paper: "#000000",
     };
     themeOptions.palette.text = {
@@ -134,12 +134,11 @@ const ThemeProv = (props) => {
       disabled: "#888888",
       hint: "#000000",
     };
-    
   } else {
     themeOptions.palette.mode = "light";
     themeOptions.palette.background = {
       default: "#000",
-      paper: "#fff",
+      paper: "#F5F3F5",
     };
     themeOptions.palette.text = {
       primary: "#222",
@@ -151,5 +150,5 @@ const ThemeProv = (props) => {
 
   return <ThemeProvider theme={themeOptions}>{props.children}</ThemeProvider>;
 };
-export {themeOptions}
+export { themeOptions };
 export default ThemeProv;
