@@ -1,6 +1,8 @@
 const usersModel = require("../../models/usersSchema");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const nodemailer = require("nodemailer");
+const uuid = require("uuid");
 
 const getAll = async (req, res, next) => {
   try {
@@ -113,6 +115,66 @@ const changePassword = async (req, res, next) => {
   }
 };
 
+const forgotPassword = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+    const user = await usersModel.esquema.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({
+        message: "No se encontró un usuario con este correo electrónico",
+      });
+    }
+
+    // Generar un token único
+    const token = uuid.v4();
+
+    // Guardar el token en la base de datos junto con el usuario
+    user.resetPasswordToken = token;
+    user.resetPasswordExpires = Date.now() + 3600000; // 1 hora de expiración
+    await user.save();
+
+    // Enviar correo electrónico con el enlace para restablecer la contraseña
+    const transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false, // true for 465, false for other ports
+      auth: {
+        user: "maxiomaro@gmail.com", // tu dirección de correo electrónico de Gmail
+        pass: "Dante1108yGaspar0406", // tu contraseña de Gmail
+      },
+    });
+
+    const resetPasswordLink = `http://localhost:3000/reset-password?token=${token}`;
+    const mailOptions = {
+      from: "maxiomaro@gmail.com",
+      to: email,
+      subject: "Recuperación de Contraseña",
+      text: `Para restablecer tu contraseña, haz clic en el siguiente enlace: ${resetPasswordLink}`,
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.log(error);
+        return res.status(500).json({
+          message:
+            "Error al enviar el correo electrónico de recuperación de contraseña: " +
+            error.message,
+        });
+      } else {
+        console.log("Email sent: " + info.response);
+        return res.status(200).json({
+          message:
+            "Correo electrónico de recuperación de contraseña enviado exitosamente",
+        });
+      }
+    });
+  } catch (error) {
+    console.error("Error al solicitar recuperación de contraseña:", error);
+    next(error);
+  }
+};
+
 module.exports = {
   getAll,
   addUser,
@@ -121,4 +183,5 @@ module.exports = {
   deleteUser,
   login,
   changePassword,
+  forgotPassword,
 };

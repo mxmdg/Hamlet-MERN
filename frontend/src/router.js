@@ -122,6 +122,8 @@ const Router = () => (
     <Route path="/users/add" element={<Register />} />
     <Route path="/users/profile" element={<Login />} />
     <Route path="/users/ChangePassword" element={<ChangePassword />} />
+
+    <Route path="/users/forgot-password" element={<ChangePassword />} />
     <Route path="/register" element={<Register />} />
     <Route
       path="/users/edit/:id"

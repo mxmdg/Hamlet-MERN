@@ -8,11 +8,13 @@ const {
   deleteUser,
   login,
   changePassword,
+  forgotPassword,
 } = require("./controllers/usersController");
 
 /* GET users listing. */
 router.post("/login", login);
 router.post("/register", addUser);
+router.post("/forgot-password", forgotPassword);
 router.get("/", getAll);
 router.get("/:id", getUser);
 router.put("/:id/change-password", changePassword);

@@ -2,6 +2,8 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
+const nodemailer = require("nodemailer");
+const uuid = require("uuid");
 
 //settings
 app.set("port", process.env.PORT || 5000);

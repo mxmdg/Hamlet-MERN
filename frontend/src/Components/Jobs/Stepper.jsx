@@ -351,7 +351,7 @@ export default function MyStepper() {
                   <Box sx={{ flex: "1 1 auto" }} />
                   {isStepOptional(activeStep) && (
                     <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
-                      Skip
+                      Saltar
                     </Button>
                   )}
                   <Button
@@ -360,7 +360,9 @@ export default function MyStepper() {
                     }
                     variant="filled"
                   >
-                    {activeStep === steps.length - 1 ? "Finish" : "Next"}
+                    {activeStep === steps.length - 1
+                      ? "Terminar Pedido"
+                      : "Siguiente"}
                   </Button>
                   {/* {useJob !== null && (
                     <Button onClick={handleNext} variant="filled">

@@ -138,7 +138,7 @@ const ThemeProv = (props) => {
     themeOptions.palette.mode = "light";
     themeOptions.palette.background = {
       default: "#000",
-      paper: "#F5F3F5",
+      paper: "#F7FBEF",
     };
     themeOptions.palette.text = {
       primary: "#222",
