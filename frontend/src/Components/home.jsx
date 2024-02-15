@@ -28,7 +28,7 @@ const Home = () => {
           <Container>
             <Grid container spacing="3" columns={{ xs: 1, sm: 12, md: 12 }}>
               <Grid item xs={1} sm={12} md={12}>
-                <Fetch collection="jobs/urg" />
+                <Fetch collection="jobs" subdir="urg" />
               </Grid>
 
               <Grid item xs={1} sm={6} md={8}>
@@ -45,11 +45,6 @@ const Home = () => {
                 </DarkWoodCard>
               </Grid>
             </Grid>
-
-            <Divider />
-            <Typography variant="subtitle" color={"secondary"} gutterBottom>
-              Token: {getToken() ? "Habilitado" : "Inhabilitado"}
-            </Typography>
           </Container>
         </Grid>
         <Grid item xs={1} sm={12} md={4}>

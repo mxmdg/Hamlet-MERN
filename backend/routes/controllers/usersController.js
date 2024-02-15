@@ -137,12 +137,21 @@ const forgotPassword = async (req, res, next) => {
     // Enviar correo electrónico con el enlace para restablecer la contraseña
     const transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
-      port: 587,
-      secure: false, // true for 465, false for other ports
+      port: 465,
+      secure: true, // true for 465, false for other ports
       auth: {
         user: "maxiomaro@gmail.com", // tu dirección de correo electrónico de Gmail
         pass: "Dante1108yGaspar0406", // tu contraseña de Gmail
       },
+    });
+
+    // verify connection configuration
+    transporter.verify(function (error, success) {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log("Server is ready to take our messages");
+      }
     });
 
     const resetPasswordLink = `http://localhost:3000/reset-password?token=${token}`;
@@ -159,7 +168,7 @@ const forgotPassword = async (req, res, next) => {
         return res.status(500).json({
           message:
             "Error al enviar el correo electrónico de recuperación de contraseña: " +
-            error.message,
+            error,
         });
       } else {
         console.log("Email sent: " + info.response);

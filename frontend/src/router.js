@@ -4,6 +4,7 @@ import { Routes, Route } from "react-router-dom";
 import MainContainer from "./Components/General/MainContainer";
 import { Register } from "./Components/Users/Register";
 import { Login } from "./Components/Users/Login";
+import { Profile } from "./Components/Users/Profile";
 import { LogPage } from "./Components/Users/LogPage";
 import ChangePassword from "./Components/Users/ChangePassword";
 import Home from "./Components/home";
@@ -120,7 +121,7 @@ const Router = () => (
     />
     <Route path="/users" element={<MainContainer entity={"users"} />} />
     <Route path="/users/add" element={<Register />} />
-    <Route path="/users/profile" element={<Login />} />
+    <Route path="/users/profile" element={<Profile />} />
     <Route path="/users/ChangePassword" element={<ChangePassword />} />
 
     <Route path="/users/forgot-password" element={<ChangePassword />} />
