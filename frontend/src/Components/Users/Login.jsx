@@ -23,6 +23,7 @@ import { serverURL, databaseURL } from "../Config/config";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import { AuthContext } from "../context/AuthContext";
 import { useContext } from "react";
+import { Profile } from "./Profile";
 
 export const Login = () => {
   const {
@@ -116,14 +117,7 @@ export const Login = () => {
         )}
         <CardContent>
           {context.userLogged !== null && (
-            <Box>
-              <Typography>
-                Correo electronico: {context.userLogged.email}
-              </Typography>
-              <br></br>
-              <Typography>Rol: {context.userLogged.Role}</Typography>
-              <br></br>
-            </Box>
+            <Profile />
           )}
           {context.userLogged === null && (
             <FormControl sx={{ width: "90%" }}>

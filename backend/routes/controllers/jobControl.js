@@ -37,12 +37,28 @@ jobControl.getJobsParts = async (req, res) => {
 jobControl.getUrgentJobs = async (req, res) => {
   const currentDate = new Date();
   const daysLater = new Date();
-  daysLater.setDate(currentDate.getDate() + 5);
+  daysLater.setDate(currentDate.getDate() + 10);
   try {
     {
       const queryText = req.query.Q || "";
       const jobList = await jobs.esquema
         .find({ Entrega: { $gte: currentDate, $lt: daysLater } })
+        .select("Nombre Cantidad Fecha Entrega Emision Deadline");
+      res.json(jobList);
+    }
+  } catch (e) {
+    throw e;
+  }
+};
+
+jobControl.getOwnerJobs = async (req, res) => {
+  
+  try {
+    {
+      const queryText = req.query.Q || "";
+      const currentUserId = req.params.id
+      const jobList = await jobs.esquema
+        .find({ Owner: { $eq: currentUserId } })
         .select("Nombre Cantidad Fecha Entrega Emision Deadline");
       res.json(jobList);
     }

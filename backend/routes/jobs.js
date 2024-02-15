@@ -10,11 +10,13 @@ const {
   updateJob,
   deleteJob,
   getJobsParts,
+  getOwnerJobs,
 } = require("./controllers/jobControl");
 
 routerJob.route("/").get(getJobs).post(addJob);
 
 routerJob.route("/urg").get(getUrgentJobs);
+routerJob.route("/owner/:id").get(getOwnerJobs);
 
 routerJob.route("/urg/:id").put(updateJob).get(getJob).delete(deleteJob);
 routerJob.route("/:id").put(updateJob).get(getJob).delete(deleteJob);
