@@ -7,7 +7,7 @@ const uuid = require("uuid");
 
 //settings
 app.set("port", process.env.PORT || 5000);
-app.set("secretKey", "dorrego");
+app.set("secretKey", "hamlet");
 
 // middlewares
 app.use(cors({ origin: "*" }));

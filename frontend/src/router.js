@@ -7,6 +7,7 @@ import { Login } from "./Components/Users/Login";
 import { Profile } from "./Components/Users/Profile";
 import { LogPage } from "./Components/Users/LogPage";
 import ChangePassword from "./Components/Users/ChangePassword";
+import ResetPassword from "./Components/Users/RecoverPassword";
 import Home from "./Components/home";
 import Form from "./Components/Formulario/Form";
 import PrintersDataForm from "./Components/Formulario/PrintersDataForm";
@@ -123,8 +124,8 @@ const Router = () => (
     <Route path="/users/add" element={<Register />} />
     <Route path="/users/profile" element={<Profile />} />
     <Route path="/users/ChangePassword" element={<ChangePassword />} />
+    <Route path="/users/reset-password/:token" element={<ResetPassword />} />
 
-    <Route path="/users/forgot-password" element={<ChangePassword />} />
     <Route path="/register" element={<Register />} />
     <Route
       path="/users/edit/:id"

@@ -3,6 +3,8 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const uuid = require("uuid");
+const mailAccount = { user: process.env.MAILUSER, pass: process.env.MAILPASS };
+const mailer = require("../../services/mail");
 
 const getAll = async (req, res, next) => {
   try {
@@ -135,18 +137,18 @@ const forgotPassword = async (req, res, next) => {
     await user.save();
 
     // Enviar correo electrónico con el enlace para restablecer la contraseña
-    const transporter = nodemailer.createTransport({
+    const transporterOutOfService = nodemailer.createTransport({
       host: "smtp.gmail.com",
       port: 465,
       secure: true, // true for 465, false for other ports
       auth: {
-        user: "maxiomaro@gmail.com", // tu dirección de correo electrónico de Gmail
-        pass: "Dante1108yGaspar0406", // tu contraseña de Gmail
+        user: mailAccount.user, // tu dirección de correo electrónico de Gmail
+        pass: mailAccount.pass, // tu contraseña de Gmail
       },
     });
 
     // verify connection configuration
-    transporter.verify(function (error, success) {
+    mailer.transporter.verify(function (error, success) {
       if (error) {
         console.log(error);
       } else {
@@ -154,15 +156,15 @@ const forgotPassword = async (req, res, next) => {
       }
     });
 
-    const resetPasswordLink = `http://localhost:3000/reset-password?token=${token}`;
+    const resetPasswordLink = `http://192.168.0.198:3000/users/reset-password/${token}`;
     const mailOptions = {
-      from: "maxiomaro@gmail.com",
+      from: "webapproval@imprentadorrego.com.ar",
       to: email,
-      subject: "Recuperación de Contraseña",
-      text: `Para restablecer tu contraseña, haz clic en el siguiente enlace: ${resetPasswordLink}`,
+      subject: "Recuperar mi contraseña en Hamlet",
+      text: `Para restablecer tu contraseña, hacé clic en el siguiente enlace: ${resetPasswordLink}`,
     };
 
-    transporter.sendMail(mailOptions, (error, info) => {
+    mailer.transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
         console.log(error);
         return res.status(500).json({
@@ -171,15 +173,41 @@ const forgotPassword = async (req, res, next) => {
             error,
         });
       } else {
-        console.log("Email sent: " + info.response);
         return res.status(200).json({
-          message:
-            "Correo electrónico de recuperación de contraseña enviado exitosamente",
+          message: "Revisá tu correo",
         });
       }
     });
   } catch (error) {
     console.error("Error al solicitar recuperación de contraseña:", error);
+    next(error);
+  }
+};
+
+const resetPassword = async (req, res, next) => {
+  try {
+    const { token } = req.params;
+    const { newPassword } = req.body;
+
+    // Buscar el usuario por el token de restablecimiento de contraseña
+    const user = await usersModel.esquema.findOne({
+      resetPasswordToken: token,
+      resetPasswordExpires: { $gt: Date.now() }, // Verificar que el token aún no haya expirado
+    });
+
+    if (!user) {
+      return res.status(400).json({ message: "Token inválido o expirado" });
+    }
+
+    // Actualizar la contraseña
+    user.password = newPassword;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
+    await user.save();
+
+    res.json({ message: "Contraseña restablecida exitosamente" });
+  } catch (error) {
+    console.error("Error al restablecer la contraseña:", error);
     next(error);
   }
 };
@@ -193,4 +221,5 @@ module.exports = {
   login,
   changePassword,
   forgotPassword,
+  resetPassword,
 };

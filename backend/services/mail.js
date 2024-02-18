@@ -1,14 +1,18 @@
-import nodemailer from "nodemailer";
+const nodemailer = require("nodemailer");
+
+const mailAccount = { user: process.env.MAILUSER, pass: process.env.MAILPASS };
+
+const mailer = {};
 
 // create reusable transporter object using the default SMTP transport
-const transporter = nodemailer.createTransport({
+mailer.transporter = nodemailer.createTransport({
   service: "gmail",
   host: "smtp.gmail.com",
-  port: 587,
-  secure: false,
+  port: 465,
+  secure: true, // true for 465, false for other ports
   auth: {
-    user: "maxiomaro@gmail.com",
-    pass: "Dante1108yGaspar0406",
+    user: mailAccount.user, // tu dirección de correo electrónico de Gmail
+    pass: mailAccount.pass, // tu contraseña de Gmail
   },
 });
 
@@ -16,7 +20,7 @@ const transporter = nodemailer.createTransport({
  {object} options - mail options (to, subject, text, html)
  {function} callback - callback function to handle response
 */
-const SENDMAIL = async (mailDetails, callback) => {
+mailer.SENDMAIL = async (mailDetails, callback) => {
   try {
     const info = await transporter.sendMail(mailDetails);
     callback(info);
@@ -25,4 +29,4 @@ const SENDMAIL = async (mailDetails, callback) => {
   }
 };
 
-export default SENDMAIL;
+module.exports = mailer;

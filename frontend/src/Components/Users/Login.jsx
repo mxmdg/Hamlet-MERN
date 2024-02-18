@@ -49,6 +49,11 @@ export const Login = () => {
     setError("");
   };
 
+  const resetSuccess = () => {
+    console.log("reset Success");
+    setSuccessMessage("");
+  };
+
   const onSubmit = async (data) => {
     try {
       const token = await axios.post(databaseURL + "users/login", data);
@@ -84,7 +89,11 @@ export const Login = () => {
         "http://localhost:5000/hamlet/users/forgot-password",
         data
       );
-      setSuccessMessage(response.data.message);
+      setSuccessMessage({
+        message: response.data.message,
+        severity: "success",
+        action: { resetSuccess },
+      });
     } catch (e) {
       console.log(e);
       setError({
@@ -116,9 +125,7 @@ export const Login = () => {
           ></CardHeader>
         )}
         <CardContent>
-          {context.userLogged !== null && (
-            <Profile />
-          )}
+          {context.userLogged !== null && <Profile />}
           {context.userLogged === null && (
             <FormControl sx={{ width: "90%" }}>
               <form name="Register" onSubmit={handleSubmit(onSubmit)}>
@@ -235,7 +242,13 @@ export const Login = () => {
             action={resetError}
           />
         )}
-        {successMessage && <p>{successMessage}</p>}
+        {successMessage && (
+          <ErrorMessage
+            message={successMessage.message}
+            severity="success"
+            action={resetSuccess}
+          />
+        )}
       </form>
     </FormControl>
   );
