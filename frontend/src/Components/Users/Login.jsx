@@ -19,7 +19,7 @@ import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import { Grid } from "@mui/material";
-import { serverURL, databaseURL } from "../Config/config";
+import { serverURL, databaseURL, url } from "../Config/config";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import { AuthContext } from "../context/AuthContext";
 import { useContext } from "react";
@@ -86,7 +86,7 @@ export const Login = () => {
   const forgottenPassword = async (data) => {
     try {
       const response = await axios.post(
-        "http://localhost:5000/hamlet/users/forgot-password",
+        `${databaseURL}users/forgot-password`,
         data
       );
       setSuccessMessage({
@@ -97,8 +97,7 @@ export const Login = () => {
     } catch (e) {
       console.log(e);
       setError({
-        message:
-          "Error al enviar el correo electrónico de recuperación de contraseña",
+        message: "Error al enviar el correo: " + e.message,
         severity: "warning",
         action: { resetError },
       });

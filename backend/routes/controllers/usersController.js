@@ -5,6 +5,9 @@ const nodemailer = require("nodemailer");
 const uuid = require("uuid");
 const mailAccount = { user: process.env.MAILUSER, pass: process.env.MAILPASS };
 const mailer = require("../../services/mail");
+const Port = process.env.PORT;
+const uiPort = process.env.UIPORT;
+const URL = process.env.URL;
 
 const getAll = async (req, res, next) => {
   try {
@@ -156,7 +159,7 @@ const forgotPassword = async (req, res, next) => {
       }
     });
 
-    const resetPasswordLink = `http://192.168.0.198:3000/users/reset-password/${token}`;
+    const resetPasswordLink = `${URL}:${uiPort}/users/reset-password/${token}`;
     const mailOptions = {
       from: "webapproval@imprentadorrego.com.ar",
       to: email,

@@ -22,6 +22,7 @@ export const Profile = () => {
     >
       <Grid item xs={1} sm={12} md={4}>
         <Card>
+          <CardHeader title={`Hola ${context.userLogged.Name}`} />
           <CardContent>
             <Typography>
               Correo electronico: {context.userLogged.email}
