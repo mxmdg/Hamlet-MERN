@@ -67,6 +67,30 @@ jobControl.getOwnerJobs = async (req, res) => {
   }
 };
 
+jobControl.getCompanyJobs = async (req, res) => {
+  
+  try {
+    {
+      const queryText = req.query.Q || "";
+      const currentUserId = req.params.id
+      const jobList = await jobs.esquema
+        .find({ Company: { $eq: currentUserId } })
+        .populate({
+          path: "Owner",
+          model: users.esquema,
+        })
+        .populate({
+          path: "Company",
+          model: companies.esquema,
+          select: "Nombre email",
+        })
+        res.json(jobList);
+    }
+  } catch (e) {
+    throw e;
+  }
+};
+
 jobControl.addJob = async (req, res) => {
   {
     try {

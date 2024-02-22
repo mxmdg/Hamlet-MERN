@@ -116,7 +116,7 @@ const Simulator = (props) => {
     await fechtData("Formatos", setFormats);
   };
 
-  const cantidades = [1, 100, 500];
+  const cantidades = [1, 100, 500, 1000];
   const pliegos = [
     { Ancho: 215, Alto: 315 },
     { Ancho: 470, Alto: 320 },
@@ -224,12 +224,12 @@ const Simulator = (props) => {
           <CardHeader title={props.data.Proceso}></CardHeader>
           <CardContent>
             <Form />
-            {/* <SimulationTable
+            <SimulationTable
               data={props.data}
               pliegos={pliegos}
               cantidades={cantidades}
               simCLC={simCLC}
-            /> */}
+            />
           </CardContent>
 
           <CardActions>

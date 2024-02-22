@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import PricesDataForm from "../Formulario/PricesDataForm";
 import ItemsDetails from "../General/itemsDetails";
@@ -24,6 +25,7 @@ const Precioso = (props) => {
   const [useEdit, setEdit] = useState(false);
   const [loading, setLoading] = useState(true);
   const [useErrorMessage, setErrorMessage] = useState();
+  const Navigate = useNavigate()
 
   const formulaCLC = (item) => {
     let formula;
@@ -56,7 +58,7 @@ const Precioso = (props) => {
     return formula;
   };
 
-  const AlertError = <ErrorMessage message={priceList?.message} />;
+  const AlertError = <ErrorMessage message={priceList?.message} severity='warning'/>;
 
   useEffect(() => {
     /* const getElements = async () => {

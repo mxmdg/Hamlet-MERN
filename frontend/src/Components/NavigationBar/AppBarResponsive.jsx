@@ -19,6 +19,7 @@ import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { serverURL, databaseURL } from "../Config/config";
 import { ListItemButton, Paper } from "@mui/material";
+import SessionTimer from "../Users/SessionTimer";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import LightModeIcon from "@mui/icons-material/LightMode";
@@ -221,9 +222,11 @@ function ResponsiveAppBar(props) {
             >
               {context.userLogged && (
                 <MenuItem>
-                  <Typography textAlign="center">
+                  <Typography textAlign="left" color={"primary"}>
                     {context.userLogged.Name} {context.userLogged.LastName}{" "}
+                    <SessionTimer/>
                   </Typography>
+                  
                 </MenuItem>
               )}
 

@@ -92,7 +92,7 @@ function createData(Cantidad, Pliego, Unitario, Total) {
 
 export default function SimulationTable(props) {
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState("All");
 
   const rows = () => {
     let result = [];

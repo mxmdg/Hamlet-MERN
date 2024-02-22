@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { serverURL } from "../Config/config";
+import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 
 export const AuthContext = React.createContext();
 
@@ -45,6 +48,19 @@ const AuthProvider = ({ children }) => {
       return { message: "El password ha expirado" };
     }
   };
+
+  const validateToken = ()=> {
+    const decodeToken = jwtDecode(useToken)
+    if (decodeToken.exp < Date.now() / 1000) {
+      handleLogout()
+    }  
+  }
+
+  useEffect(()=>{
+    if (useToken !== null) {
+      validateToken()
+    }
+  },[])
 
   return (
     <AuthContext.Provider
