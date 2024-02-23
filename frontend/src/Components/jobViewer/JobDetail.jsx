@@ -37,6 +37,9 @@ import Canvas from "../utils/impo/Canvas";
 import { bestCut, cutOptimizer } from "../utils/impo/ImpositionService";
 import DarkWoodCard from "../utils/DarkWoodCard";
 
+// Mis componentes
+import JobRow from "../Jobs/jobsTable/JobRow";
+
 export const calcularLomo = (pags, resma) => {
   return Math.ceil(Math.ceil(pags / 2) * (resma / 500));
 };
@@ -329,6 +332,7 @@ const JobDetail = (props) => {
           </Container>
         </CardActions>
       </Card>
+      <JobRow job={job}/>
     </Container>
   );
 };

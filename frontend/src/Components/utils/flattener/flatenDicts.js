@@ -23,4 +23,4 @@ function flattenArrayOfObjects(arr) {
 // const flattenedData = flattenArrayOfObjects(dataFromDatabase);
 // console.log(flattenedData);
 
-module.exports = { flattenObject, flattenArrayOfObjects }
+export default flattenArrayOfObjects 

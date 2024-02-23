@@ -13,7 +13,32 @@ jobControl.getJobs = async (req, res) => {
         .find({
           Nombre: { $regex: queryText, $options: "i" },
         })
-        .select("Nombre Cantidad Fecha Entrega Emision Deadline")
+        .select("Nombre Cantidad Fecha Entrega Emision Deadline Owner")
+        .sort({ Nombre: -1 });
+      res.json(jobList);
+    } catch (e) {
+      throw e;
+    }
+  }
+};
+
+jobControl.getCompleteJobs = async (req, res) => {
+  {
+    try {
+      const queryText = req.query.Q || "";
+      const jobList = await jobs.esquema
+        .find({
+          Nombre: { $regex: queryText, $options: "i" },
+        })
+        .populate({
+          path: "Owner",
+          model: users.esquema,
+        })
+        .populate({
+          path: "Company",
+          model: companies.esquema,
+          select: "Nombre email",
+        })
         .sort({ Nombre: -1 });
       res.json(jobList);
     } catch (e) {

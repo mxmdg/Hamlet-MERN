@@ -12,6 +12,7 @@ import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import DarkWoodCard from "../utils/DarkWoodCard";
 import { useNavigate } from "react-router-dom";
 import { fechtData, getPrivateElements } from "../customHooks/FetchDataHook";
+import flattenArrayOfObjects from "../utils/flattener/flatenDicts";
 
 const Fetch = (props) => {
   const [useList, setList] = useState([]);
@@ -29,8 +30,9 @@ const Fetch = (props) => {
     const elements = await getPrivateElements(
       props.collection + (props.subdir ? `/${props.subdir}` : "")
     );
-    console.log(elements.flat(Infinity));
+    
     setList(elements);
+
     setHeaders(() => {
       const arr = [];
       const labels = elements.length
