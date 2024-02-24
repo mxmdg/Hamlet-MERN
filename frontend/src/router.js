@@ -24,6 +24,7 @@ import ConfigMainContainer from "./Components/Config/ConfigMainContainer";
 import StocksMainContainer from "./Components/Stocks/StocksMainContainer";
 import FormatsMainContainer from "./Components/Formats/FormatsMainContainer";
 import PrintersMainContainer from "./Components/Printers/PrintersMainContainer";
+import FullJobsRender from "./Components/Pages/FullJobsRender";
 
 const Router = () => (
   <Routes>
@@ -134,6 +135,7 @@ const Router = () => (
     <Route path="/Jobs" element={<JobsContainer entity={"Jobs"} />} />
     <Route path="/Jobs/add" element={<MyStepper />} />
     <Route path="/Jobs/edit/:id" element={<JobViewer entity={"Jobs"} />} />
+    <Route path="/Jobs/fullList" element={<FullJobsRender />} />
     <Route path="/precios" element={<MainContainer entity={"precios"} />} />
     <Route
       path="/precios/edit/:id"
