@@ -6,6 +6,7 @@ import Spinner from "../General/Spinner";
 import JobRow from "../Jobs/jobsTable/JobRow";
 import { fechtData, getPrivateElements } from "../customHooks/FetchDataHook";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
+import CollapsibleTable from "../Jobs/jobsTable/CollapsibleTable";
 
 const FullJobsRender = () => {
   const [jobList, setJobList] = React.useState([]);
@@ -59,7 +60,7 @@ const FullJobsRender = () => {
       ) : error !== null ? (
         AlertError
       ) : jobList ? (
-        <JobListRender />
+        <CollapsibleTable />
       ) : (
         <Typography color={"error"}> NO Data </Typography>
       )}
