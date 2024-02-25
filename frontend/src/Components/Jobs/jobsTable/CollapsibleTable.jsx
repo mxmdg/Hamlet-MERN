@@ -36,6 +36,7 @@ function createData(
       pages: p.Pages,
       size: `${p.Ancho} x ${p.Alto} mm`,
       colors: `${p.ColoresFrente} / ${p.ColoresDorso || "0"}`,
+      stock: `${p.partStock.Marca} ${p.partStock.Tipo} ${p.partStock.Gramaje}`,
     };
     arr.push(data);
   });
@@ -96,6 +97,7 @@ function Row(props) {
                     <TableCell align="right">Páginas</TableCell>
                     <TableCell align="right">Formato</TableCell>
                     <TableCell align="right">Colores</TableCell>
+                    <TableCell align="left">Material</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -108,6 +110,7 @@ function Row(props) {
                       <TableCell align="right">{historyRow.pages}</TableCell>
                       <TableCell align="right">{historyRow.size}</TableCell>
                       <TableCell align="right">{historyRow.colors}</TableCell>
+                      <TableCell align="left">{historyRow.stock}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>

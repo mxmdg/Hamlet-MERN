@@ -39,6 +39,7 @@ jobControl.getCompleteJobs = async (req, res) => {
           model: companies.esquema,
           select: "Nombre email",
         })
+        .populate({ path: "Partes.partStock", model: stocks.esquema })
         .sort({ Nombre: -1 });
       res.json(jobList);
     } catch (e) {
@@ -77,11 +78,10 @@ jobControl.getUrgentJobs = async (req, res) => {
 };
 
 jobControl.getOwnerJobs = async (req, res) => {
-  
   try {
     {
       const queryText = req.query.Q || "";
-      const currentUserId = req.params.id
+      const currentUserId = req.params.id;
       const jobList = await jobs.esquema
         .find({ Owner: { $eq: currentUserId } })
         .select("Nombre Cantidad Fecha Entrega Emision Deadline");
@@ -93,11 +93,10 @@ jobControl.getOwnerJobs = async (req, res) => {
 };
 
 jobControl.getCompanyJobs = async (req, res) => {
-  
   try {
     {
       const queryText = req.query.Q || "";
-      const currentUserId = req.params.id
+      const currentUserId = req.params.id;
       const jobList = await jobs.esquema
         .find({ Company: { $eq: currentUserId } })
         .populate({
@@ -108,8 +107,8 @@ jobControl.getCompanyJobs = async (req, res) => {
           path: "Company",
           model: companies.esquema,
           select: "Nombre email",
-        })
-        res.json(jobList);
+        });
+      res.json(jobList);
     }
   } catch (e) {
     throw e;
