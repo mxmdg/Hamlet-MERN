@@ -162,7 +162,7 @@ export default function CollapsibleTable() {
         const data = res.map((job) => {
           return createData(
             job.Nombre,
-            job.Tipo[0].name,
+            job.Tipo[0]?.name,
             job.Cantidad,
             job.Company.Nombre,
             job.Owner?.Name + " " + job.Owner?.LastName,
@@ -174,6 +174,7 @@ export default function CollapsibleTable() {
         rows.push(...data); // Use spread operator to push elements individually
         setData([...data]); // Update state with the fetched data
       } catch (error) {
+        console.log(error);
         setError(error);
       }
     };
