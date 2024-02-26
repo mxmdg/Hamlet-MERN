@@ -118,11 +118,11 @@ jobControl.getCompanyJobs = async (req, res) => {
 jobControl.addJob = async (req, res) => {
   {
     try {
-      const Nombre = req.body.jobName;
+      const Nombre = req.body.Nombre;
       const Tipo = req.body.JobType;
-      const Cantidad = req.body.quantity;
+      const Cantidad = req.body.Cantidad;
       const Partes = req.body.Partes;
-      const Entrega = req.body.endDate;
+      const Entrega = req.body.Entrega;
       const Owner = req.body.Owner;
       const Company = req.body.Company;
       //const Archivos = '/uploads/' + req.file.filename;

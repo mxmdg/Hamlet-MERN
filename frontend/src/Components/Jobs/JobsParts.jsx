@@ -269,39 +269,6 @@ const JobParts = (props) => {
             spacing={{ xs: 2, md: 3 }}
             columns={{ xs: 1, sm: 4, md: 8 }}
           >
-            <Grid item xs={1} sm={4} md={8}>
-              <TextField
-                variant="outlined"
-                type="text"
-                name="Name"
-                id="Name"
-                defaultValue={
-                  props.editPart === null ? "" : props.editPart.part?.Name
-                }
-                label="Nombre de la parte"
-                color="info"
-                required
-                {...register("Name", {
-                  required: true,
-                  maxLength: 85,
-                  minLength: 3,
-                })}
-                onBlur={() => {
-                  trigger("Name");
-                }}
-              />
-              {errors.Name?.type === "required" && (
-                <FormHelperText>
-                  Agregue una descripcion o titulo a la parte
-                </FormHelperText>
-              )}
-              {errors.Name?.type === "maxLength" && (
-                <FormHelperText>Maximo 85 caracteres</FormHelperText>
-              )}
-              {errors.Name?.type === "minLength" && (
-                <FormHelperText>Minimo 3 caracteres</FormHelperText>
-              )}
-            </Grid>
             {partsList !== null && (
               <Grid item xs={1} sm={2} md={4}>
                 <FormControl sx={{ width: "90%" }}>
@@ -339,6 +306,39 @@ const JobParts = (props) => {
                 )}
               </Grid>
             )}
+            <Grid item xs={1} sm={2} md={4}>
+              <TextField
+                variant="outlined"
+                type="text"
+                name="Name"
+                id="Name"
+                defaultValue={
+                  props.editPart === null ? "" : props.editPart.part?.Name
+                }
+                label="Nombre de la parte"
+                color="info"
+                required
+                {...register("Name", {
+                  required: true,
+                  maxLength: 85,
+                  minLength: 3,
+                })}
+                onBlur={() => {
+                  trigger("Name");
+                }}
+              />
+              {errors.Name?.type === "required" && (
+                <FormHelperText>
+                  Agregue una descripcion o titulo a la parte
+                </FormHelperText>
+              )}
+              {errors.Name?.type === "maxLength" && (
+                <FormHelperText>Maximo 85 caracteres</FormHelperText>
+              )}
+              {errors.Name?.type === "minLength" && (
+                <FormHelperText>Minimo 3 caracteres</FormHelperText>
+              )}
+            </Grid>
             <Grid item xs={1} sm={2} md={4}>
               <TextField
                 id="Pages"

@@ -103,20 +103,24 @@ const JobDetail = (props) => {
       console.log(partCosts);
     };
 
-    const calculateStock = (signnatureWidth,signatureHeight,sheetWidth,sheetHeight) => {
-
+    const calculateStock = (
+      signnatureWidth,
+      signatureHeight,
+      sheetWidth,
+      sheetHeight
+    ) => {
       const straightCut = cutOptimizer(
         sheetWidth, //part.partStock.Ancho_Resma,
         sheetHeight, //part.partStock.Alto_Resma,
         parseInt(signnatureWidth), //useSheet.width,
-        parseInt(signatureHeight), //useSheet.height
+        parseInt(signatureHeight) //useSheet.height
       );
 
       const rotatedtCut = cutOptimizer(
         sheetWidth, //part.partStock.Ancho_Resma,
         sheetHeight, //part.partStock.Alto_Resma,
         parseInt(signatureHeight), //useSheet.height,
-        parseInt(signnatureWidth), //useSheet.width
+        parseInt(signnatureWidth) //useSheet.width
       );
 
       const pliegosPorHoja = Math.max(
@@ -200,48 +204,59 @@ const JobDetail = (props) => {
                         Tirada: {Math.ceil(job.Cantidad / usePoses)}
                       </Item2>
                       <Item2 elevation={4}>
-                        Pliegos: {calculateStock(
-                          useSheet.width,
-                          useSheet.height,
-                          part.partStock.Ancho_Resma,
-                          part.partStock.Alto_Resma,
-                          ).cantidadDePliegos} - Salen:{" "}
-                        {calculateStock(
-                          useSheet.width,
-                          useSheet.height,
-                          part.partStock.Ancho_Resma,
-                          part.partStock.Alto_Resma,
-                          ).pliegosPorHoja} del{" "}
-                        {part.partStock.Ancho_Resma} x{" "}
+                        Pliegos:{" "}
+                        {
+                          calculateStock(
+                            useSheet.width,
+                            useSheet.height,
+                            part.partStock.Ancho_Resma,
+                            part.partStock.Alto_Resma
+                          ).cantidadDePliegos
+                        }{" "}
+                        - Salen:{" "}
+                        {
+                          calculateStock(
+                            useSheet.width,
+                            useSheet.height,
+                            part.partStock.Ancho_Resma,
+                            part.partStock.Alto_Resma
+                          ).pliegosPorHoja
+                        }{" "}
+                        del {part.partStock.Ancho_Resma} x{" "}
                         {part.partStock.Alto_Resma}
                       </Item2>
                       <Item2 elevation={4}>
                         Cantidad de resmas:{" "}
-                        {Math.ceil((calculateStock(
-                          useSheet.width,
-                          useSheet.height,
-                          part.partStock.Ancho_Resma,
-                          part.partStock.Alto_Resma,
-                          ).totalHojas / 500) * 100) /
-                          100}{" "}
-                        {`(${calculateStock(
-                          useSheet.width,
-                          useSheet.height,
-                          part.partStock.Ancho_Resma,
-                          part.partStock.Alto_Resma,
-                          ).totalHojas} hojas)`}
+                        {Math.ceil(
+                          (calculateStock(
+                            useSheet.width,
+                            useSheet.height,
+                            part.partStock.Ancho_Resma,
+                            part.partStock.Alto_Resma
+                          ).totalHojas /
+                            500) *
+                            100
+                        ) / 100}{" "}
+                        {`(${
+                          calculateStock(
+                            useSheet.width,
+                            useSheet.height,
+                            part.partStock.Ancho_Resma,
+                            part.partStock.Alto_Resma
+                          ).totalHojas
+                        } hojas)`}
                       </Item2>
-                        <Button
-                            //icon={ArrowBackIcon}
-                            onClick={() => {
-                              saveImpoData();
-                            }}
-                            variant="contained"
-                            color="success"
-                            startIcon={<SaveIcon />}
-                          >
-                            Guardar Imposicion
-                        </Button>
+                      <Button
+                        //icon={ArrowBackIcon}
+                        onClick={() => {
+                          saveImpoData();
+                        }}
+                        variant="contained"
+                        color="success"
+                        startIcon={<SaveIcon />}
+                      >
+                        Guardar Imposicion
+                      </Button>
                     </>
                   )}
                 </Stack>
@@ -257,7 +272,6 @@ const JobDetail = (props) => {
                   </DarkWoodCard>
                 </ImpoProvider>
               </Grid>
-              
             </Grid>
           </AccordionDetails>
         </Accordion>
@@ -282,13 +296,22 @@ const JobDetail = (props) => {
               <Paper elevation={12} sx={{ background: "#39a" }}>
                 <Container sx={{ padding: "15px" }}>
                   <Typography variant="title" gutterBottom>
-                    <b>Emision: {new Date(job.Fecha).toLocaleDateString(undefined, options)}</b>
+                    <b>
+                      Emision:{" "}
+                      {new Date(job.Fecha).toLocaleDateString(
+                        undefined,
+                        options
+                      )}
+                    </b>
                     <br />
                     <Divider />
-                    <b>Entrega: {new Date(job.Entrega).toLocaleDateString(
-                      undefined,
-                      options
-                    )}</b>
+                    <b>
+                      Entrega:{" "}
+                      {new Date(job.Entrega).toLocaleDateString(
+                        undefined,
+                        options
+                      )}
+                    </b>
                   </Typography>
                 </Container>
                 <Container>
@@ -332,7 +355,6 @@ const JobDetail = (props) => {
           </Container>
         </CardActions>
       </Card>
-      <JobRow job={job}/>
     </Container>
   );
 };

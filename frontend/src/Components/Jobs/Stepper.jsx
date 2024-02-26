@@ -31,14 +31,14 @@ import {
 import { calcularLomo } from "../jobViewer/JobDetail";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 
-export default function MyStepper() {
+export default function MyStepper(props) {
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set());
   const [allParts, setAllParts] = React.useState([]);
-  const [useParts, setParts] = React.useState([]);
+  const [useParts, setParts] = React.useState(props.job?.Partes || []);
   const [usePartToEdit, setPartToEdit] = React.useState(null);
-  const [useJobType, setJobType] = React.useState({});
-  const [useJob, setJob] = React.useState(null);
+  const [useJobType, setJobType] = React.useState(props.job?.Tipo[0] || {});
+  const [useJob, setJob] = React.useState(props.job || null);
   const [useError, setError] = React.useState(null);
   const context = useContext(AuthContext);
 
@@ -169,9 +169,9 @@ export default function MyStepper() {
 
   const handleReset = () => {
     setActiveStep(0);
-    setParts([]);
-    setJobType({});
-    setJob({});
+    setParts(props.job?.Partes || []);
+    setJobType(props.job?.Tipo[0] || {});
+    setJob(props.job || null);
   };
 
   const steps = [
@@ -224,8 +224,8 @@ export default function MyStepper() {
     >
       <Card raised sx={{ gap: "20px" }} color="info">
         <CardHeader
-          title={useJob?.jobName || "Nuevo Pedido"}
-          subheader={useJob?.quantity || "Solicita tu presupuesto!"}
+          title={useJob?.Nombre || "Nuevo Pedido"}
+          subheader={useJob?.Cantidad || "Solicita tu presupuesto!"}
         />
         <CardContent>
           <Container>
@@ -235,7 +235,7 @@ export default function MyStepper() {
               spacing={1}
               overflow={"auto"}
             >
-              {useParts.map((part, index) => {
+              {useParts?.map((part, index) => {
                 return (
                   <Grid item xs={4} sm={4} md={6} key={part.id}>
                     <Card elevation={12} square={true}>
@@ -361,7 +361,7 @@ export default function MyStepper() {
                     variant="filled"
                   >
                     {activeStep === steps.length - 1
-                      ? "Terminar Pedido"
+                      ? "Enviar Pedido"
                       : "Siguiente"}
                   </Button>
                   {/* {useJob !== null && (

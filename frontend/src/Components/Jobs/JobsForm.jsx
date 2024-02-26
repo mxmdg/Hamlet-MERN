@@ -82,9 +82,42 @@ const JobsForm = (props) => {
               >
                 <Grid item xs={1} sm={2} md={4}>
                   <TextField
+                    id="Nombre"
+                    label="Nombre del Trabajo"
+                    variant="outlined"
+                    defaultValue={props.data?.Nombre || ""}
+                    name="Nombre"
+                    {...register("Nombre", {
+                      required: true,
+                      minLength: 3,
+                      maxLength: 50,
+                    })}
+                    onBlur={() => {
+                      trigger("Nombre");
+                    }}
+                    fullWidth
+                  />
+                  {errors.Nombre?.type === "minLength" && (
+                    <FormHelperText>
+                      Este campo debe tener al menos de 3 caracteres.
+                    </FormHelperText>
+                  )}
+                  {errors.Nombre?.type === "maxLength" && (
+                    <FormHelperText>
+                      Este campo debe tener menos de 50 caracteres.
+                    </FormHelperText>
+                  )}
+                  {errors.Nombre?.type === "required" && (
+                    <FormHelperText>Este campo es requerido</FormHelperText>
+                  )}
+                </Grid>
+                <Grid item xs={1} sm={2} md={4}>
+                  <TextField
                     select
                     defaultValue={
-                      props.data === null ? "" : props.data.JobType?.id
+                      props.data === null
+                        ? ""
+                        : props.data.jobType?.id || props.data?.Tipo[0]?.id
                     }
                     id="JobType"
                     inputProps={{
@@ -117,72 +150,41 @@ const JobsForm = (props) => {
                 </Grid>
                 <Grid item xs={1} sm={2} md={4}>
                   <TextField
-                    id="jobName"
-                    label="Nombre del Trabajo"
-                    variant="outlined"
-                    defaultValue={props.data?.jobName || ""}
-                    name="jobName"
-                    {...register("jobName", {
-                      required: true,
-                      minLength: 3,
-                      maxLength: 50,
-                    })}
-                    onBlur={() => {
-                      trigger("jobName");
-                    }}
-                    fullWidth
-                  />
-                  {errors.jobName?.type === "minLength" && (
-                    <FormHelperText>
-                      Este campo debe tener al menos de 3 caracteres.
-                    </FormHelperText>
-                  )}
-                  {errors.jobName?.type === "maxLength" && (
-                    <FormHelperText>
-                      Este campo debe tener menos de 50 caracteres.
-                    </FormHelperText>
-                  )}
-                  {errors.jobName?.type === "required" && (
-                    <FormHelperText>Este campo es requerido</FormHelperText>
-                  )}
-                </Grid>
-                <Grid item xs={1} sm={2} md={4}>
-                  <TextField
-                    id="quantity"
+                    id="Cantidad"
                     type="number"
                     label="Cantidad"
                     variant="outlined"
-                    defaultValue={props.data?.quantity || ""}
-                    name="quantity"
-                    {...register("quantity", {
+                    defaultValue={props.data?.Cantidad || ""}
+                    name="Cantidad"
+                    {...register("Cantidad", {
                       required: true,
                       min: 1,
                       max: 50000,
                     })}
                     onBlur={() => {
-                      trigger("quantity");
+                      trigger("Cantidad");
                     }}
                     fullWidth
                   />
-                  {errors.quantity?.type === "required" && (
+                  {errors.Cantidad?.type === "required" && (
                     <FormHelperText>Este campo es requerido</FormHelperText>
                   )}
-                  {errors.quantity?.type === "min" && (
+                  {errors.Cantidad?.type === "min" && (
                     <FormHelperText>La cantidad minima es 1</FormHelperText>
                   )}
-                  {errors.quantity?.type === "max" && (
+                  {errors.Cantidad?.type === "max" && (
                     <FormHelperText>La cantidad máxima es 50000</FormHelperText>
                   )}
                 </Grid>
                 <Grid item xs={1} sm={2} md={4}>
                   <TextField
-                    id="endDate"
+                    id="Entrega"
                     type="date"
                     label="Fecha de entrega"
                     variant="outlined"
-                    defaultValue={props.data?.endDate || ""}
-                    name="endDate"
-                    {...register("endDate", { required: true })}
+                    defaultValue={props.data?.Entrega || ""}
+                    name="Entrega"
+                    {...register("Entrega", { required: true })}
                     InputLabelProps={{
                       shrink: true,
                     }}
@@ -192,11 +194,11 @@ const JobsForm = (props) => {
                       },
                     }}
                     onBlur={() => {
-                      trigger("endDate");
+                      trigger("Entrega");
                     }}
                     fullWidth
                   />
-                  {errors.endDate?.type === "required" && (
+                  {errors.Entrega?.type === "required" && (
                     <FormHelperText>
                       Establezca la fecha de entrega
                     </FormHelperText>
@@ -206,7 +208,9 @@ const JobsForm = (props) => {
                   <TextField
                     select
                     defaultValue={
-                      !context.useLogin ? "" : context.userLogged._id
+                      !context.useLogin
+                        ? props.data?.Owner?._id || ""
+                        : context.userLogged._id
                     }
                     id="Owner"
                     inputProps={{
