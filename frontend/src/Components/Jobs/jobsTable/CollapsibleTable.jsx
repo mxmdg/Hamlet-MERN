@@ -8,6 +8,8 @@ import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
+import TableFooter from "@mui/material/TableFooter";
+import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
@@ -68,19 +70,23 @@ function Row(props) {
             size="small"
             onClick={() => setOpen(!open)}
           >
-            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+            {open ? (
+              <KeyboardArrowUpIcon color="primary" />
+            ) : (
+              <KeyboardArrowDownIcon color="secondary" />
+            )}
           </IconButton>
         </TableCell>
         <TableCell component="th" scope="row">
           {row.name}
         </TableCell>
-        <TableCell align="right">{row.name}</TableCell>
-        <TableCell align="right">{row.product}</TableCell>
-        <TableCell align="right">{row.quantity}</TableCell>
-        <TableCell align="right">{row.customer}</TableCell>
-        <TableCell align="right">{row.owner}</TableCell>
-        <TableCell align="right">{row.emited}</TableCell>
-        <TableCell align="right">{row.deadLine}</TableCell>
+        <TableCell align="left">{row.name}</TableCell>
+        <TableCell align="left">{row.product}</TableCell>
+        <TableCell align="left">{row.quantity}</TableCell>
+        <TableCell align="left">{row.customer}</TableCell>
+        <TableCell align="left">{row.owner}</TableCell>
+        <TableCell align="left">{row.emited}</TableCell>
+        <TableCell align="left">{row.deadLine}</TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
@@ -94,9 +100,9 @@ function Row(props) {
                   <TableRow>
                     <TableCell>Tipo</TableCell>
                     <TableCell>Nombre</TableCell>
-                    <TableCell align="right">Páginas</TableCell>
-                    <TableCell align="right">Formato</TableCell>
-                    <TableCell align="right">Colores</TableCell>
+                    <TableCell align="left">Páginas</TableCell>
+                    <TableCell align="left">Formato</TableCell>
+                    <TableCell align="left">Colores</TableCell>
                     <TableCell align="left">Material</TableCell>
                   </TableRow>
                 </TableHead>
@@ -107,9 +113,9 @@ function Row(props) {
                         {historyRow.type}
                       </TableCell>
                       <TableCell>{historyRow.name}</TableCell>
-                      <TableCell align="right">{historyRow.pages}</TableCell>
-                      <TableCell align="right">{historyRow.size}</TableCell>
-                      <TableCell align="right">{historyRow.colors}</TableCell>
+                      <TableCell align="left">{historyRow.pages}</TableCell>
+                      <TableCell align="left">{historyRow.size}</TableCell>
+                      <TableCell align="left">{historyRow.colors}</TableCell>
                       <TableCell align="left">{historyRow.stock}</TableCell>
                     </TableRow>
                   ))}
@@ -159,7 +165,7 @@ export default function CollapsibleTable() {
             job.Tipo[0].name,
             job.Cantidad,
             job.Company.Nombre,
-            job.Owner?.Name + job.Owner?.LastName,
+            job.Owner?.Name + " " + job.Owner?.LastName,
             job.Emision,
             job.DeadLine,
             job.Partes
@@ -182,13 +188,13 @@ export default function CollapsibleTable() {
           <TableRow>
             <TableCell />
             <TableCell>Pedido</TableCell>
-            <TableCell align="right">Nombre</TableCell>
-            <TableCell align="right">Tipo</TableCell>
-            <TableCell align="right">Cantidad</TableCell>
-            <TableCell align="right">Cliente</TableCell>
-            <TableCell align="right">Representante</TableCell>
-            <TableCell align="right">Emision</TableCell>
-            <TableCell align="right">Entrega</TableCell>
+            <TableCell align="left">Nombre</TableCell>
+            <TableCell align="left">Tipo</TableCell>
+            <TableCell align="left">Cantidad</TableCell>
+            <TableCell align="left">Cliente</TableCell>
+            <TableCell align="left">Representante</TableCell>
+            <TableCell align="left">Emision</TableCell>
+            <TableCell align="left">Entrega</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -196,6 +202,9 @@ export default function CollapsibleTable() {
             <Row key={row.name} row={row} />
           ))}
         </TableBody>
+        <TableFooter>
+          <TablePagination />
+        </TableFooter>
       </Table>
     </TableContainer>
   );

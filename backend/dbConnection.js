@@ -4,7 +4,7 @@ const URI = process.env.MONGODB_URI
   ? process.env.MONGODB_URI
   : "mongodb://127.0.0.1:27017/";
 const DB_NAME =
-  "test"; /*"ImprentaDorrego"; "mxm"; "ImprentaCarballo"*/
+  "ImprentaDorrego"; /*"ImprentaDorrego"; "mxm"; "ImprentaCarballo"*/
 
 mongoose.connect(URI + DB_NAME, {
   useNewUrlParser: true,
