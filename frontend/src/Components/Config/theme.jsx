@@ -90,11 +90,13 @@ const themeOptions = createTheme({
       main: "#00bbff",
       light: "#18ffff",
       dark: "#09f",
+      contrastText: "#fff",
     },
     success: {
       main: "#6f2",
       light: "#00e676",
       dark: "#388e3c",
+      contrastText: "#fff",
     },
   },
   typography: {

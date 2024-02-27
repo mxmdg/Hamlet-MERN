@@ -59,7 +59,7 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-function EnhancedTableHead(props) {
+export function EnhancedTableHead(props) {
   const {
     onSelectAllClick,
     order,
