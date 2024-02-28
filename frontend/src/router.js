@@ -133,7 +133,8 @@ const Router = () => (
       path="/users/edit/:id"
       element={<Form form={UsersDataForm} collection="users" task="edit" />}
     />
-    <Route path="/Jobs" element={<JobsContainer entity={"Jobs"} />} />
+    {/*<Route path="/Jobs" element={<JobsContainer entity={"Jobs"} />} />*/}
+    <Route path="/Jobs" element={<FullJobsRender />} />
     <Route path="/Jobs/add" element={<MyStepper />} />
     <Route path="/Jobs/edit/:id" element={<JobViewer entity={"Jobs"} />} />
     <Route path="/Jobs/copy/:id" element={<JobsEditAndCopy />} />

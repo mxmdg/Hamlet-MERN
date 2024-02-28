@@ -100,7 +100,12 @@ function Row(props) {
 
   return (
     <React.Fragment>
-      <TableRow  key={props.key} sx={{ "& > *": { borderBottom: "unset" } }}>
+      <TableRow
+        key={props.key}
+        sx={{ "& > *": { borderBottom: "unset" } }}
+        hover={true}
+        selected={open ? true : false}
+      >
         <TableCell>
           <IconButton
             aria-label="expand row"
@@ -115,19 +120,13 @@ function Row(props) {
           </IconButton>
         </TableCell>
         <TableCell align="left">
-          <Typography variant="subtitle1">
-          {row.name}
-          </Typography>
+          <Typography variant="subtitle1">{row.name}</Typography>
         </TableCell>
         <TableCell align="left">
-          <Typography variant="subtitle1">
-            {row.product}
-          </Typography>
+          <Typography variant="subtitle1">{row.product}</Typography>
         </TableCell>
         <TableCell align="left">
-          <Typography variant="subtitle1">
-            {row.quantity}
-          </Typography>
+          <Typography variant="subtitle1">{row.quantity}</Typography>
         </TableCell>
         <TableCell align="left">
           <Typography color={"info"} variant="subtitle1">
@@ -135,59 +134,66 @@ function Row(props) {
           </Typography>
         </TableCell>
         <TableCell align="left">
-          <Typography variant="subtitle1">
-          {row.owner}
-          </Typography>
+          <Typography variant="subtitle1">{row.owner}</Typography>
         </TableCell>
         <TableCell align="left">
-          <Typography variant="subtitle1">
-          {row.emited}
-          </Typography>
+          <Typography variant="subtitle1">{row.emited}</Typography>
         </TableCell>
         <TableCell align="left">
-          <Typography variant="subtitle1">
-            {row.deadLine}
-          </Typography>
+          <Typography variant="subtitle1">{row.deadLine}</Typography>
         </TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={8}>
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box sx={{ margin: 1, padding: "15px", borderRadius: "8px", border: "1px solid #777" }}>
-              <Typography variant="subtitle1" color={"secondary"} gutterBottom={0} component="div">
+          <Collapse
+            in={open}
+            timeout={1000}
+            easing={{ enter: "ease-in", exit: "ease-in" }}
+            unmountOnExit
+          >
+            <Box
+              component="Paper"
+              elevation={12}
+              sx={{
+                margin: "20px",
+                padding: "15px",
+                borderRadius: "8px",
+              }}
+            >
+              <Typography variant="subtitle1" gutterBottom={0} component="div">
                 Partes
               </Typography>
               <Table size="small" aria-label="purchases">
                 <TableHead>
                   <TableRow>
                     <TableCell>
-                      <Typography color={"secondary"} variant="subtitle2">
+                      <Typography color={"info"} variant="subtitle2">
                         Tipo
                       </Typography>
                     </TableCell>
                     <TableCell>
-                      <Typography color={"secondary"} variant="subtitle2">
+                      <Typography color={"info"} variant="subtitle2">
                         Nombre
                       </Typography>
                     </TableCell>
                     <TableCell>
-                      <Typography color={"secondary"} variant="subtitle2">
-                      Páginas
+                      <Typography color={"info"} variant="subtitle2">
+                        Páginas
                       </Typography>
                     </TableCell>
                     <TableCell>
-                      <Typography color={"secondary"} variant="subtitle2">
-                      Formato
+                      <Typography color={"info"} variant="subtitle2">
+                        Formato
                       </Typography>
                     </TableCell>
                     <TableCell>
-                      <Typography color={"secondary"} variant="subtitle2">
-                      Colores
+                      <Typography color={"info"} variant="subtitle2">
+                        Colores
                       </Typography>
                     </TableCell>
                     <TableCell>
-                      <Typography color={"secondary"} variant="subtitle2">
-                      Material
+                      <Typography color={"info"} variant="subtitle2">
+                        Material
                       </Typography>
                     </TableCell>
                   </TableRow>
@@ -216,7 +222,6 @@ function Row(props) {
     </React.Fragment>
   );
 }
-
 
 export default function CollapsibleTable(props) {
   const [useLoading, setLoading] = React.useState(true);
@@ -330,8 +335,6 @@ export default function CollapsibleTable(props) {
       onRequestSort(event, property);
     };
 
-    
-  
     return (
       <TableHead>
         <TableRow>
@@ -361,7 +364,9 @@ export default function CollapsibleTable(props) {
                 {headCell.label}
                 {orderBy === headCell.id ? (
                   <Box component="span" sx={visuallyHidden}>
-                    {order === "desc" ? "sorted descending" : "sorted ascending"}
+                    {order === "desc"
+                      ? "sorted descending"
+                      : "sorted ascending"}
                   </Box>
                 ) : null}
               </TableSortLabel>
@@ -381,10 +386,13 @@ export default function CollapsibleTable(props) {
     rowCount: PropTypes.number.isRequired,
   };
 
-  
-
   const tableOK = (
-    <TableContainer component={Paper}>
+    <TableContainer
+      component={Paper}
+      elevation={2}
+      sx={{ padding: "10px" }}
+      square
+    >
       <Table aria-label="collapsible table">
         {/* <TableHead>
           <TableRow>
@@ -400,19 +408,20 @@ export default function CollapsibleTable(props) {
           </TableRow>
         </TableHead> */}
         <EnhancedTableHead
-            numSelected={selected.length}
-            order={order}
-            orderBy={orderBy}
-            onSelectAllClick={handleSelectAllClick}
-            onRequestSort={handleRequestSort}
-            rowCount={rows.length}/>
+          numSelected={selected.length}
+          order={order}
+          orderBy={orderBy}
+          onSelectAllClick={handleSelectAllClick}
+          onRequestSort={handleRequestSort}
+          rowCount={rows.length}
+        />
         <TableBody>
           {visibleRows.map((row) => (
             <Row key={row._id} row={row} />
           ))}
         </TableBody>
         <TableFooter>
-          <TablePagination 
+          <TablePagination
             count={rows.length}
             rowsPerPageOptions={[5, 10, 15, 20, 25]}
             showFirstButton={true}

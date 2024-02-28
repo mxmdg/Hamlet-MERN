@@ -60,7 +60,7 @@ const FullJobsRender = () => {
       ) : error !== null ? (
         AlertError
       ) : jobList ? (
-        <CollapsibleTable rows={jobList}/>
+        <CollapsibleTable rows={jobList} />
       ) : (
         <Typography color={"error"}> NO Data </Typography>
       )}

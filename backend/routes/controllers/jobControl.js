@@ -63,7 +63,7 @@ jobControl.getJobsParts = async (req, res) => {
 jobControl.getUrgentJobs = async (req, res) => {
   const currentDate = new Date();
   const daysLater = new Date();
-  daysLater.setDate(currentDate.getDate() + 10);
+  daysLater.setDate(currentDate.getDate() + 3);
   try {
     {
       const queryText = req.query.Q || "";
