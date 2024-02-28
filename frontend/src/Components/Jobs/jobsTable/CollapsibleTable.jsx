@@ -24,6 +24,7 @@ import ErrorMessage from "../../ErrorMessage/ErrorMessage";
 import Spinner from "../../General/Spinner";
 
 import { headers } from "./headers";
+import { Filter } from "../../customHooks/Filter";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -79,8 +80,6 @@ function createData(
     };
     arr.push(data);
   });
-
-  console.log(arr);
 
   return {
     name,
@@ -147,7 +146,7 @@ function Row(props) {
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={8}>
           <Collapse
             in={open}
-            timeout={1000}
+            timeout={300}
             easing={{ enter: "ease-in", exit: "ease-in" }}
             unmountOnExit
           >
@@ -160,7 +159,7 @@ function Row(props) {
                 borderRadius: "8px",
               }}
             >
-              <Typography variant="subtitle1" gutterBottom={0} component="div">
+              <Typography variant="subtitle1" component="div">
                 Partes
               </Typography>
               <Table size="small" aria-label="purchases">
@@ -230,9 +229,10 @@ export default function CollapsibleTable(props) {
   const [selected, setSelected] = React.useState([]);
   const [orderBy, setOrderBy] = React.useState("name");
   const [rows, setRows] = React.useState(props.rows);
+  const [filteredRows, setFilteredRows] = React.useState(props.rows);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(true);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -387,53 +387,38 @@ export default function CollapsibleTable(props) {
   };
 
   const tableOK = (
-    <TableContainer
-      component={Paper}
-      elevation={2}
-      sx={{ padding: "10px" }}
-      square
-    >
-      <Table aria-label="collapsible table">
-        {/* <TableHead>
-          <TableRow>
-            <TableCell />
-            <TableCell>Pedido</TableCell>
-            <TableCell align="left">Nombre</TableCell>
-            <TableCell align="left">Tipo</TableCell>
-            <TableCell align="left">Cantidad</TableCell>
-            <TableCell align="left">Cliente</TableCell>
-            <TableCell align="left">Representante</TableCell>
-            <TableCell align="left">Emision</TableCell>
-            <TableCell align="left">Entrega</TableCell>
-          </TableRow>
-        </TableHead> */}
-        <EnhancedTableHead
-          numSelected={selected.length}
-          order={order}
-          orderBy={orderBy}
-          onSelectAllClick={handleSelectAllClick}
-          onRequestSort={handleRequestSort}
-          rowCount={rows.length}
-        />
-        <TableBody>
-          {visibleRows.map((row) => (
-            <Row key={row._id} row={row} />
-          ))}
-        </TableBody>
-        <TableFooter>
-          <TablePagination
-            count={rows.length}
-            rowsPerPageOptions={[5, 10, 15, 20, 25]}
-            showFirstButton={true}
-            showLastButton={true}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
+    <>
+      <Filter headers={headers} data={rows} setFilteredList={setRows} />
+      <TableContainer component={Box}>
+        <Table aria-label="collapsible table">
+          <EnhancedTableHead
+            numSelected={selected.length}
+            order={order}
+            orderBy={orderBy}
+            onSelectAllClick={handleSelectAllClick}
+            onRequestSort={handleRequestSort}
+            rowCount={rows.length}
           />
-        </TableFooter>
-      </Table>
-    </TableContainer>
+          <TableBody>
+            {visibleRows.map((row) => (
+              <Row key={row._id} row={row} />
+            ))}
+          </TableBody>
+          <TableFooter>
+            <TablePagination
+              count={rows.length}
+              rowsPerPageOptions={[5, 10, 15, 20, 25]}
+              showFirstButton={true}
+              showLastButton={true}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          </TableFooter>
+        </Table>
+      </TableContainer>
+    </>
   );
 
   const alert = <ErrorMessage message={useError?.message} severity="warning" />;

@@ -7,6 +7,7 @@ import JobRow from "../Jobs/jobsTable/JobRow";
 import { fechtData, getPrivateElements } from "../customHooks/FetchDataHook";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import CollapsibleTable from "../Jobs/jobsTable/CollapsibleTable";
+import DarkWoodCard from "../utils/DarkWoodCard";
 
 const FullJobsRender = () => {
   const [jobList, setJobList] = React.useState([]);
@@ -60,7 +61,9 @@ const FullJobsRender = () => {
       ) : error !== null ? (
         AlertError
       ) : jobList ? (
-        <CollapsibleTable rows={jobList} />
+        <DarkWoodCard>
+          <CollapsibleTable rows={jobList} />
+        </DarkWoodCard>
       ) : (
         <Typography color={"error"}> NO Data </Typography>
       )}

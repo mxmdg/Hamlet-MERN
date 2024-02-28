@@ -138,7 +138,7 @@ const Router = () => (
     <Route path="/Jobs/add" element={<MyStepper />} />
     <Route path="/Jobs/edit/:id" element={<JobViewer entity={"Jobs"} />} />
     <Route path="/Jobs/copy/:id" element={<JobsEditAndCopy />} />
-    <Route path="/Jobs/fullList" element={<FullJobsRender />} />
+    <Route path="/Jobs/fullList" element={<JobsContainer entity={"Jobs"} />} />
     <Route path="/precios" element={<MainContainer entity={"precios"} />} />
     <Route
       path="/precios/edit/:id"

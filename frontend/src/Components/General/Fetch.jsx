@@ -13,6 +13,7 @@ import DarkWoodCard from "../utils/DarkWoodCard";
 import { useNavigate } from "react-router-dom";
 import { fechtData, getPrivateElements } from "../customHooks/FetchDataHook";
 import flattenArrayOfObjects from "../utils/flattener/flatenDicts";
+import { Filter } from "../customHooks/Filter";
 
 const Fetch = (props) => {
   const [useList, setList] = useState([]);
@@ -30,7 +31,7 @@ const Fetch = (props) => {
     const elements = await getPrivateElements(
       props.collection + (props.subdir ? `/${props.subdir}` : "")
     );
-    
+
     setList(elements);
 
     setHeaders(() => {
@@ -57,9 +58,11 @@ const Fetch = (props) => {
     const keys = Object.keys(useList[0]);
     const results = [];
 
+    query = query.toLowerCase();
+
     const findByColumn = (col) => {
       for (let item of useList) {
-        const cellToString = item[col].toString();
+        const cellToString = item[col].toString().toLowerCase();
         if (cellToString.includes(query.toString())) {
           console.log(item[col], query);
           results.push(item);
@@ -70,8 +73,8 @@ const Fetch = (props) => {
     const findAll = () => {
       for (let item of useList) {
         for (let key of keys) {
-          console.log(key + " -> Problema en impresoras");
-          const cellToString = item[key].toString();
+          //console.log(key + " -> Problema en impresoras");
+          const cellToString = item[key].toString().toLowerCase();
           if (cellToString.includes(query.toString())) {
             console.log(item[key], query);
             results.push(item);
@@ -126,6 +129,11 @@ const Fetch = (props) => {
 
   const TableLoaded = (
     <>
+      {/* <Filter
+        headers={useHeaders}
+        data={useList}
+        setFilteredList={setFilteredList}
+      /> */}
       <DarkWoodCard>
         <Paper elevation={4} color="info" sx={{ padding: "10px" }}>
           <Stack direction="row" spacing={4}>
