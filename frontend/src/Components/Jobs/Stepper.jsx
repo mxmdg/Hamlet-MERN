@@ -179,6 +179,7 @@ export default function MyStepper(props) {
       "Defina el tipo de producto",
       <JobsForm
         jobType={useJobType}
+        setJobType={setJobType}
         data={useJob}
         setJob={setJob}
         continue={handleNext}

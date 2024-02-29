@@ -60,6 +60,7 @@ const JobsForm = (props) => {
     //console.log(context.userLogged?._id);
     //values.Owner = context.userLogged._id;
     props.setJob(values);
+    props.setJobType(jt);
     props.continue();
     console.log(values);
   };
@@ -117,7 +118,7 @@ const JobsForm = (props) => {
                     defaultValue={
                       props.data === null
                         ? ""
-                        : props.data.jobType?.id || props.data?.Tipo[0]?.id
+                        : props.jobType?.id || props.data?.Tipo[0]?.id
                     }
                     id="JobType"
                     inputProps={{
