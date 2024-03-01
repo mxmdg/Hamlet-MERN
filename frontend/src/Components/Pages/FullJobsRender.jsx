@@ -13,6 +13,8 @@ const FullJobsRender = () => {
   const [jobList, setJobList] = React.useState([]);
   const [error, setError] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
+  const [useDeleted, setDeleted] = React.useState([]);
+
 
   const resetError = () => {
     console.log("reset error");
@@ -52,7 +54,7 @@ const FullJobsRender = () => {
       }
     };
     fetchData();
-  }, []);
+  }, [useDeleted]);
 
   return (
     <Container>
@@ -62,7 +64,7 @@ const FullJobsRender = () => {
         AlertError
       ) : jobList ? (
         <DarkWoodCard>
-          <CollapsibleTable rows={jobList} />
+          <CollapsibleTable rows={jobList} deleted={setDeleted}/>
         </DarkWoodCard>
       ) : (
         <Typography color={"error"}> NO Data </Typography>

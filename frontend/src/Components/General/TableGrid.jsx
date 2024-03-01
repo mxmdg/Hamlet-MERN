@@ -152,7 +152,7 @@ export const DangerTooltip = styled(({ className, ...props }) => (
   },
 }));
 
-function EnhancedTableToolbar(props) {
+export function EnhancedTableToolbar(props) {
   const { numSelected } = props;
   const navigate = useNavigate();
 
@@ -289,8 +289,10 @@ export default function EnhancedTable(props) {
   };
 
   const handleClick = (event, name) => {
+    
     const selectedIndex = selected.indexOf(name);
     let newSelected = [];
+    console.log(name, selectedIndex)
 
     if (selectedIndex === -1) {
       newSelected = newSelected.concat(selected, name);

@@ -59,7 +59,6 @@ export const Filter = (props) => {
   }, [props.setFilteredList]); // Observar cambios en props.data
 
   const render = (
-    <DarkWoodCard>
       <Paper elevation={4} color="info" sx={{ padding: "10px" }}>
         <Stack direction="row" spacing={4}>
           <TextField
@@ -93,7 +92,6 @@ export const Filter = (props) => {
           ></TextField>
         </Stack>
       </Paper>
-    </DarkWoodCard>
   );
 
   return render;

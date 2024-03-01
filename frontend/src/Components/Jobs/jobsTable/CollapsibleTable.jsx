@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import Box from "@mui/material/Box";
 import Checkbox from "@mui/material/Checkbox";
@@ -25,6 +26,7 @@ import Spinner from "../../General/Spinner";
 
 import { headers } from "./headers";
 import { Filter } from "../../customHooks/Filter";
+import { EnhancedTableToolbar } from "../../General/TableGrid";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -59,6 +61,7 @@ function stableSort(array, comparator) {
 }
 
 function createData(
+  _id,
   name,
   product,
   quantity,
@@ -77,11 +80,13 @@ function createData(
       size: `${p.Ancho} x ${p.Alto} mm`,
       colors: `${p.ColoresFrente} / ${p.ColoresDorso || "0"}`,
       stock: `${p.partStock.Marca} ${p.partStock.Tipo} ${p.partStock.Gramaje}`,
+      _id: p._id,
     };
     arr.push(data);
   });
 
   return {
+    _id,
     name,
     product,
     quantity,
@@ -93,18 +98,121 @@ function createData(
   };
 }
 
+
+
+export default function CollapsibleTable(props) {
+  const [useLoading, setLoading] = React.useState(true);
+  const [useError, setError] = React.useState(null);
+  const [order, setOrder] = React.useState("asc");
+  const [selected, setSelected] = React.useState([]);
+  const [orderBy, setOrderBy] = React.useState("name");
+  const [rows, setRows] = React.useState(props.rows);
+  const [filteredRows, setFilteredRows] = React.useState(props.rows);
+  const [page, setPage] = React.useState(0);
+  const [dense, setDense] = React.useState(true);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+  const isSelected = (name) => selected.indexOf(name) !== -1;
+  
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleRequestSort = (event, property) => {
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
+    setOrderBy(property);
+  };
+
+  const handleSelectAllClick = (event) => {
+    if (event.target.checked) {
+      const newSelected = rows.map((n) => n._id);
+      setSelected(newSelected);
+      //props.editor(newSelected);
+      return;
+    }
+    setSelected([]);
+    //props.editor([]);
+  };
+
+  const handleClick = (event, name) => {
+    
+    const selectedIndex = selected.indexOf(name);
+    let newSelected = [];
+    console.log(name, selectedIndex)
+
+    if (selectedIndex === -1) {
+      newSelected = newSelected.concat(selected, name);
+    } else if (selectedIndex === 0) {
+      newSelected = newSelected.concat(selected.slice(1));
+    } else if (selectedIndex === selected.length - 1) {
+      newSelected = newSelected.concat(selected.slice(0, -1));
+    } else if (selectedIndex > 0) {
+      newSelected = newSelected.concat(
+        selected.slice(0, selectedIndex),
+        selected.slice(selectedIndex + 1)
+      );
+    }
+    setSelected(newSelected);
+    console.log(newSelected);
+    //props.editor(newSelected);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  // Avoid a layout jump when reaching the last page with empty rows.
+  const emptyRows =
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+
+  const visibleRows = React.useMemo(
+    () =>
+      stableSort(rows, getComparator(order, orderBy)).slice(
+        page * rowsPerPage,
+        page * rowsPerPage + rowsPerPage
+      ),
+    [order, orderBy, page, rowsPerPage, rows]
+  );
+
+  let i = 0;
+
+  const navigate = useNavigate()
+
 function Row(props) {
   const { row } = props;
   const [open, setOpen] = React.useState(false);
+  const isItemSelected = isSelected(row._id);
+  const labelId = `enhanced-table-checkbox-${row._id}`;
 
   return (
     <React.Fragment>
       <TableRow
         key={props.key}
+        _id={props._id}
         sx={{ "& > *": { borderBottom: "unset" } }}
         hover={true}
         selected={open ? true : false}
+        
+        onDoubleClick={() => {
+          navigate(
+            `/jobs/edit/${row._id}`
+          );
+        }}
       >
+        <TableCell padding="checkbox">
+                    <Checkbox
+                      color="info"
+                      checked={isItemSelected}
+                      inputProps={{
+                        "aria-labelledby": labelId,
+                      }}
+                      onClick={(event) => {
+                        handleClick(event, row._id)
+                      }}
+                    />
+                  </TableCell>
         <TableCell>
           <IconButton
             aria-label="expand row"
@@ -151,7 +259,7 @@ function Row(props) {
             unmountOnExit
           >
             <Box
-              component="Paper"
+              component="div"
               elevation={12}
               sx={{
                 margin: "20px",
@@ -222,79 +330,6 @@ function Row(props) {
   );
 }
 
-export default function CollapsibleTable(props) {
-  const [useLoading, setLoading] = React.useState(true);
-  const [useError, setError] = React.useState(null);
-  const [order, setOrder] = React.useState("asc");
-  const [selected, setSelected] = React.useState([]);
-  const [orderBy, setOrderBy] = React.useState("name");
-  const [rows, setRows] = React.useState(props.rows);
-  const [filteredRows, setFilteredRows] = React.useState(props.rows);
-  const [page, setPage] = React.useState(0);
-  const [dense, setDense] = React.useState(true);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === "asc";
-    setOrder(isAsc ? "desc" : "asc");
-    setOrderBy(property);
-  };
-
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelected = rows.map((n) => n._id);
-      setSelected(newSelected);
-      props.editor(newSelected);
-      return;
-    }
-    setSelected([]);
-    props.editor([]);
-  };
-
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
-    }
-    setSelected(newSelected);
-    props.editor(newSelected);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
-
-  // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
-
-  const visibleRows = React.useMemo(
-    () =>
-      stableSort(rows, getComparator(order, orderBy)).slice(
-        page * rowsPerPage,
-        page * rowsPerPage + rowsPerPage
-      ),
-    [order, orderBy, page, rowsPerPage, rows]
-  );
-
-  let i = 0;
-
   React.useEffect(() => {
     const loadData = async () => {
       try {
@@ -302,6 +337,7 @@ export default function CollapsibleTable(props) {
         setLoading(false);
         const Rows = res.map((job) => {
           return createData(
+            job._id,
             job.Nombre,
             job.Tipo[0]?.name,
             job.Cantidad,
@@ -349,6 +385,9 @@ export default function CollapsibleTable(props) {
               }}
             />
           </TableCell>
+          <TableCell>
+
+          </TableCell>
           {headers.map((headCell) => (
             <TableCell
               key={headCell.id}
@@ -389,6 +428,12 @@ export default function CollapsibleTable(props) {
   const tableOK = (
     <>
       <Filter headers={headers} data={rows} setFilteredList={setRows} />
+      <EnhancedTableToolbar 
+        collection="jobs"
+        numSelected={selected.length}
+        idSelected={selected}
+        deleted={props.deleted}
+        resetSelected={setSelected}/>
       <TableContainer component={Box}>
         <Table aria-label="collapsible table">
           <EnhancedTableHead
