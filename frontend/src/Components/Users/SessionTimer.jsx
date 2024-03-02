@@ -46,11 +46,11 @@ const SessionTimer = () => {
   };
 
   return (
-    <Typography>
+    <Typography variant='overline'>
       {sessionTimeLeft !== null && sessionTimeLeft >= 0 && (
-        <b>
-            Tiempo restante de sesión: {formatTime(sessionTimeLeft)} <br/>
-        </b>
+        
+            `Tiempo restante de sesión: ${formatTime(sessionTimeLeft)}` 
+        
       )}
       
     </Typography>

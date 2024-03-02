@@ -63,13 +63,23 @@ jobControl.getJobsParts = async (req, res) => {
 jobControl.getUrgentJobs = async (req, res) => {
   const currentDate = new Date();
   const daysLater = new Date();
-  daysLater.setDate(currentDate.getDate() + 3);
+  daysLater.setDate(currentDate.getDate() + 7);
   try {
     {
       const queryText = req.query.Q || "";
       const jobList = await jobs.esquema
         .find({ Entrega: { $gte: currentDate, $lt: daysLater } })
-        .select("Nombre Cantidad Fecha Entrega Emision Deadline");
+        .populate({
+          path: "Owner",
+          model: users.esquema,
+        })
+        .populate({
+          path: "Company",
+          model: companies.esquema,
+          select: "Nombre email",
+        })
+        .populate({ path: "Partes.partStock", model: stocks.esquema })
+        //.select("Nombre Cantidad Fecha Entrega Emision Deadline");
       res.json(jobList);
     }
   } catch (e) {

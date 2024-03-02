@@ -9,7 +9,7 @@ import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import CollapsibleTable from "../Jobs/jobsTable/CollapsibleTable";
 import DarkWoodCard from "../utils/DarkWoodCard";
 
-const FullJobsRender = () => {
+const FullJobsRender = (props) => {
   const [jobList, setJobList] = React.useState([]);
   const [error, setError] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
@@ -43,7 +43,7 @@ const FullJobsRender = () => {
   React.useEffect(() => {
     const fetchData = async () => {
       try {
-        const jobs = await getPrivateElements("jobs/complete");
+        const jobs = await getPrivateElements(props.route);
         setJobList(jobs);
         setError(null);
         setLoading(false);
@@ -64,7 +64,7 @@ const FullJobsRender = () => {
         AlertError
       ) : jobList ? (
         <DarkWoodCard>
-          <CollapsibleTable rows={jobList} deleted={setDeleted}/>
+          <CollapsibleTable rows={jobList} route={props.route} settings={props.settings} deleted={setDeleted}/>
         </DarkWoodCard>
       ) : (
         <Typography color={"error"}> NO Data </Typography>

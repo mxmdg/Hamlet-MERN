@@ -174,7 +174,7 @@ export function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          {props.collection.replace("/urg", "")}
+          {props.title}
         </Typography>
       )}
       <StyledTooltip title="Agregar" arrow>

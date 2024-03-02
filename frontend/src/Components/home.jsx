@@ -9,6 +9,7 @@ import DarkWoodCard from "./utils/DarkWoodCard";
 import PrintersMainContainer from "./Printers/PrintersMainContainer";
 import ToggleColorMode from "./Config/Theme/ToggleMode";
 import MyStepper from "./Jobs/Stepper";
+import FullJobsRender from "./Pages/FullJobsRender";
 
 //MUI Material Imports
 import { Container, Grid, Typography, Divider, Box } from "@mui/material";
@@ -28,7 +29,7 @@ const Home = () => {
           <Container>
             <Grid container spacing="3" columns={{ xs: 1, sm: 12, md: 12 }}>
               <Grid item xs={1} sm={12} md={12}>
-                <Fetch collection="jobs" subdir="urg" />
+                <FullJobsRender route="jobs/urg" settings={{title: "Proximas entregas", column: "deadLine", order: "Asc"}}/>
               </Grid>
 
               <Grid item xs={1} sm={6} md={8}>

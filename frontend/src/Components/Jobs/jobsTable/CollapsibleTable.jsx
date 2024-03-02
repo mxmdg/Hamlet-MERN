@@ -103,9 +103,9 @@ function createData(
 export default function CollapsibleTable(props) {
   const [useLoading, setLoading] = React.useState(true);
   const [useError, setError] = React.useState(null);
-  const [order, setOrder] = React.useState("asc");
+  const [order, setOrder] = React.useState(props.settings.order || "asc");
   const [selected, setSelected] = React.useState([]);
-  const [orderBy, setOrderBy] = React.useState("name");
+  const [orderBy, setOrderBy] = React.useState(props.settings.column || "name");
   const [rows, setRows] = React.useState(props.rows);
   const [filteredRows, setFilteredRows] = React.useState(props.rows);
   const [page, setPage] = React.useState(0);
@@ -333,7 +333,7 @@ function Row(props) {
   React.useEffect(() => {
     const loadData = async () => {
       try {
-        const res = await getPrivateElements("jobs/complete");
+        const res = await getPrivateElements(props.route);
         setLoading(false);
         const Rows = res.map((job) => {
           return createData(
@@ -430,6 +430,7 @@ function Row(props) {
       <Filter headers={headers} data={rows} setFilteredList={setRows} />
       <EnhancedTableToolbar 
         collection="jobs"
+        title={props.settings.title}
         numSelected={selected.length}
         idSelected={selected}
         deleted={props.deleted}

@@ -8,6 +8,7 @@ import { useContext } from "react";
 import { serverURL, databaseURL } from "../Config/config";
 import MainContainer from "../General/MainContainer";
 import Fetch from "../General/Fetch";
+import SessionTimer from "./SessionTimer";
 
 export const Profile = () => {
   //User Profile
@@ -30,6 +31,7 @@ export const Profile = () => {
             <br></br>
             <Typography>Rol: {context.userLogged.Role}</Typography>
             <br></br>
+            <SessionTimer />
           </CardContent>
         </Card>
       </Grid>

@@ -224,7 +224,6 @@ function ResponsiveAppBar(props) {
                 <MenuItem>
                   <Typography textAlign="left" color={"primary"}>
                     {context.userLogged.Name} {context.userLogged.LastName}{" "}
-                    <SessionTimer/>
                   </Typography>
                   
                 </MenuItem>
