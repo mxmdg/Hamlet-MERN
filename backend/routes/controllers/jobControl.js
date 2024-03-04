@@ -63,7 +63,7 @@ jobControl.getJobsParts = async (req, res) => {
 jobControl.getUrgentJobs = async (req, res) => {
   const currentDate = new Date();
   const daysLater = new Date();
-  daysLater.setDate(currentDate.getDate() + 7);
+  daysLater.setDate(currentDate.getDate() + 8);
   try {
     {
       const queryText = req.query.Q || "";
@@ -78,8 +78,8 @@ jobControl.getUrgentJobs = async (req, res) => {
           model: companies.esquema,
           select: "Nombre email",
         })
-        .populate({ path: "Partes.partStock", model: stocks.esquema })
-        //.select("Nombre Cantidad Fecha Entrega Emision Deadline");
+        .populate({ path: "Partes.partStock", model: stocks.esquema });
+      //.select("Nombre Cantidad Fecha Entrega Emision Deadline");
       res.json(jobList);
     }
   } catch (e) {

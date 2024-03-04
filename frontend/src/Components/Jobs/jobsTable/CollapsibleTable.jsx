@@ -98,8 +98,6 @@ function createData(
   };
 }
 
-
-
 export default function CollapsibleTable(props) {
   const [useLoading, setLoading] = React.useState(true);
   const [useError, setError] = React.useState(null);
@@ -113,7 +111,7 @@ export default function CollapsibleTable(props) {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
-  
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -136,10 +134,9 @@ export default function CollapsibleTable(props) {
   };
 
   const handleClick = (event, name) => {
-    
     const selectedIndex = selected.indexOf(name);
     let newSelected = [];
-    console.log(name, selectedIndex)
+    console.log(name, selectedIndex);
 
     if (selectedIndex === -1) {
       newSelected = newSelected.concat(selected, name);
@@ -178,159 +175,157 @@ export default function CollapsibleTable(props) {
 
   let i = 0;
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-function Row(props) {
-  const { row } = props;
-  const [open, setOpen] = React.useState(false);
-  const isItemSelected = isSelected(row._id);
-  const labelId = `enhanced-table-checkbox-${row._id}`;
+  function Row(props) {
+    const { row } = props;
+    const [open, setOpen] = React.useState(false);
+    const isItemSelected = isSelected(row._id);
+    const labelId = `enhanced-table-checkbox-${row._id}`;
 
-  return (
-    <React.Fragment>
-      <TableRow
-        key={props.key}
-        _id={props._id}
-        sx={{ "& > *": { borderBottom: "unset" } }}
-        hover={true}
-        selected={open ? true : false}
-        
-        onDoubleClick={() => {
-          navigate(
-            `/jobs/edit/${row._id}`
-          );
-        }}
-      >
-        <TableCell padding="checkbox">
-                    <Checkbox
-                      color="info"
-                      checked={isItemSelected}
-                      inputProps={{
-                        "aria-labelledby": labelId,
-                      }}
-                      onClick={(event) => {
-                        handleClick(event, row._id)
-                      }}
-                    />
-                  </TableCell>
-        <TableCell>
-          <IconButton
-            aria-label="expand row"
-            size="small"
-            onClick={() => setOpen(!open)}
-          >
-            {open ? (
-              <KeyboardArrowUpIcon color="primary" />
-            ) : (
-              <KeyboardArrowDownIcon color="secondary" />
-            )}
-          </IconButton>
-        </TableCell>
-        <TableCell align="left">
-          <Typography variant="subtitle1">{row.name}</Typography>
-        </TableCell>
-        <TableCell align="left">
-          <Typography variant="subtitle1">{row.product}</Typography>
-        </TableCell>
-        <TableCell align="left">
-          <Typography variant="subtitle1">{row.quantity}</Typography>
-        </TableCell>
-        <TableCell align="left">
-          <Typography color={"info"} variant="subtitle1">
-            {row.customer}
-          </Typography>
-        </TableCell>
-        <TableCell align="left">
-          <Typography variant="subtitle1">{row.owner}</Typography>
-        </TableCell>
-        <TableCell align="left">
-          <Typography variant="subtitle1">{row.emited}</Typography>
-        </TableCell>
-        <TableCell align="left">
-          <Typography variant="subtitle1">{row.deadLine}</Typography>
-        </TableCell>
-      </TableRow>
-      <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={8}>
-          <Collapse
-            in={open}
-            timeout={300}
-            easing={{ enter: "ease-in", exit: "ease-in" }}
-            unmountOnExit
-          >
-            <Box
-              component="div"
-              elevation={12}
-              sx={{
-                margin: "20px",
-                padding: "15px",
-                borderRadius: "8px",
+    return (
+      <React.Fragment>
+        <TableRow
+          key={props._id}
+          _id={props._id}
+          sx={{ "& > *": { borderBottom: "unset" } }}
+          hover={true}
+          selected={open ? true : false}
+          onDoubleClick={() => {
+            navigate(`/jobs/edit/${row._id}`);
+          }}
+        >
+          <TableCell padding="checkbox">
+            <Checkbox
+              color="info"
+              checked={isItemSelected}
+              inputProps={{
+                "aria-labelledby": labelId,
               }}
+              onClick={(event) => {
+                handleClick(event, row._id);
+              }}
+            />
+          </TableCell>
+          <TableCell>
+            <IconButton
+              aria-label="expand row"
+              size="small"
+              onClick={() => setOpen(!open)}
             >
-              <Typography variant="subtitle1" component="div">
-                Partes
-              </Typography>
-              <Table size="small" aria-label="purchases">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>
-                      <Typography color={"info"} variant="subtitle2">
-                        Tipo
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Typography color={"info"} variant="subtitle2">
-                        Nombre
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Typography color={"info"} variant="subtitle2">
-                        Páginas
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Typography color={"info"} variant="subtitle2">
-                        Formato
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Typography color={"info"} variant="subtitle2">
-                        Colores
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <Typography color={"info"} variant="subtitle2">
-                        Material
-                      </Typography>
-                    </TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {row.Partes?.map((historyRow) => (
-                    <TableRow key={historyRow._id}>
-                      <TableCell component="th" scope="row">
+              {open ? (
+                <KeyboardArrowUpIcon color="primary" />
+              ) : (
+                <KeyboardArrowDownIcon color="secondary" />
+              )}
+            </IconButton>
+          </TableCell>
+          <TableCell align="left">
+            <Typography variant="subtitle1">{row.name}</Typography>
+          </TableCell>
+          <TableCell align="left">
+            <Typography variant="subtitle1">{row.product}</Typography>
+          </TableCell>
+          <TableCell align="left">
+            <Typography variant="subtitle1">{row.quantity}</Typography>
+          </TableCell>
+          <TableCell align="left">
+            <Typography color={"info"} variant="subtitle1">
+              {row.customer}
+            </Typography>
+          </TableCell>
+          <TableCell align="left">
+            <Typography variant="subtitle1">{row.owner}</Typography>
+          </TableCell>
+          <TableCell align="left">
+            <Typography variant="subtitle1">{row.emited}</Typography>
+          </TableCell>
+          <TableCell align="left">
+            <Typography variant="subtitle1">{row.deadLine}</Typography>
+          </TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={8}>
+            <Collapse
+              in={open}
+              timeout={300}
+              easing={{ enter: "ease-in", exit: "ease-in" }}
+              unmountOnExit
+            >
+              <Box
+                component="div"
+                elevation={12}
+                sx={{
+                  margin: "20px",
+                  padding: "15px",
+                  borderRadius: "8px",
+                }}
+              >
+                <Typography variant="subtitle1" component="div">
+                  Partes
+                </Typography>
+                <Table size="small" aria-label="purchases">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>
                         <Typography color={"info"} variant="subtitle2">
-                          {historyRow.type}
+                          Tipo
                         </Typography>
                       </TableCell>
-                      <TableCell>{historyRow.name}</TableCell>
-                      <TableCell align="left">{historyRow.pages}</TableCell>
-                      <TableCell align="left">{historyRow.size}</TableCell>
-                      <TableCell align="left">{historyRow.colors}</TableCell>
-                      <TableCell align="left">{historyRow.stock}</TableCell>
+                      <TableCell>
+                        <Typography color={"info"} variant="subtitle2">
+                          Nombre
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography color={"info"} variant="subtitle2">
+                          Páginas
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography color={"info"} variant="subtitle2">
+                          Formato
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography color={"info"} variant="subtitle2">
+                          Colores
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography color={"info"} variant="subtitle2">
+                          Material
+                        </Typography>
+                      </TableCell>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </Box>
-          </Collapse>
-        </TableCell>
-      </TableRow>
-    </React.Fragment>
-  );
-}
+                  </TableHead>
+                  <TableBody>
+                    {row.Partes?.map((historyRow) => (
+                      <TableRow key={historyRow._id}>
+                        <TableCell component="th" scope="row">
+                          <Typography color={"info"} variant="subtitle2">
+                            {historyRow.type}
+                          </Typography>
+                        </TableCell>
+                        <TableCell>{historyRow.name}</TableCell>
+                        <TableCell align="left">{historyRow.pages}</TableCell>
+                        <TableCell align="left">{historyRow.size}</TableCell>
+                        <TableCell align="left">{historyRow.colors}</TableCell>
+                        <TableCell align="left">{historyRow.stock}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </Box>
+            </Collapse>
+          </TableCell>
+        </TableRow>
+      </React.Fragment>
+    );
+  }
 
   React.useEffect(() => {
+    console.log("Render: CollapsibleTable.jsx");
     const loadData = async () => {
       try {
         const res = await getPrivateElements(props.route);
@@ -356,7 +351,7 @@ function Row(props) {
       }
     };
     loadData();
-  }, []);
+  }, [setRows]);
 
   function EnhancedTableHead(props) {
     const {
@@ -385,9 +380,7 @@ function Row(props) {
               }}
             />
           </TableCell>
-          <TableCell>
-
-          </TableCell>
+          <TableCell></TableCell>
           {headers.map((headCell) => (
             <TableCell
               key={headCell.id}
@@ -428,13 +421,14 @@ function Row(props) {
   const tableOK = (
     <>
       <Filter headers={headers} data={rows} setFilteredList={setRows} />
-      <EnhancedTableToolbar 
+      <EnhancedTableToolbar
         collection="jobs"
         title={props.settings.title}
         numSelected={selected.length}
         idSelected={selected}
         deleted={props.deleted}
-        resetSelected={setSelected}/>
+        resetSelected={setSelected}
+      />
       <TableContainer component={Box}>
         <Table aria-label="collapsible table">
           <EnhancedTableHead
@@ -450,20 +444,19 @@ function Row(props) {
               <Row key={row._id} row={row} />
             ))}
           </TableBody>
-          <TableFooter>
-            <TablePagination
-              count={rows.length}
-              rowsPerPageOptions={[5, 10, 15, 20, 25]}
-              showFirstButton={true}
-              showLastButton={true}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-            />
-          </TableFooter>
         </Table>
       </TableContainer>
+      <TablePagination
+        component="div"
+        count={rows.length}
+        rowsPerPageOptions={[5, 10, 15, 20, 25]}
+        showFirstButton={true}
+        showLastButton={true}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
     </>
   );
 

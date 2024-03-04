@@ -3,8 +3,22 @@ const mongoose = require("mongoose");
 const URI = process.env.MONGODB_URI
   ? process.env.MONGODB_URI
   : "mongodb://127.0.0.1:27017/";
-const DB_NAME =
-  "ImprentaDorrego"; /*"ImprentaDorrego"; "mxm"; "ImprentaCarballo"*/
+
+const dbSwitch = [
+  {
+    printer: "ImprentaDorrego",
+    title: "Imprenta Dorrego",
+  },
+  {
+    printer: "mxm",
+    title: "mxmDG",
+  },
+  {
+    printer: "ImprentaCarballo",
+    title: "Imprenta Carballo",
+  },
+];
+const DB_NAME = dbSwitch[0].printer;
 
 mongoose.connect(URI + DB_NAME, {
   useNewUrlParser: true,

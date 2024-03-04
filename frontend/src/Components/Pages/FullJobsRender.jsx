@@ -1,6 +1,7 @@
 import React from "react";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
+import { Card } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import Spinner from "../General/Spinner";
 import JobRow from "../Jobs/jobsTable/JobRow";
@@ -14,7 +15,6 @@ const FullJobsRender = (props) => {
   const [error, setError] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
   const [useDeleted, setDeleted] = React.useState([]);
-
 
   const resetError = () => {
     console.log("reset error");
@@ -41,6 +41,7 @@ const FullJobsRender = (props) => {
   };
 
   React.useEffect(() => {
+    console.log("Render: FullJobsRender.jsx");
     const fetchData = async () => {
       try {
         const jobs = await getPrivateElements(props.route);
@@ -63,9 +64,14 @@ const FullJobsRender = (props) => {
       ) : error !== null ? (
         AlertError
       ) : jobList ? (
-        <DarkWoodCard>
-          <CollapsibleTable rows={jobList} route={props.route} settings={props.settings} deleted={setDeleted}/>
-        </DarkWoodCard>
+        <Card elevation={6}>
+          <CollapsibleTable
+            rows={jobList}
+            route={props.route}
+            settings={props.settings}
+            deleted={setDeleted}
+          />
+        </Card>
       ) : (
         <Typography color={"error"}> NO Data </Typography>
       )}

@@ -289,10 +289,9 @@ export default function EnhancedTable(props) {
   };
 
   const handleClick = (event, name) => {
-    
     const selectedIndex = selected.indexOf(name);
     let newSelected = [];
-    console.log(name, selectedIndex)
+    console.log(name, selectedIndex);
 
     if (selectedIndex === -1) {
       newSelected = newSelected.concat(selected, name);
@@ -433,6 +432,8 @@ export default function EnhancedTable(props) {
         component="div"
         count={rows.length}
         rowsPerPage={rowsPerPage}
+        showFirstButton={true}
+        showLastButton={true}
         page={page}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}

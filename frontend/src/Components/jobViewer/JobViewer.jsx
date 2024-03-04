@@ -17,7 +17,7 @@ export const JobViewer = (props) => {
   const [useCurrentJob, setCurrentJob] = useState(null);
   const [useLoading, setLoading] = useState(true);
   const [useError, setError] = useState(null);
-  //const navigate = useNavigate();
+  const navigate = useNavigate();
   const params = useParams();
   const { id } = params;
 
@@ -26,7 +26,9 @@ export const JobViewer = (props) => {
       try {
         const currentJob = await getPrivateElementByID(props.entity, id);
         console.log(currentJob);
-        setCurrentJob(currentJob.data);
+        currentJob.data
+          ? setCurrentJob(currentJob.data)
+          : setError({ message: "Trabajo inexistente" });
         setLoading(false);
         console.log(currentJob.data);
       } catch (e) {
@@ -52,7 +54,13 @@ export const JobViewer = (props) => {
     }
   };
   return useError ? (
-    <ErrorMessage message={setError.message} severity={"warning"} />
+    <ErrorMessage
+      message={useError.message}
+      severity={"warning"}
+      action={() => {
+        navigate(-1);
+      }}
+    />
   ) : (
     output()
   );

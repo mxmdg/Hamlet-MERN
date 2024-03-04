@@ -29,7 +29,14 @@ const Home = () => {
           <Container>
             <Grid container spacing="3" columns={{ xs: 1, sm: 12, md: 12 }}>
               <Grid item xs={1} sm={12} md={12}>
-                <FullJobsRender route="jobs/urg" settings={{title: "Proximas entregas", column: "deadLine", order: "Asc"}}/>
+                <FullJobsRender
+                  route="jobs/urg"
+                  settings={{
+                    title: "Proximas entregas",
+                    column: "deadLine",
+                    order: "asc",
+                  }}
+                />
               </Grid>
 
               <Grid item xs={1} sm={6} md={8}>

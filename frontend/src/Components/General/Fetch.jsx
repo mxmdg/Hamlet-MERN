@@ -109,7 +109,7 @@ const Fetch = (props) => {
     };
     fetchData();
     console.log(useList);
-  }, [useSelected, useDeleted, props.collection]);
+  }, [useDeleted, props.collection]);
 
   const Loading = (
     <Container>

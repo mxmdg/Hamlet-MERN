@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
@@ -19,6 +20,7 @@ const JobsEditAndCopy = () => {
   const [loading, setLoading] = React.useState(true);
 
   const params = useParams();
+  const navigate = useNavigate();
 
   const resetError = () => {
     console.log("reset error");
@@ -63,7 +65,7 @@ const JobsEditAndCopy = () => {
   }, [setJob]);
 
   return (
-    <Container>
+    <>
       {loading ? (
         <Spinner color="primary" />
       ) : error !== null ? (
@@ -71,9 +73,17 @@ const JobsEditAndCopy = () => {
       ) : useJob ? (
         <MyStepper job={useJob} />
       ) : (
-        <Typography color={"error"}> NO Data </Typography>
+        <Box>
+          <ErrorMessage
+            message={"Trabajo inexistente"}
+            severity={"warning"}
+            action={() => {
+              navigate(-1);
+            }}
+          />
+        </Box>
       )}
-    </Container>
+    </>
   );
 };
 
