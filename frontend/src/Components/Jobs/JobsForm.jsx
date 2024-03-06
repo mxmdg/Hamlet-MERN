@@ -1,8 +1,9 @@
 import { useState, useEffect, useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
-import { useForm, trigger } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import Input from "@mui/material/Input";
 import Container from "@mui/material/Container";
+import {Autocomplete} from "@mui/material";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
@@ -26,6 +27,7 @@ const JobsForm = (props) => {
     handleSubmit,
     formState: { errors },
     trigger,
+    setValue,
   } = useForm({
     mode: "onBlur", // "onChange"
   });
@@ -183,7 +185,7 @@ const JobsForm = (props) => {
                     type="date"
                     label="Fecha de entrega"
                     variant="outlined"
-                    defaultValue={props.data?.Entrega || ""}
+                    defaultValue={props.data?.Entrega.slice(0,10) || ""}
                     name="Entrega"
                     {...register("Entrega", { required: true })}
                     InputLabelProps={{
@@ -209,9 +211,10 @@ const JobsForm = (props) => {
                   <TextField
                     select
                     defaultValue={
-                      !context.useLogin
-                        ? props.data?.Owner?._id || ""
-                        : context.userLogged._id
+                      props.data?.Owner?._id || 
+                      props.data?.Owner || 
+                      context.userLogged?._id ||
+                      {value: "", label: "Usuario"}
                     }
                     id="Owner"
                     inputProps={{
@@ -241,7 +244,37 @@ const JobsForm = (props) => {
                   )}
                 </Grid>
                 <Grid item xs={1} sm={2} md={4}>
-                  <TextField
+                <Autocomplete
+                    id="Company"
+                    options={useCompaniesList}
+                    defaultValue={
+                      props.data?.Company?._id || 
+                      props.data?.Company 
+                    }
+                    autoHighlight
+                    getOptionLabel={(option) => option.Nombre}
+                    
+                    onChange={(event, newValue) => {
+                      if (newValue) {
+                        // Actualiza el valor del campo Company con el _id seleccionado
+                        setValue("Company", newValue._id);
+                      } else {
+                        // Si el valor es nulo, elimina el valor del campo Company
+                        setValue("Company", "");
+                      }
+                    }}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Empresa"
+                        variant="outlined"
+                        fullWidth
+                        error={!!errors.Company}
+                        helperText={errors.Company ? "Seleccione una empresa" : ""}
+                      />
+                    )}
+                  />
+                  {/* <TextField
                     select
                     id="Company"
                     defaultValue={props.data?.Company?._id || ""}
@@ -269,7 +302,7 @@ const JobsForm = (props) => {
                   </TextField>
                   {errors.Company?.type === "required" && (
                     <FormHelperText>Seleccione una empresa</FormHelperText>
-                  )}
+                  )} */}
                 </Grid>
 
                 <Grid item xs={1} sm={2} md={4} sx={{ alignSelf: "center" }}>

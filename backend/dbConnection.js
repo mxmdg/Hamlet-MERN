@@ -17,8 +17,12 @@ const dbSwitch = [
     printer: "ImprentaCarballo",
     title: "Imprenta Carballo",
   },
+  {
+    printer: "test",
+    title: "Imprenta Dorrego",
+  }
 ];
-const DB_NAME = dbSwitch[0].printer;
+const DB_NAME = dbSwitch[3].printer;
 
 mongoose.connect(URI + DB_NAME, {
   useNewUrlParser: true,
