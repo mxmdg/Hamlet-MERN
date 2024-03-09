@@ -19,7 +19,7 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import { Grid } from "@mui/material";
 import JobTypes from "./JobTypes";
-import { fechtData } from "../customHooks/FetchDataHook";
+import { fechtData, getPrivateElementByID } from "../customHooks/FetchDataHook";
 
 const JobsForm = (props) => {
   const {
@@ -34,6 +34,7 @@ const JobsForm = (props) => {
 
   const [useUsersList, setUsersList] = useState([]);
   const [useCompaniesList, setCompaniesList] = useState([]);
+  const [useCompany, setCompany ] = useState(props.data?.Company)
   const context = useContext(AuthContext);
 
   const handleChange = (e) => {
@@ -44,6 +45,7 @@ const JobsForm = (props) => {
   const getUsers = async () => await fechtData("Users", setUsersList);
   const getCompanies = async () =>
     await fechtData("Empresas", setCompaniesList);
+  const getCompany = async (id) => await getPrivateElementByID("empresas", id)  
 
   useEffect(() => {
     getUsers();
@@ -59,6 +61,8 @@ const JobsForm = (props) => {
     });
     console.log(jt);
     values.JobType = jt;
+    if (useCompany) {values.Company = useCompany}
+    
     //console.log(context.userLogged?._id);
     //values.Owner = context.userLogged._id;
     props.setJob(values);
@@ -214,7 +218,7 @@ const JobsForm = (props) => {
                       props.data?.Owner?._id || 
                       props.data?.Owner || 
                       context.userLogged?._id ||
-                      {value: "", label: "Usuario"}
+                      ""
                     }
                     id="Owner"
                     inputProps={{
@@ -248,16 +252,14 @@ const JobsForm = (props) => {
                     id="Company"
                     options={useCompaniesList}
                     defaultValue={
-                      props.data?.Company?._id || 
                       props.data?.Company 
                     }
                     autoHighlight
-                    getOptionLabel={(option) => option.Nombre}
-                    
+                    getOptionLabel={(option) => option.Nombre }
                     onChange={(event, newValue) => {
                       if (newValue) {
                         // Actualiza el valor del campo Company con el _id seleccionado
-                        setValue("Company", newValue._id);
+                        setValue("Company", newValue );
                       } else {
                         // Si el valor es nulo, elimina el valor del campo Company
                         setValue("Company", "");

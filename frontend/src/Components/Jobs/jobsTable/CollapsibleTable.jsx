@@ -460,7 +460,7 @@ export default function CollapsibleTable(props) {
     </>
   );
 
-  const alert = <ErrorMessage message={useError?.message} severity="warning" />;
+  const alert = <ErrorMessage message={useError?.message} severity="warning" action={()=> setError(null)}/>;
 
   const spinner = <Spinner />;
 

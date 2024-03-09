@@ -54,8 +54,8 @@ const jobSchema = new Schema({
   Entrega: { type: Date, required: true },
   Fecha: { type: Date, default: Date.now },
   Partes: [partSchema],
-  Owner: { type: mongoose.Schema.ObjectId, ref: "Users" },
-  Company: { type: mongoose.Schema.ObjectId, ref: "Empresas" },
+  Owner: { type: mongoose.Schema.ObjectId, ref: "Users", required: true},
+  Company: { type: mongoose.Schema.ObjectId, ref: "Empresas", required: true },
 });
 
 // Definimos una función que se ejecutará antes de guardar cada parte

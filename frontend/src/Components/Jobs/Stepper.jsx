@@ -200,9 +200,9 @@ export default function MyStepper(props) {
     ],
     [
       "Confirme el pedido",
-      <Box>
+      <Box >
         {useParts.map((part) => {
-          return <div key={part.jobParts?.id}>{part.jobParts?.type}</div>;
+          return <div key={part._id}>{part.jobParts?.type}</div>;
         })}
       </Box>,
     ],
@@ -211,7 +211,6 @@ export default function MyStepper(props) {
   useEffect(() => {
     try {
       fechtData("jobParts", setAllParts);
-      console.log(allParts);
     } catch (error) {
       setError(error);
     }
@@ -238,7 +237,7 @@ export default function MyStepper(props) {
             >
               {useParts?.map((part, index) => {
                 return (
-                  <Grid item xs={4} sm={4} md={6} key={part.id}>
+                  <Grid item xs={4} sm={4} md={6} key={part._id}>
                     <Card elevation={12} square={true}>
                       <CardHeader
                         title={part.Name}
