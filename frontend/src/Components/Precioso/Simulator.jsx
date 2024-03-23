@@ -116,7 +116,7 @@ const Simulator = (props) => {
     await fechtData("Formatos", setFormats);
   };
 
-  const cantidades = [1, 100, 500, 1000];
+  const cantidades = [100, 500, 1000];
   const pliegos = [
     { Ancho: 215, Alto: 315 },
     { Ancho: 470, Alto: 320 },
@@ -129,7 +129,7 @@ const Simulator = (props) => {
 
   const Form = () => {
     return (
-      <Container>
+      <Container >
         <Card elevation={10}>
           <CardContent>
             <form name="Simulador">
@@ -221,9 +221,17 @@ const Simulator = (props) => {
     >
       <Container>
         <Card sx={{ padding: "20px" }} elevation={4}>
-          <CardHeader title={props.data.Proceso}></CardHeader>
+          <CardHeader title={props.data.Proceso} action={<Button
+              onClick={() => {
+                props.stateSim(false);
+              }}
+            >
+              Cerrar
+            </Button>}> 
+          </CardHeader>
           <CardContent>
             <Form />
+            
             <SimulationTable
               data={props.data}
               pliegos={pliegos}
@@ -233,13 +241,7 @@ const Simulator = (props) => {
           </CardContent>
 
           <CardActions>
-            <Button
-              onClick={() => {
-                props.stateSim(false);
-              }}
-            >
-              Cerrar
-            </Button>
+            
           </CardActions>
         </Card>
       </Container>

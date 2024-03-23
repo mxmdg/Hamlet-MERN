@@ -30,7 +30,7 @@ function App() {
       >
         <BrowserRouter>
           <AuthProvider>
-            <Box>
+            <Box sx={{"@media print": {display: "none"}}}>
               <Header toogleMode={toogleMode} />
             </Box>
             <Box

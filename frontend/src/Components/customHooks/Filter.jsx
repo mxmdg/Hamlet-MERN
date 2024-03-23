@@ -78,7 +78,7 @@ export const Filter = (props) => {
         </TextField>
         <TextField
           variant="filled"
-          type="text"
+          type="search"
           onChange={(e) => {
             filterList(e.target.value, useColumn);
           }}

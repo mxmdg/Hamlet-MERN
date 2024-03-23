@@ -214,7 +214,7 @@ export default function MyStepper(props) {
     } catch (error) {
       setError(error);
     }
-  }, [useJob]);
+  }, [useJob, usePartToEdit]);
 
   const statusOk = (
     <Box

@@ -100,6 +100,7 @@ function ResponsiveAppBar(props) {
       color="primary" //{colorList[Math.round(Math.random() * 5)]}
       enableColorOnDark={false}
       position="fixed"
+      sx={{"@media print": {display: "none"}}}
     >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
