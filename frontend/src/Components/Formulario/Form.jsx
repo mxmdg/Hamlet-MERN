@@ -212,6 +212,7 @@ const Form = (props) => {
   };
 
   const typeOfInput = (inp) => {
+    console.log(inp);
     if (inp.type === "Select") {
       let value;
       const changeHandler = (e) => {

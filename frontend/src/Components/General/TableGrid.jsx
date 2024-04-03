@@ -26,6 +26,7 @@ import { deleteMultiple } from "../customHooks/FetchDataHook";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import { styled } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
+import ErrorMessage from "../ErrorMessage/ErrorMessage";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -267,6 +268,7 @@ export default function EnhancedTable(props) {
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(true);
+  const [error, setError] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const rows = props.rows;
   const navigate = useNavigate();
@@ -406,11 +408,21 @@ export default function EnhancedTable(props) {
                     .slice(1, -1)
                     .map((element) => {
                       i++;
-                      return (
-                        <TableCell align="left" key={`${element}_${i}`}>
-                          {element}
-                        </TableCell>
-                      );
+                      if (typeof element === "object") {
+                        return (
+                          <TableCell>
+                            <Typography variant="body1" color="#b12">
+                              Error
+                            </Typography>
+                          </TableCell>
+                        );
+                      } else {
+                        return (
+                          <TableCell align="left" key={`${element}_${i}`}>
+                            {element}
+                          </TableCell>
+                        );
+                      }
                     })}
                 </TableRow>
               );

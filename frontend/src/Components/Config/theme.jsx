@@ -81,19 +81,19 @@ const themeOptions = createTheme({
       dark: "#880e4f",
     },
     warning: {
-      main: "#fb4",
+      main: "#ffbb44",
       light: "#D36308",
-      dark: "#fa0",
+      dark: "#ffaa00",
       contrastText: "rgba(2,2,2,0.87)",
     },
     info: {
       main: "#00bbff",
       light: "#18ffff",
-      dark: "#09f",
+      dark: "#0099ff",
       contrastText: "#fff",
     },
     success: {
-      main: "#6f2",
+      main: "#66ff22",
       light: "#00e676",
       dark: "#388e3c",
       contrastText: "#fff",
@@ -127,7 +127,7 @@ const ThemeProv = (props) => {
   if (props.mode) {
     themeOptions.palette.mode = "dark";
     themeOptions.palette.background = {
-      default: "#EEF5DB",
+      default: "#ede7de",
       paper: "#000000",
     };
     themeOptions.palette.text = {

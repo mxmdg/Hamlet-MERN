@@ -9,6 +9,7 @@ import { serverURL, databaseURL } from "../Config/config";
 import MainContainer from "../General/MainContainer";
 import Fetch from "../General/Fetch";
 import SessionTimer from "./SessionTimer";
+import ColorPalette from "../Config/Theme/ColorPallete";
 
 export const Profile = () => {
   //User Profile
@@ -33,6 +34,9 @@ export const Profile = () => {
             <br></br>
             <SessionTimer />
           </CardContent>
+          {/* <CardActions>
+            <ColorPalette />
+          </CardActions> */}
         </Card>
       </Grid>
       <Grid item xs={1} sm={12} md={8}>

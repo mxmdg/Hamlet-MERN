@@ -32,7 +32,7 @@ const themeOptions: ThemeOptions = {
     button: {
       fontWeight: 500,
       fontSize: '0.8rem',
-      fontFamily: 'Open Sans',
+      fontFamily: 'Open Sans'
     },
     h1: {
       fontFamily: 'IBM Plex Sans',

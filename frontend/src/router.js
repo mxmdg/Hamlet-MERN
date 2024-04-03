@@ -17,6 +17,7 @@ import empresasDataForm from "./Components/Formulario/empresasDataForm";
 import jobPartDataForm from "./Components/Formulario/JobPartsDataForm";
 import PricesDataForm from "./Components/Formulario/PricesDataForm";
 import UsersDataForm from "./Components/Formulario/UsersDataForm";
+import FinishersDataForm from "./Components/Formulario/FinishersDataForm";
 import MyStepper from "./Components/Jobs/Stepper";
 import JobsContainer from "./Components/Jobs/JobsContainer";
 import { JobViewer } from "./Components/jobViewer/JobViewer";
@@ -51,6 +52,25 @@ const Router = () => (
       path="/impresoras/edit/:id"
       element={
         <Form form={PrintersDataForm} collection="impresoras" task="edit" />
+      }
+    />
+    <Route path="/finishers" element={<MainContainer entity={"finishers"} />} />
+    <Route
+      path="/finishers/add"
+      element={
+        <Form form={FinishersDataForm} collection="finishers" task="new" />
+      }
+    />
+    <Route
+      path="/finishers/copy/:id"
+      element={
+        <Form form={FinishersDataForm} collection="finishers" task="copy" />
+      }
+    />
+    <Route
+      path="/finishers/edit/:id"
+      element={
+        <Form form={PrintersDataForm} collection="finishers" task="edit" />
       }
     />
     <Route

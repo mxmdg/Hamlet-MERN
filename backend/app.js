@@ -40,6 +40,7 @@ app.get("/", (rej, res) => {
 app.use("/Hamlet/jobs", require("./routes/jobs"));
 app.use("/Hamlet/jobs/urg", require("./routes/jobs"));
 app.use("/Hamlet/Impresoras", require("./routes/printers"));
+app.use("/Hamlet/finishers", require("./routes/finishers"));
 app.use("/Hamlet/formatos", require("./routes/formatos"));
 app.use("/Hamlet/empresas", require("./routes/empresas"));
 app.use(
