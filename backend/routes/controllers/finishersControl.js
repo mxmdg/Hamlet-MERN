@@ -56,15 +56,16 @@ finishersControl.addFinisher = async (req, res, next) => {
 
 finishersControl.getFinisher = async (req, res, next) => {
   try {
-    const finishers = await finishers.esquema
+    const finisher = await finishers.esquema
       .findById(req.params.id)
       .populate({ path: "Costo", model: prices.esquema });
-    if (finishers) {
-      res.json(finishers);
+    if (finisher) {
+      res.json(finisher);
     } else {
       res.status(404).json({ message: "Maquinaria no encontrada" });
     }
   } catch (error) {
+    console.log(error)
     next(error);
     res.status(500).json({ message: "Error al obtener la Maquinaria" });
   }

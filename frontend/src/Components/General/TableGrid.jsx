@@ -374,6 +374,7 @@ export default function EnhancedTable(props) {
                 <TableRow
                   hover
                   onClick={(event) => handleClick(event, row._id)}
+                  key={row._id + index}
                   onDoubleClick={() => {
                     navigate(
                       `/${props.collection.replace("/urg", "")}/edit/${row._id}`
@@ -382,7 +383,6 @@ export default function EnhancedTable(props) {
                   role="checkbox"
                   aria-checked={isItemSelected}
                   tabIndex={-1}
-                  key={row._id}
                   selected={isItemSelected}
                   sx={{ cursor: "pointer" }}
                 >

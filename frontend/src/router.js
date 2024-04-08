@@ -70,7 +70,7 @@ const Router = () => (
     <Route
       path="/finishers/edit/:id"
       element={
-        <Form form={PrintersDataForm} collection="finishers" task="edit" />
+        <Form form={FinishersDataForm} collection="finishers" task="edit" />
       }
     />
     <Route

@@ -4,7 +4,7 @@ const Select = (props) => {
   return (
     <div>
       <label>{props.inputName}</label>
-      <select onChange={(e) => props.changeHandler(e)} id={props.inputName}>
+      <select onChange={(e) => props.changeHandler(e)} defaultValue={props.item?.Costo?._id} id={props.inputName}>
         <option>Elija una opcion</option>
         {props.options.map((option) => (
           <option

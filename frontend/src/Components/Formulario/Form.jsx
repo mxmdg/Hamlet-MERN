@@ -103,7 +103,7 @@ const Form = (props) => {
 
   const [useErrorMessage, setErrorMessage] = useState(null);
 
-  // In props.form you must provide the object model for the form
+  // In props.form you must provide the object model 
   let dataForm = props.form;
 
   useEffect(() => {
@@ -121,7 +121,7 @@ const Form = (props) => {
           );
           setItem(itemToEdit);
         } catch (e) {
-          setErrorMessage(e);
+          setErrorMessage(e.message);
         }
       };
       fetchItem();
@@ -246,6 +246,7 @@ const Form = (props) => {
               changeHandler={changeHandler}
               options={inp.options}
               value={value}
+              item={typeof useItem !== Object ? useItem.data : ""}
             />
             <FormHelperText>Elija una opción</FormHelperText>
           </FormControl>

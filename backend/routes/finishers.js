@@ -15,8 +15,8 @@ routerFinisher.route("/").get(getFinishers).post(addFinisher);
 
 routerFinisher
   .route("/:id")
-  .put(updateFinisher)
   .get(getFinisher)
+  .put(updateFinisher)
   .delete(deleteFinisher);
 
 module.exports = routerFinisher;
