@@ -103,7 +103,7 @@ const Form = (props) => {
 
   const [useErrorMessage, setErrorMessage] = useState(null);
 
-  // In props.form you must provide the object model 
+  // In props.form you must provide the object model
   let dataForm = props.form;
 
   useEffect(() => {
@@ -166,7 +166,7 @@ const Form = (props) => {
           : console.log("No es nuevo");
       } catch (e) {
         console.log(e);
-        setErrorMessage(e.response.data);
+        setErrorMessage("No se pudo guardar: " + e.message);
         return e;
       }
     } else {
@@ -177,7 +177,7 @@ const Form = (props) => {
         props.editor(true);
       } catch (e) {
         console.log(e);
-        setErrorMessage("No se pudo actualizar: " + e.response?.data);
+        setErrorMessage("No se pudo actualizar: " + e.message);
         return e;
       }
     }

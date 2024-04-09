@@ -14,7 +14,7 @@ finishersControl.getFinishers = async (req, res, next) => {
       return finishersList;
     } catch (error) {
       console.log(error);
-      throw error;
+      next(error);
     }
   }
 };
@@ -65,13 +65,13 @@ finishersControl.getFinisher = async (req, res, next) => {
       res.status(404).json({ message: "Maquinaria no encontrada" });
     }
   } catch (error) {
-    console.log(error)
+    console.log(error);
     next(error);
     res.status(500).json({ message: "Error al obtener la Maquinaria" });
   }
 };
 
-finishersControl.updateFinisher = async (req, res) => {
+finishersControl.updateFinisher = async (req, res, next) => {
   try {
     const {
       Modelo,
@@ -85,7 +85,7 @@ finishersControl.updateFinisher = async (req, res) => {
       Costo,
       Unidad,
     } = req.body;
-    const finishers = await finishers.esquema.findOneAndUpdate(
+    const finisherToUpdate = await finishers.esquema.findOneAndUpdate(
       { _id: req.params.id },
       {
         Modelo,
@@ -100,9 +100,10 @@ finishersControl.updateFinisher = async (req, res) => {
         Unidad,
       }
     );
-    res.json({ message: "Impresora actualizada " + finishers.Modelo });
+    res.json({ message: "Impresora actualizada " + finisherToUpdate.Modelo });
   } catch (e) {
-    res.json({ message: "Error: " + e });
+    //res.json({ message: "Error: " + e });
+    next(e);
   }
 };
 finishersControl.deleteFinisher = async (req, res) => {
