@@ -100,15 +100,17 @@ const themeOptions = createTheme({
     },
   },
   typography: {
-    fontFamily: "Open Sans, sans-serif",
+    fontFamily: "Montserrat, sans-serif",
+    fontSize: 15,
     button: {
-      fontWeight: 500,
-      fontSize: "0.9rem",
-      fontFamily: "Open Sans, sans-serif",
+      fontWeight: 700,
+      fontSize: "1rem",
+      fontFamily: "Montserrat, serifsans-",
     },
     h1: {
-      fontFamily: "Open Sans, sans-serif",
+      fontFamily: "Montserrat, sans-serif",
       fontWeight: 700,
+      fontStyle: "italic",
     },
     fontWeightLight: 100,
     fontWeightRegular: 500,

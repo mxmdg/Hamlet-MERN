@@ -48,14 +48,16 @@ const JobDetail = (props) => {
   const [expanded, setExpanded] = useState(false);
   const job = props.job;
   const navigate = useNavigate();
+  // El siguiente estado es para almacenar la informacion de la imposicion en todas las partes.
+  const [productionPlan, setProductionPlan] = useState({});
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
 
   const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === "dark" ? "#111" : "#fff",
-    ...theme.typography.body2,
+    backgroundColor: theme.palette.mode === "dark" ? "#131" : "#afa",
+    ...theme.typography.subtitle2,
     padding: theme.spacing(2),
     textAlign: "left",
     color: theme.palette.text.secondary,
@@ -82,25 +84,26 @@ const JobDetail = (props) => {
 
   const PartDetail = (part) => {
     const [usePoses, setPoses] = useState(null);
-    const [useSheet, setSheet] = useState(null);
+    const [useImpoData, setImpoData] = useState(null);
     let partNumber = job.Partes.indexOf(part) + 1;
     let myKey = part._id + partNumber;
 
-    console.log(useSheet);
-
     const partCosts = {
       Poses: usePoses,
-      Pliego: useSheet,
+      ImpositionData: useImpoData,
     };
 
-    const saveImpoData = () => {
+    const saveProductionPlan = () => {
       partCosts.totalPliegos = calculateStock().cantidadDePliegos;
       partCosts.totalHojas = calculateStock().totalHojas;
       partCosts.tirada = Math.ceil(job.Cantidad / usePoses);
       partCosts.impresiones =
         Math.ceil(part.Pages * (job.coloresDorso > 0 ? 2 : 1)) *
         Math.ceil(job.Cantidad / usePoses);
-      console.log(partCosts);
+      setProductionPlan((prevState) => ({
+        ...prevState,
+        [part._id]: partCosts,
+      }));
     };
 
     const calculateStock = (
@@ -112,15 +115,15 @@ const JobDetail = (props) => {
       const straightCut = cutOptimizer(
         sheetWidth, //part.partStock.Ancho_Resma,
         sheetHeight, //part.partStock.Alto_Resma,
-        parseInt(signnatureWidth), //useSheet.width,
-        parseInt(signatureHeight) //useSheet.height
+        parseInt(signnatureWidth), //useImpoData.width,
+        parseInt(signatureHeight) //useImpoData.height
       );
 
       const rotatedtCut = cutOptimizer(
         sheetWidth, //part.partStock.Ancho_Resma,
         sheetHeight, //part.partStock.Alto_Resma,
-        parseInt(signatureHeight), //useSheet.height,
-        parseInt(signnatureWidth) //useSheet.width
+        parseInt(signatureHeight), //useImpoData.height,
+        parseInt(signnatureWidth) //useImpoData.width
       );
 
       const pliegosPorHoja = Math.max(
@@ -138,7 +141,7 @@ const JobDetail = (props) => {
     };
 
     return (
-      <>
+      <Box key={part._id}>
         <Accordion
           key={myKey}
           id={myKey}
@@ -207,8 +210,8 @@ const JobDetail = (props) => {
                         Pliegos:{" "}
                         {
                           calculateStock(
-                            useSheet.width,
-                            useSheet.height,
+                            useImpoData.formatSelector.width,
+                            useImpoData.formatSelector.height,
                             part.partStock.Ancho_Resma,
                             part.partStock.Alto_Resma
                           ).cantidadDePliegos
@@ -216,8 +219,8 @@ const JobDetail = (props) => {
                         - Salen:{" "}
                         {
                           calculateStock(
-                            useSheet.width,
-                            useSheet.height,
+                            useImpoData.formatSelector.width,
+                            useImpoData.formatSelector.height,
                             part.partStock.Ancho_Resma,
                             part.partStock.Alto_Resma
                           ).pliegosPorHoja
@@ -229,8 +232,8 @@ const JobDetail = (props) => {
                         Cantidad de resmas:{" "}
                         {Math.ceil(
                           (calculateStock(
-                            useSheet.width,
-                            useSheet.height,
+                            useImpoData.formatSelector.width,
+                            useImpoData.formatSelector.height,
                             part.partStock.Ancho_Resma,
                             part.partStock.Alto_Resma
                           ).totalHojas /
@@ -239,8 +242,8 @@ const JobDetail = (props) => {
                         ) / 100}{" "}
                         {`(${
                           calculateStock(
-                            useSheet.width,
-                            useSheet.height,
+                            useImpoData.formatSelector.width,
+                            useImpoData.formatSelector.height,
                             part.partStock.Ancho_Resma,
                             part.partStock.Alto_Resma
                           ).totalHojas
@@ -249,7 +252,7 @@ const JobDetail = (props) => {
                       <Button
                         //icon={ArrowBackIcon}
                         onClick={() => {
-                          saveImpoData();
+                          saveProductionPlan();
                         }}
                         variant="contained"
                         color="success"
@@ -267,7 +270,7 @@ const JobDetail = (props) => {
                     <Canvas
                       part={part}
                       getPoses={setPoses}
-                      getSheet={setSheet}
+                      getSheet={setImpoData}
                     ></Canvas>
                   </DarkWoodCard>
                 </ImpoProvider>
@@ -275,7 +278,7 @@ const JobDetail = (props) => {
             </Grid>
           </AccordionDetails>
         </Accordion>
-      </>
+      </Box>
     );
   };
 

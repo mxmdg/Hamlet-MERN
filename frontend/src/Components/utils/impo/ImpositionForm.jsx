@@ -96,6 +96,8 @@ export const ImpositionForm = (props) => {
   };
 
   const onSubmit = (values) => {
+    values.printerSelector = useSelectedPrinter;
+    values.formatSelector = selectedFormat;
     context.setImpoData(values);
     props.doImposition(values);
   };
