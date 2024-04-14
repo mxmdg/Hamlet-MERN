@@ -16,9 +16,11 @@ const ProductionPlan = (props) => {
       {AllData.map((data) => {
         return (
           <div key={data.id}>
-            <h3>{`Impresora: ${data.ImpositionData.printerSelector.Fabricante} ${data.ImpositionData.printerSelector.Modelo}`}</h3>
-            <h3>{`Impresiones: ${data.impresiones}`}</h3>
-            <h3>{`${data.totalPliegos} pliegos de ${data.stock.Marca} ${data.stock.Tipo} ${data.stock.Gramaje} ${data.stock.Ancho_Resma} x ${data.stock.Alto_Resma}`}</h3>
+            <p>
+              <h3>{`Impresora: ${data.ImpositionData.printerSelector.Fabricante} ${data.ImpositionData.printerSelector.Modelo}: `}</h3>
+              {`Impresiones: ${data.impresiones},`}{" "}
+              {`${data.totalPliegos} pliegos de ${data.stock.Marca} ${data.stock.Tipo} ${data.stock.Gramaje} gramos, ${data.stock.Ancho_Resma} x ${data.stock.Alto_Resma} mm.`}
+            </p>
           </div>
         );
       })}
