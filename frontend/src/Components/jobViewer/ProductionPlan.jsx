@@ -19,7 +19,7 @@ const ProductionPlan = (props) => {
             <p>
               <h3>{`Impresora: ${data.ImpositionData.printerSelector.Fabricante} ${data.ImpositionData.printerSelector.Modelo}: `}</h3>
               {`Impresiones: ${data.impresiones},`}{" "}
-              {`${data.totalPliegos} pliegos de ${data.stock.Marca} ${data.stock.Tipo} ${data.stock.Gramaje} gramos, ${data.stock.Ancho_Resma} x ${data.stock.Alto_Resma} mm.`}
+              {`${data.totalPliegos} pliegos de ${data.stock.Marca} ${data.stock.Tipo} ${data.stock.Gramaje} gramos, ${data.ImpositionData.formatSelector.Ancho} x ${data.ImpositionData.formatSelector.Alto} mm.`}
             </p>
           </div>
         );
