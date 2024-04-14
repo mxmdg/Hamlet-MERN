@@ -39,6 +39,7 @@ import DarkWoodCard from "../utils/DarkWoodCard";
 
 // Mis componentes
 import JobRow from "../Jobs/jobsTable/JobRow";
+import ProductionPlan from "./ProductionPlan";
 
 export const calcularLomo = (pags, resma) => {
   return Math.ceil(Math.ceil(pags / 2) * (resma / 500));
@@ -50,13 +51,14 @@ const JobDetail = (props) => {
   const navigate = useNavigate();
   // El siguiente estado es para almacenar la informacion de la imposicion en todas las partes.
   const [productionPlan, setProductionPlan] = useState({});
+  const [productionPlanAvaible, setProductionPlanAvaible] = useState(false);
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
 
   const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === "dark" ? "#131" : "#afa",
+    backgroundColor: theme.palette.mode === "dark" ? "#222" : "#aaa",
     ...theme.typography.subtitle2,
     padding: theme.spacing(2),
     textAlign: "left",
@@ -82,6 +84,15 @@ const JobDetail = (props) => {
     day: "numeric",
   };
 
+  const showProductionPlan = () => {
+    console.log(Object.keys(productionPlan), job.Partes.length);
+    if (Object.keys(productionPlan).length === job.Partes.length) {
+      setProductionPlanAvaible(true);
+    } else {
+      alert("Calcular la imposicion de todas las partes");
+    }
+  };
+
   const PartDetail = (part) => {
     const [usePoses, setPoses] = useState(null);
     const [useImpoData, setImpoData] = useState(null);
@@ -94,9 +105,21 @@ const JobDetail = (props) => {
     };
 
     const saveProductionPlan = () => {
-      partCosts.totalPliegos = calculateStock().cantidadDePliegos;
-      partCosts.totalHojas = calculateStock().totalHojas;
+      partCosts.totalPliegos = calculateStock(
+        useImpoData.formatSelector.Alto,
+        useImpoData.formatSelector.Ancho,
+        part.partStock.Ancho_Resma,
+        part.partStock.Alto_Resma
+      ).cantidadDePliegos;
+      partCosts.totalHojas = calculateStock(
+        useImpoData.formatSelector.Alto,
+        useImpoData.formatSelector.Ancho,
+        part.partStock.Ancho_Resma,
+        part.partStock.Alto_Resma
+      ).totalHojas;
       partCosts.tirada = Math.ceil(job.Cantidad / usePoses);
+      partCosts.id = part._id;
+      partCosts.stock = part.partStock;
       partCosts.impresiones =
         Math.ceil(part.Pages * (job.coloresDorso > 0 ? 2 : 1)) *
         Math.ceil(job.Cantidad / usePoses);
@@ -112,6 +135,14 @@ const JobDetail = (props) => {
       sheetWidth,
       sheetHeight
     ) => {
+      console.log(
+        "Parametros recibidos ",
+        signnatureWidth,
+        signatureHeight,
+        sheetWidth,
+        sheetHeight
+      );
+
       const straightCut = cutOptimizer(
         sheetWidth, //part.partStock.Ancho_Resma,
         sheetHeight, //part.partStock.Alto_Resma,
@@ -210,8 +241,8 @@ const JobDetail = (props) => {
                         Pliegos:{" "}
                         {
                           calculateStock(
-                            useImpoData.formatSelector.width,
-                            useImpoData.formatSelector.height,
+                            useImpoData.formatSelector.Ancho,
+                            useImpoData.formatSelector.Alto,
                             part.partStock.Ancho_Resma,
                             part.partStock.Alto_Resma
                           ).cantidadDePliegos
@@ -219,8 +250,8 @@ const JobDetail = (props) => {
                         - Salen:{" "}
                         {
                           calculateStock(
-                            useImpoData.formatSelector.width,
-                            useImpoData.formatSelector.height,
+                            useImpoData.formatSelector.Ancho,
+                            useImpoData.formatSelector.Alto,
                             part.partStock.Ancho_Resma,
                             part.partStock.Alto_Resma
                           ).pliegosPorHoja
@@ -232,8 +263,8 @@ const JobDetail = (props) => {
                         Cantidad de resmas:{" "}
                         {Math.ceil(
                           (calculateStock(
-                            useImpoData.formatSelector.width,
-                            useImpoData.formatSelector.height,
+                            useImpoData.formatSelector.Ancho,
+                            useImpoData.formatSelector.Alto,
                             part.partStock.Ancho_Resma,
                             part.partStock.Alto_Resma
                           ).totalHojas /
@@ -242,8 +273,8 @@ const JobDetail = (props) => {
                         ) / 100}{" "}
                         {`(${
                           calculateStock(
-                            useImpoData.formatSelector.width,
-                            useImpoData.formatSelector.height,
+                            useImpoData.formatSelector.Ancho,
+                            useImpoData.formatSelector.Alto,
                             part.partStock.Ancho_Resma,
                             part.partStock.Alto_Resma
                           ).totalHojas
@@ -340,22 +371,33 @@ const JobDetail = (props) => {
           {job.Partes.map((parte) => {
             return PartDetail(parte);
           })}
+          {productionPlanAvaible && (
+            <ProductionPlan impositionData={productionPlan} />
+          )}
         </CardContent>
         <Divider />
         <CardActions>
-          <Container>
-            <Button
-              //icon={ArrowBackIcon}
-              onClick={() => {
-                navigate(-1);
-              }}
-              variant="contained"
-              color="primary"
-              startIcon={<ArrowBackIcon />}
-            >
-              Volver
-            </Button>
-          </Container>
+          <Button
+            //icon={ArrowBackIcon}
+            onClick={() => {
+              navigate(-1);
+            }}
+            variant="contained"
+            color="primary"
+            startIcon={<ArrowBackIcon />}
+          >
+            Volver
+          </Button>
+          <Button
+            //icon={ArrowBackIcon}
+            onClick={() => {
+              showProductionPlan();
+            }}
+            variant="contained"
+            color="primary"
+          >
+            Plan de producción
+          </Button>
         </CardActions>
       </Card>
     </Container>

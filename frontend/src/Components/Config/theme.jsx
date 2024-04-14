@@ -105,15 +105,15 @@ const themeOptions = createTheme({
     button: {
       fontWeight: 700,
       fontSize: "1rem",
-      fontFamily: "Montserrat, serifsans-",
+      fontFamily: "Montserrat, sans-serif",
     },
-    h1: {
+    h6: {
       fontFamily: "Montserrat, sans-serif",
       fontWeight: 700,
       fontStyle: "italic",
     },
     fontWeightLight: 100,
-    fontWeightRegular: 500,
+    fontWeightRegular: 400,
     fontWeightMedium: 700,
     fontWeightBold: 900,
   },
