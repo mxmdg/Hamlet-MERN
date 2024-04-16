@@ -383,7 +383,7 @@ const JobDetail = (props) => {
               navigate(-1);
             }}
             variant="contained"
-            color="primary"
+            color="secondary"
             startIcon={<ArrowBackIcon />}
           >
             Volver

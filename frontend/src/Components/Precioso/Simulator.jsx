@@ -232,12 +232,12 @@ const Simulator = (props) => {
           <CardContent>
             <Form />
             
-            <SimulationTable
+            {/* <SimulationTable
               data={props.data}
               pliegos={pliegos}
               cantidades={cantidades}
               simCLC={simCLC}
-            />
+            /> */}
           </CardContent>
 
           <CardActions>

@@ -20,7 +20,7 @@ export const getPrivateElements = async (collection) => {
     });
     return elements.data;
   } catch (e) {
-    throw e;
+    return e;
   }
 };
 
