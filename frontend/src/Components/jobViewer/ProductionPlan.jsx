@@ -1,8 +1,13 @@
 import { useEffect, useState } from "react";
 
 // Simulador de costos Papyrus - Imprenta Dorrego
-import { Encuadernacion , Laminado, Nuvera , iGenBN , iGenColor } from "../Precioso/formSimulators"
-
+import {
+  Encuadernacion,
+  Laminado,
+  Nuvera,
+  iGenBN,
+  iGenColor,
+} from "../Precioso/formSimulators";
 
 // Mui Material Imports
 import Container from "@mui/material/Container";
@@ -13,17 +18,15 @@ import ErrorMessage from "../ErrorMessage/ErrorMessage";
 
 // Mis Hooks
 import { getPrivateElements } from "../customHooks/FetchDataHook";
-import Spinner from "../General/Spinner"
+import Spinner from "../General/Spinner";
 
 const ProductionPlan = (props) => {
-  const [usePrices, setPrices] = useState()
-  const [useLoading, setLoading] = useState(false)
-  const [useError, setError] = useState(null)
+  const [usePrices, setPrices] = useState();
+  const [useLoading, setLoading] = useState(false);
+  const [useError, setError] = useState(null);
   const AllData = objectToArray(props.impositionData);
-  console.log(props.impositionData)
-  console.log(AllData)
-
- 
+  console.log(props.impositionData);
+  console.log(AllData);
 
   /* Modelo del datos:
   {
@@ -81,75 +84,87 @@ const ProductionPlan = (props) => {
 }
   */
 
-const totalResume = (arr) => {
-  
-  const totals = {};
+  const totalResume = (arr) => {
+    const totals = {};
 
-  arr.forEach((data) => {
-    const { printerSelector, stock, formatSelector } = data.ImpositionData;
-    const key = `${printerSelector.Fabricante} ${printerSelector.Modelo} - ${data.stock._id} - ${formatSelector._id} - ${data.stock._id}`;
+    arr.forEach((data) => {
+      const { printerSelector, stock, formatSelector } = data.ImpositionData;
+      const key = `${printerSelector.Fabricante} ${printerSelector.Modelo} - ${data.stock._id} - ${formatSelector._id} - ${data.stock._id}`;
+      const cost = data.ImpositionData.printerSelector.Costo;
 
-    if (!totals[key]) {
-      totals[key] = {
-        printer: printerSelector,
-        stock: data.stock,
-        format: formatSelector,
-        totalPliegos: 0,
-        totalHojas: 0,
-        impresiones: 0
-      };
-    }
-
-
-    const printerCostFunction = (valor, minimo, cantidad, entrada, largoPliego)=> {
-      if (printerSelector.Colores === 1 && printerSelector.Modelo.includes("Nuvera")) {
-        return Nuvera(valor, minimo, cantidad, entrada, largoPliego)
-      } else if (printerSelector.Colores === 1 && !printerSelector.Modelo.includes("Nuvera")) {
-        return iGenBN(valor, minimo, cantidad, entrada, largoPliego)
-      } else if (printerSelector.Colores === 4) {
-        return iGenColor(valor, minimo, cantidad, entrada, largoPliego)
+      if (!totals[key]) {
+        totals[key] = {
+          printer: printerSelector,
+          stock: data.stock,
+          format: formatSelector,
+          totalPliegos: 0,
+          totalHojas: 0,
+          impresiones: 0,
+        };
       }
-    }
-        
-    totals[key].totalPliegos += data.totalPliegos;
-    totals[key].totalHojas += data.totalHojas;
-    totals[key].impresiones += data.impresiones;
-    totals[key].printPrice = printerCostFunction(
-      10, // Valor
-      0,  // Minimo
-      totals[key].impresiones,
-      0,  // Entrada
-      Math.max(totals[key].format.Alto,totals[key].format.Ancho)
-    )
-  });
 
-  return Object.values(totals);
-};
+      const printerCostFunction = (
+        valor,
+        minimo,
+        cantidad,
+        entrada,
+        largoPliego
+      ) => {
+        if (
+          printerSelector.Colores === 1 &&
+          printerSelector.Modelo.includes("Nuvera")
+        ) {
+          console.log("Formula seleccionada segun caso Nuvera");
+          return Nuvera(valor, minimo, cantidad, entrada, largoPliego);
+        } else if (
+          printerSelector.Colores === 1 &&
+          !printerSelector.Modelo.includes("Nuvera")
+        ) {
+          console.log("Formula seleccionada segun caso iGenBN");
+          return iGenBN(valor, minimo, cantidad, entrada, largoPliego);
+        } else if (printerSelector.Colores === 4) {
+          console.log("Formula seleccionada segun caso Color");
+          return iGenColor(valor, minimo, cantidad, entrada, largoPliego);
+        }
+      };
 
-const resumen = (totalResume(AllData))
+      totals[key].totalPliegos += data.totalPliegos;
+      totals[key].totalHojas += data.totalHojas;
+      totals[key].impresiones += data.impresiones;
+      totals[key].printPrice = printerCostFunction(
+        cost.Valor,
+        cost.Minimo,
+        totals[key].impresiones,
+        cost.Entrada,
+        Math.max(totals[key].format.Alto, totals[key].format.Ancho)
+      );
+    });
 
-useEffect(() => {
-  const fetchPrices = async () => {
-    console.log("Cargando precios");
-    try {
-      setLoading(true); // Set loading state to true before fetching
-      const priceList = await getPrivateElements("Precios");
-      priceList.message ? 
-        setError(priceList.message) :
-        setPrices(priceList);
-      setLoading(false); // Set loading state to false after fetching
-    } catch (error) {
-      setLoading(false); // Set loading state to false if there's an error
-      setError(error); // Set the error state if there's an error
-    }
+    return Object.values(totals);
   };
 
-  fetchPrices(); // Call the fetchPrices function inside useEffect
+  const resumen = totalResume(AllData);
 
-  // Make sure to include fetchPrices as a dependency array to avoid unnecessary re-renders
-}, []);
+  useEffect(() => {
+    const fetchPrices = async () => {
+      console.log("Cargando precios");
+      try {
+        setLoading(true); // Set loading state to true before fetching
+        const priceList = await getPrivateElements("Precios");
+        priceList.message ? setError(priceList.message) : setPrices(priceList);
+        setLoading(false); // Set loading state to false after fetching
+      } catch (error) {
+        setLoading(false); // Set loading state to false if there's an error
+        setError(error); // Set the error state if there's an error
+      }
+    };
 
-const success = (
+    fetchPrices(); // Call the fetchPrices function inside useEffect
+
+    // Make sure to include fetchPrices as a dependency array to avoid unnecessary re-renders
+  }, []);
+
+  const success = (
     <Container>
       {/* {AllData.map((data) => {
         return (
@@ -163,15 +178,23 @@ const success = (
           </div>
         );
       })} */}
-      {resumen.map((data)=>{
+      {resumen.map((data) => {
         return (
           <div key={data.format._id + data.printer._id}>
-            <h3>{`Impresora: ${data.printer.Fabricante} ${data.printer.Modelo}: `}</h3>
+            <h3>{`${data.printer.Fabricante} ${data.printer.Modelo} (${data.printer.Costo.Proceso}): `}</h3>
             <p>
-              {`Impresiones: ${data.impresiones} $${data.printPrice.Total},`}{" "}
+              {`Impresiones: ${data.impresiones},`}{" "}
               {`${data.totalPliegos} pliegos de ${data.stock.Marca} ${data.stock.Tipo} ${data.stock.Gramaje} gramos, ${data.format.Ancho} x ${data.format.Alto} mm.`}
             </p>
-            <b>{}</b>
+            <ul>
+              <li>
+                Total: <b>{`$${data.printPrice.Total}`}</b>
+              </li>
+              <li>
+                Unitario: <b>{`$${data.printPrice.Unitario}`}</b>
+              </li>
+            </ul>
+
             <p>{`${data.totalHojas} Pliegos de la resma de ${data.stock.Ancho_Resma} x ${data.stock.Alto_Resma}`}</p>
           </div>
         );
@@ -180,15 +203,16 @@ const success = (
   );
 
   const failure = (
-    <ErrorMessage message={useError} severity="error" action={()=>setError(null)}/>
-  )
+    <ErrorMessage
+      message={useError}
+      severity="error"
+      action={() => setError(null)}
+    />
+  );
 
-  const loading = (
-    <Spinner color="secondary"/>
-  )
+  const loading = <Spinner color="secondary" />;
 
-  return (useLoading ? loading : useError !== null ? failure : success)
-
+  return useLoading ? loading : useError !== null ? failure : success;
 };
 
 export default ProductionPlan;

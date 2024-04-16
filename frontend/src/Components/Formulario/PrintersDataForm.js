@@ -1,3 +1,24 @@
+import { getPrivateElements } from "../customHooks/FetchDataHook";
+const costsList = [];
+const costos = async () => {
+  try {
+    const res = await getPrivateElements("Precios");
+    console.log(res);
+    res.map((item) => {
+      costsList.push({
+        text: `${item.Proceso} (${item.valor})`,
+        value: item._id,
+        id: item._id,
+      });
+    });
+    return res;
+  } catch (error) {
+    return error.message;
+  }
+};
+
+costos();
+
 let PrintersDataForm = [
   {
     inputName: "Modelo",
@@ -53,9 +74,10 @@ let PrintersDataForm = [
     required: true,
   },
   {
-    inputName: "Costo_impresion",
-    type: "Number",
+    inputName: "Costo",
+    type: "Select",
     id: "id_009",
+    options: costsList,
     required: true,
   },
 ];

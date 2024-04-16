@@ -1,10 +1,13 @@
 const printers = require("../../models/printers");
+const prices = require("../../models/prices");
 
 const printerControl = {};
 
 printerControl.getPrinters = async (req, res, next) => {
   {
-    const printer = await printers.esquema.find();
+    const printer = await printers.esquema
+      .find()
+      .populate({ path: "Costo", model: prices.esquema });
     res.json(printer);
   }
 };
@@ -20,7 +23,7 @@ printerControl.addPrinter = async (req, res, next) => {
       Y_Minimo,
       Y_Maximo,
       Paginas_por_minuto,
-      Costo_impresion,
+      Costo,
     } = req.body;
     const newPrinter = new printers.esquema({
       Modelo,
@@ -31,12 +34,13 @@ printerControl.addPrinter = async (req, res, next) => {
       Y_Minimo,
       Y_Maximo,
       Paginas_por_minuto,
-      Costo_impresion,
+      Costo,
     });
     try {
       await newPrinter.save();
       res.json({ message: newPrinter.Modelo + " guardado OK" });
     } catch (error) {
+      console.log(error);
       next(error);
     }
   }
@@ -67,7 +71,7 @@ printerControl.updatePrinter = async (req, res) => {
       Y_Minimo,
       Y_Maximo,
       Paginas_por_minuto,
-      Costo_impresion,
+      Costo,
     } = req.body;
     const printer = await printers.esquema.findOneAndUpdate(
       { _id: req.params.id },
@@ -80,11 +84,12 @@ printerControl.updatePrinter = async (req, res) => {
         Y_Minimo,
         Y_Maximo,
         Paginas_por_minuto,
-        Costo_impresion,
+        Costo,
       }
     );
     res.json({ message: "Impresora actualizada " + printer.Modelo });
   } catch (e) {
+    console.log(e);
     res.json({ message: "Error: " + e });
   }
 };

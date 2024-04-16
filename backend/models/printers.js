@@ -9,7 +9,11 @@ const printerSchema = new Schema({
   Y_Minimo: { type: Number, required: true },
   Y_Maximo: { type: Number, required: true },
   Paginas_por_minuto: { type: Number, required: true },
-  Costo_impresion: { type: Number, required: true },
+  Costo: {
+    type: mongoose.Schema.ObjectId,
+    ref: "Precios",
+    required: true,
+  },
   Fecha: { type: Date, default: Date.now, required: false },
 });
 
