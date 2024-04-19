@@ -112,11 +112,14 @@ const ProductionPlan = (props) => {
       ) => {
         if (
           printerSelector.Colores === 1 &&
-          printerSelector.Modelo.includes("Nuvera")
+          printerSelector.Modelo.includes("nuvera") ||
+          printerSelector.Modelo.includes("Nuvera") 
         ) {
           console.log("Formula seleccionada segun caso Nuvera");
           return Nuvera(valor, minimo, cantidad, entrada, largoPliego);
         } else if (
+          printerSelector.Colores === 1 &&
+          !printerSelector.Modelo.includes("nuvera")||
           printerSelector.Colores === 1 &&
           !printerSelector.Modelo.includes("Nuvera")
         ) {
@@ -128,6 +131,17 @@ const ProductionPlan = (props) => {
         }
       };
 
+      const stockCost = ()=> {
+        const surface = parseFloat(data.stock.Ancho_Resma) * parseFloat(data.stock.Alto_Resma);
+        const totalPaper = parseFloat(data.totalHojas) * surface;
+        const weight = totalPaper / 1000000 * parseFloat(data.stock.Gramaje);
+        const cost = Math.ceil((weight / 1000) * parseFloat(data.stock.Precio_x_Kilo))
+   
+        console.log(surface, totalPaper, "Peso " + weight, cost)
+        return {surface, totalPaper, weight, cost}
+
+      }
+
       totals[key].totalPliegos += data.totalPliegos;
       totals[key].totalHojas += data.totalHojas;
       totals[key].impresiones += data.impresiones;
@@ -138,6 +152,7 @@ const ProductionPlan = (props) => {
         cost.Entrada,
         Math.max(totals[key].format.Alto, totals[key].format.Ancho)
       );
+      totals[key].stockCost = stockCost()
     });
 
     return Object.values(totals);
@@ -194,8 +209,8 @@ const ProductionPlan = (props) => {
                 Unitario: <b>{`$${data.printPrice.Unitario}`}</b>
               </li>
             </ul>
-
-            <p>{`${data.totalHojas} Pliegos de la resma de ${data.stock.Ancho_Resma} x ${data.stock.Alto_Resma}`}</p>
+            <p>{`${data.totalHojas} Pliegos de la resma de ${data.stock.Ancho_Resma} x ${data.stock.Alto_Resma} - $${data.stockCost.cost}`}</p>
+            <p>Total: $<b>{data.printPrice.Total + data.stockCost.cost}</b></p>
           </div>
         );
       })}
