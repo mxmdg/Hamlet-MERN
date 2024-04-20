@@ -306,7 +306,10 @@ export const calculateStock = (
     signnatureWidth,
     signatureHeight,
     sheetWidth,
-    sheetHeight
+    sheetHeight,
+    part,
+    job,
+    poses
   );
 
   const straightCut = cutOptimizer(

@@ -110,8 +110,8 @@ const JobDetail = (props) => {
 
     const stockCalculated = useImpoData
       ? calculateStock(
-          useImpoData.widthSheet,
-          useImpoData.heightSheet,
+          useImpoData.sheetOriginalSize.width,
+          useImpoData.sheetOriginalSize.height,
           part.partStock.Ancho_Resma,
           part.partStock.Alto_Resma,
           part,
