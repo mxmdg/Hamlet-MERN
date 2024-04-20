@@ -98,8 +98,11 @@ const ProductionPlan = (props) => {
           stock: data.stock,
           format: formatSelector,
           totalPliegos: 0,
+          widthSheet: data.ImpositionData.widthSheet,
+          heightSheet: data.ImpositionData.heightSheet,
           totalHojas: 0,
           impresiones: 0,
+          sheetOriginalSize: data.ImpositionData.sheetOriginalSize,
         };
       }
 
@@ -111,17 +114,17 @@ const ProductionPlan = (props) => {
         largoPliego
       ) => {
         if (
-          printerSelector.Colores === 1 &&
-          printerSelector.Modelo.includes("nuvera") ||
-          printerSelector.Modelo.includes("Nuvera") 
+          (printerSelector.Colores === 1 &&
+            printerSelector.Modelo.includes("nuvera")) ||
+          printerSelector.Modelo.includes("Nuvera")
         ) {
           console.log("Formula seleccionada segun caso Nuvera");
           return Nuvera(valor, minimo, cantidad, entrada, largoPliego);
         } else if (
-          printerSelector.Colores === 1 &&
-          !printerSelector.Modelo.includes("nuvera")||
-          printerSelector.Colores === 1 &&
-          !printerSelector.Modelo.includes("Nuvera")
+          (printerSelector.Colores === 1 &&
+            !printerSelector.Modelo.includes("nuvera")) ||
+          (printerSelector.Colores === 1 &&
+            !printerSelector.Modelo.includes("Nuvera"))
         ) {
           console.log("Formula seleccionada segun caso iGenBN");
           return iGenBN(valor, minimo, cantidad, entrada, largoPliego);
@@ -131,16 +134,19 @@ const ProductionPlan = (props) => {
         }
       };
 
-      const stockCost = ()=> {
-        const surface = parseFloat(data.stock.Ancho_Resma) * parseFloat(data.stock.Alto_Resma);
+      const stockCost = () => {
+        const surface =
+          parseFloat(data.stock.Ancho_Resma) *
+          parseFloat(data.stock.Alto_Resma);
         const totalPaper = parseFloat(data.totalHojas) * surface;
-        const weight = totalPaper / 1000000 * parseFloat(data.stock.Gramaje);
-        const cost = Math.ceil((weight / 1000) * parseFloat(data.stock.Precio_x_Kilo))
-   
-        console.log(surface, totalPaper, "Peso " + weight, cost)
-        return {surface, totalPaper, weight, cost}
+        const weight = (totalPaper / 1000000) * parseFloat(data.stock.Gramaje);
+        const cost = Math.ceil(
+          (weight / 1000) * parseFloat(data.stock.Precio_x_Kilo)
+        );
 
-      }
+        console.log(surface, totalPaper, "Peso " + weight, cost);
+        return { surface, totalPaper, weight, cost };
+      };
 
       totals[key].totalPliegos += data.totalPliegos;
       totals[key].totalHojas += data.totalHojas;
@@ -152,13 +158,14 @@ const ProductionPlan = (props) => {
         cost.Entrada,
         Math.max(totals[key].format.Alto, totals[key].format.Ancho)
       );
-      totals[key].stockCost = stockCost()
+      totals[key].stockCost = stockCost();
     });
 
     return Object.values(totals);
   };
 
   const resumen = totalResume(AllData);
+  console.log(resumen);
 
   useEffect(() => {
     const fetchPrices = async () => {
@@ -194,12 +201,14 @@ const ProductionPlan = (props) => {
         );
       })} */}
       {resumen.map((data) => {
+        console.log("Data");
+        console.log(data);
         return (
-          <div key={data.format._id + data.printer._id}>
+          <div key={data.printer._id + data.stock._id + resumen.indexOf(data)}>
             <h3>{`${data.printer.Fabricante} ${data.printer.Modelo} (${data.printer.Costo.Proceso}): `}</h3>
             <p>
               {`Impresiones: ${data.impresiones},`}{" "}
-              {`${data.totalPliegos} pliegos de ${data.stock.Marca} ${data.stock.Tipo} ${data.stock.Gramaje} gramos, ${data.format.Ancho} x ${data.format.Alto} mm.`}
+              {`${data.totalPliegos} pliegos de ${data.stock.Marca} ${data.stock.Tipo} ${data.stock.Gramaje} gramos, ${data.sheetOriginalSize?.width} x ${data.sheetOriginalSize?.height} mm.`}
             </p>
             <ul>
               <li>
@@ -210,7 +219,9 @@ const ProductionPlan = (props) => {
               </li>
             </ul>
             <p>{`${data.totalHojas} Pliegos de la resma de ${data.stock.Ancho_Resma} x ${data.stock.Alto_Resma} - $${data.stockCost.cost}`}</p>
-            <p>Total: $<b>{data.printPrice.Total + data.stockCost.cost}</b></p>
+            <p>
+              Total: $<b>{data.printPrice.Total + data.stockCost.cost}</b>
+            </p>
           </div>
         );
       })}

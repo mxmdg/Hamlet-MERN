@@ -58,7 +58,7 @@ const Canvas = (props) => {
         data.margenes = Math.floor(parseInt(data.margenes) * scale);
         data.Calle = Math.floor(parseInt(data.Calle) * scale);
       }
-
+      data.sheetOriginalSize = sheet;
       console.log(data);
 
       const totalPoses = drawOptimusCutting(

@@ -291,3 +291,48 @@ export const drawOptimusCutting = (
 
   return { tPoses };
 };
+
+export const calculateStock = (
+  signnatureWidth,
+  signatureHeight,
+  sheetWidth,
+  sheetHeight,
+  part,
+  job,
+  poses
+) => {
+  console.log(
+    "Parametros recibidos ",
+    signnatureWidth,
+    signatureHeight,
+    sheetWidth,
+    sheetHeight
+  );
+
+  const straightCut = cutOptimizer(
+    sheetWidth, //part.partStock.Ancho_Resma,
+    sheetHeight, //part.partStock.Alto_Resma,
+    parseInt(signnatureWidth), //useImpoData.width,
+    parseInt(signatureHeight) //useImpoData.height
+  );
+
+  const rotatedtCut = cutOptimizer(
+    sheetWidth, //part.partStock.Ancho_Resma,
+    sheetHeight, //part.partStock.Alto_Resma,
+    parseInt(signatureHeight), //useImpoData.height,
+    parseInt(signnatureWidth) //useImpoData.width
+  );
+
+  const pliegosPorHoja = Math.max(
+    parseInt(straightCut.totalPoses),
+    parseInt(rotatedtCut.totalPoses)
+  );
+
+  const cantidadDePliegos =
+    Math.ceil(part.Pages / (part.ColoresDorso > 0 ? 2 : 1)) *
+    Math.ceil(job.Cantidad / poses);
+
+  const totalHojas = Math.ceil(cantidadDePliegos / pliegosPorHoja);
+
+  return { pliegosPorHoja, cantidadDePliegos, totalHojas };
+};

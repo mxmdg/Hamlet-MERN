@@ -34,7 +34,11 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { ImpoContext } from "../utils/impo/ImpoContext";
 import ImpoProvider from "../utils/impo/ImpoContext";
 import Canvas from "../utils/impo/Canvas";
-import { bestCut, cutOptimizer } from "../utils/impo/ImpositionService";
+import {
+  bestCut,
+  cutOptimizer,
+  calculateStock,
+} from "../utils/impo/ImpositionService";
 import DarkWoodCard from "../utils/DarkWoodCard";
 
 // Mis componentes
@@ -104,19 +108,21 @@ const JobDetail = (props) => {
       ImpositionData: useImpoData,
     };
 
+    const stockCalculated = useImpoData
+      ? calculateStock(
+          useImpoData.widthSheet,
+          useImpoData.heightSheet,
+          part.partStock.Ancho_Resma,
+          part.partStock.Alto_Resma,
+          part,
+          job,
+          usePoses
+        )
+      : "";
+
     const saveProductionPlan = () => {
-      partCosts.totalPliegos = calculateStock(
-        useImpoData.formatSelector.Alto,
-        useImpoData.formatSelector.Ancho,
-        part.partStock.Ancho_Resma,
-        part.partStock.Alto_Resma
-      ).cantidadDePliegos;
-      partCosts.totalHojas = calculateStock(
-        useImpoData.formatSelector.Alto,
-        useImpoData.formatSelector.Ancho,
-        part.partStock.Ancho_Resma,
-        part.partStock.Alto_Resma
-      ).totalHojas;
+      partCosts.totalPliegos = stockCalculated.cantidadDePliegos;
+      partCosts.totalHojas = stockCalculated.totalHojas;
       partCosts.tirada = Math.ceil(job.Cantidad / usePoses);
       partCosts.id = part._id;
       partCosts.stock = part.partStock;
@@ -127,48 +133,6 @@ const JobDetail = (props) => {
         ...prevState,
         [part._id]: partCosts,
       }));
-    };
-
-    const calculateStock = (
-      signnatureWidth,
-      signatureHeight,
-      sheetWidth,
-      sheetHeight
-    ) => {
-      console.log(
-        "Parametros recibidos ",
-        signnatureWidth,
-        signatureHeight,
-        sheetWidth,
-        sheetHeight
-      );
-
-      const straightCut = cutOptimizer(
-        sheetWidth, //part.partStock.Ancho_Resma,
-        sheetHeight, //part.partStock.Alto_Resma,
-        parseInt(signnatureWidth), //useImpoData.width,
-        parseInt(signatureHeight) //useImpoData.height
-      );
-
-      const rotatedtCut = cutOptimizer(
-        sheetWidth, //part.partStock.Ancho_Resma,
-        sheetHeight, //part.partStock.Alto_Resma,
-        parseInt(signatureHeight), //useImpoData.height,
-        parseInt(signnatureWidth) //useImpoData.width
-      );
-
-      const pliegosPorHoja = Math.max(
-        parseInt(straightCut.totalPoses),
-        parseInt(rotatedtCut.totalPoses)
-      );
-
-      const cantidadDePliegos =
-        Math.ceil(part.Pages / (part.ColoresDorso > 0 ? 2 : 1)) *
-        Math.ceil(job.Cantidad / usePoses);
-
-      const totalHojas = Math.ceil(cantidadDePliegos / pliegosPorHoja);
-
-      return { pliegosPorHoja, cantidadDePliegos, totalHojas };
     };
 
     return (
@@ -238,47 +202,16 @@ const JobDetail = (props) => {
                         Tirada: {Math.ceil(job.Cantidad / usePoses)}
                       </Item2>
                       <Item2 elevation={4}>
-                        Pliegos:{" "}
-                        {
-                          calculateStock(
-                            useImpoData.formatSelector.Ancho,
-                            useImpoData.formatSelector.Alto,
-                            part.partStock.Ancho_Resma,
-                            part.partStock.Alto_Resma
-                          ).cantidadDePliegos
-                        }{" "}
-                        - Salen:{" "}
-                        {
-                          calculateStock(
-                            useImpoData.formatSelector.Ancho,
-                            useImpoData.formatSelector.Alto,
-                            part.partStock.Ancho_Resma,
-                            part.partStock.Alto_Resma
-                          ).pliegosPorHoja
-                        }{" "}
-                        del {part.partStock.Ancho_Resma} x{" "}
+                        Pliegos: {stockCalculated.cantidadDePliegos} - Salen:{" "}
+                        {stockCalculated.pliegosPorHoja} del{" "}
+                        {part.partStock.Ancho_Resma} x{" "}
                         {part.partStock.Alto_Resma}
                       </Item2>
                       <Item2 elevation={4}>
                         Cantidad de resmas:{" "}
-                        {Math.ceil(
-                          (calculateStock(
-                            useImpoData.formatSelector.Ancho,
-                            useImpoData.formatSelector.Alto,
-                            part.partStock.Ancho_Resma,
-                            part.partStock.Alto_Resma
-                          ).totalHojas /
-                            500) *
-                            100
-                        ) / 100}{" "}
-                        {`(${
-                          calculateStock(
-                            useImpoData.formatSelector.Ancho,
-                            useImpoData.formatSelector.Alto,
-                            part.partStock.Ancho_Resma,
-                            part.partStock.Alto_Resma
-                          ).totalHojas
-                        } hojas)`}
+                        {Math.ceil((stockCalculated.totalHojas / 500) * 100) /
+                          100}{" "}
+                        {`(${stockCalculated.totalHojas} hojas)`}
                       </Item2>
                       <Button
                         //icon={ArrowBackIcon}
