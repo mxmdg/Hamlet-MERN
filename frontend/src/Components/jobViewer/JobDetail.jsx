@@ -136,7 +136,7 @@ const JobDetail = (props) => {
     };
 
     return (
-      <Box key={part._id}>
+      <Box key={part._id} mb={1}>
         <Accordion
           key={myKey}
           id={myKey}
@@ -304,9 +304,26 @@ const JobDetail = (props) => {
           {job.Partes.map((parte) => {
             return PartDetail(parte);
           })}
-          {productionPlanAvaible && (
-            <ProductionPlan impositionData={productionPlan} />
-          )}
+          
+            {productionPlanAvaible && (
+              <Accordion
+                key={"pp-" + productionPlan.id}
+                id={"pp-" + productionPlan.id}
+                expanded={expanded === ("pp-" + productionPlan.id)}
+                onChange={handleChange("pp-" + productionPlan.id)}
+              >
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel1bh-content"
+                  id="panel1bh-header">
+                  <Typography color={"primary"}>
+                  Costo:
+                </Typography>
+                </AccordionSummary>
+                <ProductionPlan impositionData={productionPlan} />
+              </Accordion>
+            )}
+        
         </CardContent>
         <Divider />
         <CardActions>

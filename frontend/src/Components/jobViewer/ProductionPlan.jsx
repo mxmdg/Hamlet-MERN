@@ -11,6 +11,13 @@ import {
 
 // Mui Material Imports
 import Container from "@mui/material/Container";
+import { Grid } from "@mui/material";
+import { Card, CardHeader, CardContent, CardActions } from "@mui/material";
+import { Typography } from "@mui/material";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import Divider from "@mui/material/Divider";
+import ListItemText from "@mui/material/ListItemText";
 
 // Mis componentes
 import { objectToArray } from "../General/ObjectToArrayFilter";
@@ -187,45 +194,96 @@ const ProductionPlan = (props) => {
   }, []);
 
   const success = (
-    <Container>
-      {/* {AllData.map((data) => {
-        return (
-          <div key={data.id}>
-            <p>
-              <h3>{`Impresora: ${data.ImpositionData.printerSelector.Fabricante} ${data.ImpositionData.printerSelector.Modelo}: `}</h3>
-              {`Impresiones: ${data.impresiones},`}{" "}
-              {`${data.totalPliegos} pliegos de ${data.stock.Marca} ${data.stock.Tipo} ${data.stock.Gramaje} gramos, ${data.ImpositionData.formatSelector.Ancho} x ${data.ImpositionData.formatSelector.Alto} mm.`}
-            </p>
-            <p>{`${data.totalHojas} Pliegos de la resma de ${data.stock.Ancho_Resma} x ${data.stock.Alto_Resma}`}</p>
-          </div>
-        );
-      })} */}
+    <Grid container columns={12} spacing={2} padding={2}>
       {resumen.map((data) => {
         console.log("Data");
         console.log(data);
         return (
-          <div key={data.printer._id + data.stock._id + resumen.indexOf(data)}>
-            <h3>{`${data.printer.Fabricante} ${data.printer.Modelo} (${data.printer.Costo.Proceso}): `}</h3>
-            <p>
-              {`Impresiones: ${data.impresiones},`}{" "}
-              {`${data.totalPliegos} pliegos de ${data.stock.Marca} ${data.stock.Tipo} ${data.stock.Gramaje} gramos, ${data.sheetOriginalSize?.width} x ${data.sheetOriginalSize?.height} mm.`}
-            </p>
-            <ul>
-              <li>
-                Total: <b>{`$${data.printPrice.Total}`}</b>
-              </li>
-              <li>
-                Unitario: <b>{`$${data.printPrice.Unitario}`}</b>
-              </li>
-            </ul>
-            <p>{`${data.totalHojas} Pliegos de la resma de ${data.stock.Ancho_Resma} x ${data.stock.Alto_Resma} - $${data.stockCost.cost}`}</p>
-            <p>
-              Total: $<b>{data.printPrice.Total + data.stockCost.cost}</b>
-            </p>
-          </div>
+          <Grid item xs={12} sm={6} lg={3}>
+            <Card
+              key={data.printer._id + data.stock._id + resumen.indexOf(data)}
+              elevation={8}
+            >
+              <CardHeader
+                title={`${data.printer.Fabricante} ${data.printer.Modelo}`}
+                titleTypographyProps={{color: "primary"}}
+                subheader={`(${data.printer.Costo.Proceso})`}
+                subheaderTypographyProps={{color: "secondary"}}
+              ></CardHeader>
+              <Divider />
+              <CardContent>
+                <List dense>
+                <ListItem alignItems="flex-start">
+                  <ListItemText
+                    primary={`${data.impresiones}`}
+                    secondary={"Impresiones"}
+                    secondaryTypographyProps={{variant: "body1", fontSize: 12}}
+                    primaryTypographyProps={{variant: "h3",fontSize: 16}}
+                  />
+                </ListItem>
+                  <Divider />
+                <ListItem alignItems="flex-start">
+                  <ListItemText
+                    primary={`${data.totalPliegos} `}
+                    secondary={"Pliegos"}
+                    secondaryTypographyProps={{variant: "body1", fontSize: 12}}
+                    primaryTypographyProps={{variant: "h3",fontSize: 16}}
+                  />
+                </ListItem>
+                  <Divider />
+                  
+                  <ListItem alignItems="flex-start">
+                    <ListItemText
+                    secondary={`${data.stock.Tipo} ${data.stock.Gramaje} gramos`}
+                    primary={`${data.sheetOriginalSize?.width} x ${data.sheetOriginalSize?.height} mm.`}
+                    secondaryTypographyProps={{variant: "body1", fontSize: 12}}
+                    primaryTypographyProps={{variant: "h3",fontSize: 16}}
+                    />
+                  </ListItem>
+                  <Divider />
+                  <ListItem alignItems="flex-start">
+                    <ListItemText
+                      primary={`$ ${data.printPrice.Unitario}`}
+                      secondary={"Unitario"}
+                      secondaryTypographyProps={{variant: "body1", fontSize: 12}}
+                      primaryTypographyProps={{variant: "h3",fontSize: 16}}
+                    />
+                  </ListItem>
+                  <Divider />
+                  <ListItem alignItems="flex-start">
+                    <ListItemText
+                      secondary={"Costo final impreiones"}
+                      primary={`$ ${data.printPrice.Total}`}
+                      secondaryTypographyProps={{variant: "body1", fontSize: 12}}
+                      primaryTypographyProps={{variant: "h3",fontSize: 16}}
+                    />
+                  </ListItem>
+                  <Divider />
+                  <ListItem alignItems="flex-start">
+                    <ListItemText
+                      primary={`$ ${data.stockCost.cost}.-`}
+                      secondary={`${data.totalHojas} Pliegos de ${data.stock.Ancho_Resma} x ${data.stock.Alto_Resma} mm.`}
+                      secondaryTypographyProps={{variant: "body1", fontSize: 12}}
+                      primaryTypographyProps={{variant: "h3",fontSize: 16}}
+                    />
+                  </ListItem>
+                  <Divider />
+                  <ListItem alignItems="flex-start">
+                    <ListItemText
+                      primary={`$ ${data.printPrice.Total + data.stockCost.cost} -`}
+                      primaryTypographyProps={{variant: "subtitle2", fontSize: 16, color: "primary"}}
+                      secondary={`Total`}
+                      secondaryTypographyProps={{variant: "subtitle2",fontSize: 14}}
+                    />
+                  </ListItem>
+                  <Divider />
+                </List>
+              </CardContent>
+            </Card>
+          </Grid>
         );
       })}
-    </Container>
+    </Grid>
   );
 
   const failure = (
