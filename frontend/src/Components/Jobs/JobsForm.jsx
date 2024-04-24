@@ -3,7 +3,7 @@ import { AuthContext } from "../context/AuthContext";
 import { useForm } from "react-hook-form";
 import Input from "@mui/material/Input";
 import Container from "@mui/material/Container";
-import {Autocomplete} from "@mui/material";
+import { Autocomplete } from "@mui/material";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
@@ -34,7 +34,7 @@ const JobsForm = (props) => {
 
   const [useUsersList, setUsersList] = useState([]);
   const [useCompaniesList, setCompaniesList] = useState([]);
-  const [useCompany, setCompany ] = useState(props.data?.Company)
+  const [useCompany, setCompany] = useState(props.data?.Company);
   const context = useContext(AuthContext);
 
   const handleChange = (e) => {
@@ -45,7 +45,7 @@ const JobsForm = (props) => {
   const getUsers = async () => await fechtData("Users", setUsersList);
   const getCompanies = async () =>
     await fechtData("Empresas", setCompaniesList);
-  const getCompany = async (id) => await getPrivateElementByID("empresas", id)  
+  const getCompany = async (id) => await getPrivateElementByID("empresas", id);
 
   useEffect(() => {
     getUsers();
@@ -61,8 +61,10 @@ const JobsForm = (props) => {
     });
     console.log(jt);
     values.JobType = jt;
-    if (useCompany) {values.Company = useCompany}
-    
+    if (useCompany) {
+      values.Company = useCompany;
+    }
+
     //console.log(context.userLogged?._id);
     //values.Owner = context.userLogged._id;
     props.setJob(values);
@@ -80,7 +82,7 @@ const JobsForm = (props) => {
       <Card raised sx={{ gap: "20px", maxWidth: "600px" }} color="main">
         <CardHeader title="+ Nuevo Trabajo" />
         <CardContent>
-          <FormControl sx={{ width: "90%" }}>
+          <FormControl>
             <form name="form1" onSubmit={handleSubmit(onSubmit)}>
               <Grid
                 container
@@ -189,7 +191,7 @@ const JobsForm = (props) => {
                     type="date"
                     label="Fecha de entrega"
                     variant="outlined"
-                    defaultValue={props.data?.Entrega.slice(0,10) || ""}
+                    defaultValue={props.data?.Entrega.slice(0, 10) || ""}
                     name="Entrega"
                     {...register("Entrega", { required: true })}
                     InputLabelProps={{
@@ -215,8 +217,8 @@ const JobsForm = (props) => {
                   <TextField
                     select
                     defaultValue={
-                      props.data?.Owner?._id || 
-                      props.data?.Owner || 
+                      props.data?.Owner?._id ||
+                      props.data?.Owner ||
                       context.userLogged?._id ||
                       ""
                     }
@@ -248,18 +250,16 @@ const JobsForm = (props) => {
                   )}
                 </Grid>
                 <Grid item xs={1} sm={2} md={4}>
-                <Autocomplete
+                  <Autocomplete
                     id="Company"
                     options={useCompaniesList}
-                    defaultValue={
-                      props.data?.Company 
-                    }
+                    defaultValue={props.data?.Company}
                     autoHighlight
-                    getOptionLabel={(option) => option.Nombre }
+                    getOptionLabel={(option) => option.Nombre}
                     onChange={(event, newValue) => {
                       if (newValue) {
                         // Actualiza el valor del campo Company con el _id seleccionado
-                        setValue("Company", newValue );
+                        setValue("Company", newValue);
                       } else {
                         // Si el valor es nulo, elimina el valor del campo Company
                         setValue("Company", "");
@@ -272,7 +272,9 @@ const JobsForm = (props) => {
                         variant="outlined"
                         fullWidth
                         error={!!errors.Company}
-                        helperText={errors.Company ? "Seleccione una empresa" : ""}
+                        helperText={
+                          errors.Company ? "Seleccione una empresa" : ""
+                        }
                       />
                     )}
                   />

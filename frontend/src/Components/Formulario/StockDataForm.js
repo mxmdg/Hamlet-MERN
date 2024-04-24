@@ -1,6 +1,7 @@
 let PrintersDataForm = [
   {
     inputName: "Nombre_Material",
+    label: "Nombre",
     type: "Text",
     id: "id_001",
   },
@@ -31,16 +32,19 @@ let PrintersDataForm = [
   },
   {
     inputName: "Ancho_Resma",
+    label: "Ancho de la resma",
     type: "Number",
     id: "id_005",
   },
   {
     inputName: "Alto_Resma",
+    label: "Alto de la resma",
     type: "Number",
     id: "id_006",
   },
   {
     inputName: "Espesor_Resma",
+    label: "Espesor de la resma",
     type: "Number",
     id: "id_007",
   },
@@ -51,6 +55,7 @@ let PrintersDataForm = [
   },
   {
     inputName: "Precio_x_Kilo",
+    label: "Costo (por kilogramos)",
     type: "Number",
     id: "id_009",
   },

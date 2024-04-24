@@ -1,12 +1,24 @@
-const Button = (props)=> {
-    const clickHandler = (e)=>{
-        e.preventDefault()
-        props.selectForm(props.id) 
-    }
+import { Button } from "@mui/material";
 
-    return  <div>
-                <button type={"reset"} id={props.id} onClick={clickHandler}>{props.inputName}</button>
-            </div>
-   }         
+const Button = (props) => {
+  const clickHandler = (e) => {
+    e.preventDefault();
+    props.selectForm(props.id);
+  };
+
+  return (
+    <>
+      <Button
+        variant="filled"
+        color="secondary"
+        type={"reset"}
+        id={props.id}
+        onClick={clickHandler}
+      >
+        {props.inputName}
+      </Button>
+    </>
+  );
+};
 
 export default Button;

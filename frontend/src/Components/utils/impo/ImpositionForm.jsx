@@ -22,6 +22,7 @@ import {
 import { getPrivateElements } from "../../customHooks/FetchDataHook";
 import { ImpoContext } from "./ImpoContext";
 import ErrorMessage from "../../ErrorMessage/ErrorMessage";
+import Cmyk from "../../Printers/Cmyk";
 
 export const ImpositionForm = (props) => {
   const context = useContext(ImpoContext);
@@ -150,7 +151,7 @@ export const ImpositionForm = (props) => {
                         size="large"
                         label={Printer.Nombre}
                       /> */}
-                      <Typography variant="button">
+                      <Typography variant="subtitle1">
                         {Printer.Fabricante} {Printer.Modelo}{" "}
                         <b>
                           {Printer.Colores === 4
