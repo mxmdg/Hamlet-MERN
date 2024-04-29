@@ -200,7 +200,7 @@ export default function MyStepper(props) {
     ],
     [
       "Confirme el pedido",
-      <Box >
+      <Box>
         {useParts.map((part) => {
           return <div key={part._id}>{part.jobParts?.type}</div>;
         })}
@@ -228,74 +228,6 @@ export default function MyStepper(props) {
           subheader={useJob?.Cantidad || "Solicita tu presupuesto!"}
         />
         <CardContent>
-          <Container>
-            <Grid
-              container
-              columns={{ xs: 4, sm: 8, md: 12 }}
-              spacing={1}
-              overflow={"auto"}
-            >
-              {useParts?.map((part, index) => {
-                return (
-                  <Grid item xs={4} sm={4} md={6} key={part._id}>
-                    <Card elevation={12} square={true}>
-                      <CardHeader
-                        title={part.Name}
-                        subheader={part.jobParts[0].Type}
-                      ></CardHeader>
-                      <Container>
-                        Paginas: {part.Pages}
-                        <br />
-                        Formato: {part.Ancho} x {part.Alto}
-                        <br />
-                        Impresion: {part.ColoresFrente}/{part.ColoresDorso}
-                        <br />
-                        Material: {part.partStock.Nombre_Material}
-                        <br />
-                        {part.jobParts[0].Type.includes(
-                          "Interior" || "Insert"
-                        ) ? (
-                          <>
-                            Lomo:{" "}
-                            {calcularLomo(
-                              part.Pages,
-                              part.partStock.Espesor_Resma
-                            )}{" "}
-                            mm.
-                          </>
-                        ) : (
-                          ""
-                        )}
-                      </Container>
-                      <CardActions>
-                        <ButtonGroup size="small">
-                          <Button
-                            color="primary"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              editPart(index);
-                              setActiveStep(1);
-                            }}
-                          >
-                            Editar
-                          </Button>
-                          <Button
-                            color="error"
-                            onClick={() => {
-                              removePart(index);
-                            }}
-                          >
-                            Eliminar
-                          </Button>
-                        </ButtonGroup>
-                      </CardActions>
-                    </Card>
-                  </Grid>
-                );
-              })}
-            </Grid>
-          </Container>
-          <Divider></Divider>
           <Box sx={{ width: "100%" }}>
             <Stepper activeStep={activeStep}>
               {steps.map((label, index) => {
@@ -318,6 +250,7 @@ export default function MyStepper(props) {
                 );
               })}
             </Stepper>
+
             {activeStep === steps.length ? (
               <React.Fragment>
                 <Typography sx={{ mt: 2, mb: 1 }}>
@@ -336,7 +269,15 @@ export default function MyStepper(props) {
                   Step {activeStep + 1}
                 </Typography>
                 {steps[activeStep][1]}
-                <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    p: 2,
+                    mt: 1,
+                    mb: 1,
+                  }}
+                >
                   <Button
                     variant="filled"
                     color="inherit"
@@ -370,6 +311,81 @@ export default function MyStepper(props) {
                     </Button>
                 )} */}
                 </Box>
+
+                <Divider></Divider>
+                <Container>
+                  <Grid
+                    container
+                    columns={{ xs: 4, sm: 8, md: 12 }}
+                    spacing={4}
+                    overflow={"auto"}
+                  >
+                    {useParts?.map((part, index) => {
+                      return (
+                        <Grid item xs={4} sm={4} md={6} key={part._id}>
+                          <Card
+                            variant="elevation"
+                            elevation={12}
+                            square={true}
+                            sx={{ marginTop: "20px" }}
+                          >
+                            <CardHeader
+                              title={part.Name}
+                              subheader={part.jobParts[0].Type}
+                            ></CardHeader>
+                            <Container>
+                              Paginas: {part.Pages}
+                              <br />
+                              Formato: {part.Ancho} x {part.Alto}
+                              <br />
+                              Impresion: {part.ColoresFrente}/
+                              {part.ColoresDorso}
+                              <br />
+                              Material: {part.partStock.Nombre_Material}
+                              <br />
+                              {part.jobParts[0].Type.includes(
+                                "Interior" || "Insert"
+                              ) ? (
+                                <>
+                                  Lomo:{" "}
+                                  {calcularLomo(
+                                    part.Pages,
+                                    part.partStock.Espesor_Resma
+                                  )}{" "}
+                                  mm.
+                                </>
+                              ) : (
+                                ""
+                              )}
+                            </Container>
+                            <CardActions>
+                              <ButtonGroup size="small">
+                                <Button
+                                  color="primary"
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    editPart(index);
+                                    setActiveStep(1);
+                                  }}
+                                >
+                                  Editar
+                                </Button>
+                                <Button
+                                  color="error"
+                                  onClick={() => {
+                                    removePart(index);
+                                  }}
+                                >
+                                  Eliminar
+                                </Button>
+                              </ButtonGroup>
+                            </CardActions>
+                          </Card>
+                        </Grid>
+                      );
+                    })}
+                  </Grid>
+                </Container>
               </React.Fragment>
             )}
           </Box>

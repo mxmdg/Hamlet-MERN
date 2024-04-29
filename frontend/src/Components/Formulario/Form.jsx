@@ -3,12 +3,11 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { useForm, Controller } from "react-hook-form";
 
 //Hamlet services imports
 
 import { serverURL, databaseURL } from "../Config/config";
-//import "./form.css";
+import "./form.css";
 import {
   addPrivateElement,
   getPrivateElments,
@@ -17,10 +16,6 @@ import {
   deletePrivateElement,
 } from "../customHooks/FetchDataHook";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
-
-// Hamlet Components Imports
-
-import Spinner from "../General/Spinner";
 
 //Input Components Imports
 
@@ -38,7 +33,6 @@ import {
   CardActions,
   CardHeader,
   Typography,
-  TextField,
   Checkbox,
   FormControlLabel,
   FormControl,
@@ -67,27 +61,28 @@ function convertirArrayAObjeto(arr) {
   }, {});
 }
 
+// CSS Style (Never read...)
+
+/* let style = {
+  position: "relative",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: "100%",
+  border: "1px solid #839",
+  background: "#000",
+  backDropFilter: "blur(5px)",
+  boxShadow: "13px 13px 15px #00000088",
+  padding: "10px",
+  borderRadius: "10px",
+  zIndex: "10",
+}; */
+
 //  ¡¡¡Form Maker Component!!!
 
 const Form = (props) => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    trigger,
-    setValue,
-  } = useForm({
-    mode: "onChange", //"onBlur"
-  });
-
   const [useHidden, setHidden] = useState(
     props.task === "copy" || props.task === "edit" ? false : true
-  );
-
-  // Preloader State
-
-  const [useLoading, setLoading] = useState(
-    props.task === "new" ? false : true
   );
 
   // This state defines form's action: "copy", "edit" or "new"
@@ -98,7 +93,7 @@ const Form = (props) => {
 
   // This state intializes chebox value
 
-  const [useValue, setMyValue] = useState({ value: "" });
+  const [useValue, setValue] = useState({ value: "" });
 
   // These states are used for navigation.
   const navigate = useNavigate();
@@ -108,7 +103,7 @@ const Form = (props) => {
 
   const [useErrorMessage, setErrorMessage] = useState(null);
 
-  // In props.form you must provide the object model
+  // In props.form you must provide the object model for the form
   let dataForm = props.form;
 
   useEffect(() => {
@@ -119,31 +114,14 @@ const Form = (props) => {
       const { id } = params;
 
       const fetchItem = async () => {
-        setLoading(true);
-
         try {
           const itemToEdit = await getPrivateElementByID(
             `${props.collection}`,
             id
           );
-          const valueFinder = (item, data) => {
-            console.table(data);
-            console.table(item);
-            for (let i = 0; i <= data.length; i++) {
-              dataForm[i].defaultValue = item[data[i]];
-              console.log("Salio bien: " + data[i].defaultValue);
-            }
-          };
           setItem(itemToEdit);
-          setLoading(false);
-
-          if (!useLoading) {
-            valueFinder(itemToEdit.data, dataForm);
-          }
-          const valor = useItem.data ? valueFinder(useItem.data, dataForm) : "";
-          console.log(dataForm);
         } catch (e) {
-          setErrorMessage(e.message);
+          setErrorMessage(e);
         }
       };
       fetchItem();
@@ -152,33 +130,15 @@ const Form = (props) => {
     } else {
       console.log("new");
     }
-  }, [useLoading]);
+  }, [setItem]);
 
-  const submitHandlerTest = async (values, collection, id) => {
-    console.log(values, collection, id);
+  const submitHandler = async (e, collection, id) => {
+    e.preventDefault();
 
-    if (props.task === "new" || props.task === "copy") {
-      try {
-        await addPrivateElement(collection, values);
-        setHidden(true);
-        navigate(-1);
-        props.setState !== undefined
-          ? props.setState(true)
-          : console.log("No es nuevo");
-      } catch (e) {
-        console.log(e);
-        setErrorMessage("No se pudo guardar: " + e.message);
-        return e;
-      }
-    }
-  };
-
-  const submitHandler = async (values, collection, id) => {
-    console.log(values);
     const datos = [];
 
     // Collect data from inputs
-    for (let element of values) {
+    for (let element of e.target.elements) {
       if (element.tagName === "INPUT" || element.tagName === "SELECT") {
         let nombre = element.id;
         let value = element.value;
@@ -194,7 +154,7 @@ const Form = (props) => {
     const formData = convertirArrayAObjeto(datos);
     //formData.checkboxItems = selectedCheckboxItems;
     console.log("Formato del POST");
-    console.log(values);
+    console.log(formData);
 
     if (props.task === "new" || props.task === "copy") {
       try {
@@ -205,20 +165,16 @@ const Form = (props) => {
           ? props.setState(true)
           : console.log("No es nuevo");
       } catch (e) {
-        console.log(e);
-        setErrorMessage("No se pudo guardar: " + e.message);
-        return e;
+        setErrorMessage("No se pudo guardar " + e);
       }
     } else {
       try {
         await putPrivateElement(`${databaseURL}${collection}/${id}`, formData);
         setHidden(true);
         navigate(-1);
-        props.editor(true);
+        //props.editor(true);
       } catch (e) {
-        console.log(e);
-        setErrorMessage("No se pudo actualizar: " + e.message);
-        return e;
+        setErrorMessage("No se pudo actualizar" + e);
       }
     }
     try {
@@ -226,8 +182,7 @@ const Form = (props) => {
         ? props.view("viewer")
         : props.view("editor");
     } catch (e) {
-      console.log(e);
-      setErrorMessage(e.message);
+      setErrorMessage("There is no props.view" + e);
     }
   };
 
@@ -241,22 +196,13 @@ const Form = (props) => {
         ? props.view("viewer")
         : props.view("editor");
     } catch (e) {
-      setErrorMessage(e.message);
+      setErrorMessage("There is no props.view" + e);
     }
   };
 
-  const resetError = () => {
-    console.log("resetError");
-    setErrorMessage(null);
-    //navigate(-1);
-  };
-
   const typeOfInput = (inp) => {
-    console.log("INP Recibido:");
-    console.log(inp);
-
     if (inp.type === "Select") {
-      let value;
+      let value = useItem.data ? useItem.data[inp.inputName] : "";
       const changeHandler = (e) => {
         e.preventDefault();
         return (value = e.target.value);
@@ -284,12 +230,11 @@ const Form = (props) => {
               })}
             </Select>*/}
             <Select
-              inputName={inp.inputName}
-              inputLabel={inp.label}
+              inputName={inp.label || inp.inputName}
+              item={typeof useItem !== Object ? useItem.data : ""}
               changeHandler={changeHandler}
               options={inp.options}
               value={value}
-              item={typeof useItem !== Object ? useItem.data : ""}
             />
             <FormHelperText>Elija una opción</FormHelperText>
           </FormControl>
@@ -300,7 +245,7 @@ const Form = (props) => {
         <Grid item xs={1} sm={2} md={4}>
           <Button
             variant="outlined"
-            inputName={inp.inputName}
+            inputName={inp.label || inp.inputName}
             color="primary"
             key={inp.id}
             type={inp.type}
@@ -308,14 +253,14 @@ const Form = (props) => {
             id={inp.id}
             fullWidth
           >
-            {inp.label || inp.inputName}
+            {inp.inputName}
           </Button>
         </Grid>
       );
     } else if (inp.type === "checkbox") {
       const changeHandler = (e, opt, checkboxSetKey) => {
         e.preventDefault();
-        setMyValue({ value: e.target.value });
+        setValue({ value: e.target.value });
         setSelectedCheckboxItems((prevItems) => {
           const selectedItemsForSet = prevItems[checkboxSetKey] || [];
 
@@ -340,10 +285,10 @@ const Form = (props) => {
         <Grid item xs={1} sm={4} md={8}>
           <FormControl
             label={inp.label || inp.inputName}
-            inputname={inp.inputName}
+            inputname={inp.label || inp.inputName}
             id={inp.inputName}
           >
-            <FormGroup label={inp.label || inp.inputName}>
+            <FormGroup>
               {inp.options.map((opt, index) => {
                 return (
                   <FormControlLabel
@@ -373,128 +318,83 @@ const Form = (props) => {
     } else {
       return (
         <Grid item xs={12} sm={3} md={3}>
-          {/* <TextField
-            name={inp.inputName}
-            label={inp.label || inp.inputName}
+          <Input
+            inputName={inp.label || inp.inputName}
+            inputRealName={inp.inputName}
             color="primary"
-            id={inp.id}
+            key={inp.id}
             type={inp.type}
             step={inp.step !== undefined ? inp.step : 1}
-            value={valor}
-            {...register(inp.inputName, {})}
-            onChange={(e) => setValue(e.target.value)}
-            onBlur={() => {
-              trigger(inp.inputName);
-            }}
+            item={typeof useItem !== Object ? useItem.data : ""}
             fullWidth
-          ></TextField> */}
-
-          <TextField
-            id={inp.id}
-            type={inp.type}
-            label={inp.label || inp.inputName}
-            variant="outlined"
-            defaultValue={inp.defaultValue || ""}
-            name={inp.inputName}
-            {...register(inp.inputName)}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            InputProps={{
-              inputProps: {
-                placeholder: "",
-              },
-            }}
-            onChange={(e) => {
-              setValue(e.target.value);
-            }}
-            onBlur={() => {
-              trigger(inp.inputName);
-            }}
-            fullWidth
-          />
-          {errors[inp.inputName] && (
-            <FormHelperText>
-              <Typography variant="body1"> {inp.help || ""}</Typography>
-            </FormHelperText>
-          )}
+          ></Input>
         </Grid>
       );
     }
   };
 
-  const loadingItemToEdit = <Spinner color="secondary" />;
-
-  const hiddenFalse = () => {
-    return (
-      <Container>
-        <Card raised>
-          <CardHeader
-            component="div"
-            title={props.collection}
-            subheader={props.Task}
-          />
-          <CardContent>
-            <FormControl>
-              <form
-                onSubmit={handleSubmit((values) => {
-                  submitHandlerTest(
-                    values,
-                    props.collection,
-                    useItem !== "new" ? useItem.data._id : ""
-                  );
-                })}
-                className="formulario"
-              >
-                <Grid
-                  container
-                  spacing={{ xs: 2, md: 3 }}
-                  columns={{ xs: 4, sm: 8, md: 12 }}
-                >
-                  {dataForm.map((inp) => typeOfInput(inp))}
-                </Grid>
-                <CardActions
-                  sx={{ display: "flex", justifyContent: "flex-end" }}
-                >
-                  <Button
-                    variant="contained"
-                    id="submitBTN"
-                    color="primary"
-                    type="submit"
-                  >
-                    Enviar
-                  </Button>
-                  <Button
-                    variant="contained"
-                    id="cancelBTN"
-                    color="error"
-                    onClick={() => navigate(-1)}
-                  >
-                    Cancelar
-                  </Button>
-                </CardActions>
-              </form>
-            </FormControl>
-          </CardContent>
-        </Card>
-      </Container>
-    );
-  };
-
-  const alertError = (
-    <ErrorMessage
-      message={useErrorMessage}
-      severity={"error"}
-      action={resetError}
-    />
+  const hiddenTrue = (
+    <div className="formulario">
+      <button onClick={toogleHandler}>Agregar {props.collection}</button>
+    </div>
   );
 
+  const hiddenFalse = (
+    <Container>
+      <Card raised>
+        <CardHeader
+          component="div"
+          title={props.collection}
+          subheader={props.Task}
+        />
+        <CardContent>
+          <div>
+            <form
+              onSubmit={(e) =>
+                submitHandler(
+                  e,
+                  props.collection,
+                  useItem !== "new" ? useItem.data._id : ""
+                )
+              }
+              className="formulario"
+            >
+              <Grid
+                container
+                spacing={{ xs: 2, md: 3 }}
+                columns={{ xs: 4, sm: 8, md: 12 }}
+              >
+                {dataForm.map((inp) => typeOfInput(inp))}
+              </Grid>
+              <CardActions sx={{ display: "flex", justifyContent: "flex-end" }}>
+                <Button
+                  variant="outlined"
+                  id="submitBTN"
+                  color="primary"
+                  type="submit"
+                >
+                  Enviar
+                </Button>
+                <Button
+                  variant="outlined"
+                  id="cancelBTN"
+                  color="warning"
+                  onClick={() => navigate(-1)}
+                >
+                  Cancelar
+                </Button>
+              </CardActions>
+            </form>
+          </div>
+        </CardContent>
+      </Card>
+    </Container>
+  );
+
+  const alertError = <ErrorMessage message={useErrorMessage} />;
+
   //return useHidden ? hiddenTrue : hiddenFalse;
-  return useLoading
-    ? loadingItemToEdit
-    : useErrorMessage !== null
-    ? alertError
-    : hiddenFalse();
+  return useErrorMessage !== null ? alertError : hiddenFalse;
 };
 
 export default Form;

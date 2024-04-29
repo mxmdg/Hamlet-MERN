@@ -15,14 +15,12 @@ const Select = (props) => {
             value={option.value}
             id={"id_" + option.value}
             key={"key_" + option.value}
+            defaultValue={"id_" + props.value}
           >
             {option.text}
           </option>
         ))}
       </select>
-      <div className="value" id={props.inputName + "_id"}>
-        {props.value}
-      </div>
     </div>
   );
 };

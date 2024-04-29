@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
+import { useForm, Controller } from "react-hook-form";
 import {
+  Container,
+  Box,
+  Grid,
+  Divider,
+  Typography,
+  List,
+  ListItem,
   TextField,
   Select,
   MenuItem,
@@ -10,7 +18,16 @@ import {
 } from "@mui/material";
 import { useParams, useNavigate } from "react-router-dom";
 
-import { getPrivateElementByID } from "../customHooks/FetchDataHook";
+import {
+  getPrivateElementByID,
+  putPrivateElement,
+  addPrivateElement,
+} from "../customHooks/FetchDataHook";
+import ErrorMessage from "../ErrorMessage/ErrorMessage";
+import Spinner from "../General/Spinner";
+
+// My inputs imports
+import TextFieldInput from "./TextFieldInput";
 
 //Auxiliar Functions:
 
@@ -30,133 +47,146 @@ function convertirArrayAObjeto(arr) {
   }, {});
 }
 
-const Form = (props) => {
-  const [hidden, setHidden] = useState(
-    props.task === "copy" || props.task === "edit" ? false : true
-  );
-  const [item, setItem] = useState(props.item || "new");
-  const [selectedCheckboxItems, setSelectedCheckboxItems] = useState({});
-  const [errorMessage, setErrorMessage] = useState(null);
+const FormMaker = (props) => {
+  //Loading state
+  const [useLoading, setLoading] = useState(false);
 
-  const navigate = useNavigate();
-  const params = useParams();
+  // Error state manager
+  const [useError, setError] = useState(null);
+  const resetError = () => {
+    setError(null);
+  };
 
+  // Item state manager
+  const [useItem, setItem] = useState(null);
+  const itemID = useParams("_id");
+
+  const getItem = async () => {
+    try {
+      setLoading(true);
+      const res = await getPrivateElementByID(props.collection, itemID.id);
+      setItem(res);
+      setLoading(false);
+    } catch (error) {
+      setError(error);
+      setLoading(false);
+    }
+  };
+
+  //React Hook Form implementation
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    trigger,
+    setValue,
+  } = useForm({
+    mode: "onChange", //"onBlur"
+  });
+
+  // useEffect
   useEffect(() => {
-    if (
-      (props.item === undefined && props.task === "edit") ||
-      props.task === "copy"
-    ) {
-      const { id } = params;
+    if (props.task !== "new") {
+      getItem();
+    }
+  }, []);
 
-      const fetchItem = async () => {
-        try {
-          const itemToEdit = await getPrivateElementByID(
-            `${props.collection}`,
-            id
+  // Renders
+  const testRender = (
+    <Container>
+      <Box component={"div"} sx={{ background: "#333", padding: 3 }}>
+        <Typography variant="h5" color="primary">
+          Coleccion: <b>{props.collection}</b>
+        </Typography>
+        <br />
+        <Typography variant="h5" color="primary">
+          Accion: <b>{props.task}</b>
+        </Typography>
+        {props.form.map((item) => {
+          return (
+            <>
+              <List key={item.id + item.inputName}>
+                <ListItem>
+                  <Typography
+                    color="primary"
+                    variant="caption"
+                    fontSize={"16px"}
+                  >
+                    {item.inputName}
+                  </Typography>
+                </ListItem>
+                <ListItem>
+                  <Typography
+                    color="primary"
+                    variant="caption"
+                    fontSize={"16px"}
+                  >
+                    {item.inputLabel}
+                  </Typography>
+                </ListItem>
+                <ListItem>
+                  <Typography
+                    color="primary"
+                    variant="caption"
+                    fontSize={"16px"}
+                  >
+                    {item.type}
+                  </Typography>
+                </ListItem>
+                <ListItem>
+                  <Typography
+                    color="primary"
+                    variant="caption"
+                    fontSize={"16px"}
+                  >
+                    {item.id}
+                  </Typography>
+                </ListItem>
+              </List>
+              <Divider></Divider>
+            </>
           );
-          setItem(itemToEdit);
-        } catch (e) {
-          setErrorMessage(e.message);
-        }
-      };
-      fetchItem();
-    }
-  }, [setItem]);
-
-  const handleCheckboxChange = (event) => {
-    setSelectedCheckboxItems({
-      ...selectedCheckboxItems,
-      [event.target.name]: event.target.checked,
-    });
-  };
-
-  const submitHandler = async (e) => {
-    e.preventDefault();
-
-    const datos = [];
-
-    // Collect data from inputs
-    for (let element of e.target.elements) {
-      if (element.tagName === "INPUT" || element.tagName === "SELECT") {
-        let nombre = element.id;
-        let value = element.value;
-        datos.push({ nombre, value });
-      }
-    }
-
-    // Collect data from checkBox
-    for (const [nombre, value] of Object.entries(selectedCheckboxItems)) {
-      const res = { nombre, value };
-      datos.push(res);
-    }
-    const formData = convertirArrayAObjeto(datos);
-
-    // Aquí puedes implementar la lógica para interactuar con tu base de datos
-    // Puedes usar 'props.collection' y 'props.task' para determinar qué operación de CRUD realizar
-  };
-
-  return (
-    <form onSubmit={submitHandler}>
-      {props.form.map((dato) => {
-        switch (dato.type) {
-          case "Text":
-            return (
-              <div key={dato.id}>
-                <TextField label={dato.inputName} variant="outlined" />
-              </div>
-            );
-          case "number":
-            return (
-              <div key={dato.id}>
-                <TextField
-                  label={dato.inputName}
-                  type="number"
-                  variant="outlined"
-                />
-              </div>
-            );
-          case "Select":
-            return (
-              <div key={dato.id}>
-                <FormControl variant="outlined">
-                  <InputLabel>{dato.inputName}</InputLabel>
-                  <Select label={dato.inputName}>
-                    {dato.options.map((option, index) => (
-                      <MenuItem key={index} value={option.value}>
-                        {option.text}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </div>
-            );
-          case "checkbox":
-            return (
-              <div key={dato.id}>
-                <FormControl component="fieldset">
-                  <InputLabel>{dato.inputName}</InputLabel>
-                  {dato.options.map((option, index) => (
-                    <FormControlLabel
-                      key={index}
-                      control={
-                        <Checkbox
-                          checked={selectedCheckboxItems[option] || false}
-                          onChange={handleCheckboxChange}
-                          name={option}
-                        />
-                      }
-                      label={option}
-                    />
-                  ))}
-                </FormControl>
-              </div>
-            );
-          default:
-            return null;
-        }
-      })}
-    </form>
+        })}
+        {useItem !== null ? (
+          <p>{JSON.stringify(useItem.data)}</p>
+        ) : (
+          <p>{useError?.message}</p>
+        )}
+      </Box>
+    </Container>
   );
+
+  // Form Render
+  const formRender = (
+    <Container>
+      <Grid container columns={12} spacing={2}>
+        {props.form.map((input) => {
+          return (
+            <Grid item key={input.id} sm={12} md={6} lg={4}>
+              {useItem !== null && (
+                <TextFieldInput
+                  input={input}
+                  itemData={useItem.data[input.inputName]}
+                />
+              )}
+            </Grid>
+          );
+        })}
+      </Grid>
+    </Container>
+  );
+
+  const loadingRender = <Spinner />;
+
+  const errorRender = (
+    <ErrorMessage message={useError} severity="error" action={resetError} />
+  );
+
+  return useLoading
+    ? loadingRender
+    : useError !== null
+    ? errorRender
+    : formRender;
 };
 
-export default Form;
+export default FormMaker;

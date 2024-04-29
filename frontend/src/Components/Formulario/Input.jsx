@@ -11,8 +11,8 @@ const Input = (props) => {
 
   const valueFinder = () => {
     for (const [key, val] of Object.entries(props.item)) {
-      if (key == props.inputName) {
-        //console.log(key, val)
+      if (key == props.inputRealName) {
+        console.log(key, val);
         return val;
       }
     }

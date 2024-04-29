@@ -83,7 +83,7 @@
 	transition: all 2s;
 }
 
-.formulario button:hover {
+/* .formulario button:hover {
 	border: 1px solid #59e3ea;
 	color: #59e3ea;
 	background-color: #222;
@@ -96,4 +96,4 @@
 .formulario > .inputError {
 	background-color: #f24;
 	border: 2px solid #900;
-}
+} */

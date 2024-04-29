@@ -10,6 +10,8 @@ import ChangePassword from "./Components/Users/ChangePassword";
 import ResetPassword from "./Components/Users/RecoverPassword";
 import Home from "./Components/home";
 import Form from "./Components/Formulario/Form";
+import FormMaker from "./Components/Formulario/FormMaker";
+import FormMaterial from "./Components/Formulario/FormMaterial";
 import PrintersDataForm from "./Components/Formulario/PrintersDataForm";
 import StockDataForm from "./Components/Formulario/StockDataForm";
 import FormatDataForm from "./Components/Formulario/FormatDataForm";
@@ -39,38 +41,62 @@ const Router = () => (
     <Route
       path="/impresoras/add"
       element={
-        <Form form={PrintersDataForm} collection="impresoras" task="new" />
+        <FormMaterial
+          form={PrintersDataForm}
+          collection="impresoras"
+          task="new"
+        />
       }
     />
     <Route
       path="/impresoras/copy/:id"
       element={
-        <Form form={PrintersDataForm} collection="impresoras" task="copy" />
+        <FormMaterial
+          form={PrintersDataForm}
+          collection="impresoras"
+          task="copy"
+        />
       }
     />
     <Route
       path="/impresoras/edit/:id"
       element={
-        <Form form={PrintersDataForm} collection="impresoras" task="edit" />
+        <FormMaterial
+          form={PrintersDataForm}
+          collection="impresoras"
+          task="edit"
+        />
       }
     />
     <Route path="/finishers" element={<MainContainer entity={"finishers"} />} />
     <Route
       path="/finishers/add"
       element={
-        <Form form={FinishersDataForm} collection="finishers" task="new" />
+        <FormMaterial
+          form={FinishersDataForm}
+          collection="finishers"
+          task="new"
+        />
       }
     />
     <Route
       path="/finishers/copy/:id"
       element={
-        <Form form={FinishersDataForm} collection="finishers" task="copy" />
+        <FormMaterial
+          form={FinishersDataForm}
+          collection="finishers"
+          task="copy"
+        />
       }
     />
     <Route
       path="/finishers/edit/:id"
       element={
-        <Form form={FinishersDataForm} collection="finishers" task="edit" />
+        <FormMaterial
+          form={FinishersDataForm}
+          collection="finishers"
+          task="edit"
+        />
       }
     />
     <Route
@@ -79,67 +105,105 @@ const Router = () => (
     />
     <Route
       path="/materiales/add"
-      element={<Form form={StockDataForm} collection="materiales" task="new" />}
+      element={
+        <FormMaterial form={StockDataForm} collection="materiales" task="new" />
+      }
     />
     <Route
       path="/materiales/copy/:id"
       element={
-        <Form form={StockDataForm} collection="materiales" task="copy" />
+        <FormMaterial
+          form={StockDataForm}
+          collection="materiales"
+          task="copy"
+        />
       }
     />
     <Route
       path="/materiales/edit/:id"
       element={
-        <Form form={StockDataForm} collection="materiales" task="edit" />
+        <FormMaterial
+          form={StockDataForm}
+          collection="materiales"
+          task="edit"
+        />
       }
     />
     <Route path="/formatos" element={<MainContainer entity={"formatos"} />} />
     <Route
       path="/formatos/add"
-      element={<Form form={FormatDataForm} collection="formatos" task="new" />}
+      element={
+        <FormMaterial form={FormatDataForm} collection="formatos" task="new" />
+      }
     />
     <Route
       path="/formatos/copy/:id"
-      element={<Form form={FormatDataForm} collection="formatos" task="copy" />}
+      element={
+        <FormMaterial form={FormatDataForm} collection="formatos" task="copy" />
+      }
     />
     <Route
       path="/formatos/edit/:id"
-      element={<Form form={FormatDataForm} collection="formatos" task="edit" />}
+      element={
+        <FormMaterial form={FormatDataForm} collection="formatos" task="edit" />
+      }
     />
     <Route path="/empresas" element={<MainContainer entity={"empresas"} />} />
     <Route
       path="/empresas/add"
       element={
-        <Form form={empresasDataForm} collection="empresas" task="new" />
+        <FormMaterial
+          form={empresasDataForm}
+          collection="empresas"
+          task="new"
+        />
       }
     />
     <Route
       path="/empresas/copy/:id"
       element={
-        <Form form={empresasDataForm} collection="empresas" task="copy" />
+        <FormMaterial
+          form={empresasDataForm}
+          collection="empresas"
+          task="copy"
+        />
       }
     />
     <Route
       path="/empresas/edit/:id"
       element={
-        <Form form={empresasDataForm} collection="empresas" task="edit" />
+        <FormMaterial
+          form={empresasDataForm}
+          collection="empresas"
+          task="edit"
+        />
       }
     />
     <Route path="/JobParts" element={<MainContainer entity={"JobParts"} />} />
     <Route
       path="/JobParts/add"
-      element={<Form form={jobPartDataForm} collection="JobParts" task="new" />}
+      element={
+        <FormMaterial form={jobPartDataForm} collection="JobParts" task="new" />
+      }
     />
     <Route
       path="/JobParts/copy/:id"
       element={
-        <Form form={jobPartDataForm} collection="JobParts" task="copy" />
+        <FormMaterial
+          form={jobPartDataForm}
+          collection="JobParts"
+          task="copy"
+        />
       }
     />
     <Route
       path="/JobParts/edit/:id"
       element={
-        <Form form={jobPartDataForm} collection="JobParts" task="edit" />
+        <FormMaterial
+          form={jobPartDataForm}
+          collection="JobParts"
+          task="edit"
+        />
       }
     />
     <Route path="/users" element={<MainContainer entity={"users"} />} />
@@ -151,7 +215,9 @@ const Router = () => (
     <Route path="/register" element={<Register />} />
     <Route
       path="/users/edit/:id"
-      element={<Form form={UsersDataForm} collection="users" task="edit" />}
+      element={
+        <FormMaterial form={UsersDataForm} collection="users" task="edit" />
+      }
     />
     {/*<Route path="/Jobs" element={<JobsContainer entity={"Jobs"} />} />*/}
     <Route
@@ -170,11 +236,15 @@ const Router = () => (
     <Route path="/precios" element={<MainContainer entity={"precios"} />} />
     <Route
       path="/precios/edit/:id"
-      element={<Form form={PricesDataForm} collection="precios" task="edit" />}
+      element={
+        <FormMaterial form={PricesDataForm} collection="precios" task="edit" />
+      }
     />
     <Route
       path="/precios/add"
-      element={<Form form={PricesDataForm} collection="precios" task="new" />}
+      element={
+        <FormMaterial form={PricesDataForm} collection="precios" task="new" />
+      }
     />
     <Route path="/configuracion" element={<ConfigMainContainer />} />
     <Route path="/configuracion/formatos" element={<FormatsMainContainer />} />

@@ -28,6 +28,8 @@ let PrintersDataForm = [
       { text: "Autoadhesivo obra", value: "Autoadhesivo obra" },
       { text: "Opp blanco", value: "Opp blanco" },
       { text: "Opp transparente", value: "Opp transparente" },
+      { text: "Cartulina", value: "Cartulina" },
+      { text: "Cartón", value: "Cartón" },
     ],
   },
   {

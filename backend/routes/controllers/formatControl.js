@@ -49,7 +49,7 @@ formatControl.getFormat = async (req, res, next) => {
     } else {
       res.status(404).json({ message: "Formato no encontrado" });
     }
-  } catch (error) {
+  } catch (e) {
     console.error(e);
     next(e);
   }
@@ -71,7 +71,7 @@ formatControl.updateFormat = async (req, res, next) => {
       return res.status(404).json({ message: "Formato no encontrado" });
     }
     res.json({ message: "Formato actualizado", format });
-  } catch (error) {
+  } catch (e) {
     console.error(e);
     next(e);
   }
@@ -80,7 +80,7 @@ formatControl.deleteFormat = async (req, res, next) => {
   try {
     const format = await formatos.esquema.findByIdAndDelete(req.params.id);
     res.json({ Message: "Formato eliminado" });
-  } catch (error) {
+  } catch (e) {
     console.error(e);
     next(e);
   }
