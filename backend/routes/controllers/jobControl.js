@@ -48,15 +48,25 @@ jobControl.getCompleteJobs = async (req, res) => {
   }
 };
 
-jobControl.getJobsParts = async (req, res) => {
-  {
-    try {
-      const queryText = req.query.Q || "";
-      const jobPartsList = await jobs.esquema.find().select("Partes");
-      res.json(jobPartsList);
-    } catch (e) {
-      throw e;
-    }
+jobControl.getAllParts = async (req, res) => {
+  const fields = "Partes";
+  try {
+    const partsList = await jobs.esquema
+      .find()
+      .select(fields)
+      .populate({ path: "Partes.partStock", model: stocks.esquema });
+    let flattenedPartsList = [];
+    partsList.forEach((item) => {
+      item.Partes.forEach((parte) => {
+        flattenedPartsList.push(parte);
+      });
+    });
+    console.log("flattenedPartsList");
+    console.log(flattenedPartsList);
+    res.json(flattenedPartsList);
+  } catch (e) {
+    console.log(e);
+    throw e;
   }
 };
 

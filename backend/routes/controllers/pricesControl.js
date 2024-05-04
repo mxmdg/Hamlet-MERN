@@ -4,7 +4,7 @@ const pricesControl = {};
 
 pricesControl.getPrices = async (req, res) => {
   {
-    const gettedPrices = await prices.esquema.find().sort({ Proceso: 1 });
+    const gettedPrices = await prices.esquema.find();
     res.json(gettedPrices);
   }
 };

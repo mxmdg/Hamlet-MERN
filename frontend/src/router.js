@@ -230,6 +230,10 @@ const Router = () => (
         />
       }
     />
+    <Route
+      path="/Jobs/partes"
+      element={<MainContainer entity={"jobs/partes"} />}
+    />
     <Route path="/Jobs/add" element={<MyStepper />} />
     <Route path="/Jobs/edit/:id" element={<JobViewer entity={"Jobs"} />} />
     <Route path="/Jobs/copy/:id" element={<JobsEditAndCopy />} />
