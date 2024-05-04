@@ -24,14 +24,15 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import LightModeIcon from "@mui/icons-material/LightMode";
 
-const pages = [
+export const pages = [
   { text: "Pedidos", path: "jobs" },
   { text: "Costos", path: "configuracion" },
   { text: "Formatos", path: "formatos" },
   { text: "Impresoras", path: "impresoras" },
-  { text: "Partes de trabajo", path: "jobparts" },
+  { text: "Partes de trabajo", path: "JobParts" },
   { text: "Materiales", path: "materiales" },
   { text: "Clientes", path: "empresas" },
+  { text: "Terminacion", path: "Finishers"},
 ];
 
 function ResponsiveAppBar(props) {
