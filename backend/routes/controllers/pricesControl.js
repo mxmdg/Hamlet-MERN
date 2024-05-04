@@ -42,29 +42,6 @@ pricesControl.getPrice = async (req, res) => {
     res.status(500).json({ message: "Error al obtener la formula" });
   }
 };
-/* formatControl.updateFormat = async (req, res)=> {
-    const {Nombre, Alto, Ancho} = req.body;
-    const format = await formatos.esquema.findOneAndUpdate({_id: req.params.id}, {Nombre, Alto, Ancho})
-    res.json({"Message": "Formato actualizado " + req.params.id})
-  } */
-/* pricesControl.updatePrice = async (req, res) => {
-  try {
-    const {Proceso, Valor, Minimo, Entrada , Historial} = req.body;
-    const Fecha = Date.now()
-    const price = await prices.esquema.findByIdAndUpdate(
-      req.params.id,
-      { Proceso, Valor, Minimo, Entrada, Fecha , Historial},
-      { new: false }
-    );
-    if (!price) {
-      return res.status(404).json({ message: "Formula no encontrada" });
-    }
-    res.json({ message: "Formula actualizada", price });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error al actualizar la Formula" });
-  }
-}; */
 
 //Update Price por GPT
 

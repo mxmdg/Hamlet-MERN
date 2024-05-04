@@ -84,16 +84,7 @@ const FormMaterial = (props) => {
   const [useItem, setItem] = useState(props.item || "new");
 
   // This state stores checkbox's selections
-  const [selectedCheckboxItems, setSelectedCheckboxItems] = useState(
-    props.form
-      .filter((inp) => inp.type === "checkbox")
-      .reduce((acc, curr) => {
-        curr.options.forEach((option) => {
-          acc[option] = false;
-        });
-        return acc;
-      }, {})
-  );
+  const [selectedCheckboxItems, setSelectedCheckboxItems] = useState();
 
   // This state intializes chebox value
   const [useValue, setMyValue] = useState({ value: "" });
@@ -171,28 +162,9 @@ const FormMaterial = (props) => {
     }
   };
 
-  const convertToDatabaseFormat = (selectedCheckboxItems) => {
-    const result = {};
-    for (const [key, value] of Object.entries(selectedCheckboxItems)) {
-      if (value) {
-        if (!result["NombreDeLaPropiedad"]) {
-          result["NombreDeLaPropiedad"] = [];
-        }
-        result["NombreDeLaPropiedad"].push(key);
-      }
-    }
-    return result;
-  };
-
   const submitHandler = async (values, collection, id) => {
     console.log(values);
     const datos = [];
-
-    // Convierte los valores de los checkboxes al formato requerido
-    const formattedValues = convertToDatabaseFormat(selectedCheckboxItems);
-    values = { ...values, ...formattedValues };
-
-    console.log(values);
 
     if (props.task === "new" || props.task === "copy") {
       try {
@@ -310,11 +282,13 @@ const FormMaterial = (props) => {
         </Grid>
       );
     } else if (inp.type === "checkbox") {
-      const changeHandler = (e, opt) => {
-        setSelectedCheckboxItems((prevItems) => ({
-          ...prevItems,
-          [opt]: e.target.checked,
-        }));
+      const changeHandler = (e) => {
+        setSelectedCheckboxItems({ [inp.inputName]: [] });
+        console.log(e.target.value, e.target.checked, inp.inputName);
+        if (e.target.checked) {
+          selectedCheckboxItems[inp.inputName].push(e.target.value);
+          console.log(selectedCheckboxItems);
+        }
       };
 
       return (
@@ -337,12 +311,13 @@ const FormMaterial = (props) => {
                         key={inp.inputName + "_" + index}
                         id={"id_" + inp.inputName + index} // Asegúrate de que cada checkbox tenga un ID único
                         //defaultChecked={false}
+                        value={[opt]}
                         defaultChecked={
                           useItem.data !== undefined
                             ? useItem.data[inp.inputName].includes(opt)
                             : false
                         }
-                        onChange={(e) => changeHandler(e, opt, inp.inputName)}
+                        onChange={(e) => changeHandler(e)}
                       />
                     }
                     label={opt}

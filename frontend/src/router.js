@@ -246,6 +246,12 @@ const Router = () => (
         <FormMaterial form={PricesDataForm} collection="precios" task="new" />
       }
     />
+    <Route
+      path="/precios/copy/:id"
+      element={
+        <FormMaterial form={PricesDataForm} collection="precios" task="copy" />
+      }
+    />
     <Route path="/configuracion" element={<ConfigMainContainer />} />
     <Route path="/configuracion/formatos" element={<FormatsMainContainer />} />
     <Route path="/configuracion/materiales" element={<StocksMainContainer />} />

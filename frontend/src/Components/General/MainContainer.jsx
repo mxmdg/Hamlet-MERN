@@ -3,6 +3,7 @@ import FormDataForm from "../Formulario/FormatDataForm";
 import Fetch from "./Fetch";
 //import "../../Styles/hamlet.css";
 import Container from "@mui/material/Container";
+import { Grid } from "@mui/material";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 
