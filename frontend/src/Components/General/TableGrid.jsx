@@ -27,6 +27,7 @@ import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import { styled } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
+import { pages } from "../NavigationBar/AppBarResponsive";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -345,6 +346,11 @@ export default function EnhancedTable(props) {
     <>
       <EnhancedTableToolbar
         collection={props.collection.replace("/urg", "")}
+        title={pages.map((pg)=>{
+          if(pg.path === props.collection.replace("/urg", "")) {
+            return pg.text
+          }
+        })}
         numSelected={selected.length}
         idSelected={selected}
         deleted={props.deleted}

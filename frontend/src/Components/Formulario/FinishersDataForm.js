@@ -6,7 +6,7 @@ const costos = async () => {
     console.log(res);
     res.map((item) => {
       costsList.push({
-        text: `${item.Proceso} (${item.valor})`,
+        text: `${item.Proceso} ($ ${item.Valor}.-)`,
         value: item._id,
         id: item._id,
       });
@@ -42,24 +42,28 @@ let FinishersDataForm = [
   },
   {
     inputName: "X_Minimo",
+    label: "Largo Minimo",
     type: "Number",
     id: "id_004",
     required: true,
   },
   {
     inputName: "X_Maximo",
+    label: "Largo Maximo",
     type: "Number",
     id: "id_005",
     required: true,
   },
   {
     inputName: "Y_Minimo",
+    label: "Ancho Minimo",
     type: "Number",
     id: "id_006",
     required: true,
   },
   {
     inputName: "Y_Maximo",
+    label: "Ancho Maximo",
     type: "Number",
     id: "id_007",
     required: true,

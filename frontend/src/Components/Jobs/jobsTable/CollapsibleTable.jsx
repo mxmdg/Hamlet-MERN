@@ -420,7 +420,7 @@ export default function CollapsibleTable(props) {
 
   const tableOK = (
     <>
-      <Filter headers={headers} data={rows} setFilteredList={setRows} />
+      <Filter headers={headers} data={rows} setFilteredList={setRows} /> 
       <EnhancedTableToolbar
         collection="jobs"
         title={props.settings.title}

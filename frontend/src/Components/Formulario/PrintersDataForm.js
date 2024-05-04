@@ -6,7 +6,7 @@ const costos = async () => {
     console.log(res);
     res.map((item) => {
       costsList.push({
-        text: `${item.Proceso} (${item.valor})`,
+        text: `${item.Proceso} ($ ${item.Valor}.-)`,
         value: item._id,
         id: item._id,
       });
@@ -95,7 +95,7 @@ let PrintersDataForm = [
     options: costsList,
     required: true,
     help: "Seleccione la formula de costos mas apropiada para su impresora",
-  },
+  }, 
 ];
 
 export default PrintersDataForm;

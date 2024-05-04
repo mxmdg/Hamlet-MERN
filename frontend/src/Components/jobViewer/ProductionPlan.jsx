@@ -270,7 +270,7 @@ const ProductionPlan = (props) => {
                   <Divider />
                   <ListItem alignItems="flex-start">
                     <ListItemText
-                      primary={`$ ${data.printPrice.Total + data.stockCost.cost} -`}
+                      primary={`$ ${Math.ceil(data.printPrice.Total + data.stockCost.cost)} -`}
                       primaryTypographyProps={{variant: "subtitle2", fontSize: 16, color: "primary"}}
                       secondary={`Total`}
                       secondaryTypographyProps={{variant: "subtitle2",fontSize: 14}}

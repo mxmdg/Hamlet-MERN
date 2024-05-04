@@ -29,6 +29,7 @@ import FormatsMainContainer from "./Components/Formats/FormatsMainContainer";
 import PrintersMainContainer from "./Components/Printers/PrintersMainContainer";
 import FullJobsRender from "./Components/Pages/FullJobsRender";
 import JobsEditAndCopy from "./Components/Pages/JobsEditAndCopy";
+import Machines from "./Components/Pages/Machines";
 
 const Router = () => (
   <Routes>
