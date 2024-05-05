@@ -37,6 +37,7 @@ import {
   CardContent,
   CardActions,
   CardHeader,
+  Divider,
   Typography,
   TextField,
   Checkbox,
@@ -229,14 +230,15 @@ const FormMaterial = (props) => {
         return (value = e.target.value);
       };
       return (
-        <Grid item xs={1} sm={2} md={4}>
-          <FormControl sx={{ m: 1, minWidth: 120 }}>
+        <Grid item xs={4} sm={2} md={3}>
+          <FormControl>
             <TextField
               id={inp.id}
               select
               label={inp.label || inp.inputName}
-              variant="filled"
+              variant="outlined"
               color="success"
+              size="small"
               defaultValue={
                 useItem !== "new" ? useItem.data[inp.inputName] : ""
               }
@@ -250,7 +252,6 @@ const FormMaterial = (props) => {
                   placeholder: "",
                 },
               }}
-              fullWidth
             >
               {inp.options.map((u) => {
                 return (
@@ -266,7 +267,7 @@ const FormMaterial = (props) => {
       );
     } else if (inp.type === "button") {
       return (
-        <Grid item xs={1} sm={2} md={4}>
+        <Grid item xs={4} sm={4} md={6}>
           <Button
             variant="outlined"
             inputName={inp.inputName}
@@ -307,45 +308,61 @@ const FormMaterial = (props) => {
       };
 
       return (
-        <Grid item xs={1} sm={4} md={8}>
-          <FormControl
-            label={inp.label || inp.inputName}
-            inputname={inp.inputName}
-            id={inp.inputName}
+        <Grid item xs={4} sm={4} md={6}>
+          <Card
+            raised={false}
+            sx={{
+              p: 2,
+              background: "none",
+              border: "1px solid #555",
+              borderRadius: "5px",
+            }}
+            variant="outlined"
           >
-            <FormGroup label={inp.label || inp.inputName}>
-              {inp.options.map((opt, index) => {
-                //console.log(useItem.data[inp.inputName][index]);
-                //console.log(useItem.data[inp.inputName].includes(opt));
-                return (
-                  <FormControlLabel
-                    key={inp.inputName + index}
-                    control={
-                      <Checkbox
-                        color="primary"
-                        key={inp.inputName + "_" + index}
-                        id={"id_" + inp.inputName + index} // Asegúrate de que cada checkbox tenga un ID único
-                        //defaultChecked={false}
-                        value={[opt]}
-                        defaultChecked={
-                          useItem.data !== undefined
-                            ? useItem.data[inp.inputName].includes(opt)
-                            : false
+            <CardHeader subheader={inp.label || inp.inputName} />
+            <CardContent>
+              <FormControl
+                label={inp.label || inp.inputName}
+                inputname={inp.inputName}
+                id={inp.inputName}
+              >
+                <FormGroup label={inp.label || inp.inputName}>
+                  {inp.options.map((opt, index) => {
+                    //console.log(useItem.data[inp.inputName][index]);
+                    //console.log(useItem.data[inp.inputName].includes(opt));
+                    return (
+                      <FormControlLabel
+                        key={inp.inputName + index}
+                        control={
+                          <Checkbox
+                            color="primary"
+                            key={inp.inputName + "_" + index}
+                            id={"id_" + inp.inputName + index} // Asegúrate de que cada checkbox tenga un ID único
+                            //defaultChecked={false}
+                            value={[opt]}
+                            defaultChecked={
+                              useItem.data !== undefined
+                                ? useItem.data[inp.inputName].includes(opt)
+                                : false
+                            }
+                            onChange={(e) =>
+                              changeHandler(e, opt, inp.inputName)
+                            }
+                          />
                         }
-                        onChange={(e) => changeHandler(e, opt, inp.inputName)}
+                        label={opt}
                       />
-                    }
-                    label={opt}
-                  />
-                );
-              })}
-            </FormGroup>
-          </FormControl>
+                    );
+                  })}
+                </FormGroup>
+              </FormControl>
+            </CardContent>
+          </Card>
         </Grid>
       );
     } else {
       return (
-        <Grid item xs={12} sm={3} md={3}>
+        <Grid item xs={4} sm={4} md={6}>
           <TextField
             id={inp.id}
             type={inp.type}
@@ -385,47 +402,52 @@ const FormMaterial = (props) => {
             title={props.collection}
             subheader={props.Task}
           />
-          <CardContent>
-            <FormControl>
-              <form
-                onSubmit={handleSubmit((values) => {
-                  submitHandler(
-                    values,
-                    props.collection,
-                    useItem !== "new" ? useItem.data._id : ""
-                  );
-                })}
-              >
-                <Grid
-                  container
-                  spacing={{ xs: 2, md: 3 }}
-                  columns={{ xs: 4, sm: 8, md: 12 }}
+          <Divider />
+          <Box sx={{ p: 2 }}>
+            <CardContent>
+              <FormControl>
+                <form
+                  onSubmit={handleSubmit((values) => {
+                    submitHandler(
+                      values,
+                      props.collection,
+                      useItem !== "new" ? useItem.data._id : ""
+                    );
+                  })}
                 >
-                  {dataForm.map((inp) => typeOfInput(inp))}
-                </Grid>
-                <CardActions
-                  sx={{ display: "flex", justifyContent: "flex-end" }}
-                >
-                  <Button
-                    variant="contained"
-                    id="submitBTN"
-                    color="primary"
-                    type="submit"
+                  <Grid
+                    container
+                    spacing={{ xs: 2, md: 4 }}
+                    columns={{ xs: 4, sm: 8, md: 12 }}
+                    sx={{ pb: 4 }}
                   >
-                    Enviar
-                  </Button>
-                  <Button
-                    variant="contained"
-                    id="cancelBTN"
-                    color="error"
-                    onClick={() => navigate(-1)}
+                    {dataForm.map((inp) => typeOfInput(inp))}
+                  </Grid>
+                  <Divider />
+                  <CardActions
+                    sx={{ display: "flex", justifyContent: "flex-end", p: 2 }}
                   >
-                    Cancelar
-                  </Button>
-                </CardActions>
-              </form>
-            </FormControl>
-          </CardContent>
+                    <Button
+                      variant="contained"
+                      id="submitBTN"
+                      color="primary"
+                      type="submit"
+                    >
+                      Enviar
+                    </Button>
+                    <Button
+                      variant="contained"
+                      id="cancelBTN"
+                      color="error"
+                      onClick={() => navigate(-1)}
+                    >
+                      Cancelar
+                    </Button>
+                  </CardActions>
+                </form>
+              </FormControl>
+            </CardContent>
+          </Box>
         </Card>
       </Container>
     );
