@@ -22,7 +22,7 @@ const dbSwitch = [
     title: "Imprenta Dorrego",
   },
 ];
-const DB_NAME = dbSwitch[0].printer;
+const DB_NAME = dbSwitch[1].printer;
 
 mongoose.connect(URI + DB_NAME, {
   useNewUrlParser: true,

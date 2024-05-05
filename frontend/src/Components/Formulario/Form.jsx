@@ -230,7 +230,8 @@ const Form = (props) => {
               })}
             </Select>*/}
             <Select
-              inputName={inp.label || inp.inputName}
+              inputName={inp.inputName}
+              label={inp.label || inp.inputName}
               item={typeof useItem !== Object ? useItem.data : ""}
               changeHandler={changeHandler}
               options={inp.options}
@@ -245,7 +246,7 @@ const Form = (props) => {
         <Grid item xs={1} sm={2} md={4}>
           <Button
             variant="outlined"
-            inputName={inp.label || inp.inputName}
+            inputName={inp.inputName}
             color="primary"
             key={inp.id}
             type={inp.type}
@@ -285,7 +286,7 @@ const Form = (props) => {
         <Grid item xs={1} sm={4} md={8}>
           <FormControl
             label={inp.label || inp.inputName}
-            inputname={inp.label || inp.inputName}
+            inputname={inp.inputName}
             id={inp.inputName}
           >
             <FormGroup>
@@ -319,8 +320,8 @@ const Form = (props) => {
       return (
         <Grid item xs={12} sm={3} md={3}>
           <Input
-            inputName={inp.label || inp.inputName}
-            inputRealName={inp.inputName}
+            inputName={inp.inputName}
+            label={inp.label}
             color="primary"
             key={inp.id}
             type={inp.type}

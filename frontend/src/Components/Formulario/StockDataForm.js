@@ -7,8 +7,15 @@ let PrintersDataForm = [
   },
   {
     inputName: "Marca",
-    type: "Text",
+    type: "Select",
     id: "id_002",
+    options: [
+      { text: "Boreal", value: "Boreal" },
+      { text: "Chambrill", value: "Chambrill" },
+      { text: "Digiart", value: "Digiart" },
+      { text: "Ledesma", value: "Ledesma" },
+      { text: "Suzanno", value: "Suzanno" },
+    ],
   },
   {
     inputName: "Gramaje",
@@ -54,6 +61,7 @@ let PrintersDataForm = [
     inputName: "Fibra",
     type: "Number",
     id: "id_008",
+    help: "Ingrese la longitud del lado paralelo a la fibra en milimetros",
   },
   {
     inputName: "Precio_x_Kilo",

@@ -84,9 +84,10 @@ const FormMaterial = (props) => {
   const [useItem, setItem] = useState(props.item || "new");
 
   // This state stores checkbox's selections
-  const [selectedCheckboxItems, setSelectedCheckboxItems] = useState();
+  const [selectedCheckboxItems, setSelectedCheckboxItems] = useState({});
 
   // This state intializes chebox value
+
   const [useValue, setMyValue] = useState({ value: "" });
 
   // These states are used for navigation.
@@ -143,62 +144,61 @@ const FormMaterial = (props) => {
     }
   }, [setItem]);
 
-  const submitHandlerTest = async (values, collection, id) => {
-    console.log(values, collection, id);
-
-    if (props.task === "new" || props.task === "copy") {
-      try {
-        await addPrivateElement(collection, values);
-        setHidden(true);
-        navigate(-1);
-        props.setState !== undefined
-          ? props.setState(true)
-          : console.log("No es nuevo");
-      } catch (e) {
-        console.log(e);
-        setErrorMessage("No se pudo guardar: " + e.message);
-        return e;
-      }
-    }
-  };
-
-  const submitHandler = async (values, collection, id) => {
-    console.log(values);
+  const submitHandler = async (e, collection, id) => {
     const datos = [];
+    const names = Object.keys(e);
+    const values = Object.values(e);
+
+    console.log(names, values);
+
+    // Collect data from inputs
+    for (let i = 0; i < names.length; i++) {
+      let nombre = names[i];
+      let value = values[i];
+      console.log(nombre, value);
+      datos.push({ nombre, value });
+    }
+    console.log(datos);
+    // Collct data from checkBox
+    for (const [nombre, value] of Object.entries(selectedCheckboxItems)) {
+      const res = { nombre, value };
+      datos.push(res);
+    }
+    console.log(datos);
+
+    const formData = convertirArrayAObjeto(datos);
+    //formData.checkboxItems = selectedCheckboxItems;
+    console.log("Formato del POST");
+    console.log(formData);
 
     if (props.task === "new" || props.task === "copy") {
       try {
-        await addPrivateElement(collection, values);
+        await addPrivateElement(collection, formData);
         setHidden(true);
         navigate(-1);
         props.setState !== undefined
           ? props.setState(true)
           : console.log("No es nuevo");
       } catch (e) {
-        console.log(e);
-        setErrorMessage("No se pudo guardar: " + e.message);
-        return e;
+        setErrorMessage("No se pudo guardar " + e);
       }
     } else {
       try {
-        await putPrivateElement(`${databaseURL}${collection}/${id}`, values);
+        await putPrivateElement(`${databaseURL}${collection}/${id}`, formData);
         setHidden(true);
         navigate(-1);
-        props.editor(true);
+        //props.editor(true);
       } catch (e) {
-        console.log(e);
-        setErrorMessage("No se pudo actualizar: " + e.message);
-        return e;
+        setErrorMessage("No se pudo actualizar" + e);
       }
     }
-    try {
+    /* try {
       typeof props.view === "function"
         ? props.view("viewer")
         : props.view("editor");
     } catch (e) {
-      console.log(e);
-      setErrorMessage(e.message);
-    }
+      setErrorMessage("There is no props.view" + e);
+    } */
   };
 
   const toogleHandler = () => {
@@ -282,13 +282,28 @@ const FormMaterial = (props) => {
         </Grid>
       );
     } else if (inp.type === "checkbox") {
-      const changeHandler = (e) => {
-        setSelectedCheckboxItems({ [inp.inputName]: [] });
-        console.log(e.target.value, e.target.checked, inp.inputName);
-        if (e.target.checked) {
-          selectedCheckboxItems[inp.inputName].push(e.target.value);
-          console.log(selectedCheckboxItems);
-        }
+      const changeHandler = (e, opt, checkboxSetKey) => {
+        e.preventDefault();
+        setMyValue({ value: e.target.value });
+        setSelectedCheckboxItems((prevItems) => {
+          const selectedItemsForSet = prevItems[checkboxSetKey] || [];
+
+          if (e.target.checked) {
+            // Agregar elemento a la lista de elementos seleccionados para el conjunto
+            return {
+              ...prevItems,
+              [checkboxSetKey]: [...selectedItemsForSet, opt],
+            };
+          } else {
+            // Remover elemento de la lista de elementos seleccionados para el conjunto
+            return {
+              ...prevItems,
+              [checkboxSetKey]: selectedItemsForSet.filter(
+                (item) => item !== opt
+              ),
+            };
+          }
+        });
       };
 
       return (
@@ -317,7 +332,7 @@ const FormMaterial = (props) => {
                             ? useItem.data[inp.inputName].includes(opt)
                             : false
                         }
-                        onChange={(e) => changeHandler(e)}
+                        onChange={(e) => changeHandler(e, opt, inp.inputName)}
                       />
                     }
                     label={opt}

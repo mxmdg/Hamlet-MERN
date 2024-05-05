@@ -11,7 +11,7 @@ const DarkWoodCard = ({ children }) => {
         <Card
           raised
           sx={{
-            background: `url(${DarkWoodBackground})`,
+            //background: `url(${DarkWoodBackground})`,
             gap: "20px",
             width: "100%",
           }}

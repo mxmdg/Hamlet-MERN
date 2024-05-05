@@ -10,7 +10,7 @@ jobPartsControl.getJobParts = async (req, res) => {
 };
 
 jobPartsControl.addJobPart = async (req, res) => {
-  {
+  try {
     const {
       Type,
       minWidth,
@@ -39,6 +39,10 @@ jobPartsControl.addJobPart = async (req, res) => {
     });
     await newJobPart.save();
     res.json({ message: newJobPart.Type + " guardado OK" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Error al guardar el jobPart" });
+    throw error;
   }
 };
 
@@ -57,22 +61,8 @@ jobPartsControl.getJobPart = async (req, res) => {
 };
 
 jobPartsControl.updateJobPart = async (req, res) => {
-  const {
-    Type,
-    minWidth,
-    maxWidth,
-    minHeight,
-    maxHeight,
-    minPages,
-    maxPages,
-    PrintModAllowed,
-    minStockWeight,
-    maxStockWeight,
-    jobTypesAllowed,
-  } = req.body;
-  const JobPart = await jobParts.esquema.findOneAndUpdate(
-    { _id: req.params.id },
-    {
+  try {
+    const {
       Type,
       minWidth,
       maxWidth,
@@ -84,13 +74,39 @@ jobPartsControl.updateJobPart = async (req, res) => {
       minStockWeight,
       maxStockWeight,
       jobTypesAllowed,
-    }
-  );
-  res.json({ Message: "JobPart actualizado " + JobPart.Type });
+    } = req.body;
+    const JobPart = await jobParts.esquema.findOneAndUpdate(
+      { _id: req.params.id },
+      {
+        Type,
+        minWidth,
+        maxWidth,
+        minHeight,
+        maxHeight,
+        minPages,
+        maxPages,
+        PrintModAllowed,
+        minStockWeight,
+        maxStockWeight,
+        jobTypesAllowed,
+      }
+    );
+    res.json({ Message: "JobPart actualizado " + JobPart.Type });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Error al guardar el jobPart" });
+    throw error;
+  }
 };
 jobPartsControl.deleteJobPart = async (req, res) => {
-  const jobPart = await jobParts.esquema.findByIdAndDelete(req.params.id);
-  res.json({ Message: "jobPart eliminado" });
+  try {
+    const jobPart = await jobParts.esquema.findByIdAndDelete(req.params.id);
+    res.json({ Message: "jobPart eliminado" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Error al borrar el jobPart" });
+    throw error;
+  }
 };
 
 module.exports = jobPartsControl;

@@ -19,6 +19,20 @@ const costos = async () => {
 
 costos();
 
+let fabricantesImpresoras = [
+  { text: "HP", value: "HP" },
+  { text: "Canon", value: "Canon" },
+  { text: "Sharp", value: "Sharp" },
+  { text: "Konica Minolta", value: "Konica Minolta" },
+  { text: "Xerox", value: "Xerox" },
+  { text: "Epson", value: "Epson" },
+  { text: "Brother", value: "Brother" },
+  { text: "Lexmark", value: "Lexmark" },
+  { text: "Panasonic", value: "Panasonic" },
+  { text: "Samsung", value: "Samsung" },
+  { text: "Toshiba", value: "Toshiba" },
+];
+
 let PrintersDataForm = [
   {
     inputName: "Modelo",
@@ -29,10 +43,11 @@ let PrintersDataForm = [
   },
   {
     inputName: "Fabricante",
-    type: "Text",
+    type: "Select",
     id: "id_002",
     required: true,
     help: "Ingrese el nombre del fabricante de la impresora",
+    options: fabricantesImpresoras,
   },
   {
     inputName: "Colores",
@@ -95,7 +110,7 @@ let PrintersDataForm = [
     options: costsList,
     required: true,
     help: "Seleccione la formula de costos mas apropiada para su impresora",
-  }, 
+  },
 ];
 
 export default PrintersDataForm;

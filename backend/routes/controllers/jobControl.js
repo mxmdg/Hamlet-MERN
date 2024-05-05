@@ -58,6 +58,8 @@ jobControl.getAllParts = async (req, res) => {
     let flattenedPartsList = [];
     partsList.forEach((item) => {
       item.Partes.forEach((parte) => {
+        const paper = parte.partStock.Tipo + " " + parte.partStock.Gramaje;
+        parte.partStock = paper;
         flattenedPartsList.push(parte);
       });
     });
