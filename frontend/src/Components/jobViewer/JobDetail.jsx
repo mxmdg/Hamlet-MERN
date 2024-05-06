@@ -16,6 +16,7 @@ import {
   Select,
 } from "@mui/material";
 import { useEffect, useState, useContext } from "react";
+import MenuBookIcon from "@mui/icons-material/MenuBook";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import SaveIcon from "@mui/icons-material/Save";
 
@@ -252,13 +253,13 @@ const JobDetail = (props) => {
         <CardHeader
           avatar={
             <Avatar
-              sx={{ bgcolor: "#c3d", minWidth: "fit-content", padding: 1 }}
-              variant="rounded"
+              variant="circle"
+              sx={{ backgroundColor: "#FFBA5A", boxShadow: "5px 5px 4px #000" }}
             >
-              {job.Cantidad}
+              <MenuBookIcon color="secondary" />
             </Avatar>
           }
-          action={
+          /*  action={
             <Box>
               <Paper elevation={12} sx={{ background: "#39a" }}>
                 <Container sx={{ padding: "15px" }}>
@@ -294,36 +295,42 @@ const JobDetail = (props) => {
                 </Container>
               </Paper>
             </Box>
+          } */
+          title={
+            job.Cantidad +
+            " | " +
+            job.Nombre +
+            (job.Company ? ` - ${job.Company.Nombre}` : "")
           }
-          title={job.Nombre + (job.Company ? ` - ${job.Company.Nombre}` : "")}
           subheader={job.Owner ? `${job.Owner.Name} ${job.Owner.LastName}` : ""}
+          te={job.Cantidad}
         />
         <CardContent>
-          <h4>Partes: </h4>
+          <Typography variant="title" fontSize={20} color={"secondary"}>
+            Partes:{" "}
+          </Typography>
           <Divider />
           {job.Partes.map((parte) => {
             return PartDetail(parte);
           })}
-          
-            {productionPlanAvaible && (
-              <Accordion
-                key={"pp-" + productionPlan.id}
-                id={"pp-" + productionPlan.id}
-                expanded={expanded === ("pp-" + productionPlan.id)}
-                onChange={handleChange("pp-" + productionPlan.id)}
+
+          {productionPlanAvaible && (
+            <Accordion
+              key={"pp-" + productionPlan.id}
+              id={"pp-" + productionPlan.id}
+              expanded={expanded === "pp-" + productionPlan.id}
+              onChange={handleChange("pp-" + productionPlan.id)}
+            >
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1bh-content"
+                id="panel1bh-header"
               >
-                <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
-                  aria-controls="panel1bh-content"
-                  id="panel1bh-header">
-                  <Typography color={"primary"}>
-                  Costo:
-                </Typography>
-                </AccordionSummary>
-                <ProductionPlan impositionData={productionPlan} />
-              </Accordion>
-            )}
-        
+                <Typography color={"primary"}>Costo:</Typography>
+              </AccordionSummary>
+              <ProductionPlan impositionData={productionPlan} />
+            </Accordion>
+          )}
         </CardContent>
         <Divider />
         <CardActions>

@@ -1,18 +1,37 @@
-function flattenObject(obj, prefix = '') {
-    return Object.keys(obj).reduce((acc, key) => {
-        const pre = prefix.length ? prefix + '_' : '';
-        if (typeof obj[key] === 'object' && obj[key] !== null) {
-            Object.assign(acc, flattenObject(obj[key], pre + key));
-        } else {
-            acc[pre + key] = obj[key];
-        }
-        return acc;
-    }, {});
+export function flattenObject(obj, prefix = "") {
+  return Object.keys(obj).reduce((acc, key) => {
+    const pre = prefix.length ? prefix + "_" : "";
+    if (typeof obj[key] === "object" && obj[key] !== null) {
+      Object.assign(acc, flattenObject(obj[key], pre + key));
+    } else {
+      acc[pre + key] = obj[key];
+    }
+    return acc;
+  }, {});
 }
 
 function flattenArrayOfObjects(arr) {
-    return arr.map(obj => flattenObject(obj));
+  return arr.map((obj) => flattenObject(obj));
 }
+
+export const objectToList = (obj) => {
+  let keys = Object.keys(obj);
+  let values = Object.values(obj);
+  let list = [];
+  for (let i = 0; i < keys.length; i++) {
+    const listItem = `${keys[i]}: ${values[i]}`;
+    console.log(listItem);
+    list.push(listItem);
+  }
+  console.log(list);
+  return (
+    <ul>
+      {list.map((item) => {
+        <li key={item}>{item}</li>;
+      })}
+    </ul>
+  );
+};
 
 // Ejemplo de uso
 // const dataFromDatabase = [
@@ -23,4 +42,4 @@ function flattenArrayOfObjects(arr) {
 // const flattenedData = flattenArrayOfObjects(dataFromDatabase);
 // console.log(flattenedData);
 
-export default flattenArrayOfObjects 
+export default flattenArrayOfObjects;
