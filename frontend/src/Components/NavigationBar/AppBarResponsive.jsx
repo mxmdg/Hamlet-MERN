@@ -32,7 +32,7 @@ export const pages = [
   { text: "Partes de trabajo", path: "JobParts" },
   { text: "Materiales", path: "materiales" },
   { text: "Clientes", path: "empresas" },
-  { text: "Terminacion", path: "Finishers"},
+  { text: "Terminacion", path: "finishers"},
 ];
 
 function ResponsiveAppBar(props) {

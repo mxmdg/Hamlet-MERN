@@ -254,9 +254,9 @@ const JobDetail = (props) => {
           avatar={
             <Avatar
               variant="circle"
-              sx={{ backgroundColor: "#FFBA5A", boxShadow: "5px 5px 4px #000" }}
+              sx={{ backgroundColor: "#FFBA5A", boxShadow: "5px 5px 10px #00000066" }}
             >
-              <MenuBookIcon color="secondary" />
+              <MenuBookIcon color="error" />
             </Avatar>
           }
           /*  action={

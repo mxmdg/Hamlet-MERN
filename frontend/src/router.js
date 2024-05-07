@@ -2,6 +2,7 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import MainContainer from "./Components/General/MainContainer";
+import PartsContainer from "./Components/General/PartsContainer";
 import { Register } from "./Components/Users/Register";
 import { Login } from "./Components/Users/Login";
 import { Profile } from "./Components/Users/Profile";
@@ -232,7 +233,7 @@ const Router = () => (
     />
     <Route
       path="/Jobs/partes"
-      element={<MainContainer entity={"jobs/partes"} />}
+      element={<PartsContainer entity={"jobs"} />}
     />
     <Route path="/Jobs/add" element={<MyStepper />} />
     <Route path="/Jobs/edit/:id" element={<JobViewer entity={"Jobs"} />} />

@@ -60,7 +60,7 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-function createData(
+export function createData(
   _id,
   name,
   product,
@@ -96,6 +96,76 @@ function createData(
     deadLine,
     Partes: arr,
   };
+}
+
+export const PartsTable = (props)=> {
+  return (
+    <Box
+              component="div"
+              elevation={12}
+              sx={{
+                margin: "20px",
+                padding: "15px",
+                borderRadius: "8px",
+              }}
+            >
+              <Typography variant="subtitle1" component="div">
+                Partes
+              </Typography>
+              <Table size="small" aria-label="purchases">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>
+                      <Typography color={"info"} variant="subtitle2">
+                        Tipo
+                      </Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography color={"info"} variant="subtitle2">
+                        Nombre
+                      </Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography color={"info"} variant="subtitle2">
+                        Páginas
+                      </Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography color={"info"} variant="subtitle2">
+                        Formato
+                      </Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography color={"info"} variant="subtitle2">
+                        Colores
+                      </Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography color={"info"} variant="subtitle2">
+                        Material
+                      </Typography>
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {props.data?.map((historyRow) => (
+                    <TableRow key={historyRow._id}>
+                      <TableCell component="th" scope="row">
+                        <Typography color={"info"} variant="subtitle2">
+                          {historyRow.type}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>{historyRow.name}</TableCell>
+                      <TableCell align="left">{historyRow.pages}</TableCell>
+                      <TableCell align="left">{historyRow.size}</TableCell>
+                      <TableCell align="left">{historyRow.colors}</TableCell>
+                      <TableCell align="left">{historyRow.stock}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </Box>
+  )
 }
 
 export default function CollapsibleTable(props) {
@@ -252,71 +322,7 @@ export default function CollapsibleTable(props) {
               easing={{ enter: "ease-in", exit: "ease-in" }}
               unmountOnExit
             >
-              <Box
-                component="div"
-                elevation={12}
-                sx={{
-                  margin: "20px",
-                  padding: "15px",
-                  borderRadius: "8px",
-                }}
-              >
-                <Typography variant="subtitle1" component="div">
-                  Partes
-                </Typography>
-                <Table size="small" aria-label="purchases">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>
-                        <Typography color={"info"} variant="subtitle2">
-                          Tipo
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography color={"info"} variant="subtitle2">
-                          Nombre
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography color={"info"} variant="subtitle2">
-                          Páginas
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography color={"info"} variant="subtitle2">
-                          Formato
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography color={"info"} variant="subtitle2">
-                          Colores
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography color={"info"} variant="subtitle2">
-                          Material
-                        </Typography>
-                      </TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {row.Partes?.map((historyRow) => (
-                      <TableRow key={historyRow._id}>
-                        <TableCell component="th" scope="row">
-                          <Typography color={"info"} variant="subtitle2">
-                            {historyRow.type}
-                          </Typography>
-                        </TableCell>
-                        <TableCell>{historyRow.name}</TableCell>
-                        <TableCell align="left">{historyRow.pages}</TableCell>
-                        <TableCell align="left">{historyRow.size}</TableCell>
-                        <TableCell align="left">{historyRow.colors}</TableCell>
-                        <TableCell align="left">{historyRow.stock}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </Box>
+              <PartsTable data={row.Partes}/>
             </Collapse>
           </TableCell>
         </TableRow>
@@ -324,6 +330,7 @@ export default function CollapsibleTable(props) {
     );
   }
 
+  
   React.useEffect(() => {
     console.log("Render: CollapsibleTable.jsx");
     const loadData = async () => {
@@ -340,7 +347,7 @@ export default function CollapsibleTable(props) {
             job.Owner?.Name + " " + job.Owner?.LastName,
             job.Emision,
             job.DeadLine,
-            job.Partes
+            job.Partes,
           );
         });
         rows.push(...Rows); // Use spread operator to push elements individually

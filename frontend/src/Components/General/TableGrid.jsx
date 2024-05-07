@@ -348,7 +348,7 @@ export default function EnhancedTable(props) {
         collection={props.collection.replace("/urg", "")}
         title={pages.map((pg)=>{
           if(pg.path === props.collection.replace("/urg", "")) {
-            return pg.text
+            return pg.text || props.collection
           }
         })}
         numSelected={selected.length}
