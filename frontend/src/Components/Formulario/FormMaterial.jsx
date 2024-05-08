@@ -85,11 +85,11 @@ const FormMaterial = (props) => {
   const [useItem, setItem] = useState(props.item || "new");
 
   // This state stores checkbox's selections
-  const [selectedCheckboxItems, setSelectedCheckboxItems] = useState({});
+  const [selectedCheckboxItems, setSelectedCheckboxItems] = useState();
 
   // This state intializes chebox value
 
-  const [useValue, setMyValue] = useState({ value: "" });
+  const [useValue, setMyValue] = useState({ value: ""});
 
   // These states are used for navigation.
   const navigate = useNavigate();
@@ -130,6 +130,16 @@ const FormMaterial = (props) => {
           );
 
           setItem(itemToEdit);
+
+          
+          // Recorremos el dataForm y si hay un checkbox, cargamos el array en el estado, a ver si anda... Anduvo!
+          for (let inp of props.form) {
+            const checkOptions = (itemToEdit) ? {[inp.inputName]: itemToEdit.data[inp.inputName]} : {[inp.inputName]: []}
+            if (inp.type === "checkbox" && props.task !== "new") {
+              setSelectedCheckboxItems(checkOptions)
+            } 
+          }
+          
           setLoading(false);
 
           console.log(dataForm);
@@ -141,6 +151,13 @@ const FormMaterial = (props) => {
     } else if (props.item) {
       console.log(useItem);
     } else {
+      for (let inp of props.form) {
+        
+        if (inp.type === "checkbox") {
+          console.log(inp.inputName, props.task)
+          setSelectedCheckboxItems({[inp.inputName]: []})
+        } 
+      }
       console.log("new");
     }
   }, [setItem]);
@@ -341,7 +358,8 @@ const FormMaterial = (props) => {
                             //defaultChecked={false}
                             value={[opt]}
                             defaultChecked={
-                              useItem.data !== undefined
+                              // Esta ultima condicion hay que quitarla cuando se solucione el problema del checkbox
+                              useItem.data !== undefined && useItem.data.jobTypesAllowed !== 0 
                                 ? useItem.data[inp.inputName].includes(opt)
                                 : false
                             }

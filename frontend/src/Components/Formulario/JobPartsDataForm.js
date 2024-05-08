@@ -44,7 +44,7 @@ let MoldeJobParts = [
   },
   {
     inputName: "maxPages",
-    label: "Cantidad maxim de paginas",
+    label: "Cantidad máxima de paginas",
     type: "number",
     step: 1,
     id: "id_407",
