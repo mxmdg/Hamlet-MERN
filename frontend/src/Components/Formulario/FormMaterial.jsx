@@ -178,10 +178,13 @@ const FormMaterial = (props) => {
     }
     console.log(datos);
     // Collct data from checkBox
-    for (const [nombre, value] of Object.entries(selectedCheckboxItems)) {
+    if(selectedCheckboxItems !== undefined) {
+      for (const [nombre, value] of Object.entries(selectedCheckboxItems)) {
       const res = { nombre, value };
       datos.push(res);
     }
+    }
+    
     console.log(datos);
 
     const formData = convertirArrayAObjeto(datos);
@@ -418,7 +421,7 @@ const FormMaterial = (props) => {
           <CardHeader
             component="div"
             title={props.collection}
-            subheader={props.Task}
+            subheader={props.task}
           />
           <Divider />
           <Box sx={{ p: 2 }}>

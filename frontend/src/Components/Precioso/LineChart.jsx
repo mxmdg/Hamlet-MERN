@@ -36,7 +36,7 @@ export default function MyLineChart(props) {
   console.log(props.newData);
 
   const chart = (interval) => (
-    <ResponsiveContainer height={250} width="100%">
+    <ResponsiveContainer height={250} width="95%" >
       <LineChart data={newData} margin={{ right: 25, top: 10 }}>
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="" interval={handleDate(interval)} />

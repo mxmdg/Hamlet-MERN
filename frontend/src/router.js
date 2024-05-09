@@ -31,6 +31,7 @@ import PrintersMainContainer from "./Components/Printers/PrintersMainContainer";
 import FullJobsRender from "./Components/Pages/FullJobsRender";
 import JobsEditAndCopy from "./Components/Pages/JobsEditAndCopy";
 import Machines from "./Components/Pages/Machines";
+import StatsCollector from "./Components/utils/stats/StatsCollector";
 
 const Router = () => (
   <Routes>
@@ -234,6 +235,10 @@ const Router = () => (
     <Route
       path="/Jobs/partes"
       element={<PartsContainer entity={"jobs"} />}
+    />
+    <Route
+      path="/Jobs/stats"
+      element={<StatsCollector />}
     />
     <Route path="/Jobs/add" element={<MyStepper />} />
     <Route path="/Jobs/edit/:id" element={<JobViewer entity={"Jobs"} />} />
