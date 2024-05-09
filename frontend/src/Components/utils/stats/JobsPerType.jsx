@@ -12,20 +12,21 @@ const JobsPerType = (props)=> {
     let customers = {}
 
    for (let job of props.jobs) {
-        if (customers[job.Tipo[0]._id]) {
-            customers[job.Tipo[0]._id].qJobs >= 1
-            ? customers[job.Tipo[0]._id].qJobs += 1 
-            : customers[job.Tipo[0]._id].qJobs = 1 
+        if (customers[job.Tipo[0].name]) {
+            customers[job.Tipo[0].name].qJobs >= 1
+            ? customers[job.Tipo[0].name].qJobs += 1 
+            : customers[job.Tipo[0].name].qJobs = 1 
         } else (
-            customers[job.Tipo[0]._id] = {qJobs: 1, name: (`${job.Tipo[0].name}`)}
+            customers[job.Tipo[0].name] = {qJobs: 1, name: (`${job.Tipo[0].name}`)}
         )
-        
+
+        console.log(customers)
     }
 
     const topCustomers = (Object.values(customers).sort((a, b) => a.qJobs - b.qJobs).slice(-useRank).reverse())
 
     return <Container sx={{width: "100%", height: '100%'}} >
-                <span color="#777">Top {useRank} Vendedores</span>
+                <span color="#777">Top {useRank} Tipos de trabajos</span>
                 <NewRadialBar data={topCustomers} dataKey='qJobs' />
             </Container>
 

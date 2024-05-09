@@ -7,7 +7,7 @@ const JobsPerSeller = (props)=> {
     // Calcular la cantidad de trabajos por cliente.
     // Recibe la lista de trabajos en props.jobs
     // Se accede a la propiedad company en props.jobs.company
-    const [useRank, setRank] = React.useState(5)
+    const [useRank, setRank] = React.useState(10)
     
     let customers = {}
 
