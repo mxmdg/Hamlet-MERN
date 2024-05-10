@@ -1,8 +1,6 @@
 import React from "react"
 import NewRadialBar from "./NewRadialBar"
 
-import { Container } from "@mui/material"
-
 const JobsPerType = (props)=> {
     // Calcular la cantidad de trabajos por cliente.
     // Recibe la lista de trabajos en props.jobs
@@ -23,12 +21,9 @@ const JobsPerType = (props)=> {
         console.log(customers)
     }
 
-    const topCustomers = (Object.values(customers).sort((a, b) => a.qJobs - b.qJobs).slice(-useRank).reverse())
+    const topCustomers = (Object.values(customers).sort((a, b) => a.qJobs - b.qJobs).slice(-useRank))
 
-    return <Container sx={{width: "100%", height: '100%'}} >
-                <span color="#777">Top {useRank} Tipos de trabajos</span>
-                <NewRadialBar data={topCustomers} dataKey='qJobs' />
-            </Container>
+    return <NewRadialBar data={topCustomers} dataKey='qJobs' />
 
 }
 

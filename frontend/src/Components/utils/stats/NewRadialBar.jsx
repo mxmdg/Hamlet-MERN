@@ -1,55 +1,18 @@
+import { Backdrop } from "@mui/material";
+import { borderRadius, fontSize, margin, textAlign } from "@mui/system";
 import React from "react";
-import { RadialBarChart, RadialBar, Legend } from "recharts";
+import { RadialBarChart, RadialBar, Legend, ResponsiveContainer, Tooltip } from "recharts";
 
-const data = [
-  {
-    name: "18-24",
-    uv: 31.47,
-    pv: 2400,
-    fill: "#8884d8",
-  },
-  {
-    name: "25-29",
-    uv: 26.69,
-    pv: 4567,
-    fill: "#83a6ed",
-  },
-  {
-    name: "30-34",
-    uv: 15.69,
-    pv: 1398,
-    fill: "#8dd1e1",
-  },
-  {
-    name: "35-39",
-    uv: 8.22,
-    pv: 9800,
-    fill: "#82ca9d",
-  },
-  {
-    name: "40-49",
-    uv: 8.63,
-    pv: 3908,
-    fill: "#a4de6c",
-  },
-  {
-    name: "50+",
-    uv: 2.63,
-    pv: 4800,
-    fill: "#d0ed57",
-  },
-  {
-    name: "unknow",
-    uv: 6.67,
-    pv: 4800,
-    fill: "#ffc658",
-  },
-];
 
-const style = {
-  top: "15%",
-  left: "0%",
-  lineHeight: "24px",
+export const style = {
+  bottom: "5%",
+  left: "5%",
+  width: "90%",
+  lineHeight: "1.5em",
+  fontSize: "1.1em",
+  fontWeight: "800",
+  padding: "15px",
+  borderTop: "1px solid #666",
 };
 
 const coloresPasteles = [
@@ -81,7 +44,7 @@ const coloresSaturados = [
 const coloresIntermedios = [
   "#FF91A4", // Rosa medio
   "#70DB93", // Verde menta medio
-  "#FFD966", // Amarillo medio
+  "#EEC933", // Amarillo medio
   "#FF826B", // Rojo coral medio
   "#B19CD9", // Púrpura lavanda
   "#5F9EA0", // Azul grisáceo
@@ -98,39 +61,33 @@ export default function NewRadialBar(props) {
   }
 
   return (
-    <RadialBarChart
-      width={600}
-      height={300}
-      cx={300}
-      cy={150}
-      innerRadius={"10%"}
-      outerRadius={"80%"}
-      barSize={10}
-      data={props.data}
-      startAngle={"0"}
-      endAngle={"180"}
-      barCategoryGap={"20%"}
-      barGap={"30%"}
-      clockWise
-    >
-      <RadialBar
-        minAngle={15}
-        label={{ position: "insideStart", fill: "#fff" }}
-        isAnimationActive={true}
-        background={false}
-        dataKey={props.dataKey}
-        legendType="circle"
-        animationEasing="ease-out"
-        animationDuration={1500}
-      />
-      <Legend
-        width={200}
-        iconSize={15}
-        layout="vertical"
-        align="right"
-        verticalAlign="bottom"
-        wrapperStyle={style}
-      />
-    </RadialBarChart>
+    <ResponsiveContainer maxHeight="900px" minHeight="200px" minWidth={200} width={"90%"} height={"100%"}>
+      <RadialBarChart
+        cx="50%" 
+        cy="25%" 
+        innerRadius="20%" 
+        outerRadius="100%" 
+        barSize={10}
+        data={props.data}
+      >
+        <RadialBar
+              minAngle={15}
+              label={{ position: 'outsideStart', fill: '#000' }}
+              background="#ffffff88"
+              clockWise
+              dataKey={props.dataKey}
+            />
+        <Legend 
+              iconSize={10}
+              iconType="circle" 
+              layout="vertical" 
+              verticalAlign="bottom" 
+              wrapperStyle={style} 
+            />
+            
+            <Tooltip />
+      </RadialBarChart>
+    </ResponsiveContainer>
+    
   );
 }
