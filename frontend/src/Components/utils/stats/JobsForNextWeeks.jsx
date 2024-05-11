@@ -1,5 +1,5 @@
 import React from "react";
-import { NewSimpleLineChart } from "./NewSimpleLineChart";
+import NewStackedBarChart from "./NewStackedBarChart";
 
 const JobsForNextDays = (props) => {
   const getMyDate = (event) => {
@@ -33,9 +33,7 @@ const JobsForNextDays = (props) => {
     return dateA - dateB;
   });
 
-  return (
-    <NewSimpleLineChart data={jobsPerOutDate} dataKey={["name", "outJobs"]} />
-  );
+  return <NewStackedBarChart data={jobsPerOutDate} dataKey="outJobs" />;
 };
 
 export default JobsForNextDays;
