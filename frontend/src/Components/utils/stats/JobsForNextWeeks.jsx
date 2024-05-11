@@ -1,5 +1,6 @@
 import React from "react";
 import NewStackedBarChart from "./NewStackedBarChart";
+import JobTypes from "../../Jobs/JobTypes";
 
 const JobsForNextDays = (props) => {
   const getMyDate = (event) => {
@@ -20,10 +21,10 @@ const JobsForNextDays = (props) => {
 
     if (new Date(job.Entrega) >= today && new Date(job.Entrega) <= endDate) {
       if (outDate[Salida]) {
-        outDate[Salida].outJobs >= 1
-          ? (outDate[Salida].outJobs += 1)
-          : (outDate[Salida].outJobs = 1);
-      } else outDate[Salida] = { outJobs: 1, name: `${Salida}` };
+        outDate[Salida][job.Tipo[0].name] >= 1
+          ? (outDate[Salida][job.Tipo[0].name] += 1)
+          : (outDate[Salida][job.Tipo[0].name] = 1);
+      } else outDate[Salida] = { [job.Tipo[0].name]: 1, name: `${Salida}` };
     }
   }
 
@@ -33,7 +34,13 @@ const JobsForNextDays = (props) => {
     return dateA - dateB;
   });
 
-  return <NewStackedBarChart data={jobsPerOutDate} dataKey="outJobs" />;
+  const dataKeys = [];
+
+  for (let type of JobTypes) {
+    dataKeys.push(type.name);
+  }
+
+  return <NewStackedBarChart data={jobsPerOutDate} dataKey={dataKeys} />;
 };
 
 export default JobsForNextDays;

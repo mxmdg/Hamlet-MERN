@@ -1,8 +1,13 @@
 import { Backdrop } from "@mui/material";
 import { borderRadius, fontSize, margin, textAlign } from "@mui/system";
 import React from "react";
-import { RadialBarChart, RadialBar, Legend, ResponsiveContainer, Tooltip } from "recharts";
-
+import {
+  RadialBarChart,
+  RadialBar,
+  Legend,
+  ResponsiveContainer,
+  Tooltip,
+} from "recharts";
 
 export const style = {
   bottom: "5%",
@@ -15,7 +20,7 @@ export const style = {
   borderTop: "1px solid #666",
 };
 
-const coloresPasteles = [
+export const coloresPasteles = [
   "#FFD1DC", // Rosa pastel
   "#AEC6CF", // Azul cielo
   "#F0E68C", // Amarillo pastel
@@ -28,7 +33,7 @@ const coloresPasteles = [
   "#87CEEB", // Azul cielo claro
 ];
 
-const coloresSaturados = [
+export const coloresSaturados = [
   "#FF6EB4", // Rosa brillante
   "#3CB371", // Verde esmeralda
   "#FFD700", // Amarillo brillante
@@ -41,7 +46,7 @@ const coloresSaturados = [
   "#00FF7F", // Verde primavera
 ];
 
-const coloresIntermedios = [
+export const coloresIntermedios = [
   "#FF91A4", // Rosa medio
   "#70DB93", // Verde menta medio
   "#EEC933", // Amarillo medio
@@ -61,33 +66,38 @@ export default function NewRadialBar(props) {
   }
 
   return (
-    <ResponsiveContainer maxHeight="900px" minHeight="200px" minWidth={200} width={"90%"} height={"100%"}>
+    <ResponsiveContainer
+      maxHeight="900px"
+      minHeight="200px"
+      minWidth={200}
+      width={"90%"}
+      height={"100%"}
+    >
       <RadialBarChart
-        cx="50%" 
-        cy="25%" 
-        innerRadius="20%" 
-        outerRadius="100%" 
+        cx="50%"
+        cy="25%"
+        innerRadius="20%"
+        outerRadius="100%"
         barSize={10}
         data={props.data}
       >
         <RadialBar
-              minAngle={15}
-              label={{ position: 'outsideStart', fill: '#000' }}
-              background="#ffffff88"
-              clockWise
-              dataKey={props.dataKey}
-            />
-        <Legend 
-              iconSize={10}
-              iconType="circle" 
-              layout="vertical" 
-              verticalAlign="bottom" 
-              wrapperStyle={style} 
-            />
-            
-            <Tooltip />
+          minAngle={15}
+          label={{ position: "outsideStart", fill: "#000" }}
+          background="#ffffff88"
+          clockWise
+          dataKey={props.dataKey}
+        />
+        <Legend
+          iconSize={10}
+          iconType="circle"
+          layout="vertical"
+          verticalAlign="bottom"
+          wrapperStyle={style}
+        />
+
+        <Tooltip />
       </RadialBarChart>
     </ResponsiveContainer>
-    
   );
 }
