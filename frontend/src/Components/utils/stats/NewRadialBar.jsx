@@ -9,12 +9,13 @@ import {
   Tooltip,
 } from "recharts";
 
-export const style = {
-  bottom: "5%",
+export const myWrapperStyle = {
+  bottom: "0",
   left: "5%",
   width: "90%",
   lineHeight: "1.5em",
   fontSize: "1.1em",
+  textAlign: "left",
   fontWeight: "800",
   padding: "15px",
   borderTop: "1px solid #666",
@@ -75,9 +76,9 @@ export default function NewRadialBar(props) {
     >
       <RadialBarChart
         cx="50%"
-        cy="25%"
+        cy="30%"
         innerRadius="20%"
-        outerRadius="100%"
+        outerRadius="80%"
         barSize={10}
         data={props.data}
       >
@@ -93,7 +94,7 @@ export default function NewRadialBar(props) {
           iconType="circle"
           layout="vertical"
           verticalAlign="bottom"
-          wrapperStyle={style}
+          wrapperStyle={myWrapperStyle}
         />
 
         <Tooltip />

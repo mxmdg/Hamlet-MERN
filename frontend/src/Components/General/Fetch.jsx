@@ -135,39 +135,37 @@ const Fetch = (props) => {
         setFilteredList={setFilteredList}
       /> */}
       <DarkWoodCard>
-        <Paper elevation={4} color="info" sx={{ padding: "10px" }}>
-          <Stack direction="row" spacing={4}>
-            <TextField
-              select
-              defaultValue={"Todo"}
-              onChange={(e) => setColumn(e.target.value)}
-              variant="filled"
-              color="success"
-              size="small"
-            >
-              {useHeaders.map((item) => {
-                return (
-                  <MenuItem value={item.label} key={item.id}>
-                    {item.label}
-                  </MenuItem>
-                );
-              })}
-              <MenuItem value={"Todo"} key="opt0">
-                Todo
-              </MenuItem>
-            </TextField>
-            <TextField
-              variant="filled"
-              type="search"
-              onChange={(e) => {
-                filterList(e.target.value, useColumn);
-              }}
-              placeholder="Buscar"
-              color="success"
-              size="small"
-            ></TextField>
-          </Stack>
-        </Paper>
+        <Stack direction="row" spacing={4}>
+          <TextField
+            select
+            defaultValue={"Todo"}
+            onChange={(e) => setColumn(e.target.value)}
+            variant="filled"
+            color="success"
+            size="small"
+          >
+            {useHeaders.map((item) => {
+              return (
+                <MenuItem value={item.label} key={item.id}>
+                  {item.label}
+                </MenuItem>
+              );
+            })}
+            <MenuItem value={"Todo"} key="opt0">
+              Todo
+            </MenuItem>
+          </TextField>
+          <TextField
+            variant="filled"
+            type="search"
+            onChange={(e) => {
+              filterList(e.target.value, useColumn);
+            }}
+            placeholder="Buscar"
+            color="success"
+            size="small"
+          ></TextField>
+        </Stack>
       </DarkWoodCard>
 
       <DarkWoodCard>

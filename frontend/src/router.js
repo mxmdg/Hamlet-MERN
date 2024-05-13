@@ -31,7 +31,17 @@ import PrintersMainContainer from "./Components/Printers/PrintersMainContainer";
 import FullJobsRender from "./Components/Pages/FullJobsRender";
 import JobsEditAndCopy from "./Components/Pages/JobsEditAndCopy";
 import Machines from "./Components/Pages/Machines";
+
+//MUI Material
+import { Grid } from "@mui/material";
+
+//Datos Estadisticos
 import StatsCollector from "./Components/utils/stats/StatsCollector";
+import JobsForNextDays from "./Components/utils/stats/JobsForNextWeeks";
+import JobsPerDate from "./Components/utils/stats/JobsPerDate";
+import JobsPerClient from "./Components/utils/stats/JobsPerClient";
+import JobsPerSeller from "./Components/utils/stats/JobsPerSeller";
+import JobsPerType from "./Components/utils/stats/JobsPerType";
 
 const Router = () => (
   <Routes>
@@ -232,13 +242,31 @@ const Router = () => (
         />
       }
     />
-    <Route
-      path="/Jobs/partes"
-      element={<PartsContainer entity={"jobs"} />}
-    />
+    <Route path="/Jobs/partes" element={<PartsContainer entity={"jobs"} />} />
     <Route
       path="/Jobs/stats"
-      element={<StatsCollector />}
+      //element={<StatsCollector />}
+      element={
+        <StatsCollector>
+          <Grid container columns={12} spacing={1}>
+            <Grid item columns={{ xs: 12, md: 12, lg: 12 }}>
+              <JobsPerDate />
+            </Grid>
+            <Grid item columns={{ xs: 12, md: 12, lg: 12 }}>
+              <JobsForNextDays />
+            </Grid>
+            <Grid item columns={{ xs: 12, md: 4, lg: 4 }}>
+              <JobsPerClient />
+            </Grid>
+            <Grid item columns={{ xs: 12, md: 4, lg: 4 }}>
+              <JobsPerSeller />
+            </Grid>
+            <Grid item columns={{ xs: 12, md: 4, lg: 4 }}>
+              <JobsPerType />
+            </Grid>
+          </Grid>
+        </StatsCollector>
+      }
     />
     <Route path="/Jobs/add" element={<MyStepper />} />
     <Route path="/Jobs/edit/:id" element={<JobViewer entity={"Jobs"} />} />

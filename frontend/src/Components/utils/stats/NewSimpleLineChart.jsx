@@ -10,6 +10,8 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
+import { coloresIntermedios, myWrapperStyle } from "./NewRadialBar";
+
 export const NewSimpleLineChart = (props) => {
   return (
     <ResponsiveContainer width="98%" height="100%">
@@ -28,7 +30,13 @@ export const NewSimpleLineChart = (props) => {
         <XAxis dataKey={props.dataKey[0]} />
         <YAxis />
         <Tooltip />
-        <Legend wrapperStyle={{ padding: "10px" }} />
+        <Legend
+          iconSize={10}
+          iconType="circle"
+          verticalAlign="bottom"
+          layout="vertical"
+          wrapperStyle={myWrapperStyle}
+        />
         <Line
           type="monotone"
           dataKey={props.dataKey[1]}

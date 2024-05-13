@@ -7,20 +7,18 @@ import { Paper } from "@mui/material";
 
 const DarkWoodCard = ({ children }) => {
   return (
-    <Container sx={{ marginTop: "10px", marginBottom: "10px" }}>
-      <Paper>
-        <Card
-          raised
-          sx={{
-            //background: `url(${DarkWoodBackground})`,
-            gap: "20px",
-            width: "100%",
-          }}
-        >
-          <CardContent>{children}</CardContent>
-        </Card>
-      </Paper>
-    </Container>
+    <Paper>
+      <Card
+        raised
+        sx={{
+          //background: `url(${DarkWoodBackground})`,
+          gap: "20px",
+          width: "100%",
+        }}
+      >
+        <CardContent>{children}</CardContent>
+      </Card>
+    </Paper>
   );
 };
 

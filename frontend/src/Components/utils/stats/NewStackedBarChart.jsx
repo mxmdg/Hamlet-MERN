@@ -10,7 +10,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-import { coloresIntermedios } from "./NewRadialBar";
+import { coloresIntermedios, myWrapperStyle } from "./NewRadialBar";
 
 const NewStackedBarChart = (props) => {
   return (
@@ -30,7 +30,13 @@ const NewStackedBarChart = (props) => {
         <XAxis dataKey="name" />
         <YAxis />
         <Tooltip />
-        <Legend />
+        <Legend
+          iconSize={10}
+          iconType="circle"
+          verticalAlign="bottom"
+          layout="vertical"
+          wrapperStyle={myWrapperStyle}
+        />
         {props.dataKey.map((item, index) => {
           return (
             <Bar dataKey={item} stackId="a" fill={coloresIntermedios[index]} />

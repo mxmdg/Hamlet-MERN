@@ -1,5 +1,6 @@
 import React from "react";
 import Container from "@mui/material/Container";
+import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import { Card } from "@mui/material";
 import Typography from "@mui/material/Typography";
@@ -41,7 +42,6 @@ const FullJobsRender = (props) => {
   };
 
   React.useEffect(() => {
-    console.log("Render: FullJobsRender.jsx");
     const fetchData = async () => {
       try {
         const jobs = await getPrivateElements(props.route);
@@ -58,7 +58,7 @@ const FullJobsRender = (props) => {
   }, [useDeleted]);
 
   return (
-    <Container>
+    <Paper elevation={12}>
       {loading ? (
         <Spinner color="primary" />
       ) : error !== null ? (
@@ -75,7 +75,7 @@ const FullJobsRender = (props) => {
       ) : (
         <Typography color={"error"}> NO Data </Typography>
       )}
-    </Container>
+    </Paper>
   );
 };
 

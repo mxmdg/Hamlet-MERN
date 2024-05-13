@@ -1,4 +1,4 @@
-import React from "react";
+/* import React from "react";
 import { getPrivateElements } from "../../customHooks/FetchDataHook";
 import ErrorMessage from "../../ErrorMessage/ErrorMessage";
 import { CircularProgress } from "@mui/material";
@@ -53,7 +53,7 @@ const StatsCollector = () => {
         <Grid item xs={12} md={12} lg={12} padding={1}>
           <Paper elevation={12} sx={{ p: 2, height: "500px", width: "100%" }}>
             <Typography color="secondary" variant="h5">
-              Entregas Proximos 10 dias
+              Compromisos próximos días
             </Typography>
             <JobsForNextDays jobs={jobsList} />
           </Paper>
@@ -61,7 +61,7 @@ const StatsCollector = () => {
         <Grid item xs={12} md={12} lg={12} padding={1}>
           <Paper elevation={12} sx={{ p: 2, height: "500px", width: "100%" }}>
             <Typography color="secondary" variant="h5">
-              Trabajos por mes
+              Reporte Mensual
             </Typography>
             <JobsPerDate jobs={jobsList} />
           </Paper>
@@ -69,7 +69,7 @@ const StatsCollector = () => {
         <Grid item xs={12} md={4} lg={3} padding={1}>
           <Paper elevation={12} sx={{ p: 2, height: "500px", width: "100%" }}>
             <Typography color="secondary" variant="h5">
-              Top 5 Clientes
+              Top 5: Clientes
             </Typography>
             <JobsPerClient jobs={jobsList} rank={5} />
           </Paper>
@@ -77,7 +77,7 @@ const StatsCollector = () => {
         <Grid item xs={12} md={4} lg={3} padding={1}>
           <Paper elevation={12} sx={{ p: 2, height: "500px", width: "100%" }}>
             <Typography color="secondary" variant="h5">
-              Top 5 Vendedores
+              Top 10: Vendedores
             </Typography>
             <JobsPerSeller jobs={jobsList} rank={5} />
           </Paper>
@@ -97,6 +97,76 @@ const StatsCollector = () => {
   const otroContent = <JobsPerClient jobs={jobsList} />;
 
   return loading ? isLoading : useError !== null ? isError : okContent;
+};
+
+export default StatsCollector; */
+
+import React from "react";
+import { getPrivateElements } from "../../customHooks/FetchDataHook";
+import ErrorMessage from "../../ErrorMessage/ErrorMessage";
+import { CircularProgress } from "@mui/material";
+import { Container, Grid, Typography, Paper } from "@mui/material";
+
+const StatsCollector = ({ children }) => {
+  const [jobsList, setJobsList] = React.useState([]);
+  const [partsList, setPartsList] = React.useState([]);
+  const [loading, setLoading] = React.useState(true);
+
+  // Manejo de errores
+  const [useError, setError] = React.useState(null);
+  const clearError = () => {
+    setError(null);
+  };
+
+  React.useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const jobs = await getPrivateElements("jobs/complete");
+        const parts = await getPrivateElements("jobs/partes");
+        setJobsList(jobs);
+        setPartsList(parts);
+        setLoading(false);
+      } catch (e) {
+        console.log(e);
+        setError(e);
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  if (loading) return <CircularProgress />;
+  if (useError !== null)
+    return <ErrorMessage message={useError} action={clearError} />;
+
+  return (
+    <>
+      {React.Children.map(children, (child) => {
+        if (React.isValidElement(child)) {
+          return (
+            <Paper
+              elevation={10}
+              sx={{
+                p: 2,
+                height: "500px",
+                minHeight: "500px",
+              }}
+            >
+              {React.cloneElement(child, {
+                jobs: jobsList,
+                parts: partsList,
+              })}
+            </Paper>
+          );
+        }
+        return (
+          <Paper elevation={10} sx={{ p: 2, height: "500px" }}>
+            {child}
+          </Paper>
+        );
+      })}
+    </>
+  );
 };
 
 export default StatsCollector;
