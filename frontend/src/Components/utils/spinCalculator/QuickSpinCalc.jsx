@@ -27,7 +27,7 @@ const QuickSpinCalc = (props) => {
   const [stocks, setStocks] = useState([]);
   const [usePages, setPages] = useState([]);
   const [useStock, selectStock] = useState([]);
-  const [useSpin, setSpin] = useState(0);
+  const [useSpin, setSpin] = useState("0");
 
   /* const {
     register,
@@ -70,7 +70,7 @@ const QuickSpinCalc = (props) => {
   }, []);
 
   return (
-    <>
+    <Container>
       <CardHeader subheader="Calculadora de lomo"></CardHeader>
       <Divider />
       <CardContent>
@@ -85,9 +85,9 @@ const QuickSpinCalc = (props) => {
                 id="Pages"
                 type="number"
                 label="Paginas"
-                variant="filled"
+                variant="outlined"
                 name="Pages"
-                color="warning"
+                color="primary"
                 size="small"
                 onChange={handlePageChange}
               />
@@ -102,7 +102,7 @@ const QuickSpinCalc = (props) => {
                   label="Material"
                   onChange={handleChange}
                   defaultValue={""}
-                  variant="filled"
+                  variant="outlined"
                   sx={{ width: "95%" }}
                   color="primary"
                   size="small"
@@ -115,22 +115,6 @@ const QuickSpinCalc = (props) => {
                 </Select>
               </FormControl>
             </Grid>
-
-            <Grid item xs={1} sm={2} md={4}>
-              <TextField
-                id="Spin"
-                type="number"
-                label="Lomo"
-                variant="filled"
-                name="Spin"
-                value={useSpin}
-                color="success"
-                size="small"
-                InputProps={{
-                  readOnly: true,
-                }}
-              />
-            </Grid>
             <Grid item xs={1} sm={2} md={4}>
               <FormControl sx={{ width: "85%" }}>
                 <Button
@@ -139,14 +123,17 @@ const QuickSpinCalc = (props) => {
                   variant="outlined"
                   color="primary"
                 >
-                  Lomo
+                  Calcular
                 </Button>
               </FormControl>
+            </Grid>
+            <Grid item xs={1} sm={2} md={4}>
+              <Typography variant="h5" color="primary">Lomo: {useSpin} mm</Typography>
             </Grid>
           </Grid>
         </form>
       </CardContent>
-    </>
+    </Container>
   );
 };
 

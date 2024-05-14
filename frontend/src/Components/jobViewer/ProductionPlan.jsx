@@ -253,7 +253,7 @@ const ProductionPlan = (props) => {
                   <ListItem alignItems="flex-start">
                     <ListItemText
                       secondary={"Costo final impreiones"}
-                      primary={`$ ${data.printPrice.Total}`}
+                      primary={`$ ${Math.ceil(data.printPrice.Total)}`}
                       secondaryTypographyProps={{variant: "body1", fontSize: 12}}
                       primaryTypographyProps={{variant: "h3",fontSize: 16}}
                     />

@@ -14,7 +14,7 @@ import { coloresIntermedios, myWrapperStyle } from "./NewRadialBar";
 
 export const NewSimpleLineChart = (props) => {
   return (
-    <ResponsiveContainer width="98%" height="100%">
+    <ResponsiveContainer width="98%" height="100%" minWidth={"300px"}>
       <LineChart
         width={500}
         height={300}

@@ -248,23 +248,11 @@ const Router = () => (
       //element={<StatsCollector />}
       element={
         <StatsCollector>
-          <Grid container columns={12} spacing={1}>
-            <Grid item columns={{ xs: 12, md: 12, lg: 12 }}>
               <JobsPerDate />
-            </Grid>
-            <Grid item columns={{ xs: 12, md: 12, lg: 12 }}>
               <JobsForNextDays />
-            </Grid>
-            <Grid item columns={{ xs: 12, md: 4, lg: 4 }}>
-              <JobsPerClient />
-            </Grid>
-            <Grid item columns={{ xs: 12, md: 4, lg: 4 }}>
+              <JobsPerClient rank={10}/>
               <JobsPerSeller />
-            </Grid>
-            <Grid item columns={{ xs: 12, md: 4, lg: 4 }}>
               <JobsPerType />
-            </Grid>
-          </Grid>
         </StatsCollector>
       }
     />

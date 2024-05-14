@@ -14,7 +14,7 @@ import { coloresIntermedios, myWrapperStyle } from "./NewRadialBar";
 
 const NewStackedBarChart = (props) => {
   return (
-    <ResponsiveContainer width="100%" height="100%">
+    <ResponsiveContainer width="100%" height="100%" minWidth={"300px"}>
       <BarChart
         width={500}
         height={300}

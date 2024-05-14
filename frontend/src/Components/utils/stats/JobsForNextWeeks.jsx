@@ -15,11 +15,13 @@ const JobsForNextDays = (props) => {
 
   for (let job of props.jobs) {
     const Salida = getMyDate(job.Entrega);
+    const yesterday = new Date();
     const today = new Date();
     const endDate = new Date();
-    endDate.setDate(today.getDate() + 10); // next 10 days
+    endDate.setDate(today.getDate() + 15); // next 30 days
+    yesterday.setDate(today.getDate() -1); //Ayer
 
-    if (new Date(job.Entrega) >= today && new Date(job.Entrega) <= endDate) {
+    if (new Date(job.Entrega) >= yesterday && new Date(job.Entrega) <= endDate) {
       if (outDate[Salida]) {
         outDate[Salida][job.Tipo[0].name] >= 1
           ? (outDate[Salida][job.Tipo[0].name] += job.Cantidad)
