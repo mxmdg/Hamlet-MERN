@@ -1,3 +1,27 @@
+import { getPrivateElements } from "../customHooks/FetchDataHook";
+const costsList = [];
+const costos = async () => {
+  try {
+    const res = await getPrivateElements("Precios");
+    console.log(res);
+    res.map((item) => {
+      if (item.Categoria === "stock") {
+        costsList.push({
+        text: `${item.Proceso} ($ ${item.Valor}.-)`,
+        value: item._id,
+        id: item._id,
+        });
+      }
+      
+    });
+    return res;
+  } catch (error) {
+    return error.message;
+  }
+};
+
+costos();
+
 let PrintersDataForm = [
   {
     inputName: "Nombre_Material",
@@ -65,9 +89,12 @@ let PrintersDataForm = [
   },
   {
     inputName: "Precio_x_Kilo",
-    label: "Costo (por kilogramos)",
-    type: "Number",
+    label: "Precio por kilo",
+    type: "Select",
     id: "id_009",
+    options: costsList,
+    required: true,
+    help: "Seleccione la formula de costos segun el tipo de material",
   },
   {
     inputName: "Color",

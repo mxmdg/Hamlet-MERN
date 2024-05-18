@@ -5,11 +5,14 @@ const costos = async () => {
     const res = await getPrivateElements("Precios");
     console.log(res);
     res.map((item) => {
-      costsList.push({
+      if (item.Categoria === "print") {
+        costsList.push({
         text: `${item.Proceso} ($ ${item.Valor}.-)`,
         value: item._id,
         id: item._id,
-      });
+        });
+      }
+      
     });
     return res;
   } catch (error) {

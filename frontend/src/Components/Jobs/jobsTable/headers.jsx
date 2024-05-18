@@ -4,8 +4,8 @@ const dict = [
     {label: "Cantidad", id: "quantity"},
     {label: "Cliente", id: "customer"},
     {label: "Representante", id: "owner"},
-    {label: "Emision", id: "emited"},
-    {label: "Entrega", id: "deadLine"}
+    {label: "Emision", id: "from"},
+    {label: "Entrega", id: "to"}
 ]
 
 // Recibe [{label: "Texto a mostrar", id: "propiedad del objeto en la base de datos"}]

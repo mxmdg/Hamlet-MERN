@@ -1,9 +1,12 @@
 const materials = require('../../models/materiales')
+const prices = require("../../models/prices");
 
 const materialControl= {}
 
 materialControl.getMaterials = async (req,res) => {{
     const material = await materials.esquema.find()
+    .populate({ path: "Precio_x_Kilo", model: prices.esquema });
+    
     res.json(material);
 }}
 
@@ -17,7 +20,8 @@ materialControl.addMaterial = async (req,res)=>{{
 
 materialControl.getMaterial = async (req, res)=> {
     try {
-        const material = await materials.esquema.findById(req.params.id);
+        const material = await materials.esquema.findById(req.params.id)
+        .populate({ path: "Precio_x_Kilo", model: prices.esquema });
         if (material) {
             res.json(material)
         } else {

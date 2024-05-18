@@ -1,4 +1,4 @@
-const { Schema, model } = require("mongoose");
+const { Schema, model, default: mongoose } = require("mongoose");
 
 const materialSchema = new Schema({
   Nombre_Material: { type: String, required: false },
@@ -9,7 +9,11 @@ const materialSchema = new Schema({
   Alto_Resma: { type: Number, required: true },
   Espesor_Resma: { type: Number, required: true },
   Fibra: { type: Number, required: true },
-  Precio_x_Kilo: { type: Number, required: true },
+  Precio_x_Kilo: {
+    type: mongoose.Schema.ObjectId,
+    ref: "Precios",
+    required: true,
+  },
   Color: { type: String, required: false },
 });
 

@@ -32,6 +32,7 @@ const priceHistorySchema = new Schema({
 });
 
 const pricesSchema = new Schema({
+  Categoria: {type: String, required: true },
   Proceso: { type: String, required: true },
   Valor: { type: Number, required: true },
   Minimo: { type: Number, required: true },

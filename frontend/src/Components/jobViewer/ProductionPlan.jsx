@@ -142,13 +142,24 @@ const ProductionPlan = (props) => {
       };
 
       const stockCost = () => {
+        
+        const paperPrice = usePrices.map((p)=> {
+          let price
+          if (p._id === data.stock.Precio_x_Kilo ) {
+            price = p.Valor
+          }
+        })
+
+        const getPrice = ()=> {}
+
+        console.log("Stock Cost: " + paperPrice )
         const surface =
           parseFloat(data.stock.Ancho_Resma) *
           parseFloat(data.stock.Alto_Resma);
         const totalPaper = parseFloat(data.totalHojas) * surface;
         const weight = (totalPaper / 1000000) * parseFloat(data.stock.Gramaje);
         const cost = Math.ceil(
-          (weight / 1000) * parseFloat(data.stock.Precio_x_Kilo)
+          (weight / 1000) * paperPrice
         );
 
         console.log(surface, totalPaper, "Peso " + weight, cost);

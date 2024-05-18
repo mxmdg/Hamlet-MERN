@@ -12,9 +12,10 @@ pricesControl.getPrices = async (req, res) => {
 pricesControl.addPrice = async (req, res) => {
   {
     try {
-      const { Proceso, Valor, Minimo, Entrada } = req.body;
+      const { Categoria, Proceso, Valor, Minimo, Entrada } = req.body;
       const Historial = [];
       const newPrice = new prices.esquema({
+        Categoria,
         Proceso,
         Valor,
         Minimo,
@@ -47,9 +48,9 @@ pricesControl.getPrice = async (req, res) => {
 
 pricesControl.updatePrice = async (req, res) => {
   try {
-    const { Proceso, Valor, Minimo, Entrada, Historial } = req.body;
+    const { Categoria, Proceso, Valor, Minimo, Entrada, Historial } = req.body;
     const Fecha = Date.now();
-    const currentPrice = [Proceso, Valor, Minimo, Entrada, Fecha];
+    const currentPrice = [Categoria, Proceso, Valor, Minimo, Entrada, Fecha];
 
     const price = await prices.esquema.findById(req.params.id);
 
@@ -75,6 +76,7 @@ pricesControl.updatePrice = async (req, res) => {
       historialItem,
       historialCurrent
     );
+    price.Categoria= Categoria;
     price.Valor = Valor;
     price.Minimo = Minimo;
     price.Entrada = Entrada;

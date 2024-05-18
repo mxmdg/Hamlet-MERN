@@ -63,7 +63,6 @@ jobControl.getAllParts = async (req, res) => {
         flattenedPartsList.push(parte);
       });
     });
-    console.log("flattenedPartsList");
     //console.log(flattenedPartsList);
     res.json(flattenedPartsList);
   } catch (e) {

@@ -58,7 +58,7 @@ const FullJobsRender = (props) => {
   }, [useDeleted]);
 
   return (
-    <Paper elevation={12}>
+    <Container>
       {loading ? (
         <Spinner color="primary" />
       ) : error !== null ? (
@@ -75,7 +75,7 @@ const FullJobsRender = (props) => {
       ) : (
         <Typography color={"error"}> NO Data </Typography>
       )}
-    </Paper>
+    </Container>
   );
 };
 

@@ -23,6 +23,7 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { fechtData, getPrivateElements } from "../../customHooks/FetchDataHook";
 import ErrorMessage from "../../ErrorMessage/ErrorMessage";
 import Spinner from "../../General/Spinner";
+import diccionarioFechas from "../../utils/generalData/fechaDiccionario";
 
 import { headers } from "./headers";
 import { Filter } from "../../customHooks/Filter";
@@ -89,6 +90,9 @@ export function createData(
     arr.push(data);
   });
 
+  const from = diccionarioFechas(emited);
+  const to = diccionarioFechas(deadLine);
+
   return {
     _id,
     name,
@@ -96,8 +100,8 @@ export function createData(
     quantity,
     customer,
     owner,
-    emited,
-    deadLine,
+    from,
+    to,
     Partes: arr,
   };
 }
@@ -179,9 +183,7 @@ export default function CollapsibleTable(props) {
   const [selected, setSelected] = React.useState([]);
   const [orderBy, setOrderBy] = React.useState(props.settings.column || "name");
   const [rows, setRows] = React.useState(props.rows);
-  const [filteredRows, setFilteredRows] = React.useState(props.rows);
   const [page, setPage] = React.useState(0);
-  const [dense, setDense] = React.useState(true);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
@@ -312,10 +314,10 @@ export default function CollapsibleTable(props) {
             <Typography variant="subtitle1">{row.owner}</Typography>
           </TableCell>
           <TableCell align="left">
-            <Typography variant="subtitle1">{row.emited}</Typography>
+            <Typography variant="subtitle1">{row.from}</Typography>
           </TableCell>
           <TableCell align="left">
-            <Typography variant="subtitle1">{row.deadLine}</Typography>
+            <Typography variant="subtitle1">{row.to}</Typography>
           </TableCell>
         </TableRow>
         <TableRow>
