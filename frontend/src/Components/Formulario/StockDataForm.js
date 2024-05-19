@@ -7,12 +7,11 @@ const costos = async () => {
     res.map((item) => {
       if (item.Categoria === "stock") {
         costsList.push({
-        text: `${item.Proceso} ($ ${item.Valor}.-)`,
-        value: item._id,
-        id: item._id,
+          text: `${item.Proceso} ($ ${item.Valor}.-)`,
+          value: item._id,
+          id: item._id,
         });
       }
-      
     });
     return res;
   } catch (error) {
@@ -39,6 +38,7 @@ let PrintersDataForm = [
       { text: "Digiart", value: "Digiart" },
       { text: "Ledesma", value: "Ledesma" },
       { text: "Suzanno", value: "Suzanno" },
+      { text: "Fasson", value: "Fasson" },
     ],
   },
   {

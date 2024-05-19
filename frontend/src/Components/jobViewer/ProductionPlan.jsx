@@ -32,8 +32,6 @@ const ProductionPlan = (props) => {
   const [useLoading, setLoading] = useState(false);
   const [useError, setError] = useState(null);
   const AllData = objectToArray(props.impositionData);
-  console.log(props.impositionData);
-  console.log(AllData);
 
   /* Modelo del datos:
   {
@@ -142,25 +140,23 @@ const ProductionPlan = (props) => {
       };
 
       const stockCost = () => {
-        
-        const paperPrice = usePrices.map((p)=> {
-          let price
-          if (p._id === data.stock.Precio_x_Kilo ) {
-            price = p.Valor
+        let paperPrice;
+
+        for (let i = 0; i < usePrices?.length; i++) {
+          if (usePrices[i]._id === data.stock.Precio_x_Kilo) {
+            paperPrice = usePrices[i].Valor;
+            break;
           }
-        })
+        }
 
-        const getPrice = ()=> {}
+        console.log(paperPrice);
 
-        console.log("Stock Cost: " + paperPrice )
         const surface =
           parseFloat(data.stock.Ancho_Resma) *
           parseFloat(data.stock.Alto_Resma);
         const totalPaper = parseFloat(data.totalHojas) * surface;
         const weight = (totalPaper / 1000000) * parseFloat(data.stock.Gramaje);
-        const cost = Math.ceil(
-          (weight / 1000) * paperPrice
-        );
+        const cost = Math.ceil((weight / 1000) * parseFloat(paperPrice));
 
         console.log(surface, totalPaper, "Peso " + weight, cost);
         return { surface, totalPaper, weight, cost };
@@ -217,38 +213,47 @@ const ProductionPlan = (props) => {
             >
               <CardHeader
                 title={`${data.printer.Fabricante} ${data.printer.Modelo}`}
-                titleTypographyProps={{color: "primary"}}
+                titleTypographyProps={{ color: "primary" }}
                 subheader={`(${data.printer.Costo.Proceso})`}
-                subheaderTypographyProps={{color: "secondary"}}
+                subheaderTypographyProps={{ color: "secondary" }}
               ></CardHeader>
               <Divider />
               <CardContent>
                 <List dense>
-                <ListItem alignItems="flex-start">
-                  <ListItemText
-                    primary={`${data.impresiones}`}
-                    secondary={"Impresiones"}
-                    secondaryTypographyProps={{variant: "body1", fontSize: 12}}
-                    primaryTypographyProps={{variant: "h3",fontSize: 16}}
-                  />
-                </ListItem>
-                  <Divider />
-                <ListItem alignItems="flex-start">
-                  <ListItemText
-                    primary={`${data.totalPliegos} `}
-                    secondary={"Pliegos"}
-                    secondaryTypographyProps={{variant: "body1", fontSize: 12}}
-                    primaryTypographyProps={{variant: "h3",fontSize: 16}}
-                  />
-                </ListItem>
-                  <Divider />
-                  
                   <ListItem alignItems="flex-start">
                     <ListItemText
-                    secondary={`${data.stock.Tipo} ${data.stock.Gramaje} gramos`}
-                    primary={`${data.sheetOriginalSize?.width} x ${data.sheetOriginalSize?.height} mm.`}
-                    secondaryTypographyProps={{variant: "body1", fontSize: 12}}
-                    primaryTypographyProps={{variant: "h3",fontSize: 16}}
+                      primary={`${data.impresiones}`}
+                      secondary={"Impresiones"}
+                      secondaryTypographyProps={{
+                        variant: "body1",
+                        fontSize: 12,
+                      }}
+                      primaryTypographyProps={{ variant: "h3", fontSize: 16 }}
+                    />
+                  </ListItem>
+                  <Divider />
+                  <ListItem alignItems="flex-start">
+                    <ListItemText
+                      primary={`${data.totalPliegos} `}
+                      secondary={"Pliegos"}
+                      secondaryTypographyProps={{
+                        variant: "body1",
+                        fontSize: 12,
+                      }}
+                      primaryTypographyProps={{ variant: "h3", fontSize: 16 }}
+                    />
+                  </ListItem>
+                  <Divider />
+
+                  <ListItem alignItems="flex-start">
+                    <ListItemText
+                      secondary={`${data.stock.Tipo} ${data.stock.Gramaje} gramos`}
+                      primary={`${data.sheetOriginalSize?.width} x ${data.sheetOriginalSize?.height} mm.`}
+                      secondaryTypographyProps={{
+                        variant: "body1",
+                        fontSize: 12,
+                      }}
+                      primaryTypographyProps={{ variant: "h3", fontSize: 16 }}
                     />
                   </ListItem>
                   <Divider />
@@ -256,8 +261,11 @@ const ProductionPlan = (props) => {
                     <ListItemText
                       primary={`$ ${data.printPrice.Unitario}`}
                       secondary={"Unitario"}
-                      secondaryTypographyProps={{variant: "body1", fontSize: 12}}
-                      primaryTypographyProps={{variant: "h3",fontSize: 16}}
+                      secondaryTypographyProps={{
+                        variant: "body1",
+                        fontSize: 12,
+                      }}
+                      primaryTypographyProps={{ variant: "h3", fontSize: 16 }}
                     />
                   </ListItem>
                   <Divider />
@@ -265,8 +273,11 @@ const ProductionPlan = (props) => {
                     <ListItemText
                       secondary={"Costo final impreiones"}
                       primary={`$ ${Math.ceil(data.printPrice.Total)}`}
-                      secondaryTypographyProps={{variant: "body1", fontSize: 12}}
-                      primaryTypographyProps={{variant: "h3",fontSize: 16}}
+                      secondaryTypographyProps={{
+                        variant: "body1",
+                        fontSize: 12,
+                      }}
+                      primaryTypographyProps={{ variant: "h3", fontSize: 16 }}
                     />
                   </ListItem>
                   <Divider />
@@ -274,17 +285,29 @@ const ProductionPlan = (props) => {
                     <ListItemText
                       primary={`$ ${data.stockCost.cost}.-`}
                       secondary={`${data.totalHojas} Pliegos de ${data.stock.Ancho_Resma} x ${data.stock.Alto_Resma} mm.`}
-                      secondaryTypographyProps={{variant: "body1", fontSize: 12}}
-                      primaryTypographyProps={{variant: "h3",fontSize: 16}}
+                      secondaryTypographyProps={{
+                        variant: "body1",
+                        fontSize: 12,
+                      }}
+                      primaryTypographyProps={{ variant: "h3", fontSize: 16 }}
                     />
                   </ListItem>
                   <Divider />
                   <ListItem alignItems="flex-start">
                     <ListItemText
-                      primary={`$ ${Math.ceil(data.printPrice.Total + data.stockCost.cost)} -`}
-                      primaryTypographyProps={{variant: "subtitle2", fontSize: 16, color: "primary"}}
+                      primary={`$ ${Math.ceil(
+                        data.printPrice.Total + data.stockCost.cost
+                      )} -`}
+                      primaryTypographyProps={{
+                        variant: "subtitle2",
+                        fontSize: 16,
+                        color: "primary",
+                      }}
                       secondary={`Total`}
-                      secondaryTypographyProps={{variant: "subtitle2",fontSize: 14}}
+                      secondaryTypographyProps={{
+                        variant: "subtitle2",
+                        fontSize: 14,
+                      }}
                     />
                   </ListItem>
                   <Divider />
