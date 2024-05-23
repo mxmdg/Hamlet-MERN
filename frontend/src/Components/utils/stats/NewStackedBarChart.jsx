@@ -14,28 +14,40 @@ import { coloresIntermedios, myWrapperStyle } from "./NewRadialBar";
 
 import { convertirFecha } from "../generalData/fechaDiccionario";
 import { getPrivateElements } from "../../customHooks/FetchDataHook";
+import FullJobsRender from "../../Pages/FullJobsRender";
+import { Modal, Box } from "@mui/material";
 
 const NewStackedBarChart = (props) => {
+
+  const [jobsForDay, setJobsForDay] = React.useState(null)
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
   const handleBarClick = async (barData) => {
     // barData podría contener la fecha de la barra clickeada
     const startDate = convertirFecha(barData);
     const endDate = new Date(startDate);
-    endDate.setDate(endDate.getDate() + 1); // Para obtener los trabajos de un día específico
+    endDate.setDate(endDate.getDate() + (1/2)); // Para obtener los trabajos de un día específico
 
     const formattedStartDate = startDate;
     const formattedEndDate = endDate.toISOString();
 
+    setJobsForDay(`jobs/urg?startDate=${formattedStartDate}&endDate=${formattedEndDate}`)
+    handleOpen()
+
     // Usando el custom hook para hacer la consulta
-    const jobs = await getPrivateElements(
+    /* const jobs = await getPrivateElements(
       `jobs/urg?startDate=${formattedStartDate}&endDate=${formattedEndDate}`
     );
     // Ahora puedes usar 'jobs' para mostrarlos en tu componente
 
-    console.log(jobs);
+    console.table(jobs); */
   };
 
   return (
-    <ResponsiveContainer width="100%" height="100%" minWidth={"300px"}>
+    <>
+      <ResponsiveContainer width="100%" height="100%" minWidth={"300px"}>
       <BarChart
         width={500}
         height={300}
@@ -68,8 +80,21 @@ const NewStackedBarChart = (props) => {
             />
           );
         })}
-      </BarChart>
+      </BarChart>      
     </ResponsiveContainer>
+    {
+      jobsForDay !== null && 
+        <Modal open={open} onClose={handleClose}>
+          <Box>
+            <FullJobsRender 
+            route={jobsForDay}
+            settings={{ title: "Pedidos", column: "emited", order: "asc" }}
+            />
+          </Box>
+        </Modal>
+    }
+    </>
+    
   );
 };
 

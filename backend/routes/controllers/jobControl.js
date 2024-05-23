@@ -72,7 +72,7 @@ jobControl.getAllParts = async (req, res) => {
 };
 
 jobControl.getUrgentJobs = async (req, res) => {
-  console.log(req.query.startDate);
+  //console.log(req.query.startDate);
   const startDate = req.query.startDate
     ? new Date(req.query.startDate)
     : new Date();
@@ -84,7 +84,7 @@ jobControl.getUrgentJobs = async (req, res) => {
     endDate.setDate(startDate.getDate() + 8); // Por defecto, la próxima semana
   }
   try {
-    console.log(startDate, endDate);
+    //console.log(startDate, endDate);
     {
       const queryText = req.query.Q || "";
       const jobList = await jobs.esquema

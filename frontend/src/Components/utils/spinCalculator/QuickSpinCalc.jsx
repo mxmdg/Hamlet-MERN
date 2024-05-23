@@ -71,7 +71,7 @@ const QuickSpinCalc = (props) => {
 
   return (
     <Container>
-      <CardHeader subheader="Calculadora de lomo"></CardHeader>
+      <CardHeader title="Calculadora de lomo" titleTypographyProps={{color: "secondary", fontWeight: "600"}}></CardHeader>
       <Divider />
       <CardContent>
         <form name="form2" action="" onSubmit={handleSubmit}>
@@ -87,7 +87,7 @@ const QuickSpinCalc = (props) => {
                 label="Paginas"
                 variant="outlined"
                 name="Pages"
-                color="primary"
+                color="secondary"
                 size="small"
                 onChange={handlePageChange}
               />
@@ -104,7 +104,7 @@ const QuickSpinCalc = (props) => {
                   defaultValue={""}
                   variant="outlined"
                   sx={{ width: "95%" }}
-                  color="primary"
+                  color="secondary"
                   size="small"
                 >
                   {stocks.map((Stock) => (
@@ -121,14 +121,14 @@ const QuickSpinCalc = (props) => {
                   type="submit"
                   size="large"
                   variant="outlined"
-                  color="primary"
+                  color="secondary"
                 >
                   Calcular
                 </Button>
               </FormControl>
             </Grid>
             <Grid item xs={1} sm={2} md={4}>
-              <Typography variant="h5" color="primary">Lomo: {useSpin} mm</Typography>
+              <Typography variant="h5" color="secondary">Lomo: {useSpin} mm</Typography>
             </Grid>
           </Grid>
         </form>

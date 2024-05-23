@@ -250,70 +250,7 @@ export default function MyStepper(props) {
                 );
               })}
             </Stepper>
-
-            {activeStep === steps.length ? (
-              <React.Fragment>
-                <Typography sx={{ mt: 2, mb: 1 }}>
-                  Todos los pasos completados,
-                </Typography>
-                <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-                  <Box sx={{ flex: "1 1 auto" }} />
-                  <Button onClick={handleReset} variant="filled">
-                    Reset
-                  </Button>
-                </Box>
-              </React.Fragment>
-            ) : (
-              <React.Fragment>
-                <Typography sx={{ mt: 2, mb: 1 }}>
-                  Step {activeStep + 1}
-                </Typography>
-                {steps[activeStep][1]}
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "row",
-                    p: 2,
-                    mt: 1,
-                    mb: 1,
-                  }}
-                >
-                  <Button
-                    variant="filled"
-                    color="inherit"
-                    disabled={activeStep === 0}
-                    onClick={handleBack}
-                    sx={{ mr: 1 }}
-                  >
-                    {activeStep < steps.length - 1
-                      ? "Modificar Datos del Trabajo"
-                      : "Agregar más partes"}
-                  </Button>
-                  <Box sx={{ flex: "1 1 auto" }} />
-                  {isStepOptional(activeStep) && (
-                    <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
-                      Saltar
-                    </Button>
-                  )}
-                  <Button
-                    onClick={
-                      activeStep === steps.length - 1 ? handlePost : handleNext
-                    }
-                    variant="filled"
-                  >
-                    {activeStep === steps.length - 1
-                      ? "Enviar Pedido"
-                      : "Siguiente"}
-                  </Button>
-                  {/* {useJob !== null && (
-                    <Button onClick={handleNext} variant="filled">
-                      {activeStep === steps.length - 1 ? "Finish" : "Next"}
-                    </Button>
-                )} */}
-                </Box>
-
-                <Divider></Divider>
-                <Container>
+            <Container>
                   <Grid
                     container
                     columns={{ xs: 4, sm: 8, md: 12 }}
@@ -386,6 +323,70 @@ export default function MyStepper(props) {
                     })}
                   </Grid>
                 </Container>
+
+            {activeStep === steps.length ? (
+              <React.Fragment>
+                <Typography sx={{ mt: 2, mb: 1 }}>
+                  Todos los pasos completados,
+                </Typography>
+                <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
+                  <Box sx={{ flex: "1 1 auto" }} />
+                  <Button onClick={handleReset} variant="filled">
+                    Reset
+                  </Button>
+                </Box>
+              </React.Fragment>
+            ) : (
+              <React.Fragment>
+                <Typography sx={{ mt: 2, mb: 1 }}>
+                  Step {activeStep + 1}
+                </Typography>
+                {steps[activeStep][1]}
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    p: 2,
+                    mt: 1,
+                    mb: 1,
+                  }}
+                >
+                  <Button
+                    variant="filled"
+                    color="inherit"
+                    disabled={activeStep === 0}
+                    onClick={handleBack}
+                    sx={{ mr: 1 }}
+                  >
+                    {activeStep < steps.length - 1
+                      ? "Modificar Datos del Trabajo"
+                      : "Agregar más partes"}
+                  </Button>
+                  <Box sx={{ flex: "1 1 auto" }} />
+                  {isStepOptional(activeStep) && (
+                    <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
+                      Saltar
+                    </Button>
+                  )}
+                  <Button
+                    onClick={
+                      activeStep === steps.length - 1 ? handlePost : handleNext
+                    }
+                    variant="filled"
+                  >
+                    {activeStep === steps.length - 1
+                      ? "Enviar Pedido"
+                      : "Siguiente"}
+                  </Button>
+                  {/* {useJob !== null && (
+                    <Button onClick={handleNext} variant="filled">
+                      {activeStep === steps.length - 1 ? "Finish" : "Next"}
+                    </Button>
+                )} */}
+                </Box>
+
+                <Divider></Divider>
+                
               </React.Fragment>
             )}
           </Box>

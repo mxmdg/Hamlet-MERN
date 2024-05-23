@@ -37,7 +37,7 @@ const Fetch = (props) => {
     setHeaders(() => {
       const arr = [];
       const labels = elements.length
-        ? Object.getOwnPropertyNames(elements[0]).slice(1, -1)
+        ? Object.getOwnPropertyNames(elements[elements.length - 1]).slice(1, -1)
         : ["Error", "Datos inexistentes"];
       labels.map((e) => {
         const obj = {
