@@ -13,7 +13,7 @@ export const fechtData = async (collection, setFunction) => {
 export const getPrivateElements = async (collection) => {
   const token = localStorage.getItem("token");
   try {
-    const elements = await axios.get(`${databaseURL + collection}/`, {
+    const elements = await axios.get(`${databaseURL + collection}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

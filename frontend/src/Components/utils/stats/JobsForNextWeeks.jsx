@@ -19,9 +19,12 @@ const JobsForNextDays = (props) => {
     const today = new Date();
     const endDate = new Date();
     endDate.setDate(today.getDate() + 30); // next 30 days
-    yesterday.setDate(today.getDate() -1); //Ayer
+    yesterday.setDate(today.getDate() - 1); //Ayer
 
-    if (new Date(job.Entrega) >= yesterday && new Date(job.Entrega) <= endDate) {
+    if (
+      new Date(job.Entrega) >= yesterday &&
+      new Date(job.Entrega) <= endDate
+    ) {
       if (outDate[Salida]) {
         outDate[Salida][job.Tipo[0].name] >= 1
           ? (outDate[Salida][job.Tipo[0].name] += job.Cantidad)

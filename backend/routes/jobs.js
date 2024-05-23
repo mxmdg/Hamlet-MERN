@@ -17,7 +17,13 @@ const {
 
 routerJob.route("/").get(getJobs).post(addJob);
 
-routerJob.route("/urg").get(getUrgentJobs);
+routerJob.route("/urg").get((req, res) => {
+  // Extrae los parámetros de consulta startDate y endDate si existen
+  const { startDate, endDate } = req.query;
+
+  // Llama a la función getUrgentJobs con los parámetros de fecha
+  getUrgentJobs(req, res, startDate, endDate);
+});
 routerJob.route("/complete").get(getCompleteJobs);
 routerJob.route("/owner/:id").get(getOwnerJobs);
 routerJob.route("/company/:id").get(getCompanyJobs);

@@ -15,7 +15,7 @@ import FullJobsRender from "./Pages/FullJobsRender";
 import StatsCollector from "./utils/stats/StatsCollector";
 import JobsForNextDays from "./utils/stats/JobsForNextWeeks";
 import JobsPerDate from "./utils/stats/JobsPerDate";
-import JobsPerClient from "./utils/stats/JobsPerClient"
+import JobsPerClient from "./utils/stats/JobsPerClient";
 //MUI Material Imports
 import { Container, Grid, Typography, Divider, Box } from "@mui/material";
 
@@ -53,29 +53,28 @@ const Home = () => {
                   </StatsCollector>
                 </DarkWoodCard>
               </Grid>
-              
             </Grid>
           </Container>
         </Grid>
         <Grid item xs={1} sm={12} md={4} lg={6}>
-            <Grid container columns={12} spacing={1}>
-              <Grid item xs={12} sm={12} md={11}>
-                  <MyStepper />
-              </Grid>
-              <Grid item xs={12} sm={12} md={11}>
+          <Grid container columns={12} spacing={1}>
+            <Grid item xs={12} sm={12} md={11}>
+              <MyStepper />
+            </Grid>
+            <Grid item xs={12} sm={12} md={11}>
+              <DarkWoodCard>
+                <QuickSpinCalc />
+              </DarkWoodCard>
+            </Grid>
+            <Grid item xs={12} sm={12} md={11}>
+              <ImpoProvider>
                 <DarkWoodCard>
-                  <QuickSpinCalc />
+                  <Canvas />
                 </DarkWoodCard>
-              </Grid>
-              <Grid item xs={12} sm={12} md={11}>
-                <ImpoProvider>
-                  <DarkWoodCard>
-                    <Canvas />
-                  </DarkWoodCard>
-                </ImpoProvider>
-              </Grid>
-            </Grid> 
+              </ImpoProvider>
+            </Grid>
           </Grid>
+        </Grid>
       </Grid>
     </Container>
   );

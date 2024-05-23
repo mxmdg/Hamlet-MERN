@@ -72,14 +72,23 @@ jobControl.getAllParts = async (req, res) => {
 };
 
 jobControl.getUrgentJobs = async (req, res) => {
-  const currentDate = new Date();
-  const daysLater = new Date();
-  daysLater.setDate(currentDate.getDate() + 8);
+  console.log(req.query.startDate);
+  const startDate = req.query.startDate
+    ? new Date(req.query.startDate)
+    : new Date();
+  const endDate = req.query.endDate ? new Date(req.query.endDate) : new Date();
+
+  if (req.query.endDate) {
+    endDate.setDate(endDate.getDate() + 1); // Para incluir el día completo
+  } else {
+    endDate.setDate(startDate.getDate() + 8); // Por defecto, la próxima semana
+  }
   try {
+    console.log(startDate, endDate);
     {
       const queryText = req.query.Q || "";
       const jobList = await jobs.esquema
-        .find({ Entrega: { $gte: currentDate, $lt: daysLater } })
+        .find({ Entrega: { $gte: startDate, $lt: endDate } })
         .populate({
           path: "Owner",
           model: users.esquema,
