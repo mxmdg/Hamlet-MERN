@@ -32,6 +32,7 @@ finishersControl.addFinisher = async (req, res, next) => {
       Velocidad,
       Costo,
       Unidad,
+      Descripcion,
     } = req.body;
     const newFinisher = new finishers.esquema({
       Modelo,
@@ -44,6 +45,7 @@ finishersControl.addFinisher = async (req, res, next) => {
       Velocidad,
       Costo,
       Unidad,
+      Descripcion,
     });
     try {
       await newFinisher.save();
@@ -56,9 +58,8 @@ finishersControl.addFinisher = async (req, res, next) => {
 
 finishersControl.getFinisher = async (req, res, next) => {
   try {
-    const finisher = await finishers.esquema
-      .findById(req.params.id)
-      //.populate({ path: "Costo", model: prices.esquema });
+    const finisher = await finishers.esquema.findById(req.params.id);
+    //.populate({ path: "Costo", model: prices.esquema });
     if (finisher) {
       res.json(finisher);
     } else {
@@ -84,6 +85,7 @@ finishersControl.updateFinisher = async (req, res, next) => {
       Velocidad,
       Costo,
       Unidad,
+      Descripcion,
     } = req.body;
     const finisherToUpdate = await finishers.esquema.findOneAndUpdate(
       { _id: req.params.id },
@@ -98,6 +100,7 @@ finishersControl.updateFinisher = async (req, res, next) => {
         Velocidad,
         Costo,
         Unidad,
+        Descripcion,
       }
     );
     res.json({ message: "Impresora actualizada " + finisherToUpdate.Modelo });

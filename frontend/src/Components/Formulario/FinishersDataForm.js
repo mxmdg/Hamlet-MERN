@@ -7,12 +7,11 @@ const costos = async () => {
     res.map((item) => {
       if (item.Categoria === "finishing") {
         costsList.push({
-        text: `${item.Proceso} ($ ${item.Valor}.-)`,
-        value: item._id,
-        id: item._id,
+          text: `${item.Proceso} ($ ${item.Valor}.-)`,
+          value: item._id,
+          id: item._id,
         });
       }
-      
     });
     return res;
   } catch (error) {
@@ -89,6 +88,12 @@ let FinishersDataForm = [
     type: "String",
     id: "id_010",
     required: true,
+  },
+  {
+    inputName: "Descripcion",
+    type: "textarea",
+    id: "id_010",
+    required: false,
   },
 ];
 

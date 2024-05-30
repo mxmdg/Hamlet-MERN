@@ -260,6 +260,7 @@ const JobsForm = (props) => {
                       if (newValue) {
                         // Actualiza el valor del campo Company con el _id seleccionado
                         setValue("Company", newValue);
+                        setCompany(newValue);
                       } else {
                         // Si el valor es nulo, elimina el valor del campo Company
                         setValue("Company", "");
