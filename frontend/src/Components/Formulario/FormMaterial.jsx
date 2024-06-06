@@ -89,7 +89,7 @@ const FormMaterial = (props) => {
 
   // This state intializes chebox value
 
-  const [useValue, setMyValue] = useState({ value: "" });
+  const [useValue, setMyValue] = useState({ value: ""});
 
   // These states are used for navigation.
   const navigate = useNavigate();
@@ -131,16 +131,15 @@ const FormMaterial = (props) => {
 
           setItem(itemToEdit);
 
+          
           // Recorremos el dataForm y si hay un checkbox, cargamos el array en el estado, a ver si anda... Anduvo!
           for (let inp of props.form) {
-            const checkOptions = itemToEdit
-              ? { [inp.inputName]: itemToEdit.data[inp.inputName] }
-              : { [inp.inputName]: [] };
+            const checkOptions = (itemToEdit) ? {[inp.inputName]: itemToEdit.data[inp.inputName]} : {[inp.inputName]: []}
             if (inp.type === "checkbox" && props.task !== "new") {
-              setSelectedCheckboxItems(checkOptions);
-            }
+              setSelectedCheckboxItems(checkOptions)
+            } 
           }
-
+          
           setLoading(false);
 
           console.log(dataForm);
@@ -153,10 +152,11 @@ const FormMaterial = (props) => {
       console.log(useItem);
     } else {
       for (let inp of props.form) {
+        
         if (inp.type === "checkbox") {
-          console.log(inp.inputName, props.task);
-          setSelectedCheckboxItems({ [inp.inputName]: [] });
-        }
+          console.log(inp.inputName, props.task)
+          setSelectedCheckboxItems({[inp.inputName]: []})
+        } 
       }
       console.log("new");
     }
@@ -178,13 +178,13 @@ const FormMaterial = (props) => {
     }
     console.log(datos);
     // Collct data from checkBox
-    if (selectedCheckboxItems !== undefined) {
+    if(selectedCheckboxItems !== undefined) {
       for (const [nombre, value] of Object.entries(selectedCheckboxItems)) {
-        const res = { nombre, value };
-        datos.push(res);
-      }
+      const res = { nombre, value };
+      datos.push(res);
     }
-
+    }
+    
     console.log(datos);
 
     const formData = convertirArrayAObjeto(datos);
@@ -362,8 +362,7 @@ const FormMaterial = (props) => {
                             value={[opt]}
                             defaultChecked={
                               // Esta ultima condicion hay que quitarla cuando se solucione el problema del checkbox
-                              useItem.data !== undefined &&
-                              useItem.data.jobTypesAllowed !== 0
+                              useItem.data !== undefined && useItem.data.jobTypesAllowed !== 0 
                                 ? useItem.data[inp.inputName].includes(opt)
                                 : false
                             }
@@ -380,35 +379,6 @@ const FormMaterial = (props) => {
               </FormControl>
             </CardContent>
           </Card>
-        </Grid>
-      );
-    } else if (inp.type === "textarea") {
-      return (
-        <Grid item xs={4} sm={4} md={6}>
-          <TextField
-            id={inp.id}
-            type={inp.type}
-            multiline
-            label={inp.label || inp.inputName}
-            variant="filled"
-            defaultValue={useItem !== "new" ? useItem.data[inp.inputName] : ""}
-            name={inp.inputName}
-            {...register(inp.inputName)}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            InputProps={{
-              inputProps: {
-                placeholder: "",
-              },
-            }}
-            fullWidth
-          />
-          {errors[inp.inputName] && (
-            <FormHelperText>
-              <Typography variant="body1"> {inp.help || ""}</Typography>
-            </FormHelperText>
-          )}
         </Grid>
       );
     } else {

@@ -321,7 +321,6 @@ const Form = (props) => {
         <Grid item xs={12} sm={3} md={3}>
           <Input
             inputName={inp.inputName}
-            multiline={inp.type === "checkbox" ? true : false}
             label={inp.label}
             color="primary"
             key={inp.id}

@@ -12,7 +12,6 @@ const finisherSchema = new Schema({
   Velocidad: { type: String, required: false },
   Costo: { type: mongoose.Schema.ObjectId, ref: "precios", required: true },
   Unidad: { type: String, required: true },
-  Descripcion: { type: String, required: false },
   Fecha: { type: Date, default: Date.now, required: false },
 });
 
