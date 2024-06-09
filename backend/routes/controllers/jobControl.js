@@ -195,12 +195,32 @@ jobControl.getJob = async (req, res) => {
   }
 };
 jobControl.updateJob = async (req, res) => {
-  const { Nombre, Alto, Ancho } = req.body;
-  const format = await formatos.esquema.findOneAndUpdate(
-    { _id: req.params.id },
-    { Nombre, Alto, Ancho }
-  );
-  res.json({ Message: "Formato actualizado " + req.params.id });
+  {
+    try {
+      const Nombre = req.body.Nombre;
+      const Tipo = req.body.JobType;
+      const Cantidad = req.body.Cantidad;
+      const Partes = req.body.Partes;
+      const Entrega = req.body.Entrega;
+      const Owner = req.body.Owner;
+      const Company = req.body.Company;
+      //const Archivos = '/uploads/' + req.file.filename;
+      const newJob = new jobs.esquema({
+        Nombre,
+        Tipo,
+        Cantidad,
+        Entrega,
+        Partes,
+        Owner,
+        Company,
+      });
+      await jobs.esquema.findOneAndUpdate({ _id: req.params.id }, {Nombre, Tipo, Cantidad, Partes, Entrega, Owner, Company});
+      console.log(`Trabajo agregado`);
+      res.json({ message: newJob.Nombre + " guardado OK" });
+    } catch (e) {
+      res.status(404).json({ message: "Error: " + e.message });
+    }
+  }
 };
 jobControl.deleteJob = async (req, res) => {
   const producto = await jobs.esquema.findByIdAndDelete(req.params.id);

@@ -1,8 +1,11 @@
 import React from "react";
 import NewStackedBarChart from "./NewStackedBarChart";
 import JobTypes from "../../Jobs/JobTypes";
+import ErrorMessage from "../../ErrorMessage/ErrorMessage";
 
 const JobsForNextDays = (props) => {
+  const [useError, setError] = React.useState(null)
+
   const getMyDate = (event) => {
     const dd = new Date(event).getUTCDate();
     const mm = new Date(event).getUTCMonth();
@@ -18,23 +21,30 @@ const JobsForNextDays = (props) => {
     const yesterday = new Date();
     const today = new Date();
     const endDate = new Date();
-    endDate.setDate(today.getDate() + 30); // next 30 days
+    endDate.setDate(today.getDate() + 60); // next 30 days
     yesterday.setDate(today.getDate() - 1); //Ayer
 
-    if (
-      new Date(job.Entrega) >= yesterday &&
-      new Date(job.Entrega) <= endDate
-    ) {
-      if (outDate[Salida]) {
-        outDate[Salida][job.Tipo[0].name] >= 1
-          ? (outDate[Salida][job.Tipo[0].name] += job.Cantidad)
-          : (outDate[Salida][job.Tipo[0].name] = job.Cantidad);
-      } else
-        outDate[Salida] = {
-          [job.Tipo[0].name]: job.Cantidad,
-          name: `${Salida}`,
-        };
+    try {
+      if (
+        new Date(job.Entrega) >= yesterday &&
+        new Date(job.Entrega) <= endDate
+      ) {
+        if (outDate[Salida]) {
+          outDate[Salida][job.Tipo[0].name] >= 1
+            ? (outDate[Salida][job.Tipo[0].name] += job.Cantidad)
+            : (outDate[Salida][job.Tipo[0].name] = job.Cantidad);
+        } else
+          outDate[Salida] = {
+            [job.Tipo[0].name]: job.Cantidad,
+            name: `${Salida}`,
+          };
+      }
+    } catch (error) {
+      console.log(error)
+      console.log(job)
+      //setError(error)
     }
+    
   }
 
   const jobsPerOutDate = Object.values(outDate).sort((a, b) => {
@@ -49,7 +59,9 @@ const JobsForNextDays = (props) => {
     dataKeys.push(type.name);
   }
 
-  return <NewStackedBarChart data={jobsPerOutDate} dataKey={dataKeys} />;
+  return useError === null 
+    ? <NewStackedBarChart data={jobsPerOutDate} dataKey={dataKeys} />
+    : <ErrorMessage message={useError.message} color="warning" action={()=>setError(null)}/>
 };
 
 export default JobsForNextDays;
