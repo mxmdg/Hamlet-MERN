@@ -4,7 +4,7 @@ import JobTypes from "../../Jobs/JobTypes";
 import ErrorMessage from "../../ErrorMessage/ErrorMessage";
 
 const JobsForNextDays = (props) => {
-  const [useError, setError] = React.useState(null)
+  const [useError, setError] = React.useState(null);
 
   const getMyDate = (event) => {
     const dd = new Date(event).getUTCDate();
@@ -22,7 +22,7 @@ const JobsForNextDays = (props) => {
     const today = new Date();
     const endDate = new Date();
     endDate.setDate(today.getDate() + 60); // next 30 days
-    yesterday.setDate(today.getDate() - 1); //Ayer
+    yesterday.setDate(today.getDate() - 7); //Ayer
 
     try {
       if (
@@ -40,11 +40,10 @@ const JobsForNextDays = (props) => {
           };
       }
     } catch (error) {
-      console.log(error)
-      console.log(job)
+      console.log(error);
+      console.log(job);
       //setError(error)
     }
-    
   }
 
   const jobsPerOutDate = Object.values(outDate).sort((a, b) => {
@@ -59,9 +58,15 @@ const JobsForNextDays = (props) => {
     dataKeys.push(type.name);
   }
 
-  return useError === null 
-    ? <NewStackedBarChart data={jobsPerOutDate} dataKey={dataKeys} />
-    : <ErrorMessage message={useError.message} color="warning" action={()=>setError(null)}/>
+  return useError === null ? (
+    <NewStackedBarChart data={jobsPerOutDate} dataKey={dataKeys} />
+  ) : (
+    <ErrorMessage
+      message={useError.message}
+      color="warning"
+      action={() => setError(null)}
+    />
+  );
 };
 
 export default JobsForNextDays;

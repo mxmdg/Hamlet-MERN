@@ -23,9 +23,11 @@ import {
   Grid,
 } from "@mui/material";
 //import { parts } from "./JobsParts";
+import { serverURL, databaseURL } from "../Config/config";
 import {
   getPrivateElementByID,
   addPrivateElement,
+  putPrivateElement,
   fechtData,
 } from "../customHooks/FetchDataHook";
 import { calcularLomo } from "../jobViewer/JobDetail";
@@ -167,6 +169,24 @@ export default function MyStepper(props) {
     }
   };
 
+  const handleUpdate = async () => {
+    const Job = useJob;
+    Job.Partes = useParts;
+    console.log(Job);
+    try {
+      console.log("Guardando...");
+      const res = await putPrivateElement(
+        `${databaseURL}jobs/${props.job._id}`,
+        Job
+      );
+      console.log(`Trabajo ${Job.Nombre} actualizado`);
+      handleNext();
+    } catch (e) {
+      console.log(e);
+      setError(e);
+    }
+  };
+
   const handleReset = () => {
     setActiveStep(0);
     setParts(props.job?.Partes || []);
@@ -251,78 +271,77 @@ export default function MyStepper(props) {
               })}
             </Stepper>
             <Container>
-                  <Grid
-                    container
-                    columns={{ xs: 4, sm: 8, md: 12 }}
-                    spacing={4}
-                    overflow={"auto"}
-                  >
-                    {useParts?.map((part, index) => {
-                      return (
-                        <Grid item xs={4} sm={4} md={6} key={part._id}>
-                          <Card
-                            variant="elevation"
-                            elevation={12}
-                            square={true}
-                            sx={{ marginTop: "20px" }}
-                          >
-                            <CardHeader
-                              title={part.Name}
-                              subheader={part.jobParts[0].Type}
-                            ></CardHeader>
-                            <Container>
-                              Paginas: {part.Pages}
-                              <br />
-                              Formato: {part.Ancho} x {part.Alto}
-                              <br />
-                              Impresion: {part.ColoresFrente}/
-                              {part.ColoresDorso}
-                              <br />
-                              Material: {part.partStock.Nombre_Material}
-                              <br />
-                              {part.jobParts[0].Type.includes(
-                                "Interior" || "Insert"
-                              ) ? (
-                                <>
-                                  Lomo:{" "}
-                                  {calcularLomo(
-                                    part.Pages,
-                                    part.partStock.Espesor_Resma
-                                  )}{" "}
-                                  mm.
-                                </>
-                              ) : (
-                                ""
-                              )}
-                            </Container>
-                            <CardActions>
-                              <ButtonGroup size="small">
-                                <Button
-                                  color="primary"
-                                  onClick={(e) => {
-                                    e.preventDefault();
-                                    editPart(index);
-                                    setActiveStep(1);
-                                  }}
-                                >
-                                  Editar
-                                </Button>
-                                <Button
-                                  color="error"
-                                  onClick={() => {
-                                    removePart(index);
-                                  }}
-                                >
-                                  Eliminar
-                                </Button>
-                              </ButtonGroup>
-                            </CardActions>
-                          </Card>
-                        </Grid>
-                      );
-                    })}
-                  </Grid>
-                </Container>
+              <Grid
+                container
+                columns={{ xs: 4, sm: 8, md: 12 }}
+                spacing={4}
+                overflow={"auto"}
+              >
+                {useParts?.map((part, index) => {
+                  return (
+                    <Grid item xs={4} sm={4} md={6} key={part._id}>
+                      <Card
+                        variant="elevation"
+                        elevation={12}
+                        square={true}
+                        sx={{ marginTop: "20px" }}
+                      >
+                        <CardHeader
+                          title={part.Name}
+                          subheader={part.jobParts[0].Type}
+                        ></CardHeader>
+                        <Container>
+                          Paginas: {part.Pages}
+                          <br />
+                          Formato: {part.Ancho} x {part.Alto}
+                          <br />
+                          Impresion: {part.ColoresFrente}/{part.ColoresDorso}
+                          <br />
+                          Material: {part.partStock.Nombre_Material}
+                          <br />
+                          {part.jobParts[0].Type.includes(
+                            "Interior" || "Insert"
+                          ) ? (
+                            <>
+                              Lomo:{" "}
+                              {calcularLomo(
+                                part.Pages,
+                                part.partStock.Espesor_Resma
+                              )}{" "}
+                              mm.
+                            </>
+                          ) : (
+                            ""
+                          )}
+                        </Container>
+                        <CardActions>
+                          <ButtonGroup size="small">
+                            <Button
+                              color="primary"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                editPart(index);
+                                setActiveStep(1);
+                              }}
+                            >
+                              Editar
+                            </Button>
+                            <Button
+                              color="error"
+                              onClick={() => {
+                                removePart(index);
+                              }}
+                            >
+                              Eliminar
+                            </Button>
+                          </ButtonGroup>
+                        </CardActions>
+                      </Card>
+                    </Grid>
+                  );
+                })}
+              </Grid>
+            </Container>
 
             {activeStep === steps.length ? (
               <React.Fragment>
@@ -351,42 +370,44 @@ export default function MyStepper(props) {
                     mb: 1,
                   }}
                 >
-                  <Button
-                    variant="filled"
-                    color="inherit"
-                    disabled={activeStep === 0}
-                    onClick={handleBack}
-                    sx={{ mr: 1 }}
-                  >
-                    {activeStep < steps.length - 1
-                      ? "Modificar Datos del Trabajo"
-                      : "Agregar más partes"}
-                  </Button>
-                  <Box sx={{ flex: "1 1 auto" }} />
-                  {isStepOptional(activeStep) && (
-                    <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
-                      Saltar
+                  <ButtonGroup variant="outlined">
+                    <Button
+                      color="success"
+                      disabled={activeStep === 0}
+                      onClick={handleBack}
+                    >
+                      {activeStep < steps.length - 1
+                        ? "Modificar Datos del Trabajo"
+                        : "Agregar más partes"}
                     </Button>
-                  )}
-                  <Button
-                    onClick={
-                      activeStep === steps.length - 1 ? handlePost : handleNext
-                    }
-                    variant="filled"
-                  >
-                    {activeStep === steps.length - 1
-                      ? "Enviar Pedido"
-                      : "Siguiente"}
-                  </Button>
-                  {/* {useJob !== null && (
-                    <Button onClick={handleNext} variant="filled">
-                      {activeStep === steps.length - 1 ? "Finish" : "Next"}
+                    {isStepOptional(activeStep) && (
+                      <Button color="info" onClick={handleSkip}>
+                        Saltar
+                      </Button>
+                    )}
+                    <Button
+                      onClick={
+                        activeStep === steps.length - 1
+                          ? handlePost
+                          : handleNext
+                      }
+                      color="info"
+                      disabled={useJob === null}
+                    >
+                      {activeStep === steps.length - 1
+                        ? "Enviar Nuevo Pedido"
+                        : "Siguiente"}
                     </Button>
-                )} */}
+                    {props.job !== undefined &&
+                      activeStep === steps.length - 1 && (
+                        <Button onClick={handleUpdate} color="warning">
+                          Guardar
+                        </Button>
+                      )}
+                  </ButtonGroup>
                 </Box>
 
                 <Divider></Divider>
-                
               </React.Fragment>
             )}
           </Box>
@@ -397,7 +418,8 @@ export default function MyStepper(props) {
 
   const statusError = (
     <ErrorMessage
-      message={useError?.response.data.message}
+      message={useError?.message}
+      color="success"
       action={resetError}
     />
   );
