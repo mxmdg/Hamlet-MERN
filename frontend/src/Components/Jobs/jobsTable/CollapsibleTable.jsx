@@ -117,39 +117,39 @@ export const PartsTable = (props) => {
         borderRadius: "8px",
       }}
     >
-      <Typography variant="subtitle1" component="div">
+      <Typography color={"secondary"} variant="subtitle1" component="div">
         Partes
       </Typography>
       <Table size="small" aria-label="purchases">
         <TableHead>
           <TableRow>
-            <TableCell>
-              <Typography color={"info"} variant="subtitle2">
+            <TableCell >
+              <Typography color={"secondary"} variant="subtitle2">
                 Tipo
               </Typography>
             </TableCell>
             <TableCell>
-              <Typography color={"info"} variant="subtitle2">
+              <Typography color={"secondary"} variant="subtitle2">
                 Nombre
               </Typography>
             </TableCell>
             <TableCell>
-              <Typography color={"info"} variant="subtitle2">
+              <Typography color={"secondary"} variant="subtitle2">
                 Páginas
               </Typography>
             </TableCell>
             <TableCell>
-              <Typography color={"info"} variant="subtitle2">
+              <Typography color={"secondary"} variant="subtitle2">
                 Formato
               </Typography>
             </TableCell>
             <TableCell>
-              <Typography color={"info"} variant="subtitle2">
+              <Typography color={"secondary"} variant="subtitle2">
                 Colores
               </Typography>
             </TableCell>
             <TableCell>
-              <Typography color={"info"} variant="subtitle2">
+              <Typography color={"secondary"} variant="subtitle2">
                 Material
               </Typography>
             </TableCell>

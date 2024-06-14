@@ -78,7 +78,7 @@ const JobDetail = (props) => {
     ...theme.typography.subtitle2,
     padding: theme.spacing(2),
     textAlign: "left",
-    color: theme.palette.success.contrastText,
+    color: theme.palette.text,
   }));
 
   // Date Format Options:
@@ -165,7 +165,7 @@ const JobDetail = (props) => {
               sx={{ maxWidth: "100%", overflow: "auto" }}
               container
               direction={{ xs: "column", md: "row" }}
-              spacing={0}
+              spacing={2}
               alignItems={"start"}
             >
               <Grid item xs={12} md={4}>
@@ -220,7 +220,7 @@ const JobDetail = (props) => {
                           saveProductionPlan();
                         }}
                         variant="contained"
-                        color="success"
+                        color="primary"
                         startIcon={<SaveIcon />}
                       >
                         Guardar Imposicion
@@ -229,6 +229,7 @@ const JobDetail = (props) => {
                   )}
                 </Stack>
               </Grid>
+              <Divider />
               <Grid item xs={12} md={8}>
                 <ImpoProvider>
                   <DarkWoodCard>
@@ -302,7 +303,7 @@ const JobDetail = (props) => {
             job.Nombre +
             (job.Company ? ` - ${job.Company.Nombre}` : "")
           }
-          subheader={job.Owner ? `${job.Owner.Name} ${job.Owner.LastName}` : ""}
+          subheader={job.Owner ? `${job.Owner.Name} ${job.Owner.LastName} - ${job.Owner.email}` : ""}
           te={job.Cantidad}
         />
         <CardContent>

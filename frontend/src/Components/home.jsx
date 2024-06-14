@@ -62,9 +62,7 @@ const Home = () => {
               <MyStepper />
             </Grid>
             <Grid item xs={12} sm={12} md={11}>
-              <DarkWoodCard>
                 <QuickSpinCalc />
-              </DarkWoodCard>
             </Grid>
             <Grid item xs={12} sm={12} md={11}>
               <ImpoProvider>

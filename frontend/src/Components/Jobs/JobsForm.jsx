@@ -53,13 +53,12 @@ const JobsForm = (props) => {
   }, [setUsersList, setCompaniesList]);
 
   const onSubmit = (values) => {
-    console.log(values);
+    
     const jt = JobTypes.find((item) => {
       if (item.id === values.JobType) {
         return item;
       }
     });
-    console.log(jt);
     values.JobType = jt;
     if (useCompany) {
       values.Company = useCompany;
@@ -68,7 +67,6 @@ const JobsForm = (props) => {
     props.setJob(values);
     props.setJobType(jt);
     props.continue();
-    console.log(values);
   };
 
   return (

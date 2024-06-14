@@ -116,13 +116,14 @@ const Canvas = (props) => {
               part={props.part || null}
             ></ImpositionForm>
           </Grid>
-
+          
+      <Divider />
           <Grid item xs={12} sm={12}>
             <canvas
               ref={canvasRef}
               width={useCanvasSize.x}
               height={useCanvasSize.y}
-              style={{ boxShadow: "5px 5px 10px #00000055", padding: "15px" }}
+              style={{ padding: "20px", border: "#666 1px solid", borderRadius: "10px", marginTop: "20px", width: "93%"}}
             ></canvas>
           </Grid>
         </Grid>

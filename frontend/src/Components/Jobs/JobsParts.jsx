@@ -239,7 +239,7 @@ const JobParts = (props) => {
       : props.parts;
 
     try {
-      console.table(filteredParts);
+      //console.table(filteredParts);
       setPartsList(filteredParts);
       updateStocks();
     } catch (e) {
@@ -282,9 +282,9 @@ const JobParts = (props) => {
                       <Select
                         label="Partes"
                         defaultValue={
-                          props.editPart === null
-                            ? ""
-                            : props.editPart.part?.jobParts._id
+                          props.editPart !== null
+                            ?  props.editPart.part.jobParts.Type
+                            : ""
                         }
                         {...field} // Aseguramos que las propiedades del campo sean manejadas por react-hook-form
                         onChange={(e) => {

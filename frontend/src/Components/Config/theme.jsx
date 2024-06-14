@@ -133,7 +133,7 @@ const ThemeProv = (props) => {
       paper: "#000000",
     };
     themeOptions.palette.text = {
-      primary: "#cccccc",
+      primary: "#ffffff",
       secondary: "#aaaaaa",
       disabled: "#888888",
       hint: "#000000",

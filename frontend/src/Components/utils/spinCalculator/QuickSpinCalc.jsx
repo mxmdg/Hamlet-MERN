@@ -70,7 +70,7 @@ const QuickSpinCalc = (props) => {
   }, []);
 
   return (
-    <Container>
+    <Card elevation={10}>
       <CardHeader title="Calculadora de lomo" titleTypographyProps={{color: "secondary", fontWeight: "600"}}></CardHeader>
       <Divider />
       <CardContent>
@@ -133,7 +133,7 @@ const QuickSpinCalc = (props) => {
           </Grid>
         </form>
       </CardContent>
-    </Container>
+    </Card>
   );
 };
 

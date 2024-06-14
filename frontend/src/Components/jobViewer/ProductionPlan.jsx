@@ -206,9 +206,9 @@ const ProductionPlan = (props) => {
         console.log("Data");
         console.log(data);
         return (
-          <Grid item xs={12} sm={6} lg={3}>
+          <Grid item xs={12} sm={6} lg={3} key={data.printer._id + data.stock._id + resumen.indexOf(data)}>
             <Card
-              key={data.printer._id + data.stock._id + resumen.indexOf(data)}
+              
               elevation={8}
             >
               <CardHeader

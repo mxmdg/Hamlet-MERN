@@ -22,7 +22,7 @@ const JobsForNextDays = (props) => {
     const today = new Date();
     const endDate = new Date();
     endDate.setDate(today.getDate() + 60); // next 30 days
-    yesterday.setDate(today.getDate() - 7); //Ayer
+    yesterday.setDate(today.getDate() - 1); //Ayer
 
     try {
       if (
