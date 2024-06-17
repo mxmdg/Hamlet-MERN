@@ -74,11 +74,15 @@ const Fetch = (props) => {
       for (let item of useList) {
         for (let key of keys) {
           //console.log(key + " -> Problema en impresoras");
-          const cellToString = item[key].toString().toLowerCase();
-          if (cellToString.includes(query.toString())) {
-            console.log(item[key], query);
-            results.push(item);
-            break; // Evitar duplicados al encontrar coincidencia en cualquier columna
+          try {
+            const cellToString = item[key].toString().toLowerCase();
+            if (cellToString.includes(query.toString())) {
+              console.log(item[key], query);
+              results.push(item);
+              break; // Evitar duplicados al encontrar coincidencia en cualquier columna
+            }
+          } catch (error) {
+            setErrMessage(error);
           }
         }
       }
