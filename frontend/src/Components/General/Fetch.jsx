@@ -62,11 +62,16 @@ const Fetch = (props) => {
 
     const findByColumn = (col) => {
       for (let item of useList) {
-        const cellToString = item[col].toString().toLowerCase();
+        try {
+          const cellToString = item[col].toString().toLowerCase();
         if (cellToString.includes(query.toString())) {
           console.log(item[col], query);
           results.push(item);
         }
+        } catch (error) {
+          setErrMessage("Error en la busqueda: " + error.message);
+        }
+        
       }
     };
 
@@ -82,7 +87,7 @@ const Fetch = (props) => {
               break; // Evitar duplicados al encontrar coincidencia en cualquier columna
             }
           } catch (error) {
-            setErrMessage(error);
+            setErrMessage("Error en la busqueda: " + error.message);
           }
         }
       }
@@ -126,7 +131,7 @@ const Fetch = (props) => {
       message={useErrMessage}
       severity={"warning"}
       action={() => {
-        navigate(-1);
+        setErrMessage(null);
       }}
     />
   );
