@@ -399,6 +399,7 @@ const FormMaterial = (props) => {
               inputProps: {
                 placeholder: "",
               },
+                step: (inp.step !== undefined ? inp.step : 1)
             }}
             fullWidth
           />

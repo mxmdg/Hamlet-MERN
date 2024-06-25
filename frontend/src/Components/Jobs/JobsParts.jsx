@@ -339,49 +339,7 @@ const JobParts = (props) => {
                 <FormHelperText>Minimo 3 caracteres</FormHelperText>
               )}
             </Grid>
-            <Grid item xs={1} sm={2} md={4}>
-              <TextField
-                id="Pages"
-                type="number"
-                label="Paginas"
-                variant="outlined"
-                name="Pages"
-                color="warning"
-                defaultValue={
-                  props.editPart === null ? "" : props.editPart.part?.Pages
-                }
-                {...register("Pages", {
-                  required: true,
-                  min:
-                    currentPart !== null
-                      ? currentPart?.minPages
-                      : props.job?.JobType?.pagMin,
-                  max:
-                    currentPart !== null
-                      ? currentPart?.maxPages
-                      : props.job?.JobType?.pagMax,
-                })}
-                onBlur={(e) => {
-                  e.target.value < 2 ? setSimplex(true) : setSimplex(false);
-                  trigger("Pages");
-                }}
-              />
-              {errors.Pages?.type === "required" && (
-                <FormHelperText>Ingrese la cantidad de paginas</FormHelperText>
-              )}
-              {errors.Pages?.type === "min" && (
-                <FormHelperText>
-                  Cantidad minima de paginas{" "}
-                  {currentPart?.minPages || props.job.JobType.pagMin}
-                </FormHelperText>
-              )}
-              {errors.Pages?.type === "max" && (
-                <FormHelperText>
-                  Cantidad maxima de paginas{" "}
-                  {currentPart?.maxPages || props.job.JobType.pagMax}
-                </FormHelperText>
-              )}
-            </Grid>
+            
             <Grid item xs={1} sm={2} md={4}>
               <TextField
                 variant="outlined"
@@ -457,6 +415,79 @@ const JobParts = (props) => {
             </Grid>
             <Grid item xs={1} sm={2} md={4}>
               <TextField
+                id="Pages"
+                type="number"
+                label="Paginas"
+                variant="outlined"
+                name="Pages"
+                color="warning"
+                defaultValue={
+                  props.editPart === null ? "" : props.editPart.part?.Pages
+                }
+                {...register("Pages", {
+                  required: true,
+                  min:
+                    currentPart !== null
+                      ? currentPart?.minPages
+                      : props.job?.JobType?.pagMin,
+                  max:
+                    currentPart !== null
+                      ? currentPart?.maxPages
+                      : props.job?.JobType?.pagMax,
+                })}
+                onBlur={(e) => {
+                  e.target.value < 2 || currentPart.PrintModAllowed === "Simplex" ? setSimplex(true) : setSimplex(false);
+                  trigger("Pages");
+                }}
+              />
+              {errors.Pages?.type === "required" && (
+                <FormHelperText>Ingrese la cantidad de paginas</FormHelperText>
+              )}
+              {errors.Pages?.type === "min" && (
+                <FormHelperText>
+                  Cantidad minima de paginas{" "}
+                  {currentPart?.minPages || props.job.JobType.pagMin}
+                </FormHelperText>
+              )}
+              {errors.Pages?.type === "max" && (
+                <FormHelperText>
+                  Cantidad maxima de paginas{" "}
+                  {currentPart?.maxPages || props.job.JobType.pagMax}
+                </FormHelperText>
+              )}
+            </Grid>
+            <Grid item xs={1} sm={2} md={4}>
+              <FormControl sx={{ width: "90%" }}>
+                <InputLabel id="demo-simple-select-label">Material</InputLabel>
+                <Select
+                  name="partStock"
+                  id="partStock"
+                  label="Material"
+                  onChange={props.onChange}
+                  defaultValue={""}
+                  variant="outlined"
+                  sx={{ width: "95%" }}
+                  color="secondary"
+                  {...register("partStock", {
+                    required: true,
+                  })}
+                >
+                  {filteredStocks.map((Stock) => (
+                    <MenuItem value={Stock._id} id={Stock._id} key={Stock._id}>
+                      {Stock.Nombre_Material} - {Stock.Marca}{" "}
+                      {`(${Stock.Ancho_Resma} x ${Stock.Alto_Resma})`}
+                    </MenuItem>
+                  ))}
+                </Select>
+                {errors.ColoresDorso?.type === "required" && (
+                  <FormHelperText>
+                    Seleccione el material para la impresión.
+                  </FormHelperText>
+                )}
+              </FormControl>
+            </Grid>
+            <Grid item xs={1} sm={2} md={4}>
+              <TextField
                 variant="outlined"
                 type="number"
                 name="ColoresFrente"
@@ -517,36 +548,6 @@ const JobParts = (props) => {
                   Como maximo podemos utilizar 4 tintas
                 </FormHelperText>
               )}
-            </Grid>
-            <Grid item xs={1} sm={2} md={4}>
-              <FormControl sx={{ width: "90%" }}>
-                <InputLabel id="demo-simple-select-label">Material</InputLabel>
-                <Select
-                  name="partStock"
-                  id="partStock"
-                  label="Material"
-                  onChange={props.onChange}
-                  defaultValue={""}
-                  variant="outlined"
-                  sx={{ width: "95%" }}
-                  color="secondary"
-                  {...register("partStock", {
-                    required: true,
-                  })}
-                >
-                  {filteredStocks.map((Stock) => (
-                    <MenuItem value={Stock._id} id={Stock._id} key={Stock._id}>
-                      {Stock.Nombre_Material} - {Stock.Marca}{" "}
-                      {`(${Stock.Ancho_Resma} x ${Stock.Alto_Resma})`}
-                    </MenuItem>
-                  ))}
-                </Select>
-                {errors.ColoresDorso?.type === "required" && (
-                  <FormHelperText>
-                    Seleccione el material para la impresión.
-                  </FormHelperText>
-                )}
-              </FormControl>
             </Grid>
             <Grid item xs={1} sm={2} md={4}>
               <FormControl sx={{ width: "85%" }}>

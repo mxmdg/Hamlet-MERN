@@ -21,7 +21,7 @@ let MoldePrecios = [
   },
   {
     inputName: "Valor",
-    type: "Number",
+    type: "text",
     step: 0.0001,
     id: "id_402",
     required: true,
