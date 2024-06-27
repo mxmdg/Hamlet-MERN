@@ -20,6 +20,7 @@ import MenuItem from "@mui/material/MenuItem";
 import { Grid } from "@mui/material";
 import JobTypes from "./JobTypes";
 import { fechtData, getPrivateElementByID } from "../customHooks/FetchDataHook";
+import ErrorMessage from "../ErrorMessage/ErrorMessage";
 
 const JobsForm = (props) => {
   const {
@@ -35,6 +36,7 @@ const JobsForm = (props) => {
   const [useUsersList, setUsersList] = useState([]);
   const [useCompaniesList, setCompaniesList] = useState([]);
   const [useCompany, setCompany] = useState(props.data?.Company);
+  const [useError, setError] = useState(null);
   const context = useContext(AuthContext);
 
   const handleChange = (e) => {
@@ -42,7 +44,13 @@ const JobsForm = (props) => {
     props.setJob(e);
   };
 
-  const getUsers = async () => await fechtData("Users", setUsersList);
+  const getUsers = async () => {
+    try {
+      await fechtData("Users", setUsersList);
+    } catch (error) {
+      setError(error);
+    }
+  };
   const getCompanies = async () =>
     await fechtData("Empresas", setCompaniesList);
   const getCompany = async (id) => await getPrivateElementByID("empresas", id);
@@ -53,7 +61,6 @@ const JobsForm = (props) => {
   }, [setUsersList, setCompaniesList]);
 
   const onSubmit = (values) => {
-    
     const jt = JobTypes.find((item) => {
       if (item.id === values.JobType) {
         return item;
@@ -69,7 +76,11 @@ const JobsForm = (props) => {
     props.continue();
   };
 
-  return (
+  const alertError = (
+    <ErrorMessage message={useError?.message} color="warning" />
+  );
+
+  const noError = (
     <Box
       sx={{
         width: "fit-content",
@@ -318,6 +329,8 @@ const JobsForm = (props) => {
       </Card>
     </Box>
   );
+
+  return useError !== null ? alertError : noError;
 };
 
 export default JobsForm;

@@ -22,7 +22,7 @@ const dbSwitch = [
     title: "Imprenta Dorrego",
   },
 ];
-const DB = dbSwitch[1];
+const DB = dbSwitch[0];
 
 mongoose.connect(URI + DB.printer, {
   useNewUrlParser: true,
@@ -30,7 +30,7 @@ mongoose.connect(URI + DB.printer, {
 
 const objectDB = mongoose.connection;
 
-objectDB.on("connected", () => console.log("Connected to DB: " + DB.title));
-objectDB.on("error", (e) => console.log("Not connected to DB. Error: " + e));
+objectDB.on("connected", () => "Connected to DB: " + DB.title);
+objectDB.on("error", (e) => "Not connected to DB. Error: " + e);
 
 module.exports = mongoose;

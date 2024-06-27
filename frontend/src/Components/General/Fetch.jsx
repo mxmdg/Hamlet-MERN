@@ -28,28 +28,37 @@ const Fetch = (props) => {
   const navigate = useNavigate();
 
   const getElements = async () => {
-    const elements = await getPrivateElements(
-      props.collection + (props.subdir ? `/${props.subdir}` : "")
-    );
+    try {
+      const elements = await getPrivateElements(
+        props.collection + (props.subdir ? `/${props.subdir}` : "")
+      );
 
-    setList(elements);
+      setList(elements);
 
-    setHeaders(() => {
-      const arr = [];
-      const labels = elements.length
-        ? Object.getOwnPropertyNames(elements[elements.length - 1]).slice(1, -1)
-        : ["Error", "Datos inexistentes"];
-      labels.map((e) => {
-        const obj = {
-          id: e,
-          numeric: false,
-          disablePadding: false,
-          label: e,
-        };
-        arr.push(obj);
+      setHeaders(() => {
+        const arr = [];
+        const labels = elements.length
+          ? Object.getOwnPropertyNames(elements[elements.length - 1]).slice(
+              1,
+              -1
+            )
+          : ["Error", "Datos inexistentes"];
+        labels.map((e) => {
+          const obj = {
+            id: e,
+            numeric: false,
+            disablePadding: false,
+            label: e,
+          };
+          arr.push(obj);
+        });
+        return arr;
       });
-      return arr;
-    });
+    } catch (error) {
+      setErrMessage("No se pudo conectar con el servidor");
+      console.log(error);
+      return error;
+    }
   };
 
   const filterList = (query, column) => {
@@ -64,14 +73,13 @@ const Fetch = (props) => {
       for (let item of useList) {
         try {
           const cellToString = item[col].toString().toLowerCase();
-        if (cellToString.includes(query.toString())) {
-          console.log(item[col], query);
-          results.push(item);
-        }
+          if (cellToString.includes(query.toString())) {
+            console.log(item[col], query);
+            results.push(item);
+          }
         } catch (error) {
           setErrMessage("Error en la busqueda: " + error.message);
         }
-        
       }
     };
 
@@ -118,7 +126,7 @@ const Fetch = (props) => {
     };
     fetchData();
     console.log(useList);
-  }, [useDeleted, props.collection]);
+  }, [useErrMessage, useDeleted, props.collection]);
 
   const Loading = (
     <Container>
@@ -127,22 +135,11 @@ const Fetch = (props) => {
   );
 
   const AlertError = (
-    <ErrorMessage
-      message={useErrMessage}
-      severity={"warning"}
-      action={() => {
-        setErrMessage(null);
-      }}
-    />
+    <ErrorMessage message={useErrMessage} severity={"warning"} />
   );
 
   const TableLoaded = (
     <>
-      {/* <Filter
-        headers={useHeaders}
-        data={useList}
-        setFilteredList={setFilteredList}
-      /> */}
       <DarkWoodCard>
         <Stack direction="row" spacing={4}>
           <TextField
@@ -179,7 +176,13 @@ const Fetch = (props) => {
 
       <DarkWoodCard>
         <EnhancedTable
-          rows={useFilteredList.length > 0 ? useFilteredList : useList}
+          rows={
+            useFilteredList.length > 0
+              ? useFilteredList
+              : useList.length > 0
+              ? useList
+              : [, , ,]
+          }
           headCells={useHeaders}
           collection={props.collection}
           editor={setSelected}
@@ -190,7 +193,11 @@ const Fetch = (props) => {
     </>
   );
 
-  return useLoading ? Loading : useErrMessage ? AlertError : TableLoaded;
+  return useLoading
+    ? Loading
+    : useErrMessage !== null
+    ? AlertError
+    : TableLoaded;
 };
 
 export default Fetch;

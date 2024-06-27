@@ -269,9 +269,10 @@ export default function EnhancedTable(props) {
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(true);
-  const [error, setError] = React.useState(false);
+  const [useError, setError] = React.useState(null);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const rows = props.rows;
+
   const navigate = useNavigate();
 
   const handleRequestSort = (event, property) => {
@@ -342,7 +343,9 @@ export default function EnhancedTable(props) {
 
   let i = 0;
 
-  return (
+  const errorAlert = <ErrorMessage message={useError} color="danger" />;
+
+  const success = (
     <>
       <EnhancedTableToolbar
         collection={props.collection.replace("/urg", "")}
@@ -462,4 +465,6 @@ export default function EnhancedTable(props) {
       />
     </>
   );
+
+  return useError === null ? success : errorAlert;
 }
