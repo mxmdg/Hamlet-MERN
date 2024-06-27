@@ -349,9 +349,9 @@ export default function EnhancedTable(props) {
     <>
       <EnhancedTableToolbar
         collection={props.collection.replace("/urg", "")}
-        title={pages.map((pg) => {
-          if (pg.path === props.collection.replace("/urg", "")) {
-            return pg.text || props.collection;
+        title={pages.map((pg)=>{
+          if(pg.path === props.collection.replace("/urg", "")) {
+            return pg.text || props.collection
           }
         })}
         numSelected={selected.length}
@@ -383,7 +383,7 @@ export default function EnhancedTable(props) {
                 <TableRow
                   hover
                   onClick={(event) => handleClick(event, row._id)}
-                  key={index}
+                  key={row._id + index}
                   onDoubleClick={() => {
                     navigate(
                       `/${props.collection.replace("/urg", "")}/edit/${row._id}`
@@ -395,7 +395,7 @@ export default function EnhancedTable(props) {
                   selected={isItemSelected}
                   sx={{ cursor: "pointer" }}
                 >
-                  <TableCell padding="checkbox" key={row._id}>
+                  <TableCell padding="checkbox">
                     <Checkbox
                       color="info"
                       checked={isItemSelected}
@@ -413,13 +413,13 @@ export default function EnhancedTable(props) {
                       {row._id}
                     </TableCell> */}
 
-                  {Object.values(row, index)
+                  {Object.values(row)
                     .slice(1, -1)
                     .map((element) => {
                       i++;
                       if (typeof element === "object") {
                         return (
-                          <TableCell key={row._id + element}>
+                          <TableCell>
                             <Typography variant="body1" color="#b12">
                               Error
                             </Typography>

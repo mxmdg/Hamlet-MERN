@@ -17,12 +17,12 @@ const verifyToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
   if (authHeader) {
     const token = authHeader.split(" ")[1];
-    console.log(token);
+    //console.log(token);
     jwt.verify(token, req.app.get("secretKey"), (error, payload) => {
       if (error) {
         res.json(error);
       } else {
-        console.log(payload);
+        //console.log(payload);
         next();
       }
     });
