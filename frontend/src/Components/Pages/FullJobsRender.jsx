@@ -66,7 +66,7 @@ const FullJobsRender = (props) => {
       ) : jobList ? (
         <Card elevation={6}>
           <CollapsibleTable
-            rows={jobList.length > 0 ? jobList : [, , ,]}
+            rows={jobList}
             route={props.route}
             settings={props.settings}
             deleted={setDeleted}
