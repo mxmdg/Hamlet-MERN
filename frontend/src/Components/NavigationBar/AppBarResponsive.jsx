@@ -47,7 +47,7 @@ function ResponsiveAppBar(props) {
   const settings = [
     { text: "Ingresar", path: "login" },
     { text: "Registrarse", path: "register" },
-    { text: "usuarios", path: "users" },
+    //{ text: "usuarios", path: "users" },
   ];
   const userMenu = [
     { text: "Perfil", path: "users/profile" },
@@ -113,6 +113,7 @@ function ResponsiveAppBar(props) {
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
               color="warning"
+              disabled={context.useLogin}
             >
               <MenuIcon />
             </IconButton>
@@ -141,6 +142,8 @@ function ResponsiveAppBar(props) {
                   onClick={() => {
                     handleCloseNavMenu(page.path);
                   }}
+                  
+                {...(context.useLogin ? "" : { disabled: true })}
                 >
                   <Typography textAlign="center">{page.text}</Typography>
                 </MenuItem>
@@ -177,6 +180,7 @@ function ResponsiveAppBar(props) {
                   handleCloseNavMenu(page.path);
                 }}
                 sx={{ my: 2, display: "block" }}
+                {...(context.useLogin ? "" : { disabled: true })}
               >
                 {page.text}
               </Button>

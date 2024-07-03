@@ -1,5 +1,7 @@
 // router.js
 import React from "react";
+import { useContext } from "react";
+import { AuthContext } from "./Components/context/AuthContext";
 import { Routes, Route } from "react-router-dom";
 import MainContainer from "./Components/General/MainContainer";
 import PartsContainer from "./Components/General/PartsContainer";
@@ -43,11 +45,17 @@ import JobsPerClient from "./Components/utils/stats/JobsPerClient";
 import JobsPerSeller from "./Components/utils/stats/JobsPerSeller";
 import JobsPerType from "./Components/utils/stats/JobsPerType";
 
-const Router = () => (
+const Router = () => { 
+  const context = useContext(AuthContext)
+
+  return (
   <Routes>
     <Route path="/" element={<Home />} />
     <Route path="/login" element={<Login />} />
-    <Route
+    <Route path="/register" element={<Register />} />
+    {context.useLogin === true && (
+      <>
+      <Route
       path="/impresoras"
       element={<MainContainer entity={"impresoras"} />}
     />
@@ -225,7 +233,7 @@ const Router = () => (
     <Route path="/users/ChangePassword" element={<ChangePassword />} />
     <Route path="/users/reset-password/:token" element={<ResetPassword />} />
 
-    <Route path="/register" element={<Register />} />
+   
     <Route
       path="/users/edit/:id"
       element={
@@ -286,7 +294,10 @@ const Router = () => (
       path="/configuracion/impresoras"
       element={<PrintersMainContainer />}
     />
+      </>
+    )}
+    
   </Routes>
-);
+)}
 
 export default Router;

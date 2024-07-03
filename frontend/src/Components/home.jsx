@@ -1,4 +1,5 @@
 import { useContext } from "react";
+import { AuthContext } from "./context/AuthContext";
 
 import Canvas from "./utils/impo/Canvas";
 import ImpoProvider from "./utils/impo/ImpoContext";
@@ -10,6 +11,7 @@ import PrintersMainContainer from "./Printers/PrintersMainContainer";
 import ToggleColorMode from "./Config/Theme/ToggleMode";
 import MyStepper from "./Jobs/Stepper";
 import FullJobsRender from "./Pages/FullJobsRender";
+import { Login } from "./Users/Login";
 
 //Stats
 import StatsCollector from "./utils/stats/StatsCollector";
@@ -25,9 +27,9 @@ const Home = () => {
     return tkn;
   };
 
-  const context = useContext(ImpoContext);
+  const context = useContext(AuthContext);
 
-  return (
+  const homePage = (
     <Container disableGutters maxWidth={false}>
       <Grid container columns={{ xs: 1, sm: 12, md: 12, lg: 16 }} spacing={0}>
         <Grid item xs={1} sm={12} md={8} lg={10}>
@@ -76,6 +78,12 @@ const Home = () => {
       </Grid>
     </Container>
   );
+  
+  const logPage = <Login />
+  return context.useLogin ? homePage : logPage  
+
 };
+
+
 
 export default Home;

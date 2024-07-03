@@ -64,6 +64,7 @@ export const Login = () => {
           severity: "warning",
           action: { resetError },
         });
+        return
       } else {
         context.handleLogin(token.data.token, token.data.expirationTime);
         context.setUserLogged(token.data.document);
@@ -73,6 +74,7 @@ export const Login = () => {
           severity: "success",
           action: { resetError },
         });
+        return
       }
     } catch (e) {
       setError({
@@ -80,6 +82,7 @@ export const Login = () => {
         action: { resetError },
         severity: "error",
       });
+      return
     }
   };
 
