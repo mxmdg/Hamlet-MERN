@@ -119,8 +119,8 @@ export const Login = () => {
 
   const success = (
     <Box>
-      <Card elevation={2}>
-        {context.userLogged === null && <CardHeader title="Login"></CardHeader>}
+      <Card elevation={10}>
+        {context.userLogged === null && <CardHeader title="Login" titleTypographyProps={{color: "secondary", fontWeight: "600"}}></CardHeader>}
         {context.userLogged !== null && (
           <CardHeader
             title={`Bienvenido ${context.userLogged.Name}`}

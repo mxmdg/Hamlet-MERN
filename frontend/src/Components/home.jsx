@@ -12,6 +12,7 @@ import ToggleColorMode from "./Config/Theme/ToggleMode";
 import MyStepper from "./Jobs/Stepper";
 import FullJobsRender from "./Pages/FullJobsRender";
 import { Login } from "./Users/Login";
+import {LogPage} from "./Users/LogPage"
 
 //Stats
 import StatsCollector from "./utils/stats/StatsCollector";
@@ -79,7 +80,7 @@ const Home = () => {
     </Container>
   );
   
-  const logPage = <Login />
+  const logPage = <LogPage />
   return context.useLogin ? homePage : logPage  
 
 };

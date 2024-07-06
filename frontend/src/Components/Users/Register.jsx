@@ -61,8 +61,8 @@ export const Register = () => {
 
   const success = (
     <Box>
-      <Card elevation={2}>
-        <CardHeader title="Registrate!"></CardHeader>
+      <Card elevation={10}>
+        <CardHeader title="Registrate!" titleTypographyProps={{color: "primary", fontWeight: "600"}}></CardHeader>
         <CardContent>
           <FormControl sx={{ width: "90%" }}>
             <form name="Register" onSubmit={handleSubmit(onSubmit)}>
@@ -180,7 +180,7 @@ export const Register = () => {
                   />
                 </Grid>
                 <Grid item xs={6} sm={6} md={3} sx={{ alignSelf: "center" }}>
-                  <Button type="submit" variant="contained" color="warning">
+                  <Button type="submit" variant="contained" color="primary">
                     Registrarse
                   </Button>
                 </Grid>

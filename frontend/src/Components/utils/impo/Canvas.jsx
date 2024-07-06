@@ -97,7 +97,7 @@ const Canvas = (props) => {
 
   return (
     <>
-      <CardHeader subheader="Imposición" />
+      <CardHeader title="Imposición" titleTypographyProps={{color: "primary", fontWeight: "600"}}/>
       <Divider />
       <CardContent>
         <Grid

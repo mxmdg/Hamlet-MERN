@@ -113,7 +113,7 @@ function ResponsiveAppBar(props) {
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
               color="warning"
-              disabled={context.useLogin}
+              //disabled={context.useLogin}
             >
               <MenuIcon />
             </IconButton>
@@ -206,7 +206,7 @@ function ResponsiveAppBar(props) {
                   : "Registrarse"
               }
             >
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }} disabled={false}>
                 <Avatar alt={"Nada"} />
               </IconButton>
             </Tooltip>
