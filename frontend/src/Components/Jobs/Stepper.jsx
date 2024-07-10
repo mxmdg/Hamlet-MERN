@@ -299,9 +299,7 @@ export default function MyStepper(props) {
                           <br />
                           Material: {part.partStock.Nombre_Material}
                           <br />
-                          {part.jobParts[0].Type.includes(
-                            "Interior" || "Insert"
-                          ) ? (
+                          {part.jobParts[0].Pages > 10 ? (
                             <>
                               Lomo:{" "}
                               {calcularLomo(
