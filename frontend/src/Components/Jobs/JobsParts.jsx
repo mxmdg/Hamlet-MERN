@@ -19,162 +19,6 @@ import { Grid } from "@mui/material";
 import { fechtData, getPrivateElements } from "../customHooks/FetchDataHook";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 
-/* export const parts = [
-  {
-    id: "part001",
-    type: "Tapa",
-    pageRange: [1, 4],
-    printModAllowed: "duplex",
-    minStockWeight: 170,
-    maxStockWeight: 350,
-    jobTypes: ["Libro", "Revista", "Anillado", "Cosido a Hilo"],
-  },
-  {
-    id: "part002",
-    type: "Contratapa",
-    pageRange: [1, 2],
-    printModAllowed: "duplex",
-    minStockWeight: 170,
-    maxStockWeight: 350,
-    jobTypes: ["Libro", "Revista", "Anillado", "Cosido a Hilo"],
-  },
-  {
-    id: "part003",
-    type: "Interior Binder",
-    pageRange: [20, 1200],
-    printModAllowed: "duplex",
-    minStockWeight: 65,
-    maxStockWeight: 170,
-    jobTypes: ["Libro"],
-  },
-  {
-    id: "part004",
-    type: "Interior Cosido",
-    pageRange: [24, 1200],
-    printModAllowed: "duplex",
-    minStockWeight: 65,
-    maxStockWeight: 150,
-    jobTypes: ["Cosido a Hilo"],
-  },
-  {
-    id: "part005",
-    type: "Interior Anillado",
-    pageRange: [8, 900],
-    printModAllowed: "duplex",
-    minStockWeight: 65,
-    maxStockWeight: 350,
-    jobTypes: ["Anillado"],
-  },
-  {
-    id: "part006",
-    type: "Interior Revista",
-    pageRange: [4, 72],
-    printModAllowed: "duplex",
-    minStockWeight: 65,
-    maxStockWeight: 170,
-    jobTypes: ["Revista"],
-  },
-  {
-    id: "part007",
-    type: "Hojas sueltas",
-    pageRange: [1, 1000000],
-    printModAllowed: "duplex",
-    minStockWeight: 65,
-    maxStockWeight: 350,
-    jobTypes: ["Sin Encuadernacion", "Multipagina"],
-  },
-  {
-    id: "part008",
-    type: "Afiche",
-    pageRange: [1, 1000],
-    printModAllowed: "simplex",
-    minStockWeight: 65,
-    maxStockWeight: 350,
-    jobTypes: ["Sin Encuadernacion", "Multipagina"],
-  },
-  {
-    id: "part009",
-    type: "Señalador",
-    pageRange: [1, 1000],
-    printModAllowed: "duplex",
-    minStockWeight: 150,
-    maxStockWeight: 350,
-    jobTypes: ["Sin Encuadernacion", "Multipagina", "Libro"],
-  },
-  {
-    id: "part010",
-    type: "Tarjeta",
-    pageRange: [1, 1000],
-    printModAllowed: "duplex",
-    minStockWeight: 150,
-    maxStockWeight: 350,
-    jobTypes: ["Sin Encuadernacion", "Multipagina"],
-  },
-  {
-    id: "part011",
-    type: "Etiqueta",
-    pageRange: [1, 1000],
-    printModAllowed: "simplex",
-    minStockWeight: 65,
-    maxStockWeight: 350,
-    jobTypes: ["Sin Encuadernacion", "Multipagina"],
-  },
-  {
-    id: "part012",
-    type: "Insert",
-    pageRange: [1, 1000],
-    printModAllowed: "duplex",
-    minStockWeight: 65,
-    maxStockWeight: 350,
-    jobTypes: ["Libro", "Revista", "Anillado", "Cosido a Hilo"],
-  },
-  {
-    id: "part013",
-    type: "Diptico",
-    pageRange: [1, 1000],
-    printModAllowed: "duplex",
-    minStockWeight: 65,
-    maxStockWeight: 350,
-    jobTypes: ["Sin Encuadernacion", "Multipagina"],
-  },
-  {
-    id: "part014",
-    type: "Triptico",
-    pageRange: [1, 1000],
-    printModAllowed: "duplex",
-    minStockWeight: 65,
-    maxStockWeight: 350,
-    jobTypes: ["Sin Encuadernacion", "Multipagina"],
-  },
-  {
-    id: "part015",
-    type: "Folleto",
-    pageRange: [1, 1000],
-    printModAllowed: "duplex",
-    minStockWeight: 65,
-    maxStockWeight: 350,
-    jobTypes: ["Sin Encuadernacion", "Multipagina"],
-  },
-  {
-    id: "part016",
-    type: "Cubierta",
-    pageRange: [1, 1000],
-    printModAllowed: "duplex",
-    minStockWeight: 150,
-    maxStockWeight: 350,
-    jobTypes: ["Sin Encuadernacion", "Multipagina", "Libro"],
-  },
-  {
-    id: "part017",
-    type: "Guardas",
-    pageRange: [1, 1000],
-    printModAllowed: "duplex",
-    minStockWeight: 150,
-    maxStockWeight: 350,
-    jobTypes: ["Libro", "Revista", "Anillado", "Cosido a Hilo"],
-  },
-]; */
-
 const JobParts = (props) => {
   /* Props que recibe este componente>
         jobType= El tipo de trabajo, determina los tipos de partes que se pueden utilizar en el mismo.
@@ -241,7 +85,7 @@ const JobParts = (props) => {
     const part = partsList.find((item) => item._id === selectedValue);
     setCurrentPart(part);
     console.log(part);
-    if (part.PrintModAllowed === "Simplex") {
+    if (part?.PrintModAllowed === "Simplex") {
       setSimplex(true);
     } else {
       setSimplex(false);
@@ -538,10 +382,11 @@ const JobParts = (props) => {
                 name="partStock"
                 fullWidth
                 {...register("partStock", { required: true })}
-                onChange={(e) => {
+                onChange={props.onChange}
+                /* onChange={(e) => {
                   handleChange(e.target.value); // Llamamos a nuestra función handleChange
                   //field.onChange(e); // Importante llamar esto para que react-hook-form actualice los valores internamente
-                }}
+                }} */
               >
                 {filteredStocks.map((Stock) => (
                   <MenuItem value={Stock._id} id={Stock._id} key={Stock._id}>

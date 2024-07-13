@@ -77,7 +77,7 @@ const NewStackedBarChart = (props) => {
                 dataKey={item}
                 key={index}
                 stackId="a"
-                fill={coloresIntermedios[index]}
+                fill={coloresIntermedios[index + 1]}
                 onClick={(e) => handleBarClick(e.payload.name)}
               />
             );
