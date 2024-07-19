@@ -139,7 +139,7 @@ const ProductionPlan = (props) => {
         }
       };
 
-      const stockCost = () => {
+      const stockCost = (totalHojas) => {
         let paperPrice;
 
         for (let i = 0; i < usePrices?.length; i++) {
@@ -154,7 +154,7 @@ const ProductionPlan = (props) => {
         const surface =
           parseFloat(data.stock.Ancho_Resma) *
           parseFloat(data.stock.Alto_Resma);
-        const totalPaper = parseFloat(data.totalHojas) * surface;
+        const totalPaper = parseFloat(totalHojas) * surface;
         const weight = (totalPaper / 1000000) * parseFloat(data.stock.Gramaje);
         const cost = Math.ceil((weight / 1000) * parseFloat(paperPrice));
 
@@ -172,7 +172,7 @@ const ProductionPlan = (props) => {
         cost.Entrada,
         Math.max(totals[key].format.Alto, totals[key].format.Ancho)
       );
-      totals[key].stockCost = stockCost();
+      totals[key].stockCost = stockCost(totals[key].totalHojas);
     });
 
     return Object.values(totals);

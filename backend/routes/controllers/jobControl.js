@@ -81,6 +81,7 @@ jobControl.getUrgentJobs = async (req, res) => {
   if (req.query.endDate) {
     endDate.setDate(endDate.getDate() + 1); // Para incluir el día completo
   } else {
+    startDate.setDate(startDate.getDate() -1) // Por defecto incluye hoy
     endDate.setDate(startDate.getDate() + 8); // Por defecto, la próxima semana
   }
   try {
@@ -98,7 +99,8 @@ jobControl.getUrgentJobs = async (req, res) => {
           model: companies.esquema,
           select: "Nombre email",
         })
-        .populate({ path: "Partes.partStock", model: stocks.esquema });
+        .populate({ path: "Partes.partStock", model: stocks.esquema })
+        .sort({ Entrega: +1 });
       //.select("Nombre Cantidad Fecha Entrega Emision Deadline");
       res.json(jobList);
     }
