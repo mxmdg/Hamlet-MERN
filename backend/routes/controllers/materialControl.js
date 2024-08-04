@@ -11,10 +11,17 @@ materialControl.getMaterials = async (req,res) => {{
 }}
 
 materialControl.addMaterial = async (req,res)=>{{
-    const {Nombre_Material, Marca, Gramaje, Tipo, Ancho_Resma, Alto_Resma, Espesor_Resma, Fibra, Precio_x_Kilo, Color} = req.body;
-    const newMaterial = new materials.esquema({Nombre_Material, Marca, Gramaje, Tipo, Ancho_Resma, Alto_Resma, Espesor_Resma, Fibra, Precio_x_Kilo, Color});
-    await newMaterial.save();
-    res.json({"message": newMaterial.Nombre + " guardado OK"});
+     try {
+        const {Nombre_Material, Marca, Gramaje, Tipo, Ancho_Resma, Alto_Resma, Espesor_Resma, Fibra, Precio_x_Kilo, Color} = req.body;
+        const newMaterial = new materials.esquema({Nombre_Material, Marca, Gramaje, Tipo, Ancho_Resma, Alto_Resma, Espesor_Resma, Fibra, Precio_x_Kilo, Color});
+        await newMaterial.save();
+        res.json({"message": newMaterial.Nombre + " guardado OK"});
+    } catch (e) {
+        console.log(e)
+        res.status(404).json({ message: e });
+      }
+    
+    
     
 }}
 
@@ -34,9 +41,14 @@ materialControl.getMaterial = async (req, res)=> {
 }
     
 materialControl.updateMaterial = async (req, res)=> {
-    const {Nombre_Material, Marca, Gramaje, Tipo, Ancho_Resma, Alto_Resma, Espesor_Resma, Fibra, Precio_x_Kilo, Color} = req.body;
-    const material = await materials.esquema.findOneAndUpdate({ _id: req.params.id },{Nombre_Material, Marca, Gramaje, Tipo, Ancho_Resma, Alto_Resma, Espesor_Resma, Fibra, Precio_x_Kilo, Color})
-    res.json({"Message": "Material actualizado " + material.Nombre})
+    try {
+        const {Nombre_Material, Marca, Gramaje, Tipo, Ancho_Resma, Alto_Resma, Espesor_Resma, Fibra, Precio_x_Kilo, Color} = req.body;
+        const material = await materials.esquema.findOneAndUpdate({ _id: req.params.id },{Nombre_Material, Marca, Gramaje, Tipo, Ancho_Resma, Alto_Resma, Espesor_Resma, Fibra, Precio_x_Kilo, Color})
+        res.json({"Message": "Material actualizado " + material.Nombre})
+    } catch (error) {
+        console.log("Error: " + error)
+        res.status(404).json({error})
+    }
 }
 materialControl.deleteMaterial = async (req, res)=> {
     const material =  await materials.esquema.findByIdAndDelete(req.params.id);

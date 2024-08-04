@@ -30,7 +30,8 @@ let MoldeEmpresas = [{
     options: [
         {text: 'Buenos Aires', value: 'Buenos Aires', id: 'pr01'},
         {text: 'CABA', value: 'CABA', id: 'pr00'}, 
-        {text: 'Entre Rios', value: 'Entre Rios', id: 'pr02'}
+        {text: 'Entre Rios', value: 'Entre Rios', id: 'pr02'}, 
+        {text: 'Santa Fe', value: 'Santa Fe', id: 'pr03'}
     ]
 },
 {

@@ -85,6 +85,7 @@ let PrintersDataForm = [
     inputName: "Fibra",
     type: "Number",
     id: "id_008",
+    required: true,
     help: "Ingrese la longitud del lado paralelo a la fibra en milimetros",
   },
   {

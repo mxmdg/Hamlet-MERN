@@ -193,8 +193,8 @@ const JobDetail = (props) => {
                     Impresion: {part.ColoresFrente} / {part.ColoresDorso}
                   </Item>
                   <Item>
-                    Material: {part.partStock.Marca}, {part.partStock.Tipo},{" "}
-                    {part.partStock.Gramaje}
+                  {part.partStock.Tipo} {part.partStock.Gramaje} {useImpoData ? ` - ${useImpoData.formatSelector.Nombre}` : "" }
+                    
                   </Item>
                   {usePoses && (
                     <>

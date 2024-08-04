@@ -201,7 +201,7 @@ const FormMaterial = (props) => {
           ? props.setState(true)
           : console.log("No es nuevo");
       } catch (e) {
-        setErrorMessage("No se pudo guardar " + e);
+        setErrorMessage("No se pudo guardar. " + e);
       }
     } else {
       try {
@@ -210,7 +210,8 @@ const FormMaterial = (props) => {
         navigate(-1);
         //props.editor(true);
       } catch (e) {
-        setErrorMessage("No se pudo actualizar" + e);
+        console.log(e)
+        setErrorMessage("No se pudo actualizar. " + e.response.data.error.message);
       }
     }
     /* try {
@@ -282,6 +283,9 @@ const FormMaterial = (props) => {
               })}
             </TextField>
             <FormHelperText>Elija una opción</FormHelperText>
+            {errors[inp.id]?.type === "required" && (
+                    <FormHelperText>Este campo es requerido</FormHelperText>
+                  )}
           </FormControl>
         </Grid>
       );
@@ -375,6 +379,9 @@ const FormMaterial = (props) => {
                       />
                     );
                   })}
+                  {errors[inp.id]?.type === "required" && (
+                    <FormHelperText>Este campo es requerido</FormHelperText>
+                  )}
                 </FormGroup>
               </FormControl>
             </CardContent>
