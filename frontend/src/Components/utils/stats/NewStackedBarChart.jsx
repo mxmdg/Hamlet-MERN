@@ -15,11 +15,14 @@ import { coloresIntermedios, myWrapperStyle } from "./NewRadialBar";
 import { convertirFecha } from "../generalData/fechaDiccionario";
 import { getPrivateElements } from "../../customHooks/FetchDataHook";
 import FullJobsRender from "../../Pages/FullJobsRender";
-import { Modal, Box } from "@mui/material";
+import { Modal, Box, TextField } from "@mui/material";
 
 const NewStackedBarChart = (props) => {
   const [jobsForDay, setJobsForDay] = React.useState(null);
   const [open, setOpen] = React.useState(false);
+  const [filter, setFilter] = React.useState(null)
+  const [statsData, setStatsData] = React.useState(props.data)
+  const [useTitle, setTitle] = React.useState("")
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
@@ -35,6 +38,7 @@ const NewStackedBarChart = (props) => {
     setJobsForDay(
       `jobs/urg?startDate=${formattedStartDate}&endDate=${formattedEndDate}`
     );
+    setTitle(`${endDate.getDate() + 1}-${(endDate.getMonth() + 1)}-${(endDate.getFullYear())}`)
     handleOpen();
 
     // Usando el custom hook para hacer la consulta
@@ -46,13 +50,33 @@ const NewStackedBarChart = (props) => {
     console.table(jobs); */
   };
 
+  React.useEffect(()=>{
+    function filtrarTipoTrabajo(data, tipoTrabajo) {
+      return data.map(item => {
+        const { name } = item;
+        const tipo = item[tipoTrabajo];
+    
+        return tipo !== undefined
+          ? { name, [tipoTrabajo]: tipo }
+          : { name };
+      });
+    }
+
+    if (filter !== null) {
+      setStatsData(filtrarTipoTrabajo(props.data,filter))
+    } else {
+      setStatsData(props.data)
+    }
+  },[filter])
+
   return (
     <>
       <ResponsiveContainer width="100%" height="100%" minWidth={"300px"}>
+       
         <BarChart
           width={500}
           height={300}
-          data={props.data}
+          data={statsData}
           margin={{
             top: 20,
             right: 30,
@@ -66,10 +90,14 @@ const NewStackedBarChart = (props) => {
           <Tooltip />
           <Legend
             iconSize={10}
-            iconType="circle"
+            iconType=  {(e) =>{ return (filter === e.dataKey ? "circle" : "square")}}
             verticalAlign="bottom"
             layout="vertical"
             wrapperStyle={myWrapperStyle}
+            onClick={(e)=>{
+              setFilter(filter !== e.dataKey ? e.dataKey : null)
+            }}
+            
           />
           {props.dataKey.map((item, index) => {
             return (
@@ -89,7 +117,7 @@ const NewStackedBarChart = (props) => {
           <Box>
             <FullJobsRender
               route={jobsForDay}
-              settings={{ title: "Pedidos", column: "emited", order: "asc" }}
+              settings={{ title: `Pedidos para el ${useTitle}`, column: "emited", order: "asc" }}
             />
           </Box>
         </Modal>

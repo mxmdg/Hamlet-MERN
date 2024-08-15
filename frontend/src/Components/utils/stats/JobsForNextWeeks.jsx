@@ -5,6 +5,7 @@ import ErrorMessage from "../../ErrorMessage/ErrorMessage";
 
 const JobsForNextDays = (props) => {
   const [useError, setError] = React.useState(null);
+  const [from, setFrom] =React.useState(null);
 
   const getMyDate = (event) => {
     const dd = new Date(event).getUTCDate();
@@ -21,7 +22,7 @@ const JobsForNextDays = (props) => {
     const yesterday = new Date();
     const today = new Date();
     const endDate = new Date();
-    endDate.setDate(today.getDate() +60); // next 30 days
+    endDate.setDate(today.getDate() + 60); // next 30 days
     yesterday.setDate(today.getDate() - 1); //Ayer
 
     try {
