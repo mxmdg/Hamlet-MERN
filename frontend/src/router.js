@@ -54,10 +54,14 @@ const Router = () => {
     <Route path="/login" element={<Login />} />
     <Route path="/register" element={<Register />} />
     {context.useLogin === true && (
-      <>
-      <Route
+    <>
+    <Route
       path="/impresoras"
       element={<MainContainer entity={"impresoras"} />}
+    />
+    <Route
+      path="/misimpresoras"
+      element={<PrintersMainContainer entity={"impresoras"} />}
     />
     <Route
       path="/impresoras/add"

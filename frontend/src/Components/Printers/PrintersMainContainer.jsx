@@ -20,7 +20,7 @@ const PrintersMainContainer = () => {
   const navigate = useNavigate();
 
   return (
-    <>
+    <Card elevation={6}>
       <CardHeader title={collection} />
       <CardContent>
         <Printers collection={collection} />
@@ -31,7 +31,7 @@ const PrintersMainContainer = () => {
           onclick={() => navigate(`/${collection}/add`)}
         />
       </CardActions>
-    </>
+    </Card>
   );
 };
 

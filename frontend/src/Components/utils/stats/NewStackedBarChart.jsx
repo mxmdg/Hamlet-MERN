@@ -117,7 +117,7 @@ const NewStackedBarChart = (props) => {
           <Box>
             <FullJobsRender
               route={jobsForDay}
-              settings={{ title: `Pedidos para el ${useTitle}`, column: "emited", order: "asc" }}
+              settings={{ title: `Pedidos para el ${useTitle}`, column: "emited", order: "asc", filter: filter }}
             />
           </Box>
         </Modal>

@@ -33,7 +33,7 @@ const Home = () => {
   const homePage = (
     <Container disableGutters maxWidth={false}>
       <Grid container columns={{ xs: 1, sm: 12, md: 12, lg: 16 }} spacing={0}>
-        <Grid item xs={1} sm={12} md={8} lg={10}>
+        <Grid item xs={1} sm={12} md={12} lg={10}>
           <Container>
             <Grid container spacing="3" columns={{ xs: 1, sm: 12, md: 12 }}>
               <Grid item xs={1} sm={12} md={12}>
@@ -59,15 +59,15 @@ const Home = () => {
             </Grid>
           </Container>
         </Grid>
-        <Grid item xs={1} sm={12} md={4} lg={6}>
+        <Grid item xs={1} sm={12} md={12} lg={6}>
           <Grid container columns={12} spacing={1}>
-            <Grid item xs={12} sm={12} md={11}>
+            <Grid item xs={12} sm={12} md={10} lg={10} >
               <MyStepper />
             </Grid>
-            <Grid item xs={12} sm={12} md={11}>
+            <Grid item xs={12} sm={12} md={11} lg={10}>
                 <QuickSpinCalc />
             </Grid>
-            <Grid item xs={12} sm={12} md={11}>
+            <Grid item xs={12} sm={12} md={11} lg={10}>
               <ImpoProvider>
                 <DarkWoodCard>
                   <Canvas />

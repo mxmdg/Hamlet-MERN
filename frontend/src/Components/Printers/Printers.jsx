@@ -7,6 +7,7 @@ import ItemsDetails from "../General/itemsDetails";
 import { serverURL } from "../Config/config";
 import Grid from "@mui/material/Unstable_Grid2"; // Grid version 2
 import Spinner from "../General/Spinner";
+import { Paper } from "@mui/material";
 
 const readPrinters = async () => {
   const res = await axios.get(`${serverURL}/hamlet/impresoras`);
@@ -39,13 +40,16 @@ const Printers = (props) => {
       ) : (
         printerList.map((printer) => (
           <Grid xs={12} md={4} key={printer._id}>
-            <PrinterDetails
+            <Paper elevation={10} sx={{p: 2}}>
+              <PrinterDetails
               pd={printer}
               id={printer._id}
               collection={props.collection}
               formData={PrintersDataForm}
               editor={setEdit}
             />
+            </Paper>
+            
           </Grid>
         ))
       )}

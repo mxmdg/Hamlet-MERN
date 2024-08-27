@@ -10,7 +10,6 @@ export const Filter = (props) => {
   const [useHeaders, setHeaders] = useState(props.headers);
 
   const filterList = (query, column) => {
-    //Inicializar o reiniciar variables
     props.setFilteredList([]);
     const keys = useHeaders;
     const results = [];
@@ -32,13 +31,11 @@ export const Filter = (props) => {
           const cellToString = item[key?.id].toString().toLowerCase();
           if (cellToString.includes(query.toString())) {
             results.push(item);
-            break; // Evitar duplicados al encontrar coincidencia en cualquier columna
+            break;
           }
         }
       }
     };
-
-    console.log(results);
 
     column === "Todo" ? findAll() : findByColumn(column);
     props.setFilteredList(results);
@@ -47,14 +44,18 @@ export const Filter = (props) => {
       props.setFilteredList([,]);
     }
   };
+  
 
   useEffect(() => {
-    console.log("Render: Filter.jsx");
-    // Actualizar el estado interno cuando cambie la propiedad data
-    //setDataList(props.data);
-  }, [setDataList, props.setFilteredList, props.rows]); // Observar cambios en props.data
+    if (props.filter) {
+      setTimeout(()=>{
+        filterList(props.filter, useColumn);
+        console.log("0.05 seconds")
+      },0);
+    }
+  }, [props.filter, useColumn, useDataList, useHeaders,props.setFilteredList]); // Observar cambios relevantes
 
-  const render = (
+  return (
     <Paper elevation={4} color="info" sx={{ padding: "10px" }}>
       <Stack direction="row" spacing={4}>
         <TextField
@@ -79,16 +80,20 @@ export const Filter = (props) => {
         <TextField
           variant="filled"
           type="search"
+          defaultValue={props.filter ? props.filter : ""}
+          onFocusCapture={(e) => {
+            filterList(e.target.value, useColumn);
+          }}
           onChange={(e) => {
             filterList(e.target.value, useColumn);
           }}
           placeholder="Buscar"
           color="success"
           size="small"
+          focused={true}
+
         ></TextField>
       </Stack>
     </Paper>
   );
-
-  return render;
 };

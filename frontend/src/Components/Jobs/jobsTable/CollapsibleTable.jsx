@@ -355,6 +355,7 @@ export default function CollapsibleTable(props) {
             job.Partes
           );
         });
+        
         rows.push(...Rows); // Use spread operator to push elements individually
         setRows([...Rows]); // Update state with the fetched data
       } catch (error) {
@@ -432,7 +433,7 @@ export default function CollapsibleTable(props) {
 
   const tableOK = (
     <>
-      <Filter headers={headers} data={rows} setFilteredList={setRows} />
+      <Filter headers={headers} data={rows} setFilteredList={setRows} filter={props.settings.filter}/>
       <EnhancedTableToolbar
         collection="jobs"
         title={props.settings.title}

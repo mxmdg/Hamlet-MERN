@@ -14,6 +14,10 @@ const PrinterDetails = (props) => {
     setState(Show);
   };
 
+  const cancelClickHandler = () => {
+    setState(Show);
+  };
+
   const deleteClickHandler = async (id) => {
     if (window.confirm("Estas recontra seguro de borrar esta impresora?")) {
       try {
@@ -40,26 +44,27 @@ const PrinterDetails = (props) => {
       <h5>
         Y: {props.pd.Y_Minimo}-{props.pd.Y_Maximo}
       </h5>
-      {/* <button onClick={(e) => editClickHandler(props.pd._id)}>Editar</button>
+      <button onClick={(e) => editClickHandler(props.pd._id)}>Editar</button>
       <button onClick={(e) => deleteClickHandler(props.pd._id)}>
         Eliminar
-      </button> */}
+      </button> 
     </div>
   );
 
   const Edit = (
     <div id={props.pd._id} className="frame">
       <div className="frame__title">
-        <input type="text" placeholder={props.pd.Modelo}></input>{" "}
-        <input type="text" placeholder={props.pd.Fabricante}></input>
+        <input type="text" defaultValue={props.pd.Modelo}></input>{" "}
+        <input type="text" defaultValue={props.pd.Fabricante}></input>
       </div>
-      <input type="number" placeholder="Colores"></input>
-      <input type="number" placeholder="Paginas por minuto"></input>
-      <input type="number" placeholder="Ancho Minimo"></input> -{" "}
-      <input type="number" placeholder="Ancho Maximo"></input>
-      <input type="number" placeholder="Alto Minimo"></input> -{" "}
-      <input type="number" placeholder="Alto Maximo"></input>
+      <input type="number" placeholder="Colores" defaultValue={props.pd.Colores} aria-label="Colores"></input>
+      <input type="number" placeholder="Paginas por minuto" defaultValue={props.pd.Paginas_por_minuto}></input>
+      <input type="number" placeholder="Ancho Minimo" defaultValue={props.pd.X_Minimo}></input> -{" "}
+      <input type="number" placeholder="Ancho Maximo" defaultValue={props.pd.X_Maximo}></input>
+      <input type="number" placeholder="Alto Minimo" defaultValue={props.pd.Y_Minimo}></input> -{" "}
+      <input type="number" placeholder="Alto Maximo" defaultValue={props.pd.Y_Maximo}></input>
       <button onClick={saveClickHandler}>Guardar</button>
+      <button onClick={cancelClickHandler}>Cancelar</button>
     </div>
   );
 
