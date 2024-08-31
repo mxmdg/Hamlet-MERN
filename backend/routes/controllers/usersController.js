@@ -136,7 +136,7 @@ const forgotPassword = async (req, res, next) => {
 
     // Guardar el token en la base de datos junto con el usuario
     user.resetPasswordToken = token;
-    user.resetPasswordExpires = Date.now() + 3600; // 1 hora de expiración
+    user.resetPasswordExpires = Date.now() + 36000; // 1 hora de expiración
     await user.save();
 
     // Enviar correo electrónico con el enlace para restablecer la contraseña

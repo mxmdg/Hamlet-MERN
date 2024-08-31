@@ -41,7 +41,7 @@ const ResetPassword = () => {
     } catch (error) {
       console.log(error);
       setError({
-        msg: "Hubo un error al restablecer la contraseña: " + error.message,
+        msg: "Hubo un error al restablecer la contraseña: " + error.response.data.message,
         sev: "error",
         act: resetError,
       });

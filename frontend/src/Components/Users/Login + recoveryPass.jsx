@@ -75,7 +75,7 @@ export const Login = () => {
       console.log(e);
       setError({
         message:
-          "Error al enviar el correo electrónico de recuperación de contraseña",
+          "Error al enviar el correo electrónico de recuperación de contraseña" + response.data.message,
         severity: "warning",
         action: resetError(),
       });

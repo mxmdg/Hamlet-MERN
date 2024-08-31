@@ -35,7 +35,7 @@ import JobsEditAndCopy from "./Components/Pages/JobsEditAndCopy";
 import Machines from "./Components/Pages/Machines";
 
 //MUI Material
-import { Grid } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 
 //Datos Estadisticos
 import StatsCollector from "./Components/utils/stats/StatsCollector";
@@ -53,6 +53,7 @@ const Router = () => {
     <Route path="/" element={<Home />} />
     <Route path="/login" element={<Login />} />
     <Route path="/register" element={<Register />} />
+    <Route path="/users/reset-password/:token" element={<ResetPassword />} />
     {context.useLogin === true && (
     <>
     <Route
@@ -173,7 +174,20 @@ const Router = () => {
         <FormMaterial form={FormatDataForm} collection="formatos" task="edit" />
       }
     />
-    <Route path="/empresas" element={<MainContainer entity={"empresas"} />} />
+    <Route path="/empresas" element={
+      <Grid container columns={12}>
+        <Grid item columns={9}>
+          <MainContainer entity={"empresas"} />
+        </Grid>
+        <Grid item columns={12}>
+          <StatsCollector>
+            <JobsPerClient rank={10}/>
+          </StatsCollector>
+        </Grid>
+        
+      </Grid>
+      
+      } />
     <Route
       path="/empresas/add"
       element={
@@ -235,7 +249,6 @@ const Router = () => {
     <Route path="/users/add" element={<Register />} />
     <Route path="/users/profile" element={<Profile />} />
     <Route path="/users/ChangePassword" element={<ChangePassword />} />
-    <Route path="/users/reset-password/:token" element={<ResetPassword />} />
 
    
     <Route
@@ -254,7 +267,7 @@ const Router = () => {
         />
       }
     />
-    <Route path="/Jobs/partes" element={<PartsContainer entity={"jobs"} />} />
+    <Route path="/Jobs/partes" element={<MainContainer entity={"jobs/partes"} />} />
     <Route
       path="/Jobs/stats"
       //element={<StatsCollector />}

@@ -1,4 +1,4 @@
-import { Backdrop } from "@mui/material";
+import { Backdrop, Typography } from "@mui/material";
 import { borderRadius, fontSize, margin, textAlign } from "@mui/system";
 import React from "react";
 import {
@@ -73,7 +73,7 @@ export default function NewRadialBar(props) {
       minWidth={200}
       width={"90%"}
       height={"100%"}
-    >
+    > 
       <RadialBarChart
         cx="50%"
         cy="30%"
@@ -82,22 +82,22 @@ export default function NewRadialBar(props) {
         barSize={10}
         data={props.data}
       >
-        <RadialBar
-          minAngle={15}
-          label={{ position: "outsideStart", fill: "#000" }}
-          background="#ffffff88"
-          clockWise
-          dataKey={props.dataKey}
-        />
-        <Legend
-          iconSize={10}
-          iconType="circle"
-          layout="vertical"
-          verticalAlign="bottom"
-          wrapperStyle={myWrapperStyle}
-        />
-
-        <Tooltip />
+          <Typography>Titulo</Typography>
+          <RadialBar
+            minAngle={15}
+            label={{ position: "outsideStart", fill: "#000" }}
+            background="#ffffff88"
+            conunterClockWise
+            dataKey={props.dataKey}
+          />
+          <Legend
+            iconSize={10}
+            iconType="star"
+            layout="vertical"
+            verticalAlign="top"
+            wrapperStyle={myWrapperStyle}
+          />
+          <Tooltip />
       </RadialBarChart>
     </ResponsiveContainer>
   );

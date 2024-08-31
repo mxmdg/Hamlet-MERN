@@ -100,7 +100,7 @@ export const Login = () => {
     } catch (e) {
       console.log(e);
       setError({
-        message: "Error al enviar el correo: " + e.message,
+        message: "Error al enviar el correo: " + e.response.data.message,
         severity: "warning",
         action: { resetError },
       });
