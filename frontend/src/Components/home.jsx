@@ -10,6 +10,7 @@ import DarkWoodCard from "./utils/DarkWoodCard";
 import PrintersMainContainer from "./Printers/PrintersMainContainer";
 import ToggleColorMode from "./Config/Theme/ToggleMode";
 import MyStepper from "./Jobs/Stepper";
+import JobEditor from "./Jobs/JobEditor/JobEditor";
 import FullJobsRender from "./Pages/FullJobsRender";
 import { Login } from "./Users/Login";
 import {LogPage} from "./Users/LogPage"
@@ -61,6 +62,9 @@ const Home = () => {
         </Grid>
         <Grid item xs={1} sm={12} md={12} lg={6}>
           <Grid container columns={12} spacing={1}>
+          <Grid item xs={12} sm={12} md={10} lg={10} >
+              <JobEditor />
+            </Grid>
             <Grid item xs={12} sm={12} md={10} lg={10} >
               <MyStepper />
             </Grid>

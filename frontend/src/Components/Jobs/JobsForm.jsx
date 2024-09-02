@@ -53,7 +53,6 @@ const JobsForm = (props) => {
   }, [setUsersList, setCompaniesList]);
 
   const onSubmit = (values) => {
-    
     const jt = JobTypes.find((item) => {
       if (item.id === values.JobType) {
         return item;

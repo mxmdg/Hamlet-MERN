@@ -32,6 +32,7 @@ import {
 } from "../customHooks/FetchDataHook";
 import { calcularLomo } from "../jobViewer/JobDetail";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
+import PartCard from "./PartCard";
 
 export default function MyStepper(props) {
   const [activeStep, setActiveStep] = React.useState(0);
@@ -42,6 +43,7 @@ export default function MyStepper(props) {
   const [useJobType, setJobType] = React.useState(props.job?.Tipo[0] || {});
   const [useJob, setJob] = React.useState(props.job || null);
   const [useError, setError] = React.useState(null);
+  const [stocks, setStocks] = React.useState([]);
   const context = useContext(AuthContext);
 
   const handleJobTypeChange = (e) => {
@@ -95,12 +97,34 @@ export default function MyStepper(props) {
     console.log(partsOk);
   };
 
-  const replacePart = (n, replace) => {
+  const replacePart = (newPart) => {
     console.table(useParts);
-    const partsOk = [useParts.splice(n, 1, replace)];
+    console.table(newPart);
+
+    try {
+      const getStock = async (id) => {
+        const stock = await getPrivateElementByID("materiales", id);
+        newPart.partStock = stock.data;
+      };
+      getStock(newPart.partStock);
+      /*  const part = parts.find((parte)=>{
+        parte.id == newPart.jobParts ?
+        parte :
+        console.log("No encuentro " + parte.id)
+      }) */
+      //newPart.jobParts = part
+    } catch (e) {
+      console.log(e);
+      setError(e);
+    }
+    const part = parts.filter((part) => part._id === newPart.jobParts);
+    newPart.jobParts = part;
+
+    const partsOk = useParts.splice(usePartToEdit.index, 1, newPart);
     console.table(partsOk);
-    console.log(`Reemplazar la parte ${n + 1} de ${partsOk.length}`);
-    setParts(partsOk);
+    //console.log(`Reemplazar la parte ${n + 1} de ${partsOk.length}`);
+    //console.log(partsOk);
+    setPartToEdit(null);
   };
 
   const editPart = (n) => {
@@ -216,6 +240,7 @@ export default function MyStepper(props) {
         setEditPart={setPartToEdit}
         useParts={useParts}
         parts={allParts}
+        stocks={stocks}
       />,
     ],
     [
@@ -231,6 +256,7 @@ export default function MyStepper(props) {
   useEffect(() => {
     try {
       fechtData("jobParts", setAllParts);
+      fechtData("materiales", setStocks);
     } catch (error) {
       setError(error);
     }
@@ -274,67 +300,19 @@ export default function MyStepper(props) {
               <Grid
                 container
                 columns={{ xs: 4, sm: 8, md: 12 }}
-                spacing={4}
+                spacing={1}
                 overflow={"auto"}
               >
                 {useParts?.map((part, index) => {
                   return (
                     <Grid item xs={4} sm={4} md={6} key={part._id}>
-                      <Card
-                        variant="elevation"
-                        elevation={12}
-                        square={true}
-                        sx={{ marginTop: "20px" }}
-                      >
-                        <CardHeader
-                          title={part.Name}
-                          subheader={part.jobParts[0].Type}
-                        ></CardHeader>
-                        <Container>
-                          Paginas: {part.Pages}
-                          <br />
-                          Formato: {part.Ancho} x {part.Alto}
-                          <br />
-                          Impresion: {part.ColoresFrente}/{part.ColoresDorso}
-                          <br />
-                          Material: {part.partStock.Nombre_Material}
-                          <br />
-                          {part.jobParts[0].Pages > 10 ? (
-                            <>
-                              Lomo:{" "}
-                              {calcularLomo(
-                                part.Pages,
-                                part.partStock.Espesor_Resma
-                              )}{" "}
-                              mm.
-                            </>
-                          ) : (
-                            ""
-                          )}
-                        </Container>
-                        <CardActions>
-                          <ButtonGroup size="small">
-                            <Button
-                              color="primary"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                editPart(index);
-                                setActiveStep(1);
-                              }}
-                            >
-                              Editar
-                            </Button>
-                            <Button
-                              color="error"
-                              onClick={() => {
-                                removePart(index);
-                              }}
-                            >
-                              Eliminar
-                            </Button>
-                          </ButtonGroup>
-                        </CardActions>
-                      </Card>
+                      <PartCard
+                        part={part}
+                        index={index}
+                        editPart={editPart}
+                        setActiveStep={setActiveStep}
+                        removePart={removePart}
+                      />
                     </Grid>
                   );
                 })}

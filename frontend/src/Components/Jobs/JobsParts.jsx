@@ -30,7 +30,7 @@ const JobParts = (props) => {
         useParts= Partes del tranajo nuevo o editando, se usa para pasar algunos parametros comunes a todas las partes, como el ancho y el alto.
         parts= Partes definidas en la base de datos con sus caracteristicas.
 */
-  const [stocks, setStocks] = useState([]);
+  const [stocks, setStocks] = useState(props.stocks);
   const [filteredStocks, setFilteredStocks] = useState([]);
   const [partsList, setPartsList] = useState(null);
   const [currentPart, setCurrentPart] = useState(props.editPart || null);
@@ -55,23 +55,34 @@ const JobParts = (props) => {
   });
 
   const filterStocks = () => {
+    console.log("Ejecutando funcion filterStocks");
+    console.table(stocks);
     const res = stocks.filter((stock) => {
-      if (
-        props.editPart === null &&
-        stock.Gramaje >= currentPart.minStockWeight &&
-        stock.Gramaje <= currentPart.maxStockWeight
-      ) {
-        console.log(stock);
-        return stock;
-      } else if (
-        props.editPart !== null &&
-        stock.Gramaje >= currentPart.part.minStockWeight &&
-        stock.Gramaje <= currentPart.part.maxStockWeight
-      ) {
-        console.log(stock);
-        return stock;
+      try {
+        if (
+          props.editPart === null &&
+          stock.Gramaje >= currentPart.minStockWeight &&
+          stock.Gramaje <= currentPart.maxStockWeight
+        ) {
+          console.log("Filtrando los papelesde una parte nueva");
+          console.log(stock);
+          return stock;
+        } else if (
+          props.editPart !== null &&
+          stock.Gramaje >= props.editPart.part.jobParts[0].minStockWeight &&
+          stock.Gramaje <= props.editPart.part.jobParts[0].maxStockWeight
+        ) {
+          console.log("Filtrando los papelesde una parte a editar");
+          console.log(stock);
+          return stock;
+        }
+      } catch (error) {
+        console.log(error);
+        setError(error);
       }
     });
+    console.log("Devuelve lista de materiales filtrada");
+    console.table(res);
     setFilteredStocks(res);
   };
 
@@ -92,9 +103,11 @@ const JobParts = (props) => {
     }
   };
 
+  console.log("Estados y variables declaradoas antes de useEffect");
+
   useEffect(() => {
-    console.log(props.jobType);
-    console.log(props.editPart);
+    console.log("Inicio useEffect");
+
     const updateStocks = async () => {
       await fechtData("materiales", setStocks);
       filterStocks();
@@ -102,11 +115,9 @@ const JobParts = (props) => {
 
     console.log(props.parts);
 
-    const filteredParts = props.job?.JobType
-      ? props.parts.filter((part) =>
-          part.jobTypesAllowed.includes(props.job.JobType.name)
-        )
-      : props.parts;
+    const filteredParts = props.parts.filter((part) =>
+      part.jobTypesAllowed.includes(props.jobType.name)
+    );
 
     try {
       //console.table(filteredParts);
@@ -119,7 +130,11 @@ const JobParts = (props) => {
   }, [setFilteredStocks, setPartsList, currentPart, setSimplex]);
 
   const failed = (
-    <ErrorMessage message={useError.message} actiton={resetError} />
+    <ErrorMessage
+      message={useError.message}
+      action={resetError}
+      severity="warning"
+    />
   );
 
   const success = (
@@ -128,15 +143,7 @@ const JobParts = (props) => {
         <form
           name="form2"
           onSubmit={handleSubmit(
-            props.editPart === null
-              ? props.addParts
-              : () => {
-                  props.replacePart(
-                    props.editPart?.index,
-                    props.editPart?.part
-                  );
-                  props.setEditPart(null);
-                }
+            props.editPart === null ? props.addParts : props.replacePart
           )}
         >
           <Grid

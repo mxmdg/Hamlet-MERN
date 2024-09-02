@@ -13,6 +13,7 @@ import {
 } from "../customHooks/FetchDataHook";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import MyStepper from "../Jobs/Stepper";
+import JobEditor from "../Jobs/JobEditor/JobEditor";
 
 const JobsEditAndCopy = () => {
   const [useJob, setJob] = React.useState([]);

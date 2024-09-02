@@ -177,7 +177,7 @@ const JobDetail = (props) => {
                   </Item>
                   <Item>
                     Paginas: {part.Pages}
-                    {part.jobParts[0].Type.includes("Interior" || "Insert") ? (
+                    {part.pages > 10 ? (
                       <>
                         {" ("}Lomo:{" "}
                         {calcularLomo(part.Pages, part.partStock.Espesor_Resma)}{" "}
@@ -193,8 +193,10 @@ const JobDetail = (props) => {
                     Impresion: {part.ColoresFrente} / {part.ColoresDorso}
                   </Item>
                   <Item>
-                  {part.partStock.Tipo} {part.partStock.Gramaje} {useImpoData ? ` - ${useImpoData.formatSelector.Nombre}` : "" }
-                    
+                    {part.partStock.Tipo} {part.partStock.Gramaje}{" "}
+                    {useImpoData
+                      ? ` - ${useImpoData.formatSelector.Nombre}`
+                      : ""}
                   </Item>
                   {usePoses && (
                     <>
@@ -255,7 +257,10 @@ const JobDetail = (props) => {
           avatar={
             <Avatar
               variant="circle"
-              sx={{ backgroundColor: "#FFBA5A", boxShadow: "5px 5px 10px #00000066" }}
+              sx={{
+                backgroundColor: "#FFBA5A",
+                boxShadow: "5px 5px 10px #00000066",
+              }}
             >
               <MenuBookIcon color="error" />
             </Avatar>
@@ -303,7 +308,11 @@ const JobDetail = (props) => {
             job.Nombre +
             (job.Company ? ` - ${job.Company.Nombre}` : "")
           }
-          subheader={job.Owner ? `${job.Owner.Name} ${job.Owner.LastName} - ${job.Owner.email}` : ""}
+          subheader={
+            job.Owner
+              ? `${job.Owner.Name} ${job.Owner.LastName} - ${job.Owner.email}`
+              : ""
+          }
           te={job.Cantidad}
         />
         <CardContent>
