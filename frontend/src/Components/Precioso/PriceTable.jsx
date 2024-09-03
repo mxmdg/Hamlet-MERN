@@ -145,6 +145,7 @@ const PriceTable = (props) => {
         color="secondary"
         elevation={6}
       >
+        <CardHeader title={props.pd.Proceso} subheader={props.pd.Categoria} />
         <CardContent
           sx={{
             maxWidth: "100%",
@@ -152,9 +153,6 @@ const PriceTable = (props) => {
             height: "100%",
           }}
         >
-          <Typography gutterBottom variant="h5" color="info" component="div">
-            {props.pd.Proceso}
-          </Typography>
           <Typography
             gutterBottom
             variant="p"

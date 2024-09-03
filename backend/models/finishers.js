@@ -13,6 +13,8 @@ const finisherSchema = new Schema({
   Costo: { type: mongoose.Schema.ObjectId, ref: "precios", required: true },
   Unidad: { type: String, required: true },
   Fecha: { type: Date, default: Date.now, required: false },
+  jobTypesAllowed: { type: Object, required: false },
+  partTypesAllowed: { type: Object, required: false },
 });
 
 finisherSchema.virtual("formula").get(function () {
