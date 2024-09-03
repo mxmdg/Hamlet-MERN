@@ -125,6 +125,7 @@ export default function MyStepper(props) {
     //console.log(`Reemplazar la parte ${n + 1} de ${partsOk.length}`);
     //console.log(partsOk);
     setPartToEdit(null);
+    handleNext();
   };
 
   const editPart = (n) => {
@@ -181,6 +182,7 @@ export default function MyStepper(props) {
   const handlePost = async () => {
     const Job = useJob;
     Job.Partes = useParts;
+    Job.Tipo = useJobType;
     console.log(Job);
     try {
       console.log("Guardando...");

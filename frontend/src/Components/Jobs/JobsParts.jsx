@@ -77,8 +77,7 @@ const JobParts = (props) => {
           return stock;
         }
       } catch (error) {
-        console.log(error);
-        setError(error);
+        console.log(error.message);
       }
     });
     console.log("Devuelve lista de materiales filtrada");
@@ -118,6 +117,20 @@ const JobParts = (props) => {
     const filteredParts = props.parts.filter((part) =>
       part.jobTypesAllowed.includes(props.jobType.name)
     );
+
+    if (props.editPart !== null) {
+      try {
+        setCurrentPart(
+          props.parts.find(
+            (item) => item._id === props.editPart.part.jobParts[0]._id
+          )
+        );
+        console.table(currentPart);
+      } catch (e) {
+        console.log(e);
+        setError(e);
+      }
+    }
 
     try {
       //console.table(filteredParts);
@@ -182,36 +195,7 @@ const JobParts = (props) => {
                     </MenuItem>
                   ))}
                 </TextField>
-                {/* <FormControl sx={{ width: "90%" }}>
-                  <InputLabel id="demo-simple-select-label">Partes</InputLabel>
-                  <Controller // Usamos Controller de react-hook-form para el Select
-                    name="jobParts"
-                    {...register("jobParts", { required: true })}
-                    control={control} // Proporcionamos el control del formulario
-                    value={partsList[0]?._id}
-                    render={({ field }) => (
-                      <Select
-                        label="Partes"
-                        defaultValue={
-                          props.editPart !== null
-                            ? props.editPart.part.jobParts._id
-                            : ""
-                        }
-                        {...field} // Aseguramos que las propiedades del campo sean manejadas por react-hook-form
-                        onChange={(e) => {
-                          handleChange(e.target.value); // Llamamos a nuestra función handleChange
-                          field.onChange(e); // Importante llamar esto para que react-hook-form actualice los valores internamente
-                        }}
-                      >
-                        {partsList.map((part) => (
-                          <MenuItem value={part._id} key={part._id}>
-                            {part.Type}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    )}
-                  />
-                </FormControl> */}
+
                 {errors.jobParts?.type === "required" && (
                   <FormHelperText>Seleccione el tipo de parte</FormHelperText>
                 )}
@@ -375,7 +359,7 @@ const JobParts = (props) => {
                 select
                 defaultValue={
                   props.editPart !== null
-                    ? props.editPart.part.jobParts[0]._id
+                    ? props.editPart.part.partStock._id
                     : ""
                 }
                 id="partStock"
@@ -390,10 +374,6 @@ const JobParts = (props) => {
                 fullWidth
                 {...register("partStock", { required: true })}
                 onChange={props.onChange}
-                /* onChange={(e) => {
-                  handleChange(e.target.value); // Llamamos a nuestra función handleChange
-                  //field.onChange(e); // Importante llamar esto para que react-hook-form actualice los valores internamente
-                }} */
               >
                 {filteredStocks.map((Stock) => (
                   <MenuItem value={Stock._id} id={Stock._id} key={Stock._id}>
@@ -402,34 +382,9 @@ const JobParts = (props) => {
                   </MenuItem>
                 ))}
               </TextField>
-              {/* <FormControl sx={{ width: "90%" }}>
-                <InputLabel id="demo-simple-select-label">Material</InputLabel>
-                <Select
-                  name="partStock"
-                  id="partStock"
-                  label="Material"
-                  onChange={props.onChange}
-                  defaultValue={""}
-                  variant="outlined"
-                  sx={{ width: "95%" }}
-                  color="secondary"
-                  {...register("partStock", {
-                    required: true,
-                  })}
-                >
-                  {filteredStocks.map((Stock) => (
-                    <MenuItem value={Stock._id} id={Stock._id} key={Stock._id}>
-                      {Stock.Nombre_Material} - {Stock.Marca}{" "}
-                      {`(${Stock.Ancho_Resma} x ${Stock.Alto_Resma})`}
-                    </MenuItem>
-                  ))}
-                </Select>
-                {errors.ColoresDorso?.type === "required" && (
-                  <FormHelperText>
-                    Seleccione el material para la impresión.
-                  </FormHelperText>
-                )}
-              </FormControl> */}
+              {errors.partStock?.type === "required" && (
+                <FormHelperText>Seleccione Material</FormHelperText>
+              )}
             </Grid>
             <Grid item xs={1} sm={2} md={4}>
               <TextField
