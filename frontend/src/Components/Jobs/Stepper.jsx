@@ -312,6 +312,7 @@ export default function MyStepper(props) {
                         part={part}
                         index={index}
                         editPart={editPart}
+                        addPart={addParts}
                         setActiveStep={setActiveStep}
                         removePart={removePart}
                       />

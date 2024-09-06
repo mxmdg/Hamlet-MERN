@@ -177,7 +177,7 @@ const JobDetail = (props) => {
                   </Item>
                   <Item>
                     Paginas: {part.Pages}
-                    {part.pages > 10 ? (
+                    {parseInt(part.Pages) > 10 ? (
                       <>
                         {" ("}Lomo:{" "}
                         {calcularLomo(part.Pages, part.partStock.Espesor_Resma)}{" "}

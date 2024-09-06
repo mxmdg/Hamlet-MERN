@@ -36,7 +36,7 @@ const Home = () => {
       <Grid container columns={{ xs: 1, sm: 12, md: 12, lg: 16 }} spacing={0}>
         <Grid item xs={1} sm={12} md={12} lg={10}>
           <Container>
-            <Grid container spacing="3" columns={{ xs: 1, sm: 12, md: 12 }}>
+            <Grid container spacing={{ xs: 0, sm: 1, md: 4 }} columns={{ xs: 1, sm: 12, md: 12 }}>
               <Grid item xs={1} sm={12} md={12}>
                 <DarkWoodCard>
                   <FullJobsRender
@@ -62,9 +62,6 @@ const Home = () => {
         </Grid>
         <Grid item xs={1} sm={12} md={12} lg={6}>
           <Grid container columns={12} spacing={1}>
-          <Grid item xs={12} sm={12} md={10} lg={10} >
-              <JobEditor />
-            </Grid>
             <Grid item xs={12} sm={12} md={10} lg={10} >
               <MyStepper />
             </Grid>

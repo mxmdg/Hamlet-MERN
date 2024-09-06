@@ -60,6 +60,21 @@ const PartCard = (props) => {
           >
             Editar
           </Button>
+          {/* 
+          
+            Agregar Boton para copiar partes, antes hay que resolver la 
+            propiedad _id para que se modifique, porque nos da error la repeticion de ids
+
+          <Button
+            color="secondary"
+            onClick={(e) => {
+              e.preventDefault();
+              props.addPart(props.part);
+              props.setActiveStep(1);
+            }}
+          >
+            Copiar
+          </Button> */}
           <Button
             color="error"
             onClick={() => {

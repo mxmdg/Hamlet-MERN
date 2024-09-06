@@ -108,48 +108,49 @@ export function createData(
 
 export const PartsTable = (props) => {
   return (
-    <Box
+    <Paper
       component="div"
-      elevation={12}
+      elevation={6}
       sx={{
-        margin: "20px",
-        padding: "15px",
-        borderRadius: "8px",
+        width: "100%",
+        margin: "5px",
+        padding: "5px",
+        alignContent: "center"
       }}
     >
       <Typography color={"secondary"} variant="subtitle1" component="div">
         Partes
       </Typography>
-      <Table size="small" aria-label="purchases">
+      <Table size="small" aria-label="purchases" padding="small" variant="h6">
         <TableHead>
           <TableRow>
             <TableCell >
-              <Typography color={"secondary"} variant="subtitle2">
+              <Typography color={"secondary"} variant="body1">
                 Tipo
               </Typography>
             </TableCell>
             <TableCell>
-              <Typography color={"secondary"} variant="subtitle2">
+              <Typography color={"secondary"} variant="body1">
                 Nombre
               </Typography>
             </TableCell>
             <TableCell>
-              <Typography color={"secondary"} variant="subtitle2">
+              <Typography color={"secondary"} variant="body1">
                 Páginas
               </Typography>
             </TableCell>
             <TableCell>
-              <Typography color={"secondary"} variant="subtitle2">
+              <Typography color={"secondary"} variant="body1">
                 Formato
               </Typography>
             </TableCell>
             <TableCell>
-              <Typography color={"secondary"} variant="subtitle2">
+              <Typography color={"secondary"} variant="body1">
                 Colores
               </Typography>
             </TableCell>
             <TableCell>
-              <Typography color={"secondary"} variant="subtitle2">
+              <Typography color={"secondary"} variant="body1">
                 Material
               </Typography>
             </TableCell>
@@ -159,7 +160,7 @@ export const PartsTable = (props) => {
           {props.data?.map((historyRow) => (
             <TableRow key={historyRow._id}>
               <TableCell component="th" scope="row">
-                <Typography color={"info"} variant="subtitle2">
+                <Typography color={"info"} variant="body2">
                   {historyRow.type}
                 </Typography>
               </TableCell>
@@ -172,7 +173,7 @@ export const PartsTable = (props) => {
           ))}
         </TableBody>
       </Table>
-    </Box>
+    </Paper>
   );
 };
 
@@ -184,6 +185,7 @@ export default function CollapsibleTable(props) {
   const [orderBy, setOrderBy] = React.useState(props.settings.column || "name");
   const [rows, setRows] = React.useState(props.rows);
   const [page, setPage] = React.useState(0);
+  const [dense, setDense] = React.useState(true);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
@@ -264,14 +266,14 @@ export default function CollapsibleTable(props) {
         <TableRow
           key={props._id}
           _id={props._id}
-          sx={{ "& > *": { borderBottom: "unset" } }}
+          sx={{ borderBottom: "unset" } }
           hover={true}
           selected={open ? true : false}
           onDoubleClick={() => {
             navigate(`/jobs/edit/${row._id}`);
           }}
         >
-          <TableCell padding="checkbox">
+          <TableCell >
             <Checkbox
               color="info"
               checked={isItemSelected}
@@ -297,31 +299,31 @@ export default function CollapsibleTable(props) {
             </IconButton>
           </TableCell>
           <TableCell align="left">
-            <Typography variant="subtitle1">{row.name}</Typography>
+            <Typography >{row.name}</Typography>
           </TableCell>
           <TableCell align="left">
-            <Typography variant="subtitle1">{row.product}</Typography>
+            <Typography >{row.product}</Typography>
           </TableCell>
           <TableCell align="left">
-            <Typography variant="subtitle1">{row.quantity}</Typography>
+            <Typography >{row.quantity}</Typography>
           </TableCell>
           <TableCell align="left">
-            <Typography color={"info"} variant="subtitle1">
+            <Typography color={"info"} >
               {row.customer}
             </Typography>
           </TableCell>
           <TableCell align="left">
-            <Typography variant="subtitle1">{row.owner}</Typography>
+            <Typography >{row.owner}</Typography>
           </TableCell>
           <TableCell align="left">
-            <Typography variant="subtitle1">{row.from}</Typography>
+            <Typography >{row.from}</Typography>
           </TableCell>
           <TableCell align="left">
-            <Typography variant="subtitle1">{row.to}</Typography>
+            <Typography >{row.to}</Typography>
           </TableCell>
         </TableRow>
         <TableRow>
-          <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={8}>
+          <TableCell style={{ padding: 0 }} colSpan={12}>
             <Collapse
               in={open}
               timeout={300}
@@ -382,7 +384,7 @@ export default function CollapsibleTable(props) {
     return (
       <TableHead>
         <TableRow>
-          <TableCell padding="checkbox">
+          <TableCell>
             <Checkbox
               color="info"
               indeterminate={numSelected > 0 && numSelected < rowCount}
@@ -393,7 +395,9 @@ export default function CollapsibleTable(props) {
               }}
             />
           </TableCell>
-          <TableCell></TableCell>
+          <TableCell style={{
+                padding: 1,
+              }}></TableCell>
           {headers.map((headCell) => (
             <TableCell
               key={headCell.id}
@@ -443,7 +447,7 @@ export default function CollapsibleTable(props) {
         resetSelected={setSelected}
       />
       <TableContainer component={Box}>
-        <Table aria-label="collapsible table">
+        <Table aria-label="collapsible table" padding="normal" size="small" variant="body2">
           <EnhancedTableHead
             numSelected={selected.length}
             order={order}
@@ -451,6 +455,9 @@ export default function CollapsibleTable(props) {
             onSelectAllClick={handleSelectAllClick}
             onRequestSort={handleRequestSort}
             rowCount={rows.length}
+            style={{
+              padding: (dense ? 1 : 5),
+            }}
           />
           <TableBody>
             {visibleRows.map((row) => (
