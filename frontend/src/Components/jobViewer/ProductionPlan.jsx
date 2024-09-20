@@ -198,7 +198,7 @@ const ProductionPlan = (props) => {
     fetchPrices(); // Call the fetchPrices function inside useEffect
 
     // Make sure to include fetchPrices as a dependency array to avoid unnecessary re-renders
-  }, []);
+  }, [setPrices]);
 
   const success = (
     <Grid container columns={12} spacing={2} padding={2}>
@@ -317,6 +317,32 @@ const ProductionPlan = (props) => {
           </Grid>
         );
       })}
+      
+      {/* 
+      
+      Proximamente: agregar calculos de terminacion para el trabajo.
+      
+      <Grid item xs={12} sm={6} lg={3} key={"general"}>
+            <Card
+              
+              elevation={8}
+            >
+              <CardHeader
+                title={`${props.job.Nombre}`}
+                titleTypographyProps={{ color: "primary" }}
+                subheader={`${props.job.Tipo[0].name}`}
+                subheaderTypographyProps={{ color: "secondary" }}
+              ></CardHeader>
+              <Divider />
+              <CardContent>
+                { {usePrices.map((price)=>{
+                  <Typography key={price._id}>
+                    {price.Proceso} {price.Valor}
+                  </Typography>
+                })} }
+              </CardContent>
+            </Card>
+          </Grid> */}
     </Grid>
   );
 

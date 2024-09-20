@@ -338,7 +338,7 @@ const JobDetail = (props) => {
               >
                 <Typography color={"primary"}>Costo:</Typography>
               </AccordionSummary>
-              <ProductionPlan impositionData={productionPlan} />
+              <ProductionPlan impositionData={productionPlan} job={job} />
             </Accordion>
           )}
         </CardContent>

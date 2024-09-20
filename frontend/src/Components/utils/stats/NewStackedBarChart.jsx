@@ -15,7 +15,7 @@ import { coloresIntermedios, myWrapperStyle } from "./NewRadialBar";
 import { convertirFecha } from "../generalData/fechaDiccionario";
 import { getPrivateElements } from "../../customHooks/FetchDataHook";
 import FullJobsRender from "../../Pages/FullJobsRender";
-import { Modal, Box, TextField } from "@mui/material";
+import { Modal, Box, TextField, Card, CardHeader,CardContent, Typography } from "@mui/material";
 
 const NewStackedBarChart = (props) => {
   const [jobsForDay, setJobsForDay] = React.useState(null);
@@ -35,10 +35,12 @@ const NewStackedBarChart = (props) => {
     const formattedStartDate = startDate;
     const formattedEndDate = endDate.toISOString();
 
+    const weekdays = ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado", "Domingo"]
+
     setJobsForDay(
       `jobs/urg?startDate=${formattedStartDate}&endDate=${formattedEndDate}`
     );
-    setTitle(`${endDate.getDate() + 1}-${(endDate.getMonth() + 1)}-${(endDate.getFullYear())}`)
+    setTitle(`${weekdays[endDate.getDay()]} ${endDate.getDate() + 1}-${(endDate.getMonth() + 1)}-${(endDate.getFullYear())}`)
     handleOpen();
 
     // Usando el custom hook para hacer la consulta
@@ -48,6 +50,27 @@ const NewStackedBarChart = (props) => {
     // Ahora puedes usar 'jobs' para mostrarlos en tu componente
 
     console.table(jobs); */
+  };
+
+  const CustomTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+      return (
+        <Card elevation={20}>
+          <CardHeader subheader={label}/>
+          <CardContent>
+              {payload.map((item, index)=>{
+                return (
+                  <Typography color="primary">
+                    {item.name}: <b>{item.value}</b> 
+                  </Typography>
+                )
+              })}
+          </CardContent>
+        </Card>
+      );
+    }
+  
+    return null;
   };
 
   React.useEffect(()=>{
@@ -87,7 +110,8 @@ const NewStackedBarChart = (props) => {
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="name" />
           <YAxis />
-          <Tooltip />
+          <Tooltip content={<CustomTooltip />}/>
+          
           <Legend
             iconSize={10}
             iconType=  {(e) =>{ return (filter === e.dataKey ? "circle" : "square")}}
