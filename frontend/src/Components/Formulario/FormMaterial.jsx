@@ -1,6 +1,6 @@
 //React Imports
 
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
@@ -85,11 +85,11 @@ const FormMaterial = (props) => {
   const [useItem, setItem] = useState(props.item || "new");
 
   // This state stores checkbox's selections
-  const [selectedCheckboxItems, setSelectedCheckboxItems] = useState();
+  const [selectedCheckboxItems, setSelectedCheckboxItems] = useState([]);
 
   // This state intializes chebox value
 
-  const [useValue, setMyValue] = useState({ value: ""});
+  const [useValue, setMyValue] = useState({ value: "" });
 
   // These states are used for navigation.
   const navigate = useNavigate();
@@ -122,24 +122,36 @@ const FormMaterial = (props) => {
 
       const fetchItem = async () => {
         setLoading(true);
-
+        console.log("Cargando desde FormMaterial");
         try {
           const itemToEdit = await getPrivateElementByID(
             `${props.collection}`,
             id
           );
-
+          console.log("Item Cargado desde FormMaterial");
           setItem(itemToEdit);
 
-          
           // Recorremos el dataForm y si hay un checkbox, cargamos el array en el estado, a ver si anda... Anduvo!
-          for (let inp of props.form) {
-            const checkOptions = (itemToEdit) ? {[inp.inputName]: itemToEdit.data[inp.inputName]} : {[inp.inputName]: []}
-            if (inp.type === "checkbox" && props.task !== "new") {
-              setSelectedCheckboxItems(checkOptions)
-            } 
+          try {
+            const checkOptions = {};
+            for (let inp of dataForm) {
+              if (inp.type === "checkbox") {
+                console.log("Recorrido por el array del checkbox");
+                console.log(inp);
+
+                itemToEdit !== "new" && itemToEdit !== undefined
+                  ? (checkOptions[inp.inputName] =
+                      itemToEdit.data[inp.inputName])
+                  : (checkOptions[inp.inputName] = []);
+              }
+              if (inp.type === "checkbox" && props.task !== "new") {
+                setSelectedCheckboxItems(checkOptions);
+              }
+            }
+          } catch (e) {
+            setErrorMessage(e.message);
           }
-          
+
           setLoading(false);
 
           console.log(dataForm);
@@ -152,11 +164,10 @@ const FormMaterial = (props) => {
       console.log(useItem);
     } else {
       for (let inp of props.form) {
-        
         if (inp.type === "checkbox") {
-          console.log(inp.inputName, props.task)
-          setSelectedCheckboxItems({[inp.inputName]: []})
-        } 
+          console.log(inp.inputName, props.task);
+          setSelectedCheckboxItems({ [inp.inputName]: [] });
+        }
       }
       console.log("new");
     }
@@ -178,13 +189,13 @@ const FormMaterial = (props) => {
     }
     console.log(datos);
     // Collct data from checkBox
-    if(selectedCheckboxItems !== undefined) {
+    if (selectedCheckboxItems !== undefined) {
       for (const [nombre, value] of Object.entries(selectedCheckboxItems)) {
-      const res = { nombre, value };
-      datos.push(res);
+        const res = { nombre, value };
+        datos.push(res);
+      }
     }
-    }
-    
+    console.log("Datos from Chekbox");
     console.log(datos);
 
     const formData = convertirArrayAObjeto(datos);
@@ -210,8 +221,10 @@ const FormMaterial = (props) => {
         navigate(-1);
         //props.editor(true);
       } catch (e) {
-        console.log(e)
-        setErrorMessage("No se pudo actualizar. " + e.response.data.error.message);
+        console.log(e);
+        setErrorMessage(
+          "No se pudo actualizar. " + e.response.data.error.message
+        );
       }
     }
     /* try {
@@ -252,7 +265,7 @@ const FormMaterial = (props) => {
       };
       return (
         <Grid item xs={4} sm={2} md={3}>
-          <FormControl>
+          <FormControl key={inp.id}>
             <TextField
               id={inp.id}
               select
@@ -274,9 +287,9 @@ const FormMaterial = (props) => {
                 },
               }}
             >
-              {inp.options.map((u) => {
+              {inp.options.map((u, index) => {
                 return (
-                  <MenuItem value={u.value} key={u.id}>
+                  <MenuItem value={u.value} key={u.text + index}>
                     {u.text}
                   </MenuItem>
                 );
@@ -284,8 +297,8 @@ const FormMaterial = (props) => {
             </TextField>
             <FormHelperText>Elija una opción</FormHelperText>
             {errors[inp.id]?.type === "required" && (
-                    <FormHelperText>Este campo es requerido</FormHelperText>
-                  )}
+              <FormHelperText>Este campo es requerido</FormHelperText>
+            )}
           </FormControl>
         </Grid>
       );
@@ -309,7 +322,7 @@ const FormMaterial = (props) => {
     } else if (inp.type === "checkbox") {
       const changeHandler = (e, opt, checkboxSetKey) => {
         e.preventDefault();
-        setMyValue({ value: e.target.value });
+        setMyValue({ [inp.inputName]: e.target.value });
         setSelectedCheckboxItems((prevItems) => {
           const selectedItemsForSet = prevItems[checkboxSetKey] || [];
 
@@ -352,8 +365,6 @@ const FormMaterial = (props) => {
               >
                 <FormGroup label={inp.label || inp.inputName}>
                   {inp.options.map((opt, index) => {
-                    //console.log(useItem.data[inp.inputName][index]);
-                    //console.log(useItem.data[inp.inputName].includes(opt));
                     return (
                       <FormControlLabel
                         key={inp.inputName + index}
@@ -366,7 +377,8 @@ const FormMaterial = (props) => {
                             value={[opt]}
                             defaultChecked={
                               // Esta ultima condicion hay que quitarla cuando se solucione el problema del checkbox
-                              useItem.data !== undefined && useItem.data.jobTypesAllowed !== 0 
+                              useItem.data !== undefined &&
+                              useItem.data[inp.inputName] !== 0
                                 ? useItem.data[inp.inputName].includes(opt)
                                 : false
                             }
@@ -406,7 +418,7 @@ const FormMaterial = (props) => {
               inputProps: {
                 placeholder: "",
               },
-                step: (inp.step !== undefined ? inp.step : 1)
+              step: inp.step !== undefined ? inp.step : 1,
             }}
             fullWidth
           />
@@ -450,7 +462,9 @@ const FormMaterial = (props) => {
                     columns={{ xs: 4, sm: 8, md: 12 }}
                     sx={{ pb: 4 }}
                   >
-                    {dataForm.map((inp) => typeOfInput(inp))}
+                    {dataForm.map((inp, index) => (
+                      <Fragment key={index}>{typeOfInput(inp)}</Fragment>
+                    ))}
                   </Grid>
                   <Divider />
                   <CardActions
