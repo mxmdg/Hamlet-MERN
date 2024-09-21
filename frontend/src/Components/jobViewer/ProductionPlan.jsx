@@ -318,9 +318,6 @@ const ProductionPlan = (props) => {
         );
       })}
       
-      {/* 
-      
-      Proximamente: agregar calculos de terminacion para el trabajo.
       
       <Grid item xs={12} sm={6} lg={3} key={"general"}>
             <Card
@@ -334,15 +331,8 @@ const ProductionPlan = (props) => {
                 subheaderTypographyProps={{ color: "secondary" }}
               ></CardHeader>
               <Divider />
-              <CardContent>
-                { {usePrices.map((price)=>{
-                  <Typography key={price._id}>
-                    {price.Proceso} {price.Valor}
-                  </Typography>
-                })} }
-              </CardContent>
             </Card>
-          </Grid> */}
+          </Grid>
     </Grid>
   );
 

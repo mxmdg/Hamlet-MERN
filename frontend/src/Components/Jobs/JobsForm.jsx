@@ -1,9 +1,9 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, Fragment } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { useForm } from "react-hook-form";
 import Input from "@mui/material/Input";
 import Container from "@mui/material/Container";
-import { Autocomplete } from "@mui/material";
+import { Autocomplete, FormGroup, FormControlLabel } from "@mui/material";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
@@ -17,6 +17,7 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
+import {Checkbox} from "@mui/material";
 import { Grid } from "@mui/material";
 import JobTypes from "./JobTypes";
 import { fechtData, getPrivateElementByID } from "../customHooks/FetchDataHook";
@@ -35,6 +36,8 @@ const JobsForm = (props) => {
   const [useUsersList, setUsersList] = useState([]);
   const [useCompaniesList, setCompaniesList] = useState([]);
   const [useCompany, setCompany] = useState(props.data?.Company);
+  const [useFinishingList, setFinishingList] = useState([]);
+  const [useJobType, setJobType] = useState(props.jobType.name || null)
   const context = useContext(AuthContext);
 
   const handleChange = (e) => {
@@ -46,11 +49,13 @@ const JobsForm = (props) => {
   const getCompanies = async () =>
     await fechtData("Empresas", setCompaniesList);
   const getCompany = async (id) => await getPrivateElementByID("empresas", id);
+  const getFinishers = async () => await fechtData("Finishers", setFinishingList)
 
   useEffect(() => {
     getUsers();
     getCompanies();
-  }, [setUsersList, setCompaniesList]);
+    getFinishers();
+  }, [setUsersList, setCompaniesList, setFinishingList]);
 
   const onSubmit = (values) => {
     const jt = JobTypes.find((item) => {
@@ -134,13 +139,21 @@ const JobsForm = (props) => {
                     name="JobType"
                     fullWidth
                     {...register("JobType", { required: true })}
-                    onBlur={() => {
+                    onBlur={(e) => {
+                      e.preventDefault()
                       trigger("JobType");
+                      JobTypes.map((jt)=>{
+                        if (jt.id === e.target.value ) {
+                          setJobType(jt.name)
+                          return jt.name
+                        }
+                      })
                     }}
+                   
                   >
                     {JobTypes.map((jt) => {
                       return (
-                        <MenuItem value={jt.id} key={jt.id}>
+                        <MenuItem value={jt.id} key={jt.id} nombre={jt.name}>
                           {jt.name}
                         </MenuItem>
                       );
@@ -272,6 +285,7 @@ const JobsForm = (props) => {
                           errors.Company ? "Seleccione una empresa" : ""
                         }
                       />
+
                     )}
                   />
                   {/* <TextField
@@ -304,7 +318,30 @@ const JobsForm = (props) => {
                     <FormHelperText>Seleccione una empresa</FormHelperText>
                   )} */}
                 </Grid>
+                <Grid item xs={12} sm={12} md={12} >
+                  {
+                    <FormGroup
+                      id="Finishing"
 
+                      sx={{ display: 'flex', flexDirection: 'row', ml: 1 }}
+                      {...register("Finishing", {
+                        required: false,
+                      })}
+                      onBlur={() => {
+                        trigger("Finishing");
+                      }}
+                      >
+                        {useFinishingList.map((Finisher)=>{
+                          if (Finisher.jobTypesAllowed.includes(useJobType)) {
+                            return (
+                              <FormControlLabel control={<Checkbox />} label={`${Finisher.Proceso} ${Finisher.Modelo}`}/>
+                            )
+                          }
+                        })}
+                    </FormGroup>
+
+                  }
+                </Grid>
                 <Grid item xs={1} sm={2} md={4} sx={{ alignSelf: "center" }}>
                   <Button type="submit" variant="contained" color="primary">
                     Agregar Trabajo
