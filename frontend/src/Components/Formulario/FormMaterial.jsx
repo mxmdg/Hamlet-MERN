@@ -122,13 +122,11 @@ const FormMaterial = (props) => {
 
       const fetchItem = async () => {
         setLoading(true);
-        console.log("Cargando desde FormMaterial");
         try {
           const itemToEdit = await getPrivateElementByID(
             `${props.collection}`,
             id
           );
-          console.log("Item Cargado desde FormMaterial");
           setItem(itemToEdit);
 
           // Recorremos el dataForm y si hay un checkbox, cargamos el array en el estado, a ver si anda... Anduvo!
@@ -136,9 +134,6 @@ const FormMaterial = (props) => {
             const checkOptions = {};
             for (let inp of dataForm) {
               if (inp.type === "checkbox") {
-                console.log("Recorrido por el array del checkbox");
-                console.log(inp);
-
                 itemToEdit !== "new" && itemToEdit !== undefined
                   ? (checkOptions[inp.inputName] =
                       itemToEdit.data[inp.inputName])
@@ -165,7 +160,6 @@ const FormMaterial = (props) => {
     } else {
       for (let inp of props.form) {
         if (inp.type === "checkbox") {
-          console.log(inp.inputName, props.task);
           setSelectedCheckboxItems({ [inp.inputName]: [] });
         }
       }
@@ -187,7 +181,7 @@ const FormMaterial = (props) => {
       console.log(nombre, value);
       datos.push({ nombre, value });
     }
-    console.log(datos);
+    // console.log(datos);
     // Collct data from checkBox
     if (selectedCheckboxItems !== undefined) {
       for (const [nombre, value] of Object.entries(selectedCheckboxItems)) {

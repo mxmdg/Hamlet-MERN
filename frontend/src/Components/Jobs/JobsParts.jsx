@@ -11,7 +11,12 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import FormHelperText from "@mui/material/FormHelperText";
-import FormControl from "@mui/material/FormControl";
+import {
+  FormGroup,
+  FormControl,
+  FormControlLabel,
+  Checkbox,
+} from "@mui/material";
 import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
@@ -34,9 +39,13 @@ const JobParts = (props) => {
   const [filteredStocks, setFilteredStocks] = useState([]);
   const [partsList, setPartsList] = useState(null);
   const [currentPart, setCurrentPart] = useState(props.editPart || null);
+  const [useFinishingList, setFinishingList] = useState([]);
 
   // Estado para inhabilitar ColoresDorso cuando el trabajo es una sola cara
   const [useSimplex, setSimplex] = useState(false);
+
+  const getFinishers = async () =>
+    await fechtData("Finishers", setFinishingList);
 
   const [useError, setError] = useState(false);
 
@@ -135,12 +144,19 @@ const JobParts = (props) => {
     try {
       //console.table(filteredParts);
       setPartsList(filteredParts);
+      getFinishers();
       updateStocks();
     } catch (e) {
       console.log(e);
       setError(e);
     }
-  }, [setFilteredStocks, setPartsList, currentPart, setSimplex]);
+  }, [
+    setFilteredStocks,
+    setPartsList,
+    currentPart,
+    setSimplex,
+    setFinishingList,
+  ]);
 
   const failed = (
     <ErrorMessage
@@ -449,6 +465,36 @@ const JobParts = (props) => {
                 </FormHelperText>
               )}
             </Grid>
+            <Grid item xs={12} sm={12} md={12}>
+              {
+                <FormGroup
+                  id="Finishing"
+                  sx={{ display: "flex", flexDirection: "row", ml: 1 }}
+                  {...register("Finishing", {
+                    required: false,
+                  })}
+                  onBlur={() => {
+                    trigger("Finishing");
+                  }}
+                >
+                  {useFinishingList.map((Finisher) => {
+                    if (
+                      Finisher.partTypesAllowed &&
+                      Finisher.partTypesAllowed.includes(
+                        currentPart?.Type || ""
+                      )
+                    ) {
+                      return (
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label={`${Finisher.Proceso} ${Finisher.Modelo}`}
+                        />
+                      );
+                    }
+                  })}
+                </FormGroup>
+              }
+            </Grid>
             <Grid item xs={1} sm={2} md={4}>
               <FormControl sx={{ width: "85%" }}>
                 <Button
@@ -461,7 +507,6 @@ const JobParts = (props) => {
                     ? "Agregar Parte"
                     : "Guardar cambios"}
                 </Button>
-              
               </FormControl>
             </Grid>
           </Grid>
