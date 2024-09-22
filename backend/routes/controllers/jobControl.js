@@ -81,7 +81,7 @@ jobControl.getUrgentJobs = async (req, res) => {
   if (req.query.endDate) {
     endDate.setDate(endDate.getDate() + 1); // Para incluir el día completo
   } else {
-    startDate.setDate(startDate.getDate() -1) // Por defecto incluye hoy
+    startDate.setDate(startDate.getDate() - 1); // Por defecto incluye hoy
     endDate.setDate(startDate.getDate() + 8); // Por defecto, la próxima semana
   }
   try {
@@ -157,6 +157,7 @@ jobControl.addJob = async (req, res) => {
       const Entrega = req.body.Entrega;
       const Owner = req.body.Owner;
       const Company = req.body.Company;
+      const Finishing = req.body.Finishing;
       //const Archivos = '/uploads/' + req.file.filename;
       const newJob = new jobs.esquema({
         Nombre,
@@ -166,6 +167,7 @@ jobControl.addJob = async (req, res) => {
         Partes,
         Owner,
         Company,
+        Finishing,
       });
       await newJob.save();
       console.log(`Trabajo agregado`);
@@ -206,6 +208,7 @@ jobControl.updateJob = async (req, res) => {
       const Entrega = req.body.Entrega;
       const Owner = req.body.Owner;
       const Company = req.body.Company;
+      const Finishing = req.body.Finishing;
       //const Archivos = '/uploads/' + req.file.filename;
       const newJob = new jobs.esquema({
         Nombre,
@@ -215,8 +218,12 @@ jobControl.updateJob = async (req, res) => {
         Partes,
         Owner,
         Company,
+        Finishing,
       });
-      await jobs.esquema.findOneAndUpdate({ _id: req.params.id }, {Nombre, Tipo, Cantidad, Partes, Entrega, Owner, Company});
+      await jobs.esquema.findOneAndUpdate(
+        { _id: req.params.id },
+        { Nombre, Tipo, Cantidad, Partes, Entrega, Owner, Company, Finishing }
+      );
       console.log(`Trabajo agregado`);
       res.json({ message: newJob.Nombre + " guardado OK" });
     } catch (e) {

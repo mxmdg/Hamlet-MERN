@@ -20,7 +20,7 @@ import {
 import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
-import { Grid } from "@mui/material";
+import { Grid, Autocomplete } from "@mui/material";
 import { fechtData, getPrivateElements } from "../customHooks/FetchDataHook";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 
@@ -37,9 +37,13 @@ const JobParts = (props) => {
 */
   const [stocks, setStocks] = useState(props.stocks);
   const [filteredStocks, setFilteredStocks] = useState([]);
+  const [useStock, setStock] = useState();
   const [partsList, setPartsList] = useState(null);
   const [currentPart, setCurrentPart] = useState(props.editPart || null);
   const [useFinishingList, setFinishingList] = useState([]);
+  const [selectedFinishings, setSelectedFinishings] = useState(
+    props.editPart?.part.Finishing || []
+  );
 
   // Estado para inhabilitar ColoresDorso cuando el trabajo es una sola cara
   const [useSimplex, setSimplex] = useState(false);
@@ -58,6 +62,7 @@ const JobParts = (props) => {
     handleSubmit,
     formState: { errors },
     trigger,
+    setValue,
     control,
   } = useForm({
     mode: "onBlur", // "onChange"
@@ -111,6 +116,18 @@ const JobParts = (props) => {
     }
   };
 
+  const changeHandler = (e, useFinishingList, Finisher) => {
+    if (e.target.checked) {
+      // Agregar el objeto seleccionado al array
+      setSelectedFinishings((prevSelected) => [...prevSelected, Finisher]);
+    } else {
+      // Remover el objeto si se deselecciona
+      setSelectedFinishings((prevSelected) =>
+        prevSelected.filter((item) => item._id !== Finisher._id)
+      );
+    }
+  };
+
   console.log("Estados y variables declaradoas antes de useEffect");
 
   useEffect(() => {
@@ -120,7 +137,7 @@ const JobParts = (props) => {
       await fechtData("materiales", setStocks);
       filterStocks();
     };
-
+    console.log(props.onChange);
     console.log(props.parts);
 
     const filteredParts = props.parts.filter((part) =>
@@ -172,6 +189,7 @@ const JobParts = (props) => {
         <form
           name="form2"
           onSubmit={handleSubmit(
+            //props.editPart === null ?
             props.editPart === null ? props.addParts : props.replacePart
           )}
         >
@@ -371,7 +389,43 @@ const JobParts = (props) => {
               )}
             </Grid>
             <Grid item xs={1} sm={2} md={4}>
-              <TextField
+              <Autocomplete
+                id="partStock"
+                options={filteredStocks}
+                defaultValue={
+                  props.editPart !== null ? props.editPart.part.partStock : null
+                }
+                autoHighlight
+                getOptionLabel={(option) =>
+                  `${option.Nombre_Material} - ${option.Marca}(${option.Ancho_Resma} x ${option.Alto_Resma})`
+                }
+                {...register("partStock", { required: true })}
+                onChange={(event, newValue) => {
+                  if (newValue) {
+                    // Actualiza el valor del campo Company con el _id seleccionado
+                    setValue("partStock", newValue);
+                    setStock(newValue);
+                  } else {
+                    // Si el valor es nulo, elimina el valor del campo Company
+                    setValue("partStock", "");
+                  }
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Material"
+                    variant="outlined"
+                    fullWidth
+                    error={!!errors.partStock}
+                    helperText={
+                      errors.partStock
+                        ? "Seleccione tipo y gramaje de papel"
+                        : ""
+                    }
+                  />
+                )}
+              />
+              {/* <TextField
                 select
                 defaultValue={
                   props.editPart !== null
@@ -397,7 +451,7 @@ const JobParts = (props) => {
                     {`(${Stock.Ancho_Resma} x ${Stock.Alto_Resma})`}
                   </MenuItem>
                 ))}
-              </TextField>
+              </TextField> */}
               {errors.partStock?.type === "required" && (
                 <FormHelperText>Seleccione Material</FormHelperText>
               )}
@@ -470,14 +524,11 @@ const JobParts = (props) => {
                 <FormGroup
                   id="Finishing"
                   sx={{ display: "flex", flexDirection: "row", ml: 1 }}
-                  {...register("Finishing", {
-                    required: false,
-                  })}
-                  onBlur={() => {
-                    trigger("Finishing");
-                  }}
                 >
                   {useFinishingList.map((Finisher) => {
+                    const isChecked = selectedFinishings.some(
+                      (f) => f === Finisher._id
+                    );
                     if (
                       Finisher.partTypesAllowed &&
                       Finisher.partTypesAllowed.includes(
@@ -486,7 +537,20 @@ const JobParts = (props) => {
                     ) {
                       return (
                         <FormControlLabel
-                          control={<Checkbox />}
+                          key={Finisher._id}
+                          {...register("Finishing", {
+                            required: false,
+                          })}
+                          control={
+                            <Checkbox
+                              color="secondary"
+                              value={Finisher._id}
+                              defaultChecked={isChecked}
+                              onChange={(e) =>
+                                changeHandler(e, useFinishingList, Finisher)
+                              }
+                            />
+                          }
                           label={`${Finisher.Proceso} ${Finisher.Modelo}`}
                         />
                       );

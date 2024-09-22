@@ -37,6 +37,7 @@ import {
   CardContent,
   CardActions,
   CardHeader,
+  Chip,
   Divider,
   Typography,
   TextField,
@@ -339,7 +340,7 @@ const FormMaterial = (props) => {
       };
 
       return (
-        <Grid item xs={4} sm={4} md={6}>
+        <Grid item xs={12} sm={12} md={12}>
           <Card
             raised={false}
             sx={{
@@ -358,33 +359,49 @@ const FormMaterial = (props) => {
                 id={inp.inputName}
               >
                 <FormGroup label={inp.label || inp.inputName}>
-                  {inp.options.map((opt, index) => {
-                    return (
-                      <FormControlLabel
-                        key={inp.inputName + index}
-                        control={
-                          <Checkbox
-                            color="primary"
-                            key={inp.inputName + "_" + index}
-                            id={"id_" + inp.inputName + index} // Asegúrate de que cada checkbox tenga un ID único
-                            //defaultChecked={false}
-                            value={[opt]}
-                            defaultChecked={
-                              // Esta ultima condicion hay que quitarla cuando se solucione el problema del checkbox
-                              useItem.data !== undefined &&
-                              useItem.data[inp.inputName] !== 0
-                                ? useItem.data[inp.inputName].includes(opt)
-                                : false
+                  <Grid container columns={12}>
+                    {inp.options.map((opt, index) => {
+                      return (
+                        <Grid item xs={12} sm={6} md={4} lg={3}>
+                          <FormControlLabel
+                            key={inp.inputName + index}
+                            /* sx={{
+                          background: "#0b548c",
+                          borderRadius: "25px",
+                          boxShadow: "3px 3px 5px #000",
+                          padding: "2px 10px 2px 5px",
+                          margin: "3px",
+                          ":hover": {
+                            background: "#009fd9",
+                          },
+                        }} */
+                            control={
+                              <Checkbox
+                                color="secondary"
+                                key={inp.inputName + "_" + index}
+                                id={"id_" + inp.inputName + index} // Asegúrate de que cada checkbox tenga un ID único
+                                //defaultChecked={false}
+                                value={[opt]}
+                                defaultChecked={
+                                  // Esta ultima condicion hay que quitarla cuando se solucione el problema del checkbox
+                                  useItem.data !== undefined &&
+                                  useItem.data[inp.inputName] !== 0
+                                    ? useItem.data[inp.inputName].includes(opt)
+                                    : false
+                                }
+                                onChange={(e) =>
+                                  changeHandler(e, opt, inp.inputName)
+                                }
+                              />
                             }
-                            onChange={(e) =>
-                              changeHandler(e, opt, inp.inputName)
-                            }
+                            label={opt}
+                            labelPlacement="leftTop"
                           />
-                        }
-                        label={opt}
-                      />
-                    );
-                  })}
+                        </Grid>
+                      );
+                    })}
+                  </Grid>
+
                   {errors[inp.id]?.type === "required" && (
                     <FormHelperText>Este campo es requerido</FormHelperText>
                   )}

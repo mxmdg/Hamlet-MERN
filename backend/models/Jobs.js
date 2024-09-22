@@ -1,6 +1,7 @@
 const { Schema, model, isValidObjectId } = require("mongoose");
 const mongoose = require("../dbConnection");
 const timeAgo = require("node-time-ago");
+
 function orientation(x, y) {
   let orientacion;
   console.log(x, y);
@@ -44,6 +45,7 @@ const partSchema = new Schema({
   ColoresFrente: { type: Number, required: true },
   ColoresDorso: { type: Number, required: false, default: 0 },
   partStock: { type: mongoose.Schema.ObjectId, ref: "Category" },
+  Finishing: { type: Object, required: false },
 });
 
 const jobSchema = new Schema({
@@ -54,8 +56,9 @@ const jobSchema = new Schema({
   Entrega: { type: Date, required: true },
   Fecha: { type: Date, default: Date.now },
   Partes: [partSchema],
-  Owner: { type: mongoose.Schema.ObjectId, ref: "Users", required: true},
+  Owner: { type: mongoose.Schema.ObjectId, ref: "Users", required: true },
   Company: { type: mongoose.Schema.ObjectId, ref: "Empresas", required: true },
+  Finishing: { type: Object, required: false },
 });
 
 // Definimos una función que se ejecutará antes de guardar cada parte

@@ -37,6 +37,11 @@ const JobsForm = (props) => {
   const [useCompaniesList, setCompaniesList] = useState([]);
   const [useCompany, setCompany] = useState(props.data?.Company);
   const [useFinishingList, setFinishingList] = useState([]);
+  const [selectedFinishings, setSelectedFinishings] = useState(
+    props.data?.Finishing || []
+  );
+  // This state intializes chebox value
+  // const [useValue, setMyValue] = useState({ value: "" });
   const [useJobType, setJobType] = useState(props.jobType.name || null);
   const context = useContext(AuthContext);
 
@@ -51,6 +56,18 @@ const JobsForm = (props) => {
   const getCompany = async (id) => await getPrivateElementByID("empresas", id);
   const getFinishers = async () =>
     await fechtData("Finishers", setFinishingList);
+
+  const changeHandler = (e, useFinishingList, Finisher) => {
+    if (e.target.checked) {
+      // Agregar el objeto seleccionado al array
+      setSelectedFinishings((prevSelected) => [...prevSelected, Finisher]);
+    } else {
+      // Remover el objeto si se deselecciona
+      setSelectedFinishings((prevSelected) =>
+        prevSelected.filter((item) => item._id !== Finisher._id)
+      );
+    }
+  };
 
   useEffect(() => {
     getUsers();
@@ -73,6 +90,10 @@ const JobsForm = (props) => {
     props.setJobType(jt);
     props.continue();
   };
+
+  useEffect(() => {
+    setValue("Finishing", selectedFinishings); // Esto actualiza el campo Finishing con los objetos seleccionados
+  }, [selectedFinishings, setValue]);
 
   return (
     <Box
@@ -322,21 +343,28 @@ const JobsForm = (props) => {
                     <FormGroup
                       id="Finishing"
                       sx={{ display: "flex", flexDirection: "row", ml: 1 }}
-                      {...register("Finishing", {
-                        required: false,
-                      })}
-                      onBlur={() => {
-                        trigger("Finishing");
-                      }}
                     >
                       {useFinishingList.map((Finisher) => {
+                        const isChecked = selectedFinishings.some(
+                          (f) => f._id === Finisher._id
+                        );
                         if (
                           Finisher.jobTypesAllowed &&
                           Finisher.jobTypesAllowed.includes(useJobType)
                         ) {
                           return (
                             <FormControlLabel
-                              control={<Checkbox />}
+                              key={Finisher._id}
+                              control={
+                                <Checkbox
+                                  color="secondary"
+                                  value={Finisher._id}
+                                  defaultChecked={isChecked}
+                                  onChange={(e) =>
+                                    changeHandler(e, useFinishingList, Finisher)
+                                  }
+                                />
+                              }
                               label={`${Finisher.Proceso} ${Finisher.Modelo}`}
                             />
                           );
