@@ -6,7 +6,7 @@ const dict = [
   { label: "Representante", id: "owner" },
   { label: "Emision", id: "from" },
   { label: "Entrega", id: "to" },
-  { label: "Terminacon", id: "Finishing" },
+  //{ label: "Terminacon", id: "Finishing" },
 ];
 
 // Recibe [{label: "Texto a mostrar", id: "propiedad del objeto en la base de datos"}]

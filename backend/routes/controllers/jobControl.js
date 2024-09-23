@@ -194,7 +194,7 @@ jobControl.getJob = async (req, res) => {
         select: "Nombre email",
       })
       .populate({ path: "Partes.partStock", model: stocks.esquema })
-      .populate({ path: "Partes.Finishing", model: finishers.esquema });
+      .populate({ path: "Partes.Finishing", select: "Modelo Proceso Costo.Valor"});
     res.json(job);
   } catch (e) {
     res.status(404).json({ message: "Trabajo no encontrado: " + e.message });

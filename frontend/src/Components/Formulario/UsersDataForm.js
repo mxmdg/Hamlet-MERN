@@ -14,7 +14,7 @@ let UsersDataForm = [
     type: "Select",
     id: "id_003",
     options: [
-      { text: "Administrador", value: "Admin" },
+      //{ text: "Administrador", value: "Admin" },
       { text: "Vendedor", value: "Manager" },
       { text: "Operador", value: "Operator" },
       { text: "Cliente", value: "Customer" },

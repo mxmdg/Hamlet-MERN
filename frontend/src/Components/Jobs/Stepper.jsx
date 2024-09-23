@@ -1,5 +1,6 @@
 import * as React from "react";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import Box from "@mui/material/Box";
@@ -45,6 +46,7 @@ export default function MyStepper(props) {
   const [useError, setError] = React.useState(null);
   const [stocks, setStocks] = React.useState([]);
   const context = useContext(AuthContext);
+  const navigate = useNavigate()
 
   const handleJobTypeChange = (e) => {
     setJobType(e.target.value);
@@ -274,6 +276,11 @@ export default function MyStepper(props) {
         <CardHeader
           title={useJob?.Nombre || "Nuevo Pedido"}
           subheader={useJob?.Cantidad || "Solicita tu presupuesto!"}
+          action={
+            <Button onClick={()=>{navigate(-1)}}>
+              Volver
+            </Button>
+          }
         />
         <CardContent>
           <Box sx={{ width: "100%" }}>

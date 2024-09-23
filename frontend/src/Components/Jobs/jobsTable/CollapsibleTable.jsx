@@ -86,9 +86,9 @@ export function createData(
       size: `${p.Ancho} x ${p.Alto} mm`,
       colors: `${p.ColoresFrente} / ${p.ColoresDorso || "0"}`,
       stock: `${p.partStock.Marca} ${p.partStock.Tipo} ${p.partStock.Gramaje}`,
-      finishing: p.Finishing
-        ? p.Finishing.map((f) => `${f}, `)
-        : "Sin Terminacion",
+      // finishing: p.Finishing
+      //   ? p.Finishing.map((f) => `${f}, `)
+      //   : "Sin Terminacion",
       _id: p._id,
     };
     arr.push(data);

@@ -284,6 +284,11 @@ const JobDetail = (props) => {
               <MenuBookIcon color="error" />
             </Avatar>
           }
+          action={
+            <Button onClick={()=>{navigate(`/jobs/copy/${job._id}`)}}>
+              Editar
+            </Button>
+          }
           /*  action={
             <Box>
               <Paper elevation={12} sx={{ background: "#39a" }}>
@@ -416,6 +421,7 @@ const JobDetail = (props) => {
           >
             Plan de producción
           </Button>
+          
         </CardActions>
       </Card>
     </Container>

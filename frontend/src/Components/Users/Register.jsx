@@ -125,9 +125,9 @@ export const Register = () => {
                       trigger("Role");
                     }}
                   >
-                    <MenuItem value="Admin" key="role01">
+                    {/* <MenuItem value="Admin" key="role01">
                       Administrado
-                    </MenuItem>
+                    </MenuItem> */}
                     <MenuItem value="Manager" key="role02">
                       Vendedor
                     </MenuItem>

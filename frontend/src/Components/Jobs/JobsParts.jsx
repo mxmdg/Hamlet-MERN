@@ -527,7 +527,7 @@ const JobParts = (props) => {
                 >
                   {useFinishingList.map((Finisher) => {
                     const isChecked = selectedFinishings.some(
-                      (f) => f === Finisher._id
+                      (f) => f._id === Finisher._id
                     );
                     if (
                       Finisher.partTypesAllowed &&
