@@ -15,6 +15,7 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import Typography from "@mui/material/Typography";
+import { List, ListItem } from "@mui/material";
 import { visuallyHidden } from "@mui/utils";
 import Paper from "@mui/material/Paper";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
@@ -85,6 +86,9 @@ export function createData(
       size: `${p.Ancho} x ${p.Alto} mm`,
       colors: `${p.ColoresFrente} / ${p.ColoresDorso || "0"}`,
       stock: `${p.partStock.Marca} ${p.partStock.Tipo} ${p.partStock.Gramaje}`,
+      finishing: p.Finishing
+        ? p.Finishing.map((f) => `${f}, `)
+        : "Sin Terminacion",
       _id: p._id,
     };
     arr.push(data);
@@ -115,7 +119,7 @@ export const PartsTable = (props) => {
         width: "100%",
         margin: "5px",
         padding: "5px",
-        alignContent: "center"
+        alignContent: "center",
       }}
     >
       <Typography color={"secondary"} variant="subtitle1" component="div">
@@ -124,7 +128,7 @@ export const PartsTable = (props) => {
       <Table size="small" aria-label="purchases" padding="small" variant="h6">
         <TableHead>
           <TableRow>
-            <TableCell >
+            <TableCell>
               <Typography color={"secondary"} variant="body1">
                 Tipo
               </Typography>
@@ -154,6 +158,11 @@ export const PartsTable = (props) => {
                 Material
               </Typography>
             </TableCell>
+            <TableCell>
+              <Typography color={"secondary"} variant="body1">
+                Terminacion
+              </Typography>
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -169,6 +178,7 @@ export const PartsTable = (props) => {
               <TableCell align="left">{historyRow.size}</TableCell>
               <TableCell align="left">{historyRow.colors}</TableCell>
               <TableCell align="left">{historyRow.stock}</TableCell>
+              <TableCell align="left">{historyRow.finishing}</TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -266,14 +276,14 @@ export default function CollapsibleTable(props) {
         <TableRow
           key={props._id}
           _id={props._id}
-          sx={{ borderBottom: "unset" } }
+          sx={{ borderBottom: "unset" }}
           hover={true}
           selected={open ? true : false}
           onDoubleClick={() => {
             navigate(`/jobs/edit/${row._id}`);
           }}
         >
-          <TableCell >
+          <TableCell>
             <Checkbox
               color="info"
               checked={isItemSelected}
@@ -299,27 +309,28 @@ export default function CollapsibleTable(props) {
             </IconButton>
           </TableCell>
           <TableCell align="left">
-            <Typography >{row.name}</Typography>
+            <Typography>{row.name}</Typography>
           </TableCell>
           <TableCell align="left">
-            <Typography >{row.product}</Typography>
+            <Typography>{row.product}</Typography>
           </TableCell>
           <TableCell align="left">
-            <Typography >{row.quantity}</Typography>
+            <Typography>{row.quantity}</Typography>
           </TableCell>
           <TableCell align="left">
-            <Typography color={"info"} >
-              {row.customer}
-            </Typography>
+            <Typography color={"info"}>{row.customer}</Typography>
           </TableCell>
           <TableCell align="left">
-            <Typography >{row.owner}</Typography>
+            <Typography>{row.owner}</Typography>
           </TableCell>
           <TableCell align="left">
-            <Typography >{row.from}</Typography>
+            <Typography>{row.from}</Typography>
           </TableCell>
           <TableCell align="left">
-            <Typography >{row.to}</Typography>
+            <Typography>{row.to}</Typography>
+          </TableCell>
+          <TableCell align="left">
+            <Typography>{row.Finishing}</Typography>
           </TableCell>
         </TableRow>
         <TableRow>
@@ -354,10 +365,11 @@ export default function CollapsibleTable(props) {
             job.Owner?.Name + " " + job.Owner?.LastName,
             job.Emision,
             job.DeadLine,
-            job.Partes
+            job.Partes,
+            job.Finishing
           );
         });
-        
+
         rows.push(...Rows); // Use spread operator to push elements individually
         setRows([...Rows]); // Update state with the fetched data
       } catch (error) {
@@ -395,9 +407,11 @@ export default function CollapsibleTable(props) {
               }}
             />
           </TableCell>
-          <TableCell style={{
-                padding: 1,
-              }}></TableCell>
+          <TableCell
+            style={{
+              padding: 1,
+            }}
+          ></TableCell>
           {headers.map((headCell) => (
             <TableCell
               key={headCell.id}
@@ -437,7 +451,12 @@ export default function CollapsibleTable(props) {
 
   const tableOK = (
     <>
-      <Filter headers={headers} data={rows} setFilteredList={setRows} filter={props.settings.filter}/>
+      <Filter
+        headers={headers}
+        data={rows}
+        setFilteredList={setRows}
+        filter={props.settings.filter}
+      />
       <EnhancedTableToolbar
         collection="jobs"
         title={props.settings.title}
@@ -447,7 +466,12 @@ export default function CollapsibleTable(props) {
         resetSelected={setSelected}
       />
       <TableContainer component={Box}>
-        <Table aria-label="collapsible table" padding="normal" size="small" variant="body2">
+        <Table
+          aria-label="collapsible table"
+          padding="normal"
+          size="small"
+          variant="body2"
+        >
           <EnhancedTableHead
             numSelected={selected.length}
             order={order}
@@ -456,7 +480,7 @@ export default function CollapsibleTable(props) {
             onRequestSort={handleRequestSort}
             rowCount={rows.length}
             style={{
-              padding: (dense ? 1 : 5),
+              padding: dense ? 1 : 5,
             }}
           />
           <TableBody>

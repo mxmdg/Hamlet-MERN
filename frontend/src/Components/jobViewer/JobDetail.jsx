@@ -6,6 +6,9 @@ import {
   Card,
   CardContent,
   CardActions,
+  List,
+  ListItem,
+  ListItemText,
   Divider,
   CardHeader,
   Typography,
@@ -198,6 +201,22 @@ const JobDetail = (props) => {
                       ? ` - ${useImpoData.formatSelector.Nombre}`
                       : ""}
                   </Item>
+                  {part.Finishing && (
+                    <Item>
+                      <List dense={true} disablePadding={true}>
+                        {part.Finishing.map((pf) => {
+                          return (
+                            <ListItem divider={true}>
+                              <Typography>
+                                {pf.Proceso} / {pf.Modelo}
+                              </Typography>
+                            </ListItem>
+                          );
+                        })}
+                      </List>
+                    </Item>
+                  )}
+
                   {usePoses && (
                     <>
                       <Item2 elevation={4}>Poses: {usePoses}</Item2>
@@ -323,6 +342,38 @@ const JobDetail = (props) => {
           {job.Partes.map((parte) => {
             return PartDetail(parte);
           })}
+          {job.Finishing && (
+            <Accordion
+              key={"fn-" + productionPlan.id}
+              id={"fn-" + productionPlan.id}
+              expanded={expanded === "fn-" + productionPlan.id}
+              onChange={handleChange("fn-" + productionPlan.id)}
+            >
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1bh-content"
+                id="panel1bh-header"
+              >
+                <Typography color={"primary"}>Terminacion:</Typography>
+              </AccordionSummary>
+              <Card>
+                <CardHeader subheader="Procesos" />
+                <CardContent>
+                  <List>
+                    {job.Finishing.map((f) => {
+                      return (
+                        <ListItem>
+                          <ListItemText>
+                            {f.Proceso} / {f.Modelo}
+                          </ListItemText>
+                        </ListItem>
+                      );
+                    })}
+                  </List>
+                </CardContent>
+              </Card>
+            </Accordion>
+          )}
 
           {productionPlanAvaible && (
             <Accordion

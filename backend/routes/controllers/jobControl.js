@@ -2,6 +2,7 @@ const jobs = require("../../models/Jobs");
 const users = require("../../models/usersSchema");
 const companies = require("../../models/empresas");
 const stocks = require("../../models/materiales");
+const finishers = require("../../models/finishers");
 
 const jobControl = {};
 
@@ -192,7 +193,8 @@ jobControl.getJob = async (req, res) => {
         model: companies.esquema,
         select: "Nombre email",
       })
-      .populate({ path: "Partes.partStock", model: stocks.esquema });
+      .populate({ path: "Partes.partStock", model: stocks.esquema })
+      .populate({ path: "Partes.Finishing", model: finishers.esquema });
     res.json(job);
   } catch (e) {
     res.status(404).json({ message: "Trabajo no encontrado: " + e.message });
