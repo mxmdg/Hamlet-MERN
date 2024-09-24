@@ -31,6 +31,9 @@ jobControl.getCompleteJobs = async (req, res) => {
         .find({
           Nombre: { $regex: queryText, $options: "i" },
         })
+        .select(
+          "-Finishing.Costo.Historial  -Finishing.jobTypesAllowed -Finishing.partTypesAllowed"
+        )
         .populate({
           path: "Owner",
           model: users.esquema,
@@ -41,7 +44,12 @@ jobControl.getCompleteJobs = async (req, res) => {
           select: "Nombre email",
         })
         .populate({ path: "Partes.partStock", model: stocks.esquema })
-        .sort({ Nombre: -1 });
+        .populate({
+          path: "Partes.Finishing",
+          model: finishers.esquema,
+          select: "-Costo.Historial -jobTypesAllowed -partTypesAllowed",
+        })
+        .sort({ Fecha: -1 });
       res.json(jobList);
     } catch (e) {
       throw e;
@@ -183,6 +191,9 @@ jobControl.getJob = async (req, res) => {
   try {
     const job = await jobs.esquema
       .findById(req.params.id)
+      .select(
+        "-Finishing.Costo.Historial  -Finishing.jobTypesAllowed -Finishing.partTypesAllowed"
+      )
       .populate({
         path: "Owner",
         model: users.esquema,
@@ -194,7 +205,11 @@ jobControl.getJob = async (req, res) => {
         select: "Nombre email",
       })
       .populate({ path: "Partes.partStock", model: stocks.esquema })
-      .populate({ path: "Partes.Finishing", select: "Modelo Proceso Costo.Valor"});
+      .populate({
+        path: "Partes.Finishing",
+        model: finishers.esquema,
+        select: "-Costo.Historial -jobTypesAllowed -partTypesAllowed",
+      });
     res.json(job);
   } catch (e) {
     res.status(404).json({ message: "Trabajo no encontrado: " + e.message });
