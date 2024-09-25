@@ -96,7 +96,7 @@ export default function NewRadialBar(props) {
             layout="vertical"
             verticalAlign="top"
             wrapperStyle={myWrapperStyle}
-          />
+          /> 
           <Tooltip />
       </RadialBarChart>
     </ResponsiveContainer>

@@ -15,7 +15,7 @@ jobControl.getJobs = async (req, res) => {
           Nombre: { $regex: queryText, $options: "i" },
         })
         .select("Nombre Cantidad Fecha Entrega Emision Deadline Owner")
-        .sort({ Nombre: -1 });
+        .sort({ Fecha: -1 });
       res.json(jobList);
     } catch (e) {
       throw e;

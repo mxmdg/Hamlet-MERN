@@ -392,8 +392,15 @@ const JobParts = (props) => {
               <Autocomplete
                 id="partStock"
                 options={filteredStocks}
-                defaultValue={
-                  props.editPart !== null ? props.editPart.part.partStock : null
+                defaultValue={()=> {
+                  if (props.editPart !== null) {
+                    setValue("partStock", props.editPart.part.partStock._id)
+                    return props.editPart.part.partStock
+                  } else {
+                    return null
+                  } 
+                }
+                  
                 }
                 autoHighlight
                 getOptionLabel={(option) =>
@@ -401,9 +408,13 @@ const JobParts = (props) => {
                 }
                 {...register("partStock", { required: true })}
                 onChange={(event, newValue) => {
+                  const currenValue = event
+                  console.log("New Value Stock")
+                  console.log(currenValue)
+                  console.log(newValue)
                   if (newValue) {
                     // Actualiza el valor del campo Company con el _id seleccionado
-                    setValue("partStock", newValue);
+                    setValue("partStock", newValue._id);
                     setStock(newValue);
                   } else {
                     // Si el valor es nulo, elimina el valor del campo Company
@@ -451,10 +462,10 @@ const JobParts = (props) => {
                     {`(${Stock.Ancho_Resma} x ${Stock.Alto_Resma})`}
                   </MenuItem>
                 ))}
-              </TextField> */}
+              </TextField> 
               {errors.partStock?.type === "required" && (
                 <FormHelperText>Seleccione Material</FormHelperText>
-              )}
+              )}*/}
             </Grid>
             <Grid item xs={1} sm={2} md={4}>
               <TextField

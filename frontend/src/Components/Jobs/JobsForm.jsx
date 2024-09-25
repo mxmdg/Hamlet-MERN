@@ -284,6 +284,7 @@ const JobsForm = (props) => {
                     options={useCompaniesList}
                     defaultValue={props.data?.Company}
                     autoHighlight
+                    autoComplete={true}
                     getOptionLabel={(option) => option.Nombre}
                     onChange={(event, newValue) => {
                       if (newValue) {

@@ -32,6 +32,7 @@ import FormatsMainContainer from "./Components/Formats/FormatsMainContainer";
 import PrintersMainContainer from "./Components/Printers/PrintersMainContainer";
 import FullJobsRender from "./Components/Pages/FullJobsRender";
 import JobsEditAndCopy from "./Components/Pages/JobsEditAndCopy";
+import JobParts from "./Components/Jobs/JobsParts";
 import Machines from "./Components/Pages/Machines";
 
 //MUI Material
