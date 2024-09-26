@@ -22,19 +22,24 @@ const JobsToCSV = ({ data, fileName }) => {
     let str = "";
     console.log(array);
     for (let i = 0; i < array.length; i++) {
-      let line = `${array[i].Nombre} (${array[i].Tipo[0].name})
+      let line = `_____________________________________
+      (# ${i + 1}) ${array[i].Nombre} (${array[i].Tipo[0].name})
+      _________________________________________________
       Cliente: ${array[i].Company.Nombre}
       Cantidad ${array[i].Cantidad}, ${getMyDate(array[i].Entrega).ddmmyy} (${
         array[i].DeadLine
-      })`;
+      })
+      `;
       for (let index in array[i].Partes) {
-        if (line !== "") line += ",";
+        if (line !== "") line += " ";
 
         line += `${array[i].Partes[index].jobParts[0].Type}, ${array[i].Partes[index].Name}, 
           Pags: ${array[i].Partes[index].Pages}, 
           Colores: ${array[i].Partes[index].ColoresFrente} / ${array[i].Partes[index].ColoresDorso}, 
           Fto.: ${array[i].Partes[index].Ancho} x ${array[i].Partes[index].Alto}, 
-          Material: ${array[i].Partes[index].partStock.Tipo} ${array[i].Partes[index].partStock.Gramaje}`;
+          Material: ${array[i].Partes[index].partStock.Tipo} ${array[i].Partes[index].partStock.Gramaje}
+          ....................................................
+          `;
       }
       str += line + "\r\n";
     }
