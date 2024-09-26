@@ -2,7 +2,7 @@ import React from "react";
 import Container from "@mui/material/Container";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
-import { Card } from "@mui/material";
+import { Card, CardActions, CardContent, ButtonGroup } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import Spinner from "../General/Spinner";
 import JobRow from "../Jobs/jobsTable/JobRow";
@@ -10,6 +10,8 @@ import { fechtData, getPrivateElements } from "../customHooks/FetchDataHook";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import CollapsibleTable from "../Jobs/jobsTable/CollapsibleTable";
 import DarkWoodCard from "../utils/DarkWoodCard";
+import DownloadCSV from "../utils/DownloadCSV/DownloadCSV";
+import DownloadJSON from "../utils/DownloadCSV/DownloadJSON";
 
 const FullJobsRender = (props) => {
   const [jobList, setJobList] = React.useState([]);
@@ -65,12 +67,20 @@ const FullJobsRender = (props) => {
         AlertError
       ) : jobList ? (
         <Card elevation={6}>
-          <CollapsibleTable
-            rows={jobList}
-            route={props.route}
-            settings={props.settings}
-            deleted={setDeleted}
-          />
+          <CardContent>
+            <CollapsibleTable
+              rows={jobList}
+              route={props.route}
+              settings={props.settings}
+              deleted={setDeleted}
+            />
+          </CardContent>
+          <CardActions>
+            <ButtonGroup>
+              <DownloadCSV data={jobList} fileName={props.settings.title} />
+              <DownloadJSON data={jobList} fileName={props.settings.title} />
+            </ButtonGroup>
+          </CardActions>
         </Card>
       ) : (
         <Typography color={"error"}> NO Data </Typography>

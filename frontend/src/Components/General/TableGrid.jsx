@@ -1,6 +1,7 @@
 import * as React from "react";
 import PropTypes from "prop-types";
 import Box from "@mui/material/Box";
+import { ButtonGroup } from "@mui/material";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -28,6 +29,8 @@ import { styled } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import { pages } from "../NavigationBar/AppBarResponsive";
+import DownloadCSV from "../utils/DownloadCSV/DownloadCSV";
+import DownloadJSON from "../utils/DownloadCSV/DownloadJSON";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -223,6 +226,7 @@ export function EnhancedTableToolbar(props) {
               </StyledTooltip>
             </>
           )}
+
           <DangerTooltip title="¡BORRAR!" arrow>
             <IconButton
               sx={{ alignSelf: "right" }}
@@ -346,9 +350,9 @@ export default function EnhancedTable(props) {
     <>
       <EnhancedTableToolbar
         collection={props.collection.replace("/urg", "")}
-        title={pages.map((pg)=>{
-          if(pg.path === props.collection.replace("/urg", "")) {
-            return pg.text || props.collection
+        title={pages.map((pg) => {
+          if (pg.path === props.collection.replace("/urg", "")) {
+            return pg.text || props.collection;
           }
         })}
         numSelected={selected.length}
@@ -456,6 +460,11 @@ export default function EnhancedTable(props) {
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
+      <ButtonGroup>
+        <DownloadCSV data={props.rows} fileName={`${props.collection}`} />
+        <DownloadJSON data={props.rows} fileName={`${props.collection}`} />
+      </ButtonGroup>
+
       <FormControlLabel
         control={<Switch checked={dense} onChange={handleChangeDense} />}
         label="Dense padding"
