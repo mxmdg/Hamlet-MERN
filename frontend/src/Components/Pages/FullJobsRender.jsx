@@ -12,6 +12,7 @@ import CollapsibleTable from "../Jobs/jobsTable/CollapsibleTable";
 import DarkWoodCard from "../utils/DarkWoodCard";
 import DownloadCSV from "../utils/DownloadCSV/DownloadCSV";
 import DownloadJSON from "../utils/DownloadCSV/DownloadJSON";
+import JobsToCSV from "../utils/DownloadCSV/JobsToCSV";
 
 const FullJobsRender = (props) => {
   const [jobList, setJobList] = React.useState([]);
@@ -77,7 +78,7 @@ const FullJobsRender = (props) => {
           </CardContent>
           <CardActions>
             <ButtonGroup>
-              <DownloadCSV data={jobList} fileName={props.settings.title} />
+              <JobsToCSV data={jobList} fileName={props.settings.title} />
               <DownloadJSON data={jobList} fileName={props.settings.title} />
             </ButtonGroup>
           </CardActions>
