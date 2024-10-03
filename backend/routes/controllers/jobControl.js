@@ -124,9 +124,30 @@ jobControl.getOwnerJobs = async (req, res) => {
       const queryText = req.query.Q || "";
       const currentUserId = req.params.id;
       const jobList = await jobs.esquema
-        .find({ Owner: { $eq: currentUserId } })
+        /* .find({ Owner: { $eq: currentUserId } })
         .select("Nombre Cantidad Fecha Entrega Emision Deadline");
-      res.json(jobList);
+      res.json(jobList); */
+      .find({ Owner: { $eq: currentUserId } })
+      .select(
+        "-Finishing.Costo.Historial  -Finishing.jobTypesAllowed -Finishing.partTypesAllowed"
+      )
+      .populate({
+        path: "Owner",
+        model: users.esquema,
+      })
+      .populate({
+        path: "Company",
+        model: companies.esquema,
+        select: "Nombre email",
+      })
+      .populate({ path: "Partes.partStock", model: stocks.esquema })
+      .populate({
+        path: "Partes.Finishing",
+        model: finishers.esquema,
+        select: "-Costo.Historial -jobTypesAllowed -partTypesAllowed",
+      })
+      .sort({ Fecha: -1 });
+    res.json(jobList);
     }
   } catch (e) {
     throw e;

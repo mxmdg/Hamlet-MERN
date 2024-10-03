@@ -207,7 +207,7 @@ const JobDetail = (props) => {
                         {part.Finishing.map((pf) => {
                           return (
                             <ListItem divider={true}>
-                              <Typography>
+                              <Typography color={"primary"}>
                                 {pf.Proceso} / {pf.Modelo}
                               </Typography>
                             </ListItem>
@@ -361,7 +361,7 @@ const JobDetail = (props) => {
               >
                 <Typography color={"primary"}>Terminacion:</Typography>
               </AccordionSummary>
-              <Card>
+              <Card >
                 <CardHeader subheader="Procesos" />
                 <CardContent>
                   <List>
@@ -369,7 +369,10 @@ const JobDetail = (props) => {
                       return (
                         <ListItem>
                           <ListItemText>
-                            {f.Proceso} / {f.Modelo}
+                            <Typography >
+                              {f.Proceso} / {f.Modelo}
+                            </Typography>
+                            
                           </ListItemText>
                         </ListItem>
                       );

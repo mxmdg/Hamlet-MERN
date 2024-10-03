@@ -79,7 +79,6 @@ const FullJobsRender = (props) => {
           <CardActions>
             <ButtonGroup>
               <JobsToCSV data={jobList} fileName={props.settings.title} />
-              <DownloadJSON data={jobList} fileName={props.settings.title} />
             </ButtonGroup>
           </CardActions>
         </Card>

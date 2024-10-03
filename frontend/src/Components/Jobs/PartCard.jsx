@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
@@ -12,6 +12,8 @@ import {
   Container,
   ButtonGroup,
   Grid,
+  List,
+  ListItem,
 } from "@mui/material";
 
 import { calcularLomo } from "../jobViewer/JobDetail";
@@ -46,6 +48,23 @@ const PartCard = (props) => {
           </>
         ) : (
           ""
+        )}
+        <br />
+        {part.Finishing.length > 0 && (
+          <Fragment>
+            Terminacion: 
+            <List>
+              {
+              part.Finishing.map((f)=>{
+                return (<ListItem>{f.Proceso}</ListItem>)
+              })
+            }
+
+            </List>
+            
+           
+          </Fragment>
+          
         )}
       </CardContent>
       <CardActions>
