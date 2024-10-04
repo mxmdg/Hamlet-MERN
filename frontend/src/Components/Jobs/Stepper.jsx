@@ -147,13 +147,13 @@ export default function MyStepper(props) {
     return skipped.has(step);
   };
 
-  const handleNext = (n = 1) => {
+  const handleNext = () => {
     let newSkipped = skipped;
     if (isStepSkipped(activeStep)) {
       newSkipped = new Set(newSkipped.values());
       newSkipped.delete(activeStep);
     }
-    setActiveStep((prevActiveStep) => prevActiveStep + n);
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
     setSkipped(newSkipped);
   };
 

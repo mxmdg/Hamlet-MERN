@@ -18,12 +18,10 @@ import {
 } from "@mui/material";
 
 import { calcularLomo } from "../jobViewer/JobDetail";
-import ErrorMessage from "../ErrorMessage/ErrorMessage";
 
 const PartCard = (props) => {
   const [part, setPart] = React.useState(props.part);
   const [index, setIndex] = React.useState(props.index);
-  const [useError, setError] = React.useState(null)
 
   return (
     <Card
@@ -64,9 +62,12 @@ const PartCard = (props) => {
           <Fragment>
             <Divider />
             <List dense disablePadding>
-                  {part.Finishing?.map((f)=>{
+              {
+              part.Finishing.map((f)=>{
                     return (<ListItem disableGutters key={f._id + part._id}>{f.Proceso}</ListItem>)
-                  })}
+              })
+            }
+
             </List>
             
            
