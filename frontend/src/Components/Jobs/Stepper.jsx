@@ -147,13 +147,13 @@ export default function MyStepper(props) {
     return skipped.has(step);
   };
 
-  const handleNext = () => {
+  const handleNext = (n = 1) => {
     let newSkipped = skipped;
     if (isStepSkipped(activeStep)) {
       newSkipped = new Set(newSkipped.values());
       newSkipped.delete(activeStep);
     }
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    setActiveStep((prevActiveStep) => prevActiveStep + n);
     setSkipped(newSkipped);
   };
 
@@ -269,7 +269,8 @@ export default function MyStepper(props) {
   const statusOk = (
     <Box
       sx={{
-        width: "fit-content",
+        width: "100%",
+        padding: "2%"
       }}
     >
       <Card raised sx={{ gap: "20px" }} color="info">
@@ -282,9 +283,11 @@ export default function MyStepper(props) {
             </Button>
           }
         />
+        <Divider/>
         <CardContent>
-          <Box sx={{ width: "100%" }}>
-            <Stepper activeStep={activeStep}>
+          <Grid container columns={12} sx={{ width: "100%", display: "flex", flexDirection: "row"}}>
+            <Grid item >
+              <Stepper activeStep={activeStep}>
               {steps.map((label, index) => {
                 const stepProps = {};
                 const labelProps = {};
@@ -305,30 +308,6 @@ export default function MyStepper(props) {
                 );
               })}
             </Stepper>
-            <Container>
-              <Grid
-                container
-                columns={{ xs: 4, sm: 8, md: 12 }}
-                spacing={1}
-                overflow={"auto"}
-              >
-                {useParts?.map((part, index) => {
-                  return (
-                    <Grid item xs={4} sm={4} md={6} key={part._id}>
-                      <PartCard
-                        part={part}
-                        index={index}
-                        editPart={editPart}
-                        addPart={addParts}
-                        setActiveStep={setActiveStep}
-                        removePart={removePart}
-                      />
-                    </Grid>
-                  );
-                })}
-              </Grid>
-            </Container>
-
             {activeStep === steps.length ? (
               <React.Fragment>
                 <Typography sx={{ mt: 2, mb: 1 }}>
@@ -396,7 +375,36 @@ export default function MyStepper(props) {
                 <Divider></Divider>
               </React.Fragment>
             )}
-          </Box>
+            </Grid>
+            <Grid item xs>
+              <Container >
+                <Grid
+                  container
+                  columns={{ xs: 4, sm: 8, md: 12 }}
+                  spacing={1}
+                  overflow={"false"}
+                  sx={{height: "98%"}}
+                >
+                  {useParts?.map((part, index) => {
+                    return (
+                      <Grid item xs={4} sm={4} md={6} key={part._id}>
+                        <PartCard
+                          part={part}
+                          index={index}
+                          editPart={editPart}
+                          addPart={addParts}
+                          setActiveStep={setActiveStep}
+                          removePart={removePart}
+                        />
+                      </Grid>
+                    );
+                  })}
+                </Grid>
+              </Container>
+            </Grid>
+            
+
+          </Grid>
         </CardContent>
       </Card>
     </Box>

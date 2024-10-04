@@ -156,6 +156,19 @@ const JobParts = (props) => {
         console.log(e);
         setError(e);
       }
+    } else if (props.useParts) {
+      try {
+        const arr = []
+        console.log(props.job)
+        props.job.Partes.map((p)=>{
+          p.Finishing.push(arr)
+        })
+        console.log(arr)
+        setSelectedFinishings(arr)
+      } catch (error) {
+        setError(error)
+      }
+      
     }
 
     try {

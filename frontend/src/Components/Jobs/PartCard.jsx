@@ -14,61 +14,70 @@ import {
   Grid,
   List,
   ListItem,
+  Typography,
 } from "@mui/material";
 
 import { calcularLomo } from "../jobViewer/JobDetail";
+import ErrorMessage from "../ErrorMessage/ErrorMessage";
 
 const PartCard = (props) => {
   const [part, setPart] = React.useState(props.part);
   const [index, setIndex] = React.useState(props.index);
+  const [useError, setError] = React.useState(null)
 
   return (
     <Card
-      variant="elevation"
-      elevation={12}
-      square={true}
-      sx={{ marginTop: "20px" }}
+      variant="outlined"
+      sx={{ 
+        marginTop: "20px",  
+        border: "1px solid #666", 
+        background: "transparent", 
+        height: "100%", 
+        display: "flex",
+        flexFlow: "column",
+        alignContent: "space-between"  
+      }}
     >
       <CardHeader
         title={part.Name}
         subheader={part.jobParts[0]?.Type}
       ></CardHeader>
-      <CardContent>
-        Paginas: {part.Pages}
+      <CardContent sx={{flexGrow: 1}}>
+        <Typography variant="body2">
+          Paginas: {part.Pages}
         <br />
         Formato: {part.Ancho} x {part.Alto}
         <br />
         Impresion: {part.ColoresFrente}/{part.ColoresDorso}
         <br />
         Material: {part.partStock.Nombre_Material}
-        <br />
+        
         {part.Pages > 10 ? (
           <>
-            Lomo: {calcularLomo(part.Pages, part.partStock.Espesor_Resma)} mm.
+            {` (Lomo: ${calcularLomo(part.Pages, part.partStock.Espesor_Resma)} mm.)`}
           </>
         ) : (
           ""
         )}
-        <br />
+        <br /><br />
         {part.Finishing.length > 0 && (
           <Fragment>
-            Terminacion: 
-            <List>
-              {
-              part.Finishing.map((f)=>{
-                return (<ListItem>{f.Proceso}</ListItem>)
-              })
-            }
-
+            <Divider />
+            <List dense disablePadding>
+                  {part.Finishing?.map((f)=>{
+                    return (<ListItem disableGutters key={f._id + part._id}>{f.Proceso}</ListItem>)
+                  })}
             </List>
             
            
           </Fragment>
           
         )}
+        </Typography>
+        
       </CardContent>
-      <CardActions>
-        <ButtonGroup size="small">
+      <CardActions >
+        <ButtonGroup size="small"  variant="text" >
           <Button
             color="primary"
             onClick={(e) => {
