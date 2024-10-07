@@ -412,7 +412,7 @@ export default function MyStepper(props) {
 
   const statusError = (
     <ErrorMessage
-      message={useError?.message}
+      message={useError.response.data.message || useError.message}
       color="success"
       action={resetError}
     />

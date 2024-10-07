@@ -70,6 +70,7 @@ const JobParts = (props) => {
 
   const filterStocks = () => {
     console.log("Ejecutando funcion filterStocks");
+    console.log(currentPart)
     console.table(stocks);
     const res = stocks.filter((stock) => {
       try {
@@ -91,7 +92,8 @@ const JobParts = (props) => {
           return stock;
         }
       } catch (error) {
-        console.log(error.message);
+        console.log(error);
+        return error
       }
     });
     console.log("Devuelve lista de materiales filtrada");
@@ -154,9 +156,8 @@ const JobParts = (props) => {
         console.table(currentPart);
       } catch (e) {
         console.log(e);
-        setError(e);
       }
-    } else if (props.useParts) {
+    } else if (props.job) {
       try {
         const arr = []
         console.log(props.job)
@@ -166,7 +167,7 @@ const JobParts = (props) => {
         console.log(arr)
         setSelectedFinishings(arr)
       } catch (error) {
-        setError(error)
+        console.log(error)
       }
       
     }
@@ -178,7 +179,6 @@ const JobParts = (props) => {
       updateStocks();
     } catch (e) {
       console.log(e);
-      setError(e);
     }
   }, [
     setFilteredStocks,
