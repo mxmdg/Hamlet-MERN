@@ -46,7 +46,7 @@ export default function MyStepper(props) {
   const [useError, setError] = React.useState(null);
   const [stocks, setStocks] = React.useState([]);
   const context = useContext(AuthContext);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleJobTypeChange = (e) => {
     setJobType(e.target.value);
@@ -270,7 +270,7 @@ export default function MyStepper(props) {
     <Box
       sx={{
         width: "100%",
-        padding: "2%"
+        padding: "2%",
       }}
     >
       <Card raised sx={{ gap: "20px" }} color="info">
@@ -278,112 +278,120 @@ export default function MyStepper(props) {
           title={useJob?.Nombre || "Nuevo Pedido"}
           subheader={useJob?.Cantidad || "Solicita tu presupuesto!"}
           action={
-            <Button onClick={()=>{navigate(-1)}}>
+            <Button
+              onClick={() => {
+                navigate(-1);
+              }}
+            >
               Volver
             </Button>
           }
         />
-        <Divider/>
+        <Divider />
         <CardContent>
-          <Grid container columns={12} sx={{ width: "100%", display: "flex", flexDirection: "row"}}>
-            <Grid item >
+          <Grid
+            container
+            columns={12}
+            sx={{ width: "100%", display: "flex", flexDirection: "row" }}
+          >
+            <Grid item>
               <Stepper activeStep={activeStep}>
-              {steps.map((label, index) => {
-                const stepProps = {};
-                const labelProps = {};
-                if (isStepOptional(index)) {
-                  labelProps.optional = (
-                    <Typography variant="caption" key={index}>
-                      Opcional
-                    </Typography>
+                {steps.map((label, index) => {
+                  const stepProps = {};
+                  const labelProps = {};
+                  if (isStepOptional(index)) {
+                    labelProps.optional = (
+                      <Typography variant="caption" key={index}>
+                        Opcional
+                      </Typography>
+                    );
+                  }
+                  if (isStepSkipped(index)) {
+                    stepProps.completed = false;
+                  }
+                  return (
+                    <Step key={index + "_label"} {...stepProps}>
+                      <StepLabel {...labelProps}>{label[0]}</StepLabel>
+                    </Step>
                   );
-                }
-                if (isStepSkipped(index)) {
-                  stepProps.completed = false;
-                }
-                return (
-                  <Step key={index + "_label"} {...stepProps}>
-                    <StepLabel {...labelProps}>{label[0]}</StepLabel>
-                  </Step>
-                );
-              })}
-            </Stepper>
-            {activeStep === steps.length ? (
-              <React.Fragment>
-                <Typography sx={{ mt: 2, mb: 1 }}>
-                  Todos los pasos completados,
-                </Typography>
-                <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-                  <Box sx={{ flex: "1 1 auto" }} />
-                  <Button onClick={handleReset} variant="filled">
-                    Reset
-                  </Button>
-                </Box>
-              </React.Fragment>
-            ) : (
-              <React.Fragment>
-                <Typography sx={{ mt: 2, mb: 1 }}>
-                  Step {activeStep + 1}
-                </Typography>
-                {steps[activeStep][1]}
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "row",
-                    p: 2,
-                    mt: 1,
-                    mb: 1,
-                  }}
-                >
-                  <ButtonGroup variant="outlined">
-                    <Button
-                      color="success"
-                      disabled={activeStep === 0}
-                      onClick={handleBack}
-                    >
-                      {activeStep < steps.length - 1
-                        ? "Modificar Datos del Trabajo"
-                        : "Agregar más partes"}
+                })}
+              </Stepper>
+              {activeStep === steps.length ? (
+                <React.Fragment>
+                  <Typography sx={{ mt: 2, mb: 1 }}>
+                    Todos los pasos completados,
+                  </Typography>
+                  <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
+                    <Box sx={{ flex: "1 1 auto" }} />
+                    <Button onClick={handleReset} variant="filled">
+                      Reset
                     </Button>
-                    {isStepOptional(activeStep) && (
-                      <Button color="info" onClick={handleSkip}>
-                        Saltar
+                  </Box>
+                </React.Fragment>
+              ) : (
+                <React.Fragment>
+                  <Typography sx={{ mt: 2, mb: 1 }}>
+                    Step {activeStep + 1}
+                  </Typography>
+                  {steps[activeStep][1]}
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "row",
+                      p: 2,
+                      mt: 1,
+                      mb: 1,
+                    }}
+                  >
+                    <ButtonGroup variant="outlined">
+                      <Button
+                        color="success"
+                        disabled={activeStep === 0}
+                        onClick={handleBack}
+                      >
+                        {activeStep < steps.length - 1
+                          ? "Modificar Datos del Trabajo"
+                          : "Agregar más partes"}
                       </Button>
-                    )}
-                    <Button
-                      onClick={
-                        activeStep === steps.length - 1
-                          ? handlePost
-                          : handleNext
-                      }
-                      color="info"
-                      disabled={useJob === null}
-                    >
-                      {activeStep === steps.length - 1
-                        ? "Enviar Nuevo Pedido"
-                        : "Siguiente"}
-                    </Button>
-                    {props.job !== undefined &&
-                      activeStep === steps.length - 1 && (
-                        <Button onClick={handleUpdate} color="warning">
-                          Guardar
+                      {isStepOptional(activeStep) && (
+                        <Button color="info" onClick={handleSkip}>
+                          Saltar
                         </Button>
                       )}
-                  </ButtonGroup>
-                </Box>
+                      <Button
+                        onClick={
+                          activeStep === steps.length - 1
+                            ? handlePost
+                            : handleNext
+                        }
+                        color="info"
+                        disabled={useJob === null}
+                      >
+                        {activeStep === steps.length - 1
+                          ? "Enviar Nuevo Pedido"
+                          : "Siguiente"}
+                      </Button>
+                      {props.job !== undefined &&
+                        activeStep === steps.length - 1 && (
+                          <Button onClick={handleUpdate} color="warning">
+                            Guardar
+                          </Button>
+                        )}
+                    </ButtonGroup>
+                  </Box>
 
-                <Divider></Divider>
-              </React.Fragment>
-            )}
+                  <Divider></Divider>
+                </React.Fragment>
+              )}
             </Grid>
             <Grid item xs>
-              <Container >
+              <Container>
                 <Grid
                   container
                   columns={{ xs: 4, sm: 8, md: 12 }}
                   spacing={1}
                   overflow={"false"}
-                  sx={{height: "98%"}}
+                  sx={{ height: "98%" }}
                 >
                   {useParts?.map((part, index) => {
                     return (
@@ -402,8 +410,6 @@ export default function MyStepper(props) {
                 </Grid>
               </Container>
             </Grid>
-            
-
           </Grid>
         </CardContent>
       </Card>
@@ -411,11 +417,15 @@ export default function MyStepper(props) {
   );
 
   const statusError = (
-    <ErrorMessage
-      message={useError.response.data.message || useError.message}
-      color="success"
-      action={resetError}
-    />
+    <>
+      {useError !== null && (
+        <ErrorMessage
+          message={useError.response.data.message || useError.message}
+          color="success"
+          action={resetError}
+        />
+      )}
+    </>
   );
 
   return useError !== null ? statusError : statusOk;

@@ -16,6 +16,8 @@ import FormHelperText from "@mui/material/FormHelperText";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
+import ErrorMessage from "../ErrorMessage/ErrorMessage";
+import Spinner from "../General/Spinner";
 import MenuItem from "@mui/material/MenuItem";
 import { Checkbox } from "@mui/material";
 import { Grid } from "@mui/material";
@@ -44,7 +46,8 @@ const JobsForm = (props) => {
   // const [useValue, setMyValue] = useState({ value: "" });
   const [useJobType, setJobType] = useState(props.jobType.name || null);
   const context = useContext(AuthContext);
-
+  const [useLoading, setLoading] = useState(true);
+  const [useError, setError] = useState(false);
   const handleChange = (e) => {
     e.preventDefault();
     props.setJob(e);
@@ -70,32 +73,47 @@ const JobsForm = (props) => {
   };
 
   useEffect(() => {
-    getUsers();
-    getCompanies();
-    getFinishers();
+    try {
+      getUsers();
+      getCompanies();
+      getFinishers();
+      setLoading(false);
+    } catch (error) {
+      setError(error);
+    }
   }, [setUsersList, setCompaniesList, setFinishingList]);
 
   const onSubmit = (values) => {
-    const jt = JobTypes.find((item) => {
-      if (item.id === values.JobType) {
-        return item;
+    try {
+      setLoading(true);
+      const jt = JobTypes.find((item) => {
+        if (item.id === values.JobType) {
+          return item;
+        }
+      });
+      values.JobType = jt;
+      if (useCompany) {
+        values.Company = useCompany;
       }
-    });
-    values.JobType = jt;
-    if (useCompany) {
-      values.Company = useCompany;
-    }
 
-    props.setJob(values);
-    props.setJobType(jt);
-    props.continue(props.data ? 2 : 1);
+      props.setJob(values);
+      props.setJobType(jt);
+      props.continue(props.data ? 2 : 1);
+      setLoading(false);
+    } catch (error) {
+      setError(error);
+    }
   };
 
   useEffect(() => {
     setValue("Finishing", selectedFinishings); // Esto actualiza el campo Finishing con los objetos seleccionados
   }, [selectedFinishings, setValue]);
 
-  return (
+  const error = <ErrorMessage message={useError} />;
+
+  const loading = <Spinner />;
+
+  const success = (
     <Box
       sx={{
         width: "fit-content",
@@ -243,37 +261,45 @@ const JobsForm = (props) => {
                   )}
                 </Grid>
                 <Grid item xs={1} sm={2} md={4}>
-                  <TextField
-                    select
-                    defaultValue={
-                      props.data?.Owner?._id ||
-                      props.data?.Owner ||
-                      context.userLogged?._id ||
-                      ""
-                    }
-                    id="Owner"
-                    inputProps={{
-                      name: "Owner",
-                      id: "Owner",
-                    }}
-                    variant="outlined"
-                    color="primary"
-                    label="Usuario"
-                    name="Owner"
-                    fullWidth
-                    {...register("Owner", { required: true })}
-                    onBlur={() => {
-                      trigger("Owner");
-                    }}
-                  >
-                    {useUsersList.map((u) => {
-                      return (
-                        <MenuItem value={u._id} key={u._id}>
-                          {u.Name} {u.LastName}
-                        </MenuItem>
-                      );
-                    })}
-                  </TextField>
+                  {Array.isArray(useUsersList) && (
+                    <TextField
+                      select
+                      defaultValue={() => {
+                        if (!useLoading && Array.isArray(useUsersList)) {
+                          return (
+                            props.data?.Owner?._id ||
+                            props.data?.Owner ||
+                            context.userLogged?._id ||
+                            ""
+                          );
+                        } else {
+                          return "";
+                        }
+                      }}
+                      id="Owner"
+                      inputProps={{
+                        name: "Owner",
+                        id: "Owner",
+                      }}
+                      variant="outlined"
+                      color="primary"
+                      label="Usuario"
+                      name="Owner"
+                      fullWidth
+                      {...register("Owner", { required: true })}
+                      onBlur={() => {
+                        trigger("Owner");
+                      }}
+                    >
+                      {useUsersList.map((u) => {
+                        return (
+                          <MenuItem value={u._id} key={u._id}>
+                            {u.Name} {u.LastName}
+                          </MenuItem>
+                        );
+                      })}
+                    </TextField>
+                  )}
                   {errors.Owner?.type === "required" && (
                     <FormHelperText>Seleccione un usuario</FormHelperText>
                   )}
@@ -376,7 +402,7 @@ const JobsForm = (props) => {
                 </Grid>
                 <Grid item xs={1} sm={2} md={4} sx={{ alignSelf: "center" }}>
                   <Button type="submit" variant="contained" color="primary">
-                    {props.data ? 'Modificar Trabajo' : 'Agregar Trabajo'}
+                    {props.data ? "Modificar Trabajo" : "Agregar Trabajo"}
                   </Button>
                 </Grid>
               </Grid>
@@ -386,6 +412,8 @@ const JobsForm = (props) => {
       </Card>
     </Box>
   );
+
+  return useLoading ? loading : useError ? error : success;
 };
 
 export default JobsForm;

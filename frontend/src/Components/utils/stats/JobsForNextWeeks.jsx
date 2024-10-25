@@ -5,7 +5,8 @@ import ErrorMessage from "../../ErrorMessage/ErrorMessage";
 
 const JobsForNextDays = (props) => {
   const [useError, setError] = React.useState(null);
-  const [from, setFrom] =React.useState(null);
+  const [from, setFrom] = React.useState(null);
+  const errorRef = React.useRef(false); // Bandera de control
 
   const getMyDate = (event) => {
     const dd = new Date(event).getUTCDate();
@@ -41,9 +42,12 @@ const JobsForNextDays = (props) => {
           };
       }
     } catch (error) {
+      if (!errorRef.current) {
+        errorRef.current = true; // Se marca que ya ocurrió un error
+        setError(error); // Actualiza el estado con el error solo una vez
+      }
       console.log(error);
       console.log(job);
-      //setError(error)
     }
   }
 
@@ -65,7 +69,10 @@ const JobsForNextDays = (props) => {
     <ErrorMessage
       message={useError.message}
       color="warning"
-      action={() => setError(null)}
+      action={() => {
+        errorRef.current = false; // Resetea la bandera cuando se limpia el error
+        setError(null);
+      }}
     />
   );
 };

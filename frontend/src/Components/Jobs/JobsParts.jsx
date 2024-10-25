@@ -70,7 +70,7 @@ const JobParts = (props) => {
 
   const filterStocks = () => {
     console.log("Ejecutando funcion filterStocks");
-    console.log(currentPart)
+    console.log(currentPart);
     console.table(stocks);
     const res = stocks.filter((stock) => {
       try {
@@ -93,7 +93,7 @@ const JobParts = (props) => {
         }
       } catch (error) {
         console.log(error);
-        return error
+        return error;
       }
     });
     console.log("Devuelve lista de materiales filtrada");
@@ -119,9 +119,17 @@ const JobParts = (props) => {
   };
 
   const changeHandler = (e, useFinishingList, Finisher) => {
-    if (e.target.checked) {
+    if (e.target.checked && useFinishingList.length > 1) {
       // Agregar el objeto seleccionado al array
+      console.log("Finisher varias opciones");
+      console.log(Finisher);
+      console.log(e);
+
       setSelectedFinishings((prevSelected) => [...prevSelected, Finisher]);
+    } else if (e.target.checked && useFinishingList.length === 1) {
+      console.log("Finisher una sola opcion");
+      console.log(Finisher);
+      setSelectedFinishings([Finisher]);
     } else {
       // Remover el objeto si se deselecciona
       setSelectedFinishings((prevSelected) =>
@@ -159,17 +167,16 @@ const JobParts = (props) => {
       }
     } else if (props.job) {
       try {
-        const arr = []
-        console.log(props.job)
-        props.job.Partes.map((p)=>{
-          p.Finishing.push(arr)
-        })
-        console.log(arr)
-        setSelectedFinishings(arr)
+        const arr = [];
+        console.log(props.job);
+        props.job.Partes.map((p) => {
+          p.Finishing.push(arr);
+        });
+        console.log(arr);
+        setSelectedFinishings(arr);
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
-      
     }
 
     try {
@@ -405,26 +412,24 @@ const JobParts = (props) => {
               <Autocomplete
                 id="partStock"
                 options={filteredStocks}
-                defaultValue={()=> {
+                defaultValue={() => {
                   if (props.editPart !== null) {
-                    setValue("partStock", props.editPart.part.partStock._id)
-                    return props.editPart.part.partStock
+                    setValue("partStock", props.editPart.part.partStock._id);
+                    return props.editPart.part.partStock;
                   } else {
-                    return null
-                  } 
-                }
-                  
-                }
+                    return null;
+                  }
+                }}
                 autoHighlight
                 getOptionLabel={(option) =>
                   `${option.Nombre_Material} - ${option.Marca}(${option.Ancho_Resma} x ${option.Alto_Resma})`
                 }
                 {...register("partStock", { required: true })}
                 onChange={(event, newValue) => {
-                  const currenValue = event
-                  console.log("New Value Stock")
-                  console.log(currenValue)
-                  console.log(newValue)
+                  const currenValue = event;
+                  console.log("New Value Stock");
+                  console.log(currenValue);
+                  console.log(newValue);
                   if (newValue) {
                     // Actualiza el valor del campo Company con el _id seleccionado
                     setValue("partStock", newValue._id);
@@ -567,6 +572,7 @@ const JobParts = (props) => {
                           })}
                           control={
                             <Checkbox
+                              key={Finisher._id + Finisher.Proceso}
                               color="secondary"
                               value={Finisher._id}
                               defaultChecked={isChecked}

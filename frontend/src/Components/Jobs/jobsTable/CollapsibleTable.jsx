@@ -125,7 +125,12 @@ export const PartsTable = (props) => {
       <Typography color={"secondary"} variant="subtitle1" component="div">
         Partes
       </Typography>
-      <Table size="small" aria-label="purchases" padding="small" variant="h6">
+      <Table
+        size="small"
+        aria-label="purchases"
+        padding="checkbox"
+        variant="h6"
+      >
         <TableHead>
           <TableRow>
             <TableCell>
