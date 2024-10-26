@@ -261,17 +261,15 @@ const JobsForm = (props) => {
                   )}
                 </Grid>
                 <Grid item xs={1} sm={2} md={4}>
-                  {Array.isArray(useUsersList) && (
+                  {useUsersList.length > 0 && (
                     <TextField
                       select
                       defaultValue={() => {
-                        if (!useLoading && useUsersList.length > 0) {
-                          console.log(useUsersList);
+                        if (!useLoading) {
                           return (
                             props.data?.Owner?._id ||
                             props.data?.Owner ||
-                            context.userLogged?._id ||
-                            ""
+                            context.userLogged?._id
                           );
                         } else {
                           return "";
