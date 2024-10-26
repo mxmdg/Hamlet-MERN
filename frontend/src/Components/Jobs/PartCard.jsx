@@ -14,6 +14,7 @@ import {
   Grid,
   List,
   ListItem,
+  ListItemText,
   Typography,
 } from "@mui/material";
 
@@ -61,21 +62,21 @@ const PartCard = (props) => {
           )}
           <br />
           <br />
-          {Array.isArray(part.Finishing) && (
-            <Fragment>
-              <Divider />
-              <List dense disablePadding>
-                {part.Finishing.map((f) => {
-                  return (
-                    <ListItem disableGutters key={f._id + part._id}>
-                      {f.Proceso}
-                    </ListItem>
-                  );
-                })}
-              </List>
-            </Fragment>
-          )}
         </Typography>
+        {Array.isArray(part.Finishing) && (
+          <Fragment>
+            <Divider />
+            <List dense disablePadding>
+              {part.Finishing.map((f) => {
+                return (
+                  <ListItem disableGutters key={f._id + part._id}>
+                    <ListItemText primary={f.Proceso} secondary={f.Modelo} />
+                  </ListItem>
+                );
+              })}
+            </List>
+          </Fragment>
+        )}
       </CardContent>
       <CardActions>
         <ButtonGroup size="small" variant="text">

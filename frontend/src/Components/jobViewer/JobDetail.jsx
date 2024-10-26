@@ -206,7 +206,7 @@ const JobDetail = (props) => {
                       <List dense={true} disablePadding={true}>
                         {part.Finishing.map((pf) => {
                           return (
-                            <ListItem divider={true}>
+                            <ListItem divider={true} key={pf._id}>
                               <Typography color={"primary"}>
                                 {pf.Proceso} / {pf.Modelo}
                               </Typography>
@@ -285,7 +285,11 @@ const JobDetail = (props) => {
             </Avatar>
           }
           action={
-            <Button onClick={()=>{navigate(`/jobs/copy/${job._id}`)}}>
+            <Button
+              onClick={() => {
+                navigate(`/jobs/copy/${job._id}`);
+              }}
+            >
               Editar
             </Button>
           }
@@ -361,18 +365,17 @@ const JobDetail = (props) => {
               >
                 <Typography color={"primary"}>Terminacion:</Typography>
               </AccordionSummary>
-              <Card >
+              <Card>
                 <CardHeader subheader="Procesos" />
                 <CardContent>
                   <List>
                     {job.Finishing.map((f) => {
                       return (
-                        <ListItem>
+                        <ListItem key={"j" + f._id}>
                           <ListItemText>
-                            <Typography >
+                            <Typography>
                               {f.Proceso} / {f.Modelo}
                             </Typography>
-                            
                           </ListItemText>
                         </ListItem>
                       );
@@ -424,7 +427,6 @@ const JobDetail = (props) => {
           >
             Plan de producción
           </Button>
-          
         </CardActions>
       </Card>
     </Container>

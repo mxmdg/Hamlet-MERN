@@ -34,6 +34,7 @@ import FullJobsRender from "./Components/Pages/FullJobsRender";
 import JobsEditAndCopy from "./Components/Pages/JobsEditAndCopy";
 import JobParts from "./Components/Jobs/JobsParts";
 import Machines from "./Components/Pages/Machines";
+import Error404 from "./Components/Pages/Error404";
 
 //MUI Material
 import { Grid, Typography } from "@mui/material";
@@ -359,6 +360,8 @@ const Router = () => {
           />
         </>
       )}
+
+      <Route path="/*" element={<Error404 />} />
     </Routes>
   );
 };

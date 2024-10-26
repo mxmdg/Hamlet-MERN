@@ -420,7 +420,7 @@ export default function EnhancedTable(props) {
                       i++;
                       if (typeof element === "object") {
                         return (
-                          <TableCell>
+                          <TableCell key={`${element}_${i}`}>
                             <Typography variant="body1" color="#b12">
                               Error
                             </Typography>

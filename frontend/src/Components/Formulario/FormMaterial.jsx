@@ -361,7 +361,14 @@ const FormMaterial = (props) => {
                   <Grid container columns={12}>
                     {inp.options.map((opt, index) => {
                       return (
-                        <Grid item xs={12} sm={6} md={4} lg={3}>
+                        <Grid
+                          item
+                          xs={12}
+                          sm={6}
+                          md={4}
+                          lg={3}
+                          key={index + inp.inputName}
+                        >
                           <FormControlLabel
                             key={inp.inputName + index}
                             /* sx={{
@@ -394,7 +401,7 @@ const FormMaterial = (props) => {
                               />
                             }
                             label={opt}
-                            labelPlacement="leftTop"
+                            labelPlacement="start"
                           />
                         </Grid>
                       );

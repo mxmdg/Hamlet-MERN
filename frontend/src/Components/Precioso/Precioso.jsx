@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import PricesDataForm from "../Formulario/PricesDataForm";
-import ItemsDetails from "../General/itemsDetails";
 import PriceTable from "./PriceTable";
 import "../../Styles/hamlet.css";
 import "../Stocks/Stocks.css";
-import { databaseURL } from "../Config/config";
 import {
   formNuvera,
   formIgenColor,
@@ -25,7 +22,7 @@ const Precioso = (props) => {
   const [useEdit, setEdit] = useState(false);
   const [loading, setLoading] = useState(true);
   const [useErrorMessage, setErrorMessage] = useState();
-  const Navigate = useNavigate()
+  const Navigate = useNavigate();
 
   const formulaCLC = (item) => {
     let formula;
@@ -58,22 +55,11 @@ const Precioso = (props) => {
     return formula;
   };
 
-  const AlertError = <ErrorMessage message={priceList?.message} severity='warning'/>;
+  const AlertError = (
+    <ErrorMessage message={priceList?.message} severity="warning" />
+  );
 
   useEffect(() => {
-    /* const getElements = async () => {
-      try {
-        const prices = await axios.get(`${databaseURL + props.collection}/`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        
-      } catch (e) {
-        console.log(e);
-      }
-    }; */
-
     const fetchData = async () => {
       try {
         const prices = await getPrivateElements(props.collection);
@@ -99,9 +85,8 @@ const Precioso = (props) => {
         // Renderiza la lista de Precios
         //priceList &&
         priceList.map((price) => (
-          <Grid item xs={12} sm={6} md={4}>
+          <Grid xs={12} sm={6} md={4} key={price._id}>
             <PriceTable
-              key={price._id}
               pd={price}
               collection={props.collection}
               id={price._id}

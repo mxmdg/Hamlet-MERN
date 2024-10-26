@@ -265,7 +265,8 @@ const JobsForm = (props) => {
                     <TextField
                       select
                       defaultValue={() => {
-                        if (!useLoading && Array.isArray(useUsersList)) {
+                        if (!useLoading && useUsersList.length > 0) {
+                          console.log(useUsersList);
                           return (
                             props.data?.Owner?._id ||
                             props.data?.Owner ||
