@@ -154,7 +154,9 @@ export const ImpositionForm = (props) => {
                       <Typography variant="subtitle1">
                         {Printer.Fabricante} {Printer.Modelo}{" "}
                         <b>
-                          {Printer.Colores === 4
+                          {Printer.Colores > 4
+                            ? "(cmyk + spot)"
+                            : Printer.Colores === 4
                             ? "(cmyk)"
                             : Printer.Colores === 1
                             ? "(k)"

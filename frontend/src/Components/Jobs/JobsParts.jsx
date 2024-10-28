@@ -69,9 +69,9 @@ const JobParts = (props) => {
   });
 
   const filterStocks = () => {
-    console.log("Ejecutando funcion filterStocks");
-    console.log(currentPart);
-    console.table(stocks);
+    //console.log("Ejecutando funcion filterStocks");
+    //console.log(currentPart);
+    //console.table(stocks);
     const res = stocks.filter((stock) => {
       try {
         if (
@@ -87,8 +87,8 @@ const JobParts = (props) => {
           stock.Gramaje >= props.editPart.part.jobParts[0].minStockWeight &&
           stock.Gramaje <= props.editPart.part.jobParts[0].maxStockWeight
         ) {
-          console.log("Filtrando los papelesde una parte a editar");
-          console.log(stock);
+          //console.log("Filtrando los papelesde una parte a editar");
+          //console.log(stock);
           return stock;
         }
       } catch (error) {
@@ -96,8 +96,8 @@ const JobParts = (props) => {
         return error;
       }
     });
-    console.log("Devuelve lista de materiales filtrada");
-    console.table(res);
+    //console.log("Devuelve lista de materiales filtrada");
+    //console.table(res);
     setFilteredStocks(res);
   };
 
@@ -501,7 +501,7 @@ const JobParts = (props) => {
                 {...register("ColoresFrente", {
                   required: true,
                   min: 1,
-                  max: 4,
+                  max: 6,
                 })}
               />
               {errors.ColoresFrente?.type === "required" && (
@@ -516,7 +516,7 @@ const JobParts = (props) => {
               )}
               {errors.ColoresFrente?.type === "max" && (
                 <FormHelperText>
-                  Como maximo podemos utilizar 4 tintas
+                  Como maximo podemos utilizar 6 tintas
                 </FormHelperText>
               )}
             </Grid>
@@ -539,12 +539,12 @@ const JobParts = (props) => {
                 {...register("ColoresDorso", {
                   required: false,
                   min: 0,
-                  max: 4,
+                  max: 6,
                 })}
               />
               {errors.ColoresDorso?.type === "max" && (
                 <FormHelperText>
-                  Como maximo podemos utilizar 4 tintas
+                  Como maximo podemos utilizar 6 tintas
                 </FormHelperText>
               )}
             </Grid>

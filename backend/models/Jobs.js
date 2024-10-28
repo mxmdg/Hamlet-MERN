@@ -45,7 +45,7 @@ const partSchema = new Schema({
   ColoresFrente: { type: Number, required: true },
   ColoresDorso: { type: Number, required: false, default: 0 },
   partStock: { type: mongoose.Schema.ObjectId, ref: "Category" },
-  Finishing: { type: Object, required: true, default: [] },
+  Finishing: { type: Object, required: false, default: [] },
 });
 
 const jobSchema = new Schema({

@@ -258,12 +258,14 @@ export default function CollapsibleTable(props) {
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   const visibleRows = React.useMemo(
-    () =>
-      stableSort(rows, getComparator(order, orderBy)).slice(
-        page * rowsPerPage,
-        page * rowsPerPage + rowsPerPage
-      ),
-    [order, orderBy, page, rowsPerPage, rows]
+    () =>{
+      try {
+        return stableSort(rows, getComparator(order, orderBy)).slice(
+          page * rowsPerPage,
+          page * rowsPerPage + rowsPerPage
+        )} catch (error) {
+        setError(error)
+      }}, [order, orderBy, page, rowsPerPage, rows]
   );
 
   let i = 0;
