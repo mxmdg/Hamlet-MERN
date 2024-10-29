@@ -19,12 +19,41 @@ import {
 } from "@mui/material";
 
 import { calcularLomo } from "../jobViewer/JobDetail";
+import arrayNormalizer from "../utils/generalData/arrayNormalizer";
+import { getPrivateElementByID } from "../customHooks/FetchDataHook";
+import ErrorMessage from "../ErrorMessage/ErrorMessage";
+import Spinner from "../General/Spinner";
 
 const PartCard = (props) => {
   const [part, setPart] = React.useState(props.part);
   const [index, setIndex] = React.useState(props.index);
+  const [useFinishers, setFinishers] = React.useState([]);
+  const [useLoading, setLoading] = React.useState(false);
+  const [useError, setError] = React.useState(false);
 
-  return (
+  const getFinishers = (ids) => {
+    const arr = [];
+    try {
+      setLoading(true);
+      ids.map(async (id) => {
+        const res = await getPrivateElementByID("finishers", id);
+        arr.push(res.data);
+      });
+      setLoading(false);
+      return arr;
+    } catch (error) {
+      setError(error);
+      return error;
+    }
+  };
+
+  React.useEffect(() => {
+    const Finishing = arrayNormalizer(part.Finishing, getFinishers);
+    setFinishers(Finishing);
+    setLoading(false);
+  }, []);
+
+  const success = (
     <Card
       variant="outlined"
       sx={{
@@ -63,14 +92,17 @@ const PartCard = (props) => {
           <br />
           <br />
         </Typography>
-        {Array.isArray(part.Finishing) && (
+        {Array.isArray(useFinishers) && useFinishers.length > 0 && (
           <Fragment>
             <Divider />
             <List dense disablePadding>
-              {part.Finishing.map((f) => {
+              {useFinishers.map((f) => {
                 return (
-                  <ListItem disableGutters key={f._id + part._id}>
-                    <ListItemText primary={f.Proceso} secondary={f.Modelo} />
+                  <ListItem disableGutters key={`${f._id}${part._id}`}>
+                    <ListItemText
+                      primary={`Proceso: ${f.Proceso}`}
+                      secondary={`Modelo ${f.Modelo}`}
+                    />
                   </ListItem>
                 );
               })}
@@ -117,6 +149,12 @@ const PartCard = (props) => {
       </CardActions>
     </Card>
   );
+  const alert = (
+    <ErrorMessage message={useError.message} action={() => setError(false)} />
+  );
+  const loading = <Spinner color="info" />;
+
+  return useLoading ? loading : useError ? alert : success;
 };
 
 export default PartCard;

@@ -23,6 +23,7 @@ import MenuItem from "@mui/material/MenuItem";
 import { Grid, Autocomplete } from "@mui/material";
 import { fechtData, getPrivateElements } from "../customHooks/FetchDataHook";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
+import arrayNormalizer from "../utils/generalData/arrayNormalizer";
 
 const JobParts = (props) => {
   /* Props que recibe este componente>
@@ -42,7 +43,7 @@ const JobParts = (props) => {
   const [currentPart, setCurrentPart] = useState(props.editPart || null);
   const [useFinishingList, setFinishingList] = useState([]);
   const [selectedFinishings, setSelectedFinishings] = useState(
-    props.editPart?.part.Finishing || []
+    arrayNormalizer(props.editPart?.part.Finishing) || []
   );
 
   // Estado para inhabilitar ColoresDorso cuando el trabajo es una sola cara
@@ -92,7 +93,7 @@ const JobParts = (props) => {
           return stock;
         }
       } catch (error) {
-        console.log(error);
+        //console.log(error);
         return error;
       }
     });
@@ -568,7 +569,8 @@ const JobParts = (props) => {
                         <FormControlLabel
                           key={Finisher._id}
                           {...register("Finishing", {
-                            required: false,
+                            required: true,
+                            defaultValue: [],
                           })}
                           control={
                             <Checkbox
@@ -586,6 +588,11 @@ const JobParts = (props) => {
                       );
                     }
                   })}
+                  {errors.Finishing?.type === "required" && (
+                    <FormHelperText>
+                      Seleccione algun tipo de terminacion
+                    </FormHelperText>
+                  )}
                 </FormGroup>
               }
             </Grid>

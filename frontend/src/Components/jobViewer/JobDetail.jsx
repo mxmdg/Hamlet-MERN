@@ -48,6 +48,7 @@ import DarkWoodCard from "../utils/DarkWoodCard";
 // Mis componentes
 import JobRow from "../Jobs/jobsTable/JobRow";
 import ProductionPlan from "./ProductionPlan";
+import arrayNormalizer from "../utils/generalData/arrayNormalizer";
 
 export const calcularLomo = (pags, resma) => {
   return Math.ceil(Math.ceil(pags / 2) * (resma / 500));
@@ -111,6 +112,8 @@ const JobDetail = (props) => {
       Poses: usePoses,
       ImpositionData: useImpoData,
     };
+
+    const Finishing = arrayNormalizer(part.Finishing);
 
     const stockCalculated = useImpoData
       ? calculateStock(
@@ -201,10 +204,10 @@ const JobDetail = (props) => {
                       ? ` - ${useImpoData.formatSelector.Nombre}`
                       : ""}
                   </Item>
-                  {part.Finishing && (
+                  {Finishing && (
                     <Item>
                       <List dense={true} disablePadding={true}>
-                        {part.Finishing.map((pf) => {
+                        {Finishing.map((pf) => {
                           return (
                             <ListItem divider={true} key={pf._id}>
                               <Typography color={"primary"}>

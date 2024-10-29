@@ -19,6 +19,10 @@ import {
   Divider,
   Chip,
   Stack,
+  List,
+  ListItem,
+  ListItemText,
+  ListSubheader,
   Container,
   ButtonGroup,
   Grid,
@@ -250,9 +254,20 @@ export default function MyStepper(props) {
     [
       "Confirme el pedido",
       <Box>
-        {useParts.map((part) => {
-          return <div key={part._id}>{part.jobParts?.type}</div>;
-        })}
+        <Typography variant="subtitle1">Partes del trabajo</Typography>
+        <List sx={{ listStyleType: "bullet" }}>
+          {useParts.map((part, index) => {
+            return (
+              <ListItem divider key={`${index}-Parte_${part.Finishing.length}`}>
+                <ListItemText
+                  sx={{ display: "list-item" }}
+                  primary={part.Name}
+                  secondary={`${part.partStock.Tipo} ${part.partStock.Gramaje} ${part.partStock.Marca}`}
+                />
+              </ListItem>
+            );
+          })}
+        </List>
       </Box>,
     ],
   ];
@@ -395,7 +410,7 @@ export default function MyStepper(props) {
                 >
                   {useParts?.map((part, index) => {
                     return (
-                      <Grid item xs={4} sm={4} md={6} key={part._id}>
+                      <Grid item xs={4} sm={4} md={6} key={"Parte-" + index}>
                         <PartCard
                           part={part}
                           index={index}

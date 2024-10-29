@@ -396,6 +396,11 @@ const JobsForm = (props) => {
                           );
                         }
                       })}
+                      {errors.Finishing?.type === "required" && (
+                        <FormHelperText>
+                          Seleccione algun tipo de terminacion
+                        </FormHelperText>
+                      )}
                     </FormGroup>
                   }
                 </Grid>
