@@ -359,7 +359,7 @@ const FormMaterial = (props) => {
               >
                 <FormGroup label={inp.label || inp.inputName}>
                   <Grid container columns={12}>
-                    {inp.options.map((opt, index) => {
+                    {inp.options.sort().map((opt, index) => {
                       return (
                         <Grid
                           item
@@ -401,7 +401,7 @@ const FormMaterial = (props) => {
                               />
                             }
                             label={opt}
-                            labelPlacement="start"
+                            labelPlacement="end"
                           />
                         </Grid>
                       );
