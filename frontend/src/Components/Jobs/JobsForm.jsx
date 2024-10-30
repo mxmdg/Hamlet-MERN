@@ -370,32 +370,50 @@ const JobsForm = (props) => {
                       id="Finishing"
                       sx={{ display: "flex", flexDirection: "row", ml: 1 }}
                     >
-                      {useFinishingList.map((Finisher) => {
-                        const isChecked = selectedFinishings.some(
-                          (f) => f._id === Finisher._id
-                        );
-                        if (
-                          Finisher.jobTypesAllowed &&
-                          Finisher.jobTypesAllowed.includes(useJobType)
-                        ) {
-                          return (
-                            <FormControlLabel
-                              key={Finisher._id}
-                              control={
-                                <Checkbox
-                                  color="secondary"
-                                  value={Finisher._id}
-                                  defaultChecked={isChecked}
-                                  onChange={(e) =>
-                                    changeHandler(e, useFinishingList, Finisher)
-                                  }
-                                />
-                              }
-                              label={`${Finisher.Proceso} ${Finisher.Modelo}`}
-                            />
+                      {useFinishingList
+                        .sort((a, b) => {
+                          const nameA = a.Proceso.toUpperCase(); // ignore upper and lowercase
+                          const nameB = b.Proceso.toUpperCase(); // ignore upper and lowercase
+                          if (nameA < nameB) {
+                            return -1;
+                          }
+                          if (nameA > nameB) {
+                            return 1;
+                          }
+
+                          // names must be equal
+                          return 0;
+                        })
+                        .map((Finisher) => {
+                          const isChecked = selectedFinishings.some(
+                            (f) => f._id === Finisher._id
                           );
-                        }
-                      })}
+                          if (
+                            Finisher.jobTypesAllowed &&
+                            Finisher.jobTypesAllowed.includes(useJobType)
+                          ) {
+                            return (
+                              <FormControlLabel
+                                key={Finisher._id}
+                                control={
+                                  <Checkbox
+                                    color="secondary"
+                                    value={Finisher._id}
+                                    defaultChecked={isChecked}
+                                    onChange={(e) =>
+                                      changeHandler(
+                                        e,
+                                        useFinishingList,
+                                        Finisher
+                                      )
+                                    }
+                                  />
+                                }
+                                label={`${Finisher.Proceso} ${Finisher.Modelo}`}
+                              />
+                            );
+                          }
+                        })}
                       {errors.Finishing?.type === "required" && (
                         <FormHelperText>
                           Seleccione algun tipo de terminacion
