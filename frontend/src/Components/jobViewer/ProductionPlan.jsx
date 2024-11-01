@@ -136,6 +136,9 @@ const ProductionPlan = (props) => {
         } else if (printerSelector.Colores === 4) {
           console.log("Formula seleccionada segun caso Color");
           return iGenColor(valor, minimo, cantidad, entrada, largoPliego);
+        } else if (printerSelector.Colores === 6) {
+          console.log("Formula seleccionada segun caso 6 colores");
+          return iGenColor(valor * 1.2, minimo, cantidad, entrada, largoPliego);
         }
       };
 
@@ -206,11 +209,14 @@ const ProductionPlan = (props) => {
         console.log("Data");
         console.log(data);
         return (
-          <Grid item xs={12} sm={6} lg={3} key={data.printer._id + data.stock._id + resumen.indexOf(data)}>
-            <Card
-              
-              elevation={8}
-            >
+          <Grid
+            item
+            xs={12}
+            sm={6}
+            lg={3}
+            key={data.printer._id + data.stock._id + resumen.indexOf(data)}
+          >
+            <Card elevation={8}>
               <CardHeader
                 title={`${data.printer.Fabricante} ${data.printer.Modelo}`}
                 titleTypographyProps={{ color: "primary" }}
@@ -317,22 +323,18 @@ const ProductionPlan = (props) => {
           </Grid>
         );
       })}
-      
-      
+
       <Grid item xs={12} sm={6} lg={3} key={"general"}>
-            <Card
-              
-              elevation={8}
-            >
-              <CardHeader
-                title={`${props.job.Nombre}`}
-                titleTypographyProps={{ color: "primary" }}
-                subheader={`${props.job.Tipo[0].name}`}
-                subheaderTypographyProps={{ color: "secondary" }}
-              ></CardHeader>
-              <Divider />
-            </Card>
-          </Grid>
+        <Card elevation={8}>
+          <CardHeader
+            title={`${props.job.Nombre}`}
+            titleTypographyProps={{ color: "primary" }}
+            subheader={`${props.job.Tipo[0].name}`}
+            subheaderTypographyProps={{ color: "secondary" }}
+          ></CardHeader>
+          <Divider />
+        </Card>
+      </Grid>
     </Grid>
   );
 
