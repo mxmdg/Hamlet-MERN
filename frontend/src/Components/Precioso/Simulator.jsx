@@ -83,7 +83,8 @@ const Simulator = (props) => {
         simulation = Encuadernacion(
           props.data.Valor,
           props.data.Minimo,
-          quantity
+          quantity,
+          props.data.Entrada
         );
         break;
       case "igen b&n":
@@ -129,7 +130,7 @@ const Simulator = (props) => {
 
   const Form = () => {
     return (
-      <Container >
+      <Container>
         <Card elevation={10}>
           <CardContent>
             <form name="Simulador">
@@ -221,28 +222,30 @@ const Simulator = (props) => {
     >
       <Container>
         <Card sx={{ padding: "20px" }} elevation={4}>
-          <CardHeader title={props.data.Proceso} action={<Button
-              onClick={() => {
-                props.stateSim(false);
-              }}
-            >
-              Cerrar
-            </Button>}> 
-          </CardHeader>
+          <CardHeader
+            title={props.data.Proceso}
+            action={
+              <Button
+                onClick={() => {
+                  props.stateSim(false);
+                }}
+              >
+                Cerrar
+              </Button>
+            }
+          ></CardHeader>
           <CardContent>
             <Form />
-            
-            {/* <SimulationTable
+
+            <SimulationTable
               data={props.data}
               pliegos={pliegos}
               cantidades={cantidades}
               simCLC={simCLC}
-            /> */}
+            />
           </CardContent>
 
-          <CardActions>
-            
-          </CardActions>
+          <CardActions></CardActions>
         </Card>
       </Container>
     </Modal>
