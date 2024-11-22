@@ -9,6 +9,7 @@ import {
   List,
   ListItem,
   ListItemText,
+  Modal,
   Divider,
   CardHeader,
   Typography,
@@ -18,6 +19,7 @@ import {
   Stack,
   Select,
 } from "@mui/material";
+
 import { useEffect, useState, useContext } from "react";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -38,6 +40,7 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { ImpoContext } from "../utils/impo/ImpoContext";
 import ImpoProvider from "../utils/impo/ImpoContext";
 import Canvas from "../utils/impo/Canvas";
+import ImpositionDraw from "../utils/impo/ImpositionDraw";
 import {
   bestCut,
   cutOptimizer,
@@ -105,6 +108,8 @@ const JobDetail = (props) => {
   const PartDetail = (part) => {
     const [usePoses, setPoses] = useState(null);
     const [useImpoData, setImpoData] = useState(null);
+    const [imposed, setImposed] = useState(false);
+    const [useData, setData] = useState(null);
     let partNumber = job.Partes.indexOf(part) + 1;
     let myKey = part._id + partNumber;
 
@@ -141,6 +146,20 @@ const JobDetail = (props) => {
         [part._id]: partCosts,
       }));
     };
+
+    useEffect(() => {
+      if (usePoses !== null) {
+        setImposed(true);
+        setData({
+          widthSheet: part.partStock.Ancho_Resma,
+          heightSheet: part.partStock.Alto_Resma,
+          widthPage: useImpoData.sheetOriginalSize.width,
+          heightPage: useImpoData.sheetOriginalSize.height,
+          margenes: 0,
+          Calle: 0,
+        });
+      }
+    }, [useImpoData, stockCalculated.cantidadDePliegos]);
 
     return (
       <Box key={part._id} mb={1}>
@@ -204,21 +223,6 @@ const JobDetail = (props) => {
                       ? ` - ${useImpoData.formatSelector.Nombre}`
                       : ""}
                   </Item>
-                  {Finishing && (
-                    <Item>
-                      <List dense={true} disablePadding={true}>
-                        {Finishing.map((pf) => {
-                          return (
-                            <ListItem divider={true} key={pf._id}>
-                              <Typography color={"primary"}>
-                                {pf.Proceso} / {pf.Modelo}
-                              </Typography>
-                            </ListItem>
-                          );
-                        })}
-                      </List>
-                    </Item>
-                  )}
 
                   {usePoses && (
                     <>
@@ -238,6 +242,11 @@ const JobDetail = (props) => {
                           100}{" "}
                         {`(${stockCalculated.totalHojas} hojas)`}
                       </Item2>
+                      {useData !== null && (
+                        <ImpoProvider>
+                          <ImpositionDraw data={useData} />
+                        </ImpoProvider>
+                      )}
                       <Button
                         //icon={ArrowBackIcon}
                         onClick={() => {
@@ -250,6 +259,21 @@ const JobDetail = (props) => {
                         Guardar Imposicion
                       </Button>
                     </>
+                  )}
+                  {Finishing && (
+                    <Item>
+                      <List dense={true} disablePadding={true}>
+                        {Finishing.map((pf) => {
+                          return (
+                            <ListItem divider={true} key={pf._id}>
+                              <Typography color={"primary"}>
+                                {pf.Proceso} / {pf.Modelo}
+                              </Typography>
+                            </ListItem>
+                          );
+                        })}
+                      </List>
+                    </Item>
                   )}
                 </Stack>
               </Grid>
