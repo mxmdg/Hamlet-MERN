@@ -37,6 +37,7 @@ let MoldeEmpresas = [{
 {
     inputName: 'Pais',
     type: 'Text',
+    default: 'Argentina',
     id: 'id_707'
 },
 {

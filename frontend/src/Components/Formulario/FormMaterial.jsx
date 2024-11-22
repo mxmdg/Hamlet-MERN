@@ -424,7 +424,7 @@ const FormMaterial = (props) => {
             type={inp.type}
             label={inp.label || inp.inputName}
             variant="outlined"
-            defaultValue={useItem !== "new" ? useItem.data[inp.inputName] : ""}
+            defaultValue={useItem !== "new" ? useItem.data[inp.inputName] : inp.default ? inp.default : ""}
             name={inp.inputName}
             {...register(inp.inputName)}
             InputLabelProps={{

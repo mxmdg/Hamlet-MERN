@@ -60,6 +60,19 @@ export const coloresIntermedios = [
   "#8FBC8F", // Verde mar medio
 ];
 
+
+export const vibrantColors = ["#8bff7e",
+"#fff85d",
+"#670694",
+"#e30168",
+"#ff6256",
+"#99b6ff",
+'#ff99ff',
+'#ffaeb7',
+'#ffdf94',
+'#fbffa1',]
+
+
 export default function NewRadialBar(props) {
   for (let i = 0; i < props.data.length; i++) {
     let resto = (i + 10) % 10;

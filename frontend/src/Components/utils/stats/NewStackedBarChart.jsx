@@ -10,7 +10,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-import { coloresIntermedios, myWrapperStyle } from "./NewRadialBar";
+import { coloresSaturados, coloresPasteles, coloresIntermedios, vibrantColors, myWrapperStyle } from "./NewRadialBar";
 
 import { convertirFecha } from "../generalData/fechaDiccionario";
 import { getPrivateElements } from "../../customHooks/FetchDataHook";
