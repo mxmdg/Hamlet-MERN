@@ -43,6 +43,12 @@ let PrintersDataForm = [
     id: "id_001",
     required: true,
     help: "Consulte el manual de la impresora para verificar el modelo",
+  },{
+    inputName: "SerialNumber",
+    type: "Text",
+    id: "id_0012",
+    required: true,
+    help: "Consulte el manual de la impresora para verificar el numero de serie",
   },
   {
     inputName: "Fabricante",

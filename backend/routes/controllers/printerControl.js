@@ -16,6 +16,7 @@ printerControl.addPrinter = async (req, res, next) => {
   {
     const {
       Modelo,
+      SerialNumber,
       Fabricante,
       Colores,
       X_Minimo,
@@ -27,6 +28,7 @@ printerControl.addPrinter = async (req, res, next) => {
     } = req.body;
     const newPrinter = new printers.esquema({
       Modelo,
+      SerialNumber,
       Fabricante,
       Colores,
       X_Minimo,
@@ -64,6 +66,7 @@ printerControl.updatePrinter = async (req, res) => {
   try {
     const {
       Modelo,
+      SerialNumber,
       Fabricante,
       Colores,
       X_Minimo,
@@ -77,6 +80,7 @@ printerControl.updatePrinter = async (req, res) => {
       { _id: req.params.id },
       {
         Modelo,
+        SerialNumber,
         Fabricante,
         Colores,
         X_Minimo,
