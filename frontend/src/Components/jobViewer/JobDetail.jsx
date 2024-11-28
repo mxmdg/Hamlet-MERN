@@ -244,7 +244,15 @@ const JobDetail = (props) => {
                       </Item2>
                       {useData !== null && (
                         <ImpoProvider>
-                          <ImpositionDraw data={useData} />
+                          <Card elevation={10}>
+                            <CardHeader
+                              title="Corte de plana"
+                              titleTypographyProps={{
+                                variant: "subtitle2",
+                              }}
+                            />
+                            <ImpositionDraw data={useData} />
+                          </Card>
                         </ImpoProvider>
                       )}
                       <Button
@@ -266,9 +274,10 @@ const JobDetail = (props) => {
                         {Finishing.map((pf) => {
                           return (
                             <ListItem divider={true} key={pf._id}>
-                              <Typography color={"primary"}>
-                                {pf.Proceso} / {pf.Modelo}
-                              </Typography>
+                              <ListItemText
+                                primary={pf.Proceso}
+                                secondary={pf.Modelo}
+                              />
                             </ListItem>
                           );
                         })}

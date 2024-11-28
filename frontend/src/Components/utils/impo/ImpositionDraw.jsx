@@ -109,11 +109,10 @@ const ImpositionDraw = (props) => {
             width={useCanvasSize.x}
             height={useCanvasSize.y}
             style={{
-              padding: "20px",
+              padding: "15px",
               border: "#666 1px solid",
-              borderRadius: "10px",
-              marginTop: "20px",
-              width: "93%",
+              borderRadius: "5px",
+              width: "90%",
             }}
           ></canvas>
         </Grid>
