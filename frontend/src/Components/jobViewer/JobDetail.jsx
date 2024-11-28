@@ -194,7 +194,7 @@ const JobDetail = (props) => {
               alignItems={"start"}
             >
               <Grid item xs={12} md={4}>
-                <Stack spacing={2}>
+                <Stack spacing={0.25} sx={{ p: "2px" }}>
                   <Item>{part.jobParts[0].Type}</Item>
                   <Item>
                     Formato: {part.Ancho} x {part.Alto} - Orientacion:{" "}
