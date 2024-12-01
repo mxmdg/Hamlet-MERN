@@ -7,12 +7,11 @@ const costos = async () => {
     res.map((item) => {
       if (item.Categoria === "print") {
         costsList.push({
-        text: `${item.Proceso} ($ ${item.Valor}.-)`,
-        value: item._id,
-        id: item._id,
+          text: `${item.Proceso} ($ ${item.Valor}.-)`,
+          value: item._id,
+          id: item._id,
         });
       }
-      
     });
     return res;
   } catch (error) {
@@ -43,7 +42,8 @@ let PrintersDataForm = [
     id: "id_001",
     required: true,
     help: "Consulte el manual de la impresora para verificar el modelo",
-  },{
+  },
+  {
     inputName: "SerialNumber",
     type: "Text",
     id: "id_0012",
@@ -119,6 +119,46 @@ let PrintersDataForm = [
     options: costsList,
     required: true,
     help: "Seleccione la formula de costos mas apropiada para su impresora",
+  },
+  {
+    inputName: "TotalPrints",
+    label: "Impresiones totales",
+    type: "Number",
+    id: "id_010",
+    required: true,
+    help: "Consulte el manual de la impresora para corroborar la cantidad de impresiones.",
+  },
+  {
+    inputName: "ColorPrints",
+    label: "Impresiones Color",
+    type: "Number",
+    id: "id_010",
+    required: true,
+    help: "Consulte el manual de la impresora para corroborar la cantidad de impresiones.",
+  },
+  {
+    inputName: "BlackPrints",
+    label: "Impresiones blanco y negro",
+    type: "Number",
+    id: "id_010",
+    required: true,
+    help: "Consulte el manual de la impresora para corroborar la cantidad de impresiones.",
+  },
+  {
+    inputName: "LargePrints",
+    label: "Impresiones grandes",
+    type: "Number",
+    id: "id_010",
+    required: true,
+    help: "Consulte el manual de la impresora para corroborar la cantidad de impresiones.",
+  },
+  {
+    inputName: "SmallPrints",
+    label: "Impresiones chicas",
+    type: "Number",
+    id: "id_010",
+    required: true,
+    help: "Consulte el manual de la impresora para corroborar la cantidad de impresiones.",
   },
 ];
 
