@@ -138,7 +138,7 @@ const ProductionPlan = (props) => {
           return iGenColor(valor, minimo, cantidad, entrada, largoPliego);
         } else if (printerSelector.Colores === 6) {
           console.log("Formula seleccionada segun caso 6 colores");
-          return iGenColor(valor * 1.2, minimo, cantidad, entrada, largoPliego);
+          return iGenColor(valor * 1.3, minimo, cantidad, entrada, largoPliego);
         }
       };
 
@@ -178,6 +178,26 @@ const ProductionPlan = (props) => {
       totals[key].stockCost = stockCost(totals[key].totalHojas);
     });
 
+    console.log("Totales 1:");
+    console.log(totals);
+
+    // Costo total:
+    try {
+      const prodsets = Object.getOwnPropertyNames(totals);
+      let totalCost = { print: 0, stock: 0 };
+      for (let set of prodsets) {
+        totalCost.print += totals[set].printPrice.Total;
+        totalCost.stock += totals[set].stockCost.cost;
+      }
+      totals.totalCost = totalCost;
+    } catch (error) {
+      console.log(error);
+      setError(error);
+    }
+
+    console.log("Totales 2:");
+    console.log(totals);
+
     return Object.values(totals);
   };
 
@@ -205,7 +225,7 @@ const ProductionPlan = (props) => {
 
   const success = (
     <Grid container columns={12} spacing={2} padding={2}>
-      {resumen.map((data) => {
+      {resumen.slice(0, resumen.length - 1).map((data) => {
         console.log("Data");
         console.log(data);
         return (
@@ -333,6 +353,53 @@ const ProductionPlan = (props) => {
             subheaderTypographyProps={{ color: "secondary" }}
           ></CardHeader>
           <Divider />
+          <CardContent>
+            <List>
+              <ListItemText
+                primary={`$ ${resumen[resumen.length - 1].print}`}
+                primaryTypographyProps={{
+                  variant: "subtitle2",
+                  fontSize: 16,
+                  color: "primary",
+                }}
+                secondary={`Impresion total`}
+                secondaryTypographyProps={{
+                  variant: "subtitle2",
+                  fontSize: 14,
+                }}
+              />
+              <ListItemText
+                primary={`$ ${resumen[resumen.length - 1].stock}`}
+                primaryTypographyProps={{
+                  variant: "subtitle2",
+                  fontSize: 16,
+                  color: "primary",
+                }}
+                secondary={`Material total`}
+                secondaryTypographyProps={{
+                  variant: "subtitle2",
+                  fontSize: 14,
+                }}
+              />
+              <Divider />
+              <ListItemText
+                primary={`$ ${
+                  resumen[resumen.length - 1].print +
+                  resumen[resumen.length - 1].stock
+                }`}
+                primaryTypographyProps={{
+                  variant: "subtitle2",
+                  fontSize: 16,
+                  color: "primary",
+                }}
+                secondary={` Costo total`}
+                secondaryTypographyProps={{
+                  variant: "subtitle2",
+                  fontSize: 14,
+                }}
+              />
+            </List>
+          </CardContent>
         </Card>
       </Grid>
     </Grid>
