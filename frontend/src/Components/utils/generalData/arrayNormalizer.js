@@ -3,7 +3,8 @@ function isObject(obj) {
 }
 
 const arrayNormalizer = (element, errManager = Function) => {
-  if (isObject(element)) {
+  try {
+    if (isObject(element)) {
     console.log("Object to Array");
     return [element];
   } else if (Array.isArray(element)) {
@@ -21,6 +22,10 @@ const arrayNormalizer = (element, errManager = Function) => {
     id.push(element);
     errManager(id);
   }
+  } catch (error) {
+    console.log(error)
+  }
+  
 };
 
 export default arrayNormalizer;

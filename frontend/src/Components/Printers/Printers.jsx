@@ -2,12 +2,11 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import PrinterDetails from "./PrinterDetails";
 import PrintersDataForm from "../Formulario/PrintersDataForm";
-// import "./printers.css";
 import ItemsDetails from "../General/itemsDetails";
 import { serverURL } from "../Config/config";
 import Grid from "@mui/material/Unstable_Grid2"; // Grid version 2
 import Spinner from "../General/Spinner";
-import { Paper } from "@mui/material";
+import { Card } from "@mui/material";
 
 const readPrinters = async () => {
   const res = await axios.get(`${serverURL}/hamlet/impresoras`);
@@ -40,7 +39,7 @@ const Printers = (props) => {
       ) : (
         printerList.map((printer) => (
           <Grid xs={12} md={4} key={printer._id}>
-            <Paper elevation={10} sx={{p: 2}}>
+            <Card elevation={10} sx={{p: 2}}>
               <PrinterDetails
               pd={printer}
               id={printer._id}
@@ -48,7 +47,7 @@ const Printers = (props) => {
               formData={PrintersDataForm}
               editor={setEdit}
             />
-            </Paper>
+            </Card>
             
           </Grid>
         ))

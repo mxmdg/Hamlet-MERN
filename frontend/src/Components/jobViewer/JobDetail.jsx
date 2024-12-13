@@ -220,7 +220,7 @@ const JobDetail = (props) => {
                   <Item>
                     {part.partStock.Tipo} {part.partStock.Gramaje}{" "}
                     {useImpoData
-                      ? ` - ${useImpoData.formatSelector.Nombre}`
+                      ? ` - ${useImpoData.sheetOriginalSize.width} x ${useImpoData.sheetOriginalSize.height}`
                       : ""}
                   </Item>
 

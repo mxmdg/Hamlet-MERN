@@ -4,6 +4,29 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { serverURL } from "../Config/config";
 
+import {
+  Avatar,
+  Container,
+  Box,
+  Grid,
+  Card,
+  CardContent,
+  CardActions,
+  List,
+  ListItem,
+  ListItemText,
+  Modal,
+  Divider,
+  CardHeader,
+  Typography,
+  Button,
+  IconButton,
+  Paper,
+  Stack,
+  Select,
+  ButtonGroup,
+} from "@mui/material";
+
 const PrinterDetails = (props) => {
   const editClickHandler = (e) => {
     setState(Edit);
@@ -29,26 +52,40 @@ const PrinterDetails = (props) => {
   };
 
   const Show = (
-    <div id={props.pd._id} className="frame">
-      <div className="frame__title">
-        <h4>{props.pd.Modelo}</h4> <h5>{props.pd.Fabricante}</h5>
-      </div>
-
-      <Cmyk colores={props.pd.Colores} />
-      <h5>Colores: {props.pd.Colores}</h5>
-      <h5></h5>
-      <h5>PPM: {props.pd.Paginas_por_minuto}</h5>
-      <h5>
-        X: {props.pd.X_Minimo}-{props.pd.X_Maximo}
-      </h5>
-      <h5>
-        Y: {props.pd.Y_Minimo}-{props.pd.Y_Maximo}
-      </h5>
-      <button onClick={(e) => editClickHandler(props.pd._id)}>Editar</button>
-      <button onClick={(e) => deleteClickHandler(props.pd._id)}>
-        Eliminar
-      </button> 
-    </div>
+    <>
+      <CardHeader title={props.pd.Modelo} subheader={props.pd.Fabricante}>
+      </CardHeader>
+      <CardContent>
+        <Cmyk colores={props.pd.Colores} />
+        <List subheader={`Colores: ${props.pd.Colores}`}>
+          
+          <ListItem divider={true}>
+            <ListItemText primary='Contadores' />
+          </ListItem>
+          <ListItem divider={true}>
+            <ListItemText primary='Total:' secondary={props.pd.TotalPrints} />
+          </ListItem>
+          <ListItem divider={true}>
+            <ListItemText primary='Color:' secondary={props.pd.ColorPrints} />
+          </ListItem>
+          <ListItem divider={true}>
+            <ListItemText primary='Blanco y negro:' secondary={props.pd.BlackPrints} />
+          </ListItem>
+          <ListItem divider={true}>
+            <ListItemText primary='Grandes:' secondary={props.pd.LargePrints} />
+          </ListItem>
+          <ListItem divider={true}>
+            <ListItemText primary='Chicas:' secondary={props.pd.SmallPrints} />
+          </ListItem>
+        </List>
+      </CardContent>
+      <CardActions>
+        <ButtonGroup>
+          <Button color='primary' onClick={(e) => editClickHandler(props.pd._id)}>Editar</Button>
+          <Button color='error' onClick={(e) => deleteClickHandler(props.pd._id)}>Eliminar</Button>
+        </ButtonGroup>
+      </CardActions>
+    </>
   );
 
   const Edit = (
