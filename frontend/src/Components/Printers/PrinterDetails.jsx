@@ -4,6 +4,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { serverURL } from "../Config/config";
 
+import { NewSimpleLineChart } from "../utils/stats/NewSimpleLineChart";
+
 import {
   Avatar,
   Container,
@@ -27,7 +29,9 @@ import {
   ButtonGroup,
 } from "@mui/material";
 
+
 const PrinterDetails = (props) => {
+
   const editClickHandler = (e) => {
     setState(Edit);
   };
@@ -40,6 +44,7 @@ const PrinterDetails = (props) => {
   const cancelClickHandler = () => {
     setState(Show);
   };
+
 
   const deleteClickHandler = async (id) => {
     if (window.confirm("Estas recontra seguro de borrar esta impresora?")) {
@@ -58,7 +63,6 @@ const PrinterDetails = (props) => {
       <CardContent>
         <Cmyk colores={props.pd.Colores} />
         <List subheader={`Colores: ${props.pd.Colores}`}>
-          
           <ListItem divider={true}>
             <ListItemText primary='Contadores' />
           </ListItem>
@@ -78,6 +82,10 @@ const PrinterDetails = (props) => {
             <ListItemText primary='Chicas:' secondary={props.pd.SmallPrints} />
           </ListItem>
         </List>
+        { props.pd.Billing.length > 0 && (
+            <NewSimpleLineChart dataKey={["Fecha","Black","Color","Large","Small","Total"]} data={props.pd.Billing}/>
+          
+        )}
       </CardContent>
       <CardActions>
         <ButtonGroup>

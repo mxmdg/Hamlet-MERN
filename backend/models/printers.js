@@ -11,6 +11,7 @@ const billingSchema = new Schema({
   Black: { type: Number, required: false },
   Large: { type: Number, required: false },
   Small: { type: Number, required: false },
+  Fecha: { type: Date, default: Date.now, required: false },
 });
 
 const printerSchema = new Schema({
