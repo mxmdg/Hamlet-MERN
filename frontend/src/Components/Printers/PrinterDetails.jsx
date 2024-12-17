@@ -5,6 +5,11 @@ import axios from "axios";
 import { serverURL } from "../Config/config";
 
 import { NewSimpleLineChart } from "../utils/stats/NewSimpleLineChart";
+import {
+  getMyDate,
+  getWeekNumber,
+  handleDate,
+} from "../utils/generalData/fechaDiccionario";
 
 import {
   Avatar,
@@ -29,9 +34,7 @@ import {
   ButtonGroup,
 } from "@mui/material";
 
-
 const PrinterDetails = (props) => {
-
   const editClickHandler = (e) => {
     setState(Edit);
   };
@@ -45,7 +48,6 @@ const PrinterDetails = (props) => {
     setState(Show);
   };
 
-
   const deleteClickHandler = async (id) => {
     if (window.confirm("Estas recontra seguro de borrar esta impresora?")) {
       try {
@@ -58,39 +60,56 @@ const PrinterDetails = (props) => {
 
   const Show = (
     <>
-      <CardHeader title={props.pd.Modelo} subheader={props.pd.Fabricante}>
-      </CardHeader>
+      <CardHeader
+        title={props.pd.Modelo}
+        subheader={props.pd.Fabricante}
+      ></CardHeader>
       <CardContent>
         <Cmyk colores={props.pd.Colores} />
         <List subheader={`Colores: ${props.pd.Colores}`}>
           <ListItem divider={true}>
-            <ListItemText primary='Contadores' />
+            <ListItemText primary="Contadores" />
           </ListItem>
           <ListItem divider={true}>
-            <ListItemText primary='Total:' secondary={props.pd.TotalPrints} />
+            <ListItemText primary="Total:" secondary={props.pd.TotalPrints} />
           </ListItem>
           <ListItem divider={true}>
-            <ListItemText primary='Color:' secondary={props.pd.ColorPrints} />
+            <ListItemText primary="Color:" secondary={props.pd.ColorPrints} />
           </ListItem>
           <ListItem divider={true}>
-            <ListItemText primary='Blanco y negro:' secondary={props.pd.BlackPrints} />
+            <ListItemText
+              primary="Blanco y negro:"
+              secondary={props.pd.BlackPrints}
+            />
           </ListItem>
           <ListItem divider={true}>
-            <ListItemText primary='Grandes:' secondary={props.pd.LargePrints} />
+            <ListItemText primary="Grandes:" secondary={props.pd.LargePrints} />
           </ListItem>
           <ListItem divider={true}>
-            <ListItemText primary='Chicas:' secondary={props.pd.SmallPrints} />
+            <ListItemText primary="Chicas:" secondary={props.pd.SmallPrints} />
           </ListItem>
         </List>
-        { props.pd.Billing.length > 0 && (
-            <NewSimpleLineChart dataKey={["Fecha","Black","Color","Large","Small","Total"]} data={props.pd.Billing}/>
-          
+        {props.pd.Billing.length > 0 && (
+          <NewSimpleLineChart
+            dataKey={["Fecha", "Black", "Color", "Large", "Small", "Total"]}
+            data={props.pd.Billing}
+          />
         )}
       </CardContent>
       <CardActions>
         <ButtonGroup>
-          <Button color='primary' onClick={(e) => editClickHandler(props.pd._id)}>Editar</Button>
-          <Button color='error' onClick={(e) => deleteClickHandler(props.pd._id)}>Eliminar</Button>
+          <Button
+            color="primary"
+            onClick={(e) => editClickHandler(props.pd._id)}
+          >
+            Editar
+          </Button>
+          <Button
+            color="error"
+            onClick={(e) => deleteClickHandler(props.pd._id)}
+          >
+            Eliminar
+          </Button>
         </ButtonGroup>
       </CardActions>
     </>
@@ -102,12 +121,39 @@ const PrinterDetails = (props) => {
         <input type="text" defaultValue={props.pd.Modelo}></input>{" "}
         <input type="text" defaultValue={props.pd.Fabricante}></input>
       </div>
-      <input type="number" placeholder="Colores" defaultValue={props.pd.Colores} aria-label="Colores"></input>
-      <input type="number" placeholder="Paginas por minuto" defaultValue={props.pd.Paginas_por_minuto}></input>
-      <input type="number" placeholder="Ancho Minimo" defaultValue={props.pd.X_Minimo}></input> -{" "}
-      <input type="number" placeholder="Ancho Maximo" defaultValue={props.pd.X_Maximo}></input>
-      <input type="number" placeholder="Alto Minimo" defaultValue={props.pd.Y_Minimo}></input> -{" "}
-      <input type="number" placeholder="Alto Maximo" defaultValue={props.pd.Y_Maximo}></input>
+      <input
+        type="number"
+        placeholder="Colores"
+        defaultValue={props.pd.Colores}
+        aria-label="Colores"
+      ></input>
+      <input
+        type="number"
+        placeholder="Paginas por minuto"
+        defaultValue={props.pd.Paginas_por_minuto}
+      ></input>
+      <input
+        type="number"
+        placeholder="Ancho Minimo"
+        defaultValue={props.pd.X_Minimo}
+      ></input>{" "}
+      -{" "}
+      <input
+        type="number"
+        placeholder="Ancho Maximo"
+        defaultValue={props.pd.X_Maximo}
+      ></input>
+      <input
+        type="number"
+        placeholder="Alto Minimo"
+        defaultValue={props.pd.Y_Minimo}
+      ></input>{" "}
+      -{" "}
+      <input
+        type="number"
+        placeholder="Alto Maximo"
+        defaultValue={props.pd.Y_Maximo}
+      ></input>
       <button onClick={saveClickHandler}>Guardar</button>
       <button onClick={cancelClickHandler}>Cancelar</button>
     </div>
