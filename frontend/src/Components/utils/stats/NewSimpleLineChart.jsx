@@ -11,13 +11,15 @@ import {
 } from "recharts";
 
 import { coloresIntermedios, myWrapperStyle } from "./NewRadialBar";
-import { handleDate } from "../generalData/fechaDiccionario";
+import { handleDate, procesarFechaISO } from "../generalData/fechaDiccionario";
 
 export const NewSimpleLineChart = (props) => {
   const myDataKey = [];
 
-  for (let date of props.dataKey) {
-    const formatedDate = handleDate(date);
+  for (let date of props.data) {
+    console.log(date)
+    const formatedDate = procesarFechaISO(date.Fecha);
+    console.log(formatedDate)
     myDataKey.push(formatedDate);
   }
 
@@ -26,7 +28,8 @@ export const NewSimpleLineChart = (props) => {
       width="98%"
       height="100%"
       minWidth={"300px"}
-      minHeight={"400px"}
+      minHeight={"200px"}
+      maxHeight={"280px"}
     >
       <LineChart
         width={500}
@@ -40,7 +43,7 @@ export const NewSimpleLineChart = (props) => {
         }}
       >
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey={myDataKey} />
+        <XAxis dataKey={props.dataKey[0]} />
         <YAxis />
         <Tooltip />
         <Legend
@@ -55,6 +58,7 @@ export const NewSimpleLineChart = (props) => {
           if (index > 0) {
             myLine = (
               <Line
+                key={index + line}
                 type="monotone"
                 dataKey={props.dataKey[index]}
                 stroke={coloresIntermedios[index]}

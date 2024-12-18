@@ -5,6 +5,7 @@ import axios from "axios";
 import { serverURL } from "../Config/config";
 
 import { NewSimpleLineChart } from "../utils/stats/NewSimpleLineChart";
+import NewStackedBarChart from "../utils/stats/NewStackedBarChart"
 import {
   getMyDate,
   getWeekNumber,
@@ -35,6 +36,7 @@ import {
 } from "@mui/material";
 
 const PrinterDetails = (props) => {
+
   const editClickHandler = (e) => {
     setState(Edit);
   };
@@ -89,12 +91,11 @@ const PrinterDetails = (props) => {
             <ListItemText primary="Chicas:" secondary={props.pd.SmallPrints} />
           </ListItem>
         </List>
-        {props.pd.Billing.length > 0 && (
+        
           <NewSimpleLineChart
-            dataKey={["Fecha", "Black", "Color", "Large", "Small", "Total"]}
+            dataKey={["Black", "Color", "Large", "Small", "Total"]}
             data={props.pd.Billing}
           />
-        )}
       </CardContent>
       <CardActions>
         <ButtonGroup>

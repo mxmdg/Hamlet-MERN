@@ -62,4 +62,13 @@ export const handleDate = (date) => {
   return formattedDate;
 };
 
+export function procesarFechaISO(fechaISO) {
+  const fecha = new Date(fechaISO);
+  const opciones = { day: "numeric", month: "numeric", year: "numeric", hour: "numeric", minute: "numeric", second: "numeric" };
+  const fechaFormateada = fecha.toLocaleDateString("es-ES", opciones);
+  const horaFormateada = fecha.toLocaleTimeString("es-ES", opciones);
+  return `${fechaFormateada}`;
+}
+
+
 export default diccionarioFechas;
