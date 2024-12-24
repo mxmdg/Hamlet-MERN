@@ -64,9 +64,10 @@ export const handleDate = (date) => {
 
 export function procesarFechaISO(fechaISO) {
   const fecha = new Date(fechaISO);
-  const opciones = { day: "numeric", month: "numeric", year: "numeric", hour: "numeric", minute: "numeric", second: "numeric" };
-  const fechaFormateada = fecha.toLocaleDateString("es-ES", opciones);
-  const horaFormateada = fecha.toLocaleTimeString("es-ES", opciones);
+  const ddmmyyhhmmss = { day: "numeric", month: "numeric", year: "numeric", hour: "numeric", minute: "numeric", second: "numeric" };
+  const mmyy = { month: "numeric", year: "numeric" };
+  const fechaFormateada = fecha.toLocaleDateString("es-ES", mmyy);
+  const horaFormateada = fecha.toLocaleTimeString("es-ES", ddmmyyhhmmss);
   return `${fechaFormateada}`;
 }
 

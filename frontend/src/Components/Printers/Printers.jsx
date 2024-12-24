@@ -38,7 +38,7 @@ const Printers = (props) => {
         <Spinner color="warning" /> // Asegúrate de importar el componente Spinner si lo tienes
       ) : (
         printerList.map((printer) => (
-          <Grid xs={12} md={4} key={printer._id}>
+          <Grid xs={12} md={6} lg={4} key={printer._id}>
             <Card elevation={10} sx={{p: 2}}>
               <PrinterDetails
               pd={printer}

@@ -118,7 +118,7 @@ const FormMaterial = (props) => {
       (props.item === undefined && props.task === "edit") ||
       props.task === "copy"
     ) {
-      const { id } = params;
+      const { id } = params || props.id;
 
       const fetchItem = async () => {
         setLoading(true);

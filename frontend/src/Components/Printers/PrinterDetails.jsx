@@ -3,13 +3,17 @@ import Cmyk from "./Cmyk";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { serverURL } from "../Config/config";
+import { useNavigate } from "react-router-dom";
 
 import { NewSimpleLineChart } from "../utils/stats/NewSimpleLineChart";
+import FormMaterial from "../Formulario/FormMaterial";
+import PrintersDataForm from "../Formulario/PrintersDataForm";
 import NewStackedBarChart from "../utils/stats/NewStackedBarChart"
 import {
   getMyDate,
   getWeekNumber,
   handleDate,
+  procesarFechaISO
 } from "../utils/generalData/fechaDiccionario";
 
 import {
@@ -36,9 +40,11 @@ import {
 } from "@mui/material";
 
 const PrinterDetails = (props) => {
+  
+  const navigate = useNavigate();
 
   const editClickHandler = (e) => {
-    setState(Edit);
+    navigate(`../impresoras/edit/${props.pd._id}`);
   };
 
   const saveClickHandler = (e) => {
@@ -60,15 +66,23 @@ const PrinterDetails = (props) => {
     }
   };
 
+  let currentData = props.pd.Billing
+
+  currentData.map((B)=>{
+    B.mmyy = (procesarFechaISO(B.Fecha))
+  })
+
   const Show = (
     <>
       <CardHeader
         title={props.pd.Modelo}
         subheader={props.pd.Fabricante}
-      ></CardHeader>
+      >{`Colores: ${props.pd.Colores}`}</CardHeader>
       <CardContent>
         <Cmyk colores={props.pd.Colores} />
-        <List subheader={`Colores: ${props.pd.Colores}`}>
+        <Grid container columns={12}>
+          <Grid item columns={6}>
+          <List >
           <ListItem divider={true}>
             <ListItemText primary="Contadores" />
           </ListItem>
@@ -91,11 +105,42 @@ const PrinterDetails = (props) => {
             <ListItemText primary="Chicas:" secondary={props.pd.SmallPrints} />
           </ListItem>
         </List>
+          </Grid>
+          <Grid item columns={6}>
+          <List >
+          <ListItem divider={true}>
+            <ListItemText primary="Ultimo Mes" />
+          </ListItem>
+          <ListItem divider={true}>
+            <ListItemText primary="Total:" secondary={props.pd.Billing[props.pd.Billing.length - 1].Total} />
+          </ListItem>
+          <ListItem divider={true}>
+            <ListItemText primary="Color:" secondary={props.pd.Billing[props.pd.Billing.length - 1].Color} />
+          </ListItem>
+          <ListItem divider={true}>
+            <ListItemText
+              primary="Blanco y negro:"
+              secondary={props.pd.Billing[props.pd.Billing.length - 1].Black}
+            />
+          </ListItem>
+          <ListItem divider={true}>
+            <ListItemText primary="Grandes:" secondary={props.pd.Billing[props.pd.Billing.length - 1].Large}/>
+          </ListItem>
+          <ListItem divider={true}>
+            <ListItemText primary="Chicas:" secondary={props.pd.Billing[props.pd.Billing.length - 1].Small} />
+          </ListItem>
+        </List>
+          </Grid>
+
+        </Grid>
         
+        <Box>
           <NewSimpleLineChart
-            dataKey={["Black", "Color", "Large", "Small", "Total"]}
-            data={props.pd.Billing}
+            dataKey={["mmyy","Black", "Color", "Large", "Small", "Total"]}
+            data={currentData}
           />
+        </Box>
+          
       </CardContent>
       <CardActions>
         <ButtonGroup>
@@ -117,6 +162,15 @@ const PrinterDetails = (props) => {
   );
 
   const Edit = (
+    <FormMaterial
+    id={props.pd._id}
+    form={PrintersDataForm}
+    collection="impresoras"
+    task="edit"
+    />
+  )
+
+  const deprecatiedEdit = (
     <div id={props.pd._id} className="frame">
       <div className="frame__title">
         <input type="text" defaultValue={props.pd.Modelo}></input>{" "}

@@ -20,18 +20,9 @@ const PrintersMainContainer = () => {
   const navigate = useNavigate();
 
   return (
-    <Card elevation={6}>
-      <CardHeader title={collection} />
-      <CardContent>
+    <Container>
         <Printers collection={collection} />
-      </CardContent>
-      <CardActions>
-        <AddFloatButton
-          text={"Agregar " + collection}
-          onclick={() => navigate(`/${collection}/add`)}
-        />
-      </CardActions>
-    </Card>
+      </Container>
   );
 };
 
