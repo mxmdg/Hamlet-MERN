@@ -27,10 +27,11 @@ jobControl.getCompleteJobs = async (req, res) => {
   {
     try {
       const queryText = req.query.Q || "";
+      const property = req.query.P || "Nombre";
+      const query = { [property]: { $regex: queryText, $options: "i" } };
+
       const jobList = await jobs.esquema
-        .find({
-          Nombre: { $regex: queryText, $options: "i" },
-        })
+        .find(query)
         .select(
           "-Finishing.Costo.Historial  -Finishing.jobTypesAllowed -Finishing.partTypesAllowed"
         )
@@ -127,27 +128,27 @@ jobControl.getOwnerJobs = async (req, res) => {
         /* .find({ Owner: { $eq: currentUserId } })
         .select("Nombre Cantidad Fecha Entrega Emision Deadline");
       res.json(jobList); */
-      .find({ Owner: { $eq: currentUserId } })
-      .select(
-        "-Finishing.Costo.Historial  -Finishing.jobTypesAllowed -Finishing.partTypesAllowed"
-      )
-      .populate({
-        path: "Owner",
-        model: users.esquema,
-      })
-      .populate({
-        path: "Company",
-        model: companies.esquema,
-        select: "Nombre email",
-      })
-      .populate({ path: "Partes.partStock", model: stocks.esquema })
-      .populate({
-        path: "Partes.Finishing",
-        model: finishers.esquema,
-        select: "-Costo.Historial -jobTypesAllowed -partTypesAllowed",
-      })
-      .sort({ Fecha: -1 });
-    res.json(jobList);
+        .find({ Owner: { $eq: currentUserId } })
+        .select(
+          "-Finishing.Costo.Historial  -Finishing.jobTypesAllowed -Finishing.partTypesAllowed"
+        )
+        .populate({
+          path: "Owner",
+          model: users.esquema,
+        })
+        .populate({
+          path: "Company",
+          model: companies.esquema,
+          select: "Nombre email",
+        })
+        .populate({ path: "Partes.partStock", model: stocks.esquema })
+        .populate({
+          path: "Partes.Finishing",
+          model: finishers.esquema,
+          select: "-Costo.Historial -jobTypesAllowed -partTypesAllowed",
+        })
+        .sort({ Fecha: -1 });
+      res.json(jobList);
     }
   } catch (e) {
     throw e;

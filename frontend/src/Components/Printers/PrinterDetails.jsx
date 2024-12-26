@@ -8,12 +8,13 @@ import { useNavigate } from "react-router-dom";
 import { NewSimpleLineChart } from "../utils/stats/NewSimpleLineChart";
 import FormMaterial from "../Formulario/FormMaterial";
 import PrintersDataForm from "../Formulario/PrintersDataForm";
-import NewStackedBarChart from "../utils/stats/NewStackedBarChart"
+import ErrorMessage from "../ErrorMessage/ErrorMessage";
+import NewStackedBarChart from "../utils/stats/NewStackedBarChart";
 import {
   getMyDate,
   getWeekNumber,
   handleDate,
-  procesarFechaISO
+  procesarFechaISO,
 } from "../utils/generalData/fechaDiccionario";
 
 import {
@@ -40,7 +41,6 @@ import {
 } from "@mui/material";
 
 const PrinterDetails = (props) => {
-  
   const navigate = useNavigate();
 
   const editClickHandler = (e) => {
@@ -66,109 +66,149 @@ const PrinterDetails = (props) => {
     }
   };
 
-  let currentData = props.pd.Billing
+  let currentData = props.pd.Billing;
 
-  currentData.map((B)=>{
-    B.mmyy = (procesarFechaISO(B.Fecha))
-  })
+  currentData.map((B) => {
+    B.mmyy = procesarFechaISO(B.Fecha);
+  });
 
-  const Show = (
-    <>
-      <CardHeader
-        title={props.pd.Modelo}
-        subheader={props.pd.Fabricante}
-      >{`Colores: ${props.pd.Colores}`}</CardHeader>
-      <CardContent>
-        <Cmyk colores={props.pd.Colores} />
-        <Grid container columns={12}>
-          <Grid item columns={6}>
-          <List >
-          <ListItem divider={true}>
-            <ListItemText primary="Contadores" />
-          </ListItem>
-          <ListItem divider={true}>
-            <ListItemText primary="Total:" secondary={props.pd.TotalPrints} />
-          </ListItem>
-          <ListItem divider={true}>
-            <ListItemText primary="Color:" secondary={props.pd.ColorPrints} />
-          </ListItem>
-          <ListItem divider={true}>
-            <ListItemText
-              primary="Blanco y negro:"
-              secondary={props.pd.BlackPrints}
-            />
-          </ListItem>
-          <ListItem divider={true}>
-            <ListItemText primary="Grandes:" secondary={props.pd.LargePrints} />
-          </ListItem>
-          <ListItem divider={true}>
-            <ListItemText primary="Chicas:" secondary={props.pd.SmallPrints} />
-          </ListItem>
-        </List>
-          </Grid>
-          <Grid item columns={6}>
-          <List >
-          <ListItem divider={true}>
-            <ListItemText primary="Ultimo Mes" />
-          </ListItem>
-          <ListItem divider={true}>
-            <ListItemText primary="Total:" secondary={props.pd.Billing[props.pd.Billing.length - 1].Total} />
-          </ListItem>
-          <ListItem divider={true}>
-            <ListItemText primary="Color:" secondary={props.pd.Billing[props.pd.Billing.length - 1].Color} />
-          </ListItem>
-          <ListItem divider={true}>
-            <ListItemText
-              primary="Blanco y negro:"
-              secondary={props.pd.Billing[props.pd.Billing.length - 1].Black}
-            />
-          </ListItem>
-          <ListItem divider={true}>
-            <ListItemText primary="Grandes:" secondary={props.pd.Billing[props.pd.Billing.length - 1].Large}/>
-          </ListItem>
-          <ListItem divider={true}>
-            <ListItemText primary="Chicas:" secondary={props.pd.Billing[props.pd.Billing.length - 1].Small} />
-          </ListItem>
-        </List>
-          </Grid>
+  const Show = () => {
+    try {
+      return (
+        <>
+          <CardHeader
+            title={props.pd.Modelo}
+            subheader={props.pd.Fabricante}
+          >{`Colores: ${props.pd.Colores}`}</CardHeader>
+          <CardContent>
+            <Cmyk colores={props.pd.Colores} />
+            <Grid container columns={12}>
+              <Grid item columns={6}>
+                <List>
+                  <ListItem divider={true}>
+                    <ListItemText primary="Contadores" />
+                  </ListItem>
+                  <ListItem divider={true}>
+                    <ListItemText
+                      primary="Total:"
+                      secondary={props.pd.TotalPrints}
+                    />
+                  </ListItem>
+                  <ListItem divider={true}>
+                    <ListItemText
+                      primary="Color:"
+                      secondary={props.pd.ColorPrints}
+                    />
+                  </ListItem>
+                  <ListItem divider={true}>
+                    <ListItemText
+                      primary="Blanco y negro:"
+                      secondary={props.pd.BlackPrints}
+                    />
+                  </ListItem>
+                  <ListItem divider={true}>
+                    <ListItemText
+                      primary="Grandes:"
+                      secondary={props.pd.LargePrints}
+                    />
+                  </ListItem>
+                  <ListItem divider={true}>
+                    <ListItemText
+                      primary="Chicas:"
+                      secondary={props.pd.SmallPrints}
+                    />
+                  </ListItem>
+                </List>
+              </Grid>
+              <Grid item columns={6}>
+                <List>
+                  <ListItem divider={true}>
+                    <ListItemText primary="Ultimo Mes" />
+                  </ListItem>
+                  <ListItem divider={true}>
+                    <ListItemText
+                      primary="Total:"
+                      secondary={
+                        props.pd.Billing[props.pd.Billing.length - 1].Total
+                      }
+                    />
+                  </ListItem>
+                  <ListItem divider={true}>
+                    <ListItemText
+                      primary="Color:"
+                      secondary={
+                        props.pd.Billing[props.pd.Billing.length - 1].Color
+                      }
+                    />
+                  </ListItem>
+                  <ListItem divider={true}>
+                    <ListItemText
+                      primary="Blanco y negro:"
+                      secondary={
+                        props.pd.Billing[props.pd.Billing.length - 1].Black
+                      }
+                    />
+                  </ListItem>
+                  <ListItem divider={true}>
+                    <ListItemText
+                      primary="Grandes:"
+                      secondary={
+                        props.pd.Billing[props.pd.Billing.length - 1].Large
+                      }
+                    />
+                  </ListItem>
+                  <ListItem divider={true}>
+                    <ListItemText
+                      primary="Chicas:"
+                      secondary={
+                        props.pd.Billing[props.pd.Billing.length - 1].Small
+                      }
+                    />
+                  </ListItem>
+                </List>
+              </Grid>
+            </Grid>
 
-        </Grid>
-        
-        <Box>
-          <NewSimpleLineChart
-            dataKey={["mmyy","Black", "Color", "Large", "Small", "Total"]}
-            data={currentData}
-          />
-        </Box>
-          
-      </CardContent>
-      <CardActions>
-        <ButtonGroup>
-          <Button
-            color="primary"
-            onClick={(e) => editClickHandler(props.pd._id)}
-          >
-            Editar
-          </Button>
-          <Button
-            color="error"
-            onClick={(e) => deleteClickHandler(props.pd._id)}
-          >
-            Eliminar
-          </Button>
-        </ButtonGroup>
-      </CardActions>
-    </>
-  );
+            <Box>
+              <NewSimpleLineChart
+                dataKey={["mmyy", "Black", "Color", "Large", "Small", "Total"]}
+                data={currentData}
+              />
+            </Box>
+          </CardContent>
+          <CardActions>
+            <ButtonGroup>
+              <Button
+                color="primary"
+                onClick={(e) => editClickHandler(props.pd._id)}
+              >
+                Editar
+              </Button>
+              <Button
+                color="error"
+                onClick={(e) => deleteClickHandler(props.pd._id)}
+              >
+                Eliminar
+              </Button>
+            </ButtonGroup>
+          </CardActions>
+        </>
+      );
+    } catch (error) {
+      return (
+        <ErrorMessage message={error.message} action={() => navigate(-1)} />
+      );
+    }
+  };
 
   const Edit = (
     <FormMaterial
-    id={props.pd._id}
-    form={PrintersDataForm}
-    collection="impresoras"
-    task="edit"
+      id={props.pd._id}
+      form={PrintersDataForm}
+      collection="impresoras"
+      task="edit"
     />
-  )
+  );
 
   const deprecatiedEdit = (
     <div id={props.pd._id} className="frame">
@@ -214,7 +254,11 @@ const PrinterDetails = (props) => {
     </div>
   );
 
-  const [state, setState] = useState(Show);
+  const error = (
+    <ErrorMessage message={"No hay informacion"} action={() => navigate(-1)} />
+  );
+
+  const [state, setState] = useState(currentData !== undefined ? Show : error);
 
   return state;
 };
