@@ -63,7 +63,7 @@ const Router = () => {
             element={<MainContainer entity={"impresoras"} />}
           />
           <Route
-            path="/misimpresoras"
+            path="/billing"
             element={<PrintersMainContainer entity={"impresoras"} />}
           />
           <Route

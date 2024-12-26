@@ -53,6 +53,7 @@ function ResponsiveAppBar(props) {
     { text: "Perfil", path: "users/profile" },
     { text: "Cambiar Contraseña", path: "users/ChangePassword" },
     { text: "Trabajo Nuevo", path: "jobs/add" },
+    { text: "Contadores", path: "billing" },
     { text: "Mensajes", path: "messages" },
   ];
 
