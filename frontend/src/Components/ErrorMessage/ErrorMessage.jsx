@@ -13,7 +13,7 @@ const ErrorMessage = (props) => {
       size="small"
       onClick={() => props.action()}
     >
-      OK
+      {props.buttonTxt || "Ok"}
     </Button>
   );
 
