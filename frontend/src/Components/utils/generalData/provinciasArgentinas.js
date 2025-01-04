@@ -1,0 +1,28 @@
+const provinciasArgentinas = [
+  { text: "Buenos Aires", value: "Buenos Aires", id: "pr01" },
+  { text: "CABA", value: "CABA", id: "pr00" },
+  { text: "Catamarca", value: "Catamarca", id: "pr02" },
+  { text: "Chaco", value: "Chaco", id: "pr03" },
+  { text: "Chubut", value: "Chubut", id: "pr04" },
+  { text: "Córdoba", value: "Córdoba", id: "pr05" },
+  { text: "Corrientes", value: "Corrientes", id: "pr06" },
+  { text: "Entre Ríos", value: "Entre Ríos", id: "pr07" },
+  { text: "Formosa", value: "Formosa", id: "pr08" },
+  { text: "Jujuy", value: "Jujuy", id: "pr09" },
+  { text: "La Pampa", value: "La Pampa", id: "pr10" },
+  { text: "La Rioja", value: "La Rioja", id: "pr11" },
+  { text: "Mendoza", value: "Mendoza", id: "pr12" },
+  { text: "Misiones", value: "Misiones", id: "pr13" },
+  { text: "Neuquén", value: "Neuquén", id: "pr14" },
+  { text: "Río Negro", value: "Río Negro", id: "pr15" },
+  { text: "Salta", value: "Salta", id: "pr16" },
+  { text: "San Juan", value: "San Juan", id: "pr17" },
+  { text: "San Luis", value: "San Luis", id: "pr18" },
+  { text: "Santa Cruz", value: "Santa Cruz", id: "pr19" },
+  { text: "Santa Fe", value: "Santa Fe", id: "pr20" },
+  { text: "Santiago del Estero", value: "Santiago del Estero", id: "pr21" },
+  { text: "Tierra del Fuego", value: "Tierra del Fuego", id: "pr22" },
+  { text: "Tucumán", value: "Tucumán", id: "pr23" },
+];
+
+export default provinciasArgentinas;

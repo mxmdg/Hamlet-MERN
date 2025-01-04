@@ -150,7 +150,9 @@ const StatsCollector = ({ children }) => {
                 p: 2,
                 height: "500px",
                 minHeight: "500px",
-                width: "100%"
+                width: "100%",
+                borderBottom: "1px solid #666",
+                marginBottom: "10px",
               }}
             >
               {React.cloneElement(child, {
@@ -161,8 +163,7 @@ const StatsCollector = ({ children }) => {
           );
         }
         return (
-          <Paper elevation={10} sx={{ p: 2, height: "500px",
-            width: "100%" }}>
+          <Paper elevation={10} sx={{ p: 2, height: "500px", width: "100%" }}>
             {child}
           </Paper>
         );

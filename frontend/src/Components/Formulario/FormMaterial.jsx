@@ -46,9 +46,13 @@ import {
   FormGroup,
   Button,
   FormHelperText,
+  Tooltip,
   InputLabel,
   MenuItem,
 } from "@mui/material";
+import CustomizedTooltip from "../utils/CustomizedTooltip";
+import { StyledTooltip, DangerTooltip } from "../General/TableGrid";
+import { use } from "react";
 
 //Auxiliar Functions:
 
@@ -314,9 +318,14 @@ const FormMaterial = (props) => {
         </Grid>
       );
     } else if (inp.type === "checkbox") {
+      const allSelected =
+        useItem !== "new"
+          ? inp.options.length === selectedCheckboxItems[inp.inputName]?.length
+          : [];
+
       const changeHandler = (e, opt, checkboxSetKey) => {
         e.preventDefault();
-        setMyValue({ [inp.inputName]: e.target.value });
+        setMyValue({ [checkboxSetKey]: e.target.value });
         setSelectedCheckboxItems((prevItems) => {
           const selectedItemsForSet = prevItems[checkboxSetKey] || [];
 
@@ -335,6 +344,17 @@ const FormMaterial = (props) => {
               ),
             };
           }
+        });
+      };
+
+      const handleChange1 = (event, checkboxSetKey) => {
+        const isChecked = event.target.checked;
+        setSelectedCheckboxItems((prevItems) => {
+          const updatedItems = isChecked ? inp.options : [];
+          return {
+            ...prevItems,
+            [checkboxSetKey]: updatedItems,
+          };
         });
       };
 
@@ -357,6 +377,34 @@ const FormMaterial = (props) => {
                 inputname={inp.inputName}
                 id={inp.inputName}
               >
+                <DangerTooltip
+                  title="Atencion! esta accion no se puede deshacer"
+                  placement="top-start"
+                >
+                  <FormControlLabel
+                    label={
+                      allSelected ? "Deseleccionar todo" : "Seleccionar todo"
+                    }
+                    key={inp.inputName + "_all"}
+                    control={
+                      <Checkbox
+                        color="info"
+                        indeterminate={
+                          selectedCheckboxItems[inp.inputName]?.length > 0 &&
+                          selectedCheckboxItems[inp.inputName]?.length <
+                            inp.options.length
+                        }
+                        checked={
+                          selectedCheckboxItems[inp.inputName]?.length ===
+                          inp.options.length
+                        }
+                        onChange={(e) => {
+                          handleChange1(e, inp.inputName);
+                        }}
+                      />
+                    }
+                  />
+                </DangerTooltip>
                 <FormGroup label={inp.label || inp.inputName}>
                   <Grid container columns={12}>
                     {inp.options.sort().map((opt, index) => {
@@ -371,29 +419,16 @@ const FormMaterial = (props) => {
                         >
                           <FormControlLabel
                             key={inp.inputName + index}
-                            /* sx={{
-                          background: "#0b548c",
-                          borderRadius: "25px",
-                          boxShadow: "3px 3px 5px #000",
-                          padding: "2px 10px 2px 5px",
-                          margin: "3px",
-                          ":hover": {
-                            background: "#009fd9",
-                          },
-                        }} */
                             control={
                               <Checkbox
                                 color="secondary"
                                 key={inp.inputName + "_" + index}
-                                id={"id_" + inp.inputName + index} // Asegúrate de que cada checkbox tenga un ID único
-                                //defaultChecked={false}
-                                value={[opt]}
-                                defaultChecked={
-                                  // Esta ultima condicion hay que quitarla cuando se solucione el problema del checkbox
-                                  useItem.data !== undefined &&
-                                  useItem.data[inp.inputName] !== 0
-                                    ? useItem.data[inp.inputName].includes(opt)
-                                    : false
+                                id={"id_" + inp.inputName + index}
+                                value={opt}
+                                checked={
+                                  selectedCheckboxItems[
+                                    inp.inputName
+                                  ]?.includes(opt) || false
                                 }
                                 onChange={(e) =>
                                   changeHandler(e, opt, inp.inputName)
@@ -424,7 +459,13 @@ const FormMaterial = (props) => {
             type={inp.type}
             label={inp.label || inp.inputName}
             variant="outlined"
-            defaultValue={useItem !== "new" ? useItem.data[inp.inputName] : inp.default ? inp.default : ""}
+            defaultValue={
+              useItem !== "new"
+                ? useItem.data[inp.inputName]
+                : inp.default
+                ? inp.default
+                : ""
+            }
             name={inp.inputName}
             {...register(inp.inputName)}
             InputLabelProps={{
@@ -519,6 +560,10 @@ const FormMaterial = (props) => {
       action={resetError}
     />
   );
+
+  useEffect(() => {
+    console.log(selectedCheckboxItems);
+  }, [selectedCheckboxItems, useValue]);
 
   //return useHidden ? hiddenTrue : hiddenFalse;
   return useLoading

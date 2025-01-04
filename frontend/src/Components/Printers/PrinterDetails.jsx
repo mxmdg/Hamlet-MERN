@@ -91,35 +91,36 @@ const PrinterDetails = (props) => {
                   <ListItem divider={true}>
                     <ListItemText
                       primary="Total:"
-                      secondary={props.pd.TotalPrints}
+                      secondary={props.pd.TotalPrints || 0}
                     />
                   </ListItem>
                   <ListItem divider={true}>
                     <ListItemText
                       primary="Color:"
-                      secondary={props.pd.ColorPrints}
+                      secondary={props.pd.ColorPrints || 0}
                     />
                   </ListItem>
                   <ListItem divider={true}>
                     <ListItemText
                       primary="Blanco y negro:"
-                      secondary={props.pd.BlackPrints}
+                      secondary={props.pd.BlackPrints || 0}
                     />
                   </ListItem>
                   <ListItem divider={true}>
                     <ListItemText
                       primary="Grandes:"
-                      secondary={props.pd.LargePrints}
+                      secondary={props.pd.LargePrints || 0}
                     />
                   </ListItem>
                   <ListItem divider={true}>
                     <ListItemText
                       primary="Chicas:"
-                      secondary={props.pd.SmallPrints}
+                      secondary={props.pd.SmallPrints || 0}
                     />
                   </ListItem>
                 </List>
               </Grid>
+              <Divider orientation="vertical" />
               <Grid item columns={6}>
                 <List>
                   <ListItem divider={true}>
@@ -129,7 +130,7 @@ const PrinterDetails = (props) => {
                     <ListItemText
                       primary="Total:"
                       secondary={
-                        props.pd.Billing[props.pd.Billing.length - 1].Total
+                        props.pd.Billing[props.pd.Billing.length - 1].Total || 0
                       }
                     />
                   </ListItem>
@@ -137,7 +138,7 @@ const PrinterDetails = (props) => {
                     <ListItemText
                       primary="Color:"
                       secondary={
-                        props.pd.Billing[props.pd.Billing.length - 1].Color
+                        props.pd.Billing[props.pd.Billing.length - 1].Color || 0
                       }
                     />
                   </ListItem>
@@ -145,7 +146,7 @@ const PrinterDetails = (props) => {
                     <ListItemText
                       primary="Blanco y negro:"
                       secondary={
-                        props.pd.Billing[props.pd.Billing.length - 1].Black
+                        props.pd.Billing[props.pd.Billing.length - 1].Black || 0
                       }
                     />
                   </ListItem>
@@ -153,7 +154,7 @@ const PrinterDetails = (props) => {
                     <ListItemText
                       primary="Grandes:"
                       secondary={
-                        props.pd.Billing[props.pd.Billing.length - 1].Large
+                        props.pd.Billing[props.pd.Billing.length - 1].Large || 0
                       }
                     />
                   </ListItem>
@@ -161,7 +162,7 @@ const PrinterDetails = (props) => {
                     <ListItemText
                       primary="Chicas:"
                       secondary={
-                        props.pd.Billing[props.pd.Billing.length - 1].Small
+                        props.pd.Billing[props.pd.Billing.length - 1].Small || 0
                       }
                     />
                   </ListItem>
@@ -196,7 +197,13 @@ const PrinterDetails = (props) => {
       );
     } catch (error) {
       return (
-        <ErrorMessage message={error.message} action={() => navigate(-1)} />
+        <ErrorMessage
+          message={
+            "No se encuentra información sobre los contadores de la impresora"
+          }
+          severity="warning"
+          action={() => navigate(`../impresoras/edit/${props.pd._id}`)}
+        />
       );
     }
   };
@@ -255,7 +262,10 @@ const PrinterDetails = (props) => {
   );
 
   const error = (
-    <ErrorMessage message={"No hay informacion"} action={() => navigate(-1)} />
+    <ErrorMessage
+      message={"No hay informacion"}
+      action={() => navigate(`impresoras`)}
+    />
   );
 
   const [state, setState] = useState(currentData !== undefined ? Show : error);

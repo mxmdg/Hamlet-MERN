@@ -7,10 +7,12 @@ import { AuthContext } from "../context/AuthContext";
 import { useContext } from "react";
 import { serverURL, databaseURL } from "../Config/config";
 import MainContainer from "../General/MainContainer";
-import FullJobsRender from "../Pages/FullJobsRender"
+import FullJobsRender from "../Pages/FullJobsRender";
 import Fetch from "../General/Fetch";
 import SessionTimer from "./SessionTimer";
 import ColorPalette from "../Config/Theme/ColorPallete";
+import FormMaterial from "../Formulario/FormMaterial";
+import NewMessageForm from "../Formulario/NewMessageForm";
 
 export const Profile = () => {
   //User Profile
@@ -35,6 +37,8 @@ export const Profile = () => {
             <br></br>
             <SessionTimer />
           </CardContent>
+
+          <FormMaterial form={NewMessageForm} task={"new"} />
           {/* <CardActions>
             <ColorPalette />
           </CardActions> */}

@@ -10,6 +10,8 @@ import Container from "@mui/material/Container";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
+import CustomizedTooltip from "../utils/CustomizedTooltip";
+import { StyledTooltip } from "../General/TableGrid";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
@@ -32,7 +34,7 @@ export const pages = [
   { text: "Partes de trabajo", path: "JobParts" },
   { text: "Materiales", path: "materiales" },
   { text: "Clientes", path: "empresas" },
-  { text: "Terminacion", path: "finishers"},
+  { text: "Terminacion", path: "finishers" },
 ];
 
 function ResponsiveAppBar(props) {
@@ -143,8 +145,7 @@ function ResponsiveAppBar(props) {
                   onClick={() => {
                     handleCloseNavMenu(page.path);
                   }}
-                  
-                {...(context.useLogin ? "" : { disabled: true })}
+                  {...(context.useLogin ? "" : { disabled: true })}
                 >
                   <Typography textAlign="center">{page.text}</Typography>
                 </MenuItem>
@@ -200,17 +201,21 @@ function ResponsiveAppBar(props) {
               label="Dark Mode"
             />
 
-            <Tooltip
+            <StyledTooltip
               title={
                 context.userLogged !== null
                   ? context.userLogged.Name
                   : "Registrarse"
               }
             >
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }} disabled={false}>
+              <IconButton
+                onClick={handleOpenUserMenu}
+                sx={{ p: 0 }}
+                disabled={false}
+              >
                 <Avatar alt={"Nada"} />
               </IconButton>
-            </Tooltip>
+            </StyledTooltip>
             <Menu
               sx={{ mt: "45px" }}
               id="menu-appbar"

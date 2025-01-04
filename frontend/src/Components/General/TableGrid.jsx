@@ -25,6 +25,7 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
 import { deleteMultiple } from "../customHooks/FetchDataHook";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
+import CustomizedTooltip from "../utils/CustomizedTooltip";
 import { styled } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";

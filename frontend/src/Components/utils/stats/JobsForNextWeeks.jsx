@@ -5,7 +5,8 @@ import ErrorMessage from "../../ErrorMessage/ErrorMessage";
 
 const JobsForNextDays = (props) => {
   const [useError, setError] = React.useState(null);
-  const [from, setFrom] = React.useState(null);
+  const [from, setFrom] = React.useState(1);
+  const [to, setTo] = React.useState(60);
   const errorRef = React.useRef(false); // Bandera de control
 
   const getMyDate = (event) => {
@@ -23,8 +24,8 @@ const JobsForNextDays = (props) => {
     const yesterday = new Date();
     const today = new Date();
     const endDate = new Date();
-    endDate.setDate(today.getDate() + 60); // next 30 days
-    yesterday.setDate(today.getDate() - 1); //Ayer
+    endDate.setDate(today.getDate() + to); // next 30 days
+    yesterday.setDate(today.getDate() - from); //Ayer
 
     try {
       if (
