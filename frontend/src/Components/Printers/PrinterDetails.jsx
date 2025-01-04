@@ -198,11 +198,10 @@ const PrinterDetails = (props) => {
     } catch (error) {
       return (
         <ErrorMessage
-          message={
-            "No se encuentra información sobre los contadores de la impresora"
-          }
-          severity="warning"
-          action={() => navigate(`../impresoras/edit/${props.pd._id}`)}
+          message={`No se registran contadores para ${props.pd.Fabricante} ${props.pd.Modelo} `}
+          severity="info"
+          action={() => navigate(`..//impresoras/edit/${props.pd._id}`)}
+          buttonTxt="Ver detalle"
         />
       );
     }
