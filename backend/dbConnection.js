@@ -21,6 +21,10 @@ const dbSwitch = [
     printer: "test",
     title: "Imprenta Dorrego",
   },
+  {
+    printer: "digital",
+    title: "Digital Pritner",
+  },
 ];
 const DB = dbSwitch[3];
 

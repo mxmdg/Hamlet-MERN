@@ -13,8 +13,10 @@ let MoldePrecios = [
       { value: "humanResources", text: "Recursos Humanos" },
     ],
   },
+
   {
     inputName: "Proceso",
+    label: "Descripcion",
     type: "Text",
     id: "id_401",
     required: true,

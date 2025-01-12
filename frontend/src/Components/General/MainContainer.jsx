@@ -9,7 +9,7 @@ import Typography from "@mui/material/Typography";
 
 const MainContainer = (props) => {
   return (
-    <Container>
+    <Container sx={{ width: "100vw" }}>
       <Fetch collection={props.entity} />
     </Container>
   );

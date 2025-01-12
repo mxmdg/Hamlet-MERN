@@ -21,7 +21,8 @@ import JobsForNextDays from "./utils/stats/JobsForNextWeeks";
 import JobsPerDate from "./utils/stats/JobsPerDate";
 import JobsPerClient from "./utils/stats/JobsPerClient";
 //MUI Material Imports
-import { Container, Grid, Typography, Divider, Box } from "@mui/material";
+import { Container } from "@mui/material";
+import Grid from "@mui/material/Unstable_Grid2";
 
 const Home = () => {
   const getToken = () => {
@@ -32,7 +33,7 @@ const Home = () => {
   const context = useContext(AuthContext);
 
   const homePage = (
-    <Container disableGutters maxWidth={false}>
+    <Container fullwidth disableGutters maxWidth={false}>
       <Grid container columns={{ xs: 1, sm: 12, md: 12, lg: 16 }} spacing={0}>
         <Grid item xs={1} sm={12} md={12} lg={10}>
           <Container>

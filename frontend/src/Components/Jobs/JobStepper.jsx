@@ -1,7 +1,6 @@
 import * as React from "react";
-import { useEffect } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import Box from "@mui/material/Box";
 import Stepper from "@mui/material/Stepper";
@@ -17,69 +16,52 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import {
   Divider,
-  Chip,
-  Stack,
+  ButtonGroup,
+  Grid,
+  Container,
   List,
   ListItem,
   ListItemText,
-  ListSubheader,
-  Container,
-  ButtonGroup,
-  Grid,
 } from "@mui/material";
-//import { parts } from "./JobsParts";
-import { serverURL, databaseURL } from "../Config/config";
 import {
   getPrivateElementByID,
   addPrivateElement,
   putPrivateElement,
   fechtData,
 } from "../customHooks/FetchDataHook";
-import { calcularLomo } from "../jobViewer/JobDetail";
+
+import { serverURL, databaseURL } from "../Config/config";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import PartCard from "./PartCard";
 
-export default function MyStepper(props) {
-  const [activeStep, setActiveStep] = React.useState(0);
-  const [skipped, setSkipped] = React.useState(new Set());
-  const [allParts, setAllParts] = React.useState([]);
-  const [useParts, setParts] = React.useState(props.job?.Partes || []);
-  const [usePartToEdit, setPartToEdit] = React.useState(null);
-  const [useJobType, setJobType] = React.useState(props.job?.Tipo[0] || {});
-  const [useJob, setJob] = React.useState(props.job || null);
-  const [useError, setError] = React.useState(null);
-  const [stocks, setStocks] = React.useState([]);
+const JobStepper = (props) => {
+  const [activeStep, setActiveStep] = useState(0);
+  const [skipped, setSkipped] = useState(new Set());
+  const [allParts, setAllParts] = useState([]);
+  const [useParts, setParts] = useState(props.job?.Partes || []);
+  const [usePartToEdit, setPartToEdit] = useState(null);
+  const [useJobType, setJobType] = useState(props.job?.Tipo[0] || {});
+  const [useJob, setJob] = useState(props.job || null);
+  const [useError, setError] = useState(null);
+  const [stocks, setStocks] = useState([]);
   const context = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleJobTypeChange = (e) => {
     setJobType(e.target.value);
-    console.table(e.value);
-    console.table(useJobType);
   };
 
-  const parts = allParts;
-
   const addParts = (newPart) => {
-    console.log("adding part...");
-    console.log(newPart);
     try {
       const getStock = async (id) => {
         const stock = await getPrivateElementByID("materiales", id);
         newPart.partStock = stock.data;
       };
       getStock(newPart.partStock);
-      /*  const part = parts.find((parte)=>{
-        parte.id == newPart.jobParts ?
-        parte :
-        console.log("No encuentro " + parte.id)
-      }) */
-      //newPart.jobParts = part
     } catch (e) {
-      console.log(e);
       setError(e);
     }
-    const part = parts.filter((part) => part._id === newPart.jobParts);
+    const part = allParts.filter((part) => part._id === newPart.jobParts);
     newPart.jobParts = part;
 
     let partes = useParts;
@@ -89,59 +71,39 @@ export default function MyStepper(props) {
       setParts(partes);
       handleNext();
     } catch (e) {
-      console.log(e);
       setError(e);
     }
-
-    console.log("____________________");
-    console.log(useParts);
   };
 
   const removePart = (n) => {
-    const partsOk = useParts.splice(n, 1);
-    console.log(`Eliminar la parte ${n} de ${partsOk}`);
-    console.log(partsOk);
+    const partsOk = useParts.filter((_, index) => index !== n);
+    setParts(partsOk);
   };
 
   const replacePart = (newPart) => {
-    console.table(useParts);
-    console.table(newPart);
-
     try {
       const getStock = async (id) => {
         const stock = await getPrivateElementByID("materiales", id);
         newPart.partStock = stock.data;
       };
       getStock(newPart.partStock);
-      /*  const part = parts.find((parte)=>{
-        parte.id == newPart.jobParts ?
-        parte :
-        console.log("No encuentro " + parte.id)
-      }) */
-      //newPart.jobParts = part
     } catch (e) {
-      console.log(e);
       setError(e);
     }
-    const part = parts.filter((part) => part._id === newPart.jobParts);
+    const part = allParts.filter((part) => part._id === newPart.jobParts);
     newPart.jobParts = part;
 
-    const partsOk = useParts.splice(usePartToEdit.index, 1, newPart);
-    console.table(partsOk);
-    //console.log(`Reemplazar la parte ${n + 1} de ${partsOk.length}`);
-    //console.log(partsOk);
+    const partsOk = useParts.map((part, index) =>
+      index === usePartToEdit.index ? newPart : part
+    );
     setPartToEdit(null);
+    setParts(partsOk);
     handleNext();
   };
 
   const editPart = (n) => {
-    console.log(`Editar la parte ${n + 1} de ${useParts.length}`);
-    const res = setPartToEdit({ part: useParts[n], index: n });
-    return res;
+    setPartToEdit({ part: useParts[n], index: n });
   };
-
-  // El siguiente array contiene los componentes
-  // que se rendarizan en cada paso del stepper:
 
   const isStepOptional = (step) => {
     return step === 1;
@@ -153,13 +115,11 @@ export default function MyStepper(props) {
 
   const handleNext = () => {
     let newSkipped = skipped;
-    let stepForward = props.job !== undefined && activeStep === 0 ? 2 : 1;
-
     if (isStepSkipped(activeStep)) {
       newSkipped = new Set(newSkipped.values());
       newSkipped.delete(activeStep);
     }
-    setActiveStep((prevActiveStep) => prevActiveStep + stepForward);
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
     setSkipped(newSkipped);
   };
 
@@ -174,8 +134,6 @@ export default function MyStepper(props) {
 
   const handleSkip = () => {
     if (!isStepOptional(activeStep)) {
-      // You probably want to guard against something like this,
-      // it should never occur unless someone's actively trying to break something.
       throw new Error("You can't skip a step that isn't optional.");
     }
 
@@ -191,14 +149,10 @@ export default function MyStepper(props) {
     const Job = useJob;
     Job.Partes = useParts;
     Job.Tipo = useJobType;
-    console.log(Job);
     try {
-      console.log("Guardando...");
       const res = await addPrivateElement("Jobs", Job);
-      console.log(`Trabajo ${Job.Nombre} agregado`);
       handleNext();
     } catch (e) {
-      console.log(e);
       setError(e);
     }
   };
@@ -206,17 +160,13 @@ export default function MyStepper(props) {
   const handleUpdate = async () => {
     const Job = useJob;
     Job.Partes = useParts;
-    console.log(Job);
     try {
-      console.log("Guardando...");
       const res = await putPrivateElement(
         `${databaseURL}jobs/${props.job._id}`,
         Job
       );
-      console.log(`Trabajo ${Job.Nombre} actualizado`);
       handleNext();
     } catch (e) {
-      console.log(e);
       setError(e);
     }
   };
@@ -258,17 +208,15 @@ export default function MyStepper(props) {
       <Box>
         <Typography variant="subtitle1">Partes del trabajo</Typography>
         <List sx={{ listStyleType: "bullet" }}>
-          {useParts.map((part, index) => {
-            return (
-              <ListItem divider key={`${index}-Parte_${part.Finishing.length}`}>
-                <ListItemText
-                  sx={{ display: "list-item" }}
-                  primary={part.Name}
-                  secondary={`${part.partStock.Tipo} ${part.partStock.Gramaje} ${part.partStock.Marca}`}
-                />
-              </ListItem>
-            );
-          })}
+          {useParts.map((part, index) => (
+            <ListItem divider key={`${index}-Parte_${part.Finishing.length}`}>
+              <ListItemText
+                sx={{ display: "list-item" }}
+                primary={part.Name}
+                secondary={`${part.partStock.Tipo} ${part.partStock.Gramaje} ${part.partStock.Marca}`}
+              />
+            </ListItem>
+          ))}
         </List>
       </Box>,
     ],
@@ -410,20 +358,18 @@ export default function MyStepper(props) {
                   overflow={"false"}
                   sx={{ height: "98%" }}
                 >
-                  {useParts?.map((part, index) => {
-                    return (
-                      <Grid item xs={4} sm={4} md={6} key={"Parte-" + index}>
-                        <PartCard
-                          part={part}
-                          index={index}
-                          editPart={editPart}
-                          addPart={addParts}
-                          setActiveStep={setActiveStep}
-                          removePart={removePart}
-                        />
-                      </Grid>
-                    );
-                  })}
+                  {useParts?.map((part, index) => (
+                    <Grid item xs={4} sm={4} md={6} key={"Parte-" + index}>
+                      <PartCard
+                        part={part}
+                        index={index}
+                        editPart={editPart}
+                        addPart={addParts}
+                        setActiveStep={setActiveStep}
+                        removePart={removePart}
+                      />
+                    </Grid>
+                  ))}
                 </Grid>
               </Container>
             </Grid>
@@ -446,4 +392,6 @@ export default function MyStepper(props) {
   );
 
   return useError !== null ? statusError : statusOk;
-}
+};
+
+export default JobStepper;

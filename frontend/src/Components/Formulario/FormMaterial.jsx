@@ -32,7 +32,6 @@ import Input from "./Input";
 import {
   Container,
   Box,
-  Grid,
   Card,
   CardContent,
   CardActions,
@@ -50,6 +49,7 @@ import {
   InputLabel,
   MenuItem,
 } from "@mui/material";
+import Grid from "@mui/material/Unstable_Grid2";
 import CustomizedTooltip from "../utils/CustomizedTooltip";
 import { StyledTooltip, DangerTooltip } from "../General/TableGrid";
 import { use } from "react";
@@ -377,7 +377,7 @@ const FormMaterial = (props) => {
                 inputname={inp.inputName}
                 id={inp.inputName}
               >
-                <DangerTooltip
+                <StyledTooltip
                   title="Atencion! esta accion no se puede deshacer"
                   placement="top-start"
                 >
@@ -404,7 +404,7 @@ const FormMaterial = (props) => {
                       />
                     }
                   />
-                </DangerTooltip>
+                </StyledTooltip>
                 <FormGroup label={inp.label || inp.inputName}>
                   <Grid container columns={12}>
                     {inp.options.sort().map((opt, index) => {
@@ -426,9 +426,12 @@ const FormMaterial = (props) => {
                                 id={"id_" + inp.inputName + index}
                                 value={opt}
                                 checked={
-                                  selectedCheckboxItems[
-                                    inp.inputName
-                                  ]?.includes(opt) || false
+                                  (selectedCheckboxItems &&
+                                    selectedCheckboxItems[inp.inputName] &&
+                                    selectedCheckboxItems[
+                                      inp.inputName
+                                    ].includes(opt)) ||
+                                  false
                                 }
                                 onChange={(e) =>
                                   changeHandler(e, opt, inp.inputName)

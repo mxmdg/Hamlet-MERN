@@ -41,6 +41,7 @@ function App() {
                 minHeight: "90vh",
                 alignItems: "center",
                 justifyContent: "center",
+                background: themeOptions.palette.background.default,
               }}
             >
               <Router />

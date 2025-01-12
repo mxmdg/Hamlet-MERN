@@ -21,7 +21,6 @@ import {
   Avatar,
   Container,
   Box,
-  Grid,
   Card,
   CardContent,
   CardActions,
@@ -39,6 +38,7 @@ import {
   Select,
   ButtonGroup,
 } from "@mui/material";
+import Grid from "@mui/material/Unstable_Grid2";
 
 const PrinterDetails = (props) => {
   const navigate = useNavigate();
@@ -72,6 +72,9 @@ const PrinterDetails = (props) => {
     B.mmyy = procesarFechaISO(B.Fecha);
   });
 
+  const titleType = { color: "primary.text", variant: "title" };
+  const subtitleType = { color: "secondary.text", variant: "h5" };
+
   const Show = () => {
     try {
       return (
@@ -82,8 +85,8 @@ const PrinterDetails = (props) => {
           >{`Colores: ${props.pd.Colores}`}</CardHeader>
           <CardContent>
             <Cmyk colores={props.pd.Colores} />
-            <Grid container columns={12}>
-              <Grid item columns={6}>
+            <Grid container columns={12} spacing={1} divider={true}>
+              <Grid item columns={5}>
                 <List>
                   <ListItem divider={true}>
                     <ListItemText primary="Contadores" />
@@ -92,36 +95,46 @@ const PrinterDetails = (props) => {
                     <ListItemText
                       primary="Total:"
                       secondary={props.pd.TotalPrints || 0}
+                      primaryTypographyProps={titleType}
+                      secondaryTypographyProps={subtitleType}
                     />
                   </ListItem>
                   <ListItem divider={true}>
                     <ListItemText
                       primary="Color:"
                       secondary={props.pd.ColorPrints || 0}
+                      primaryTypographyProps={titleType}
+                      secondaryTypographyProps={subtitleType}
                     />
                   </ListItem>
                   <ListItem divider={true}>
                     <ListItemText
                       primary="Blanco y negro:"
                       secondary={props.pd.BlackPrints || 0}
+                      primaryTypographyProps={titleType}
+                      secondaryTypographyProps={subtitleType}
                     />
                   </ListItem>
                   <ListItem divider={true}>
                     <ListItemText
                       primary="Grandes:"
                       secondary={props.pd.LargePrints || 0}
+                      primaryTypographyProps={titleType}
+                      secondaryTypographyProps={subtitleType}
                     />
                   </ListItem>
                   <ListItem divider={true}>
                     <ListItemText
                       primary="Chicas:"
                       secondary={props.pd.SmallPrints || 0}
+                      primaryTypographyProps={titleType}
+                      secondaryTypographyProps={subtitleType}
                     />
                   </ListItem>
                 </List>
               </Grid>
-              <Divider orientation="vertical" />
-              <Grid item columns={6}>
+              <Divider />
+              <Grid item columns={5}>
                 <List>
                   <ListItem divider={true}>
                     <ListItemText primary="Ultimo Mes" />
@@ -132,6 +145,8 @@ const PrinterDetails = (props) => {
                       secondary={
                         props.pd.Billing[props.pd.Billing.length - 1].Total || 0
                       }
+                      primaryTypographyProps={titleType}
+                      secondaryTypographyProps={subtitleType}
                     />
                   </ListItem>
                   <ListItem divider={true}>
@@ -140,6 +155,8 @@ const PrinterDetails = (props) => {
                       secondary={
                         props.pd.Billing[props.pd.Billing.length - 1].Color || 0
                       }
+                      primaryTypographyProps={titleType}
+                      secondaryTypographyProps={subtitleType}
                     />
                   </ListItem>
                   <ListItem divider={true}>
@@ -148,6 +165,8 @@ const PrinterDetails = (props) => {
                       secondary={
                         props.pd.Billing[props.pd.Billing.length - 1].Black || 0
                       }
+                      primaryTypographyProps={titleType}
+                      secondaryTypographyProps={subtitleType}
                     />
                   </ListItem>
                   <ListItem divider={true}>
@@ -156,6 +175,8 @@ const PrinterDetails = (props) => {
                       secondary={
                         props.pd.Billing[props.pd.Billing.length - 1].Large || 0
                       }
+                      primaryTypographyProps={titleType}
+                      secondaryTypographyProps={subtitleType}
                     />
                   </ListItem>
                   <ListItem divider={true}>
@@ -164,6 +185,8 @@ const PrinterDetails = (props) => {
                       secondary={
                         props.pd.Billing[props.pd.Billing.length - 1].Small || 0
                       }
+                      primaryTypographyProps={titleType}
+                      secondaryTypographyProps={subtitleType}
                     />
                   </ListItem>
                 </List>

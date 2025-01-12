@@ -22,6 +22,7 @@ import ListItemText from "@mui/material/ListItemText";
 // Mis componentes
 import { objectToArray } from "../General/ObjectToArrayFilter";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
+import { roundCents } from "../utils/generalData/numbersAndCurrencies";
 
 // Mis Hooks
 import { getPrivateElements } from "../customHooks/FetchDataHook";
@@ -321,7 +322,7 @@ const ProductionPlan = (props) => {
                   <Divider />
                   <ListItem alignItems="flex-start">
                     <ListItemText
-                      primary={`$ ${Math.ceil(
+                      primary={`$ ${roundCents(
                         data.printPrice.Total + data.stockCost.cost
                       )} -`}
                       primaryTypographyProps={{
@@ -356,7 +357,7 @@ const ProductionPlan = (props) => {
           <CardContent>
             <List>
               <ListItemText
-                primary={`$ ${resumen[resumen.length - 1].print}`}
+                primary={`$ ${roundCents(resumen[resumen.length - 1].print)}`}
                 primaryTypographyProps={{
                   variant: "subtitle2",
                   fontSize: 16,
@@ -369,7 +370,7 @@ const ProductionPlan = (props) => {
                 }}
               />
               <ListItemText
-                primary={`$ ${resumen[resumen.length - 1].stock}`}
+                primary={`$ ${roundCents(resumen[resumen.length - 1].stock)}`}
                 primaryTypographyProps={{
                   variant: "subtitle2",
                   fontSize: 16,
@@ -383,10 +384,10 @@ const ProductionPlan = (props) => {
               />
               <Divider />
               <ListItemText
-                primary={`$ ${
+                primary={`$ ${roundCents(
                   resumen[resumen.length - 1].print +
-                  resumen[resumen.length - 1].stock
-                }`}
+                    resumen[resumen.length - 1].stock
+                )}`}
                 primaryTypographyProps={{
                   variant: "subtitle2",
                   fontSize: 16,

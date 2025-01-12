@@ -2,9 +2,9 @@ import Printers from "./Printers";
 import Form from "../Formulario/Form";
 import PrintersDataForm from "../Formulario/PrintersDataForm";
 import React, { useState } from "react";
-import Container from "@mui/material/Container";
 import {
   Typography,
+  Box,
   Button,
   Grid,
   Card,
@@ -20,9 +20,9 @@ const PrintersMainContainer = () => {
   const navigate = useNavigate();
 
   return (
-    <Container>
-        <Printers collection={collection} />
-      </Container>
+    <Box sx={{ padding: 2 }}>
+      <Printers collection={collection} />
+    </Box>
   );
 };
 

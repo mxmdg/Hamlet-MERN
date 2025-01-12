@@ -1,6 +1,4 @@
-const roundCents = (value) => {
-  return Math.round(value * 100) / 100;
-};
+import { roundCents } from "../utils/generalData/numbersAndCurrencies";
 
 export const Encuadernacion = (valor, minimo, cantidad, entrada) => {
   let resultado = Math.max(

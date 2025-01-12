@@ -94,10 +94,22 @@ const Printers = (props) => {
   const currentMonth = getMonthForPeriod(usePeriod - 1);
 
   return (
-    <Grid container spacing={3}>
-      <Grid xs={12} md={12} key={"totalPrints"}>
+    <Grid
+      xs={12}
+      sm={12}
+      md={12}
+      lg={18}
+      container
+      spacing={2}
+      maxWidth={"100%"}
+    >
+      <Grid xs={12} md={12} lg={18} key={"totalPrints"}>
         <Card elevation={10} sx={{ p: 2 }}>
-          <Box display="flex" justifyContent="space-between" alignItems="center">
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+          >
             <Typography variant="h6">
               {`Impresiones del periodo ${previousMonth}/${currentMonth}`}
             </Typography>
@@ -149,7 +161,7 @@ const Printers = (props) => {
         <Spinner color="warning" />
       ) : (
         printerList.map((printer) => (
-          <Grid xs={12} md={6} lg={4} key={printer._id}>
+          <Grid xs={12} sm={6} md={6} lg={3} key={printer._id}>
             <Card elevation={10} sx={{ p: 2 }}>
               <PrinterDetails
                 pd={printer}
