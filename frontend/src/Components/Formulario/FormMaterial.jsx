@@ -311,6 +311,7 @@ const FormMaterial = (props) => {
             type={inp.type}
             selectForm={props.selectForm}
             id={inp.id}
+            onClick={inp.clickHandler}
             fullWidth
           >
             {inp.label || inp.inputName}

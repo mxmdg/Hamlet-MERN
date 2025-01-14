@@ -28,7 +28,12 @@ jobControl.getCompleteJobs = async (req, res) => {
     try {
       const queryText = req.query.Q || "";
       const property = req.query.P || "Nombre";
-      const query = { [property]: { $regex: queryText, $options: "i" } };
+      const query =
+        property === "Nombre"
+          ? { [property]: { $regex: queryText, $options: "i" } }
+          : property === "Cantidad"
+          ? { [property]: { $eq: queryText } }
+          : { [property]: queryText };
 
       const jobList = await jobs.esquema
         .find(query)
@@ -38,6 +43,7 @@ jobControl.getCompleteJobs = async (req, res) => {
         .populate({
           path: "Owner",
           model: users.esquema,
+          select: "Name LastName Role email",
         })
         .populate({
           path: "Company",
@@ -70,6 +76,7 @@ jobControl.getAllParts = async (req, res) => {
       item.Partes.forEach((parte) => {
         parte = parte.toObject();
         parte.Material = `${parte.partStock.Marca} ${parte.partStock.Tipo} ${parte.partStock.Gramaje}`;
+        parte.Owner = item.ownerDocument();
         flattenedPartsList.push(parte);
       });
     });

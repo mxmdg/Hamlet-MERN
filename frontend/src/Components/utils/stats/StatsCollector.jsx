@@ -121,7 +121,9 @@ const StatsCollector = ({ children }) => {
   React.useEffect(() => {
     const fetchData = async () => {
       try {
-        const jobs = await getPrivateElements("jobs/complete");
+        const jobs = await getPrivateElements(
+          "jobs/complete?Q=65a6862b6e5e2a7318851284&P=Partes.jobParts._id"
+        );
         const parts = await getPrivateElements("jobs/partes");
         setJobsList(jobs);
         setPartsList(parts);
