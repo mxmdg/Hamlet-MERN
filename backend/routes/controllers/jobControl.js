@@ -99,7 +99,7 @@ jobControl.getUrgentJobs = async (req, res) => {
     endDate.setDate(endDate.getDate() + 1); // Para incluir el día completo
   } else {
     startDate.setDate(startDate.getDate() - 1); // Por defecto incluye hoy
-    endDate.setDate(startDate.getDate() + 8); // Por defecto, la próxima semana
+    endDate.setDate(startDate.getDate() + 60); // Por defecto, la próxima semana
   }
   try {
     //console.log(startDate, endDate);
