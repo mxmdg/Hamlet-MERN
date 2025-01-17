@@ -107,10 +107,12 @@ import ErrorMessage from "../../ErrorMessage/ErrorMessage";
 import { CircularProgress } from "@mui/material";
 import { Container, Grid, Typography, Paper } from "@mui/material";
 
-const StatsCollector = ({ children }) => {
+const StatsCollector = ({ children, route }) => {
   const [jobsList, setJobsList] = React.useState([]);
   const [partsList, setPartsList] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
+
+  console.log(route);
 
   // Manejo de errores
   const [useError, setError] = React.useState(null);
@@ -121,9 +123,7 @@ const StatsCollector = ({ children }) => {
   React.useEffect(() => {
     const fetchData = async () => {
       try {
-        const jobs = await getPrivateElements(
-          "jobs/complete?Q=65a6862b6e5e2a7318851284&P=Partes.jobParts._id"
-        );
+        const jobs = await getPrivateElements(route);
         const parts = await getPrivateElements("jobs/partes");
         setJobsList(jobs);
         setPartsList(parts);

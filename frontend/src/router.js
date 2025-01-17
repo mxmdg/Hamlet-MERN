@@ -46,7 +46,7 @@ import JobsPerDate from "./Components/utils/stats/JobsPerDate";
 import JobsPerClient from "./Components/utils/stats/JobsPerClient";
 import JobsPerSeller from "./Components/utils/stats/JobsPerSeller";
 import JobsPerType from "./Components/utils/stats/JobsPerType";
-import JobFinderForm from "./Components/Formulario/JobFinderForm";
+import JobFinder from "./Components/Jobs/JobFinder";
 
 const Router = () => {
   const context = useContext(AuthContext);
@@ -278,12 +278,13 @@ const Router = () => {
           {/*<Route path="/Jobs" element={<JobsContainer entity={"Jobs"} />} />*/}
           <Route
             path="/Jobs"
-            element={
+            element={<JobFinder />}
+            /* element={
               <FullJobsRender
-                route="jobs/complete?Q=65a6862b6e5e2a7318851284&P=Partes.jobParts._id"
+                route="jobs/complete"
                 settings={{ title: "Pedidos", column: "emited", order: "asc" }}
               />
-            }
+            } */
             /* element={<JobFinderForm />}*/
           />
           <Route
@@ -294,7 +295,7 @@ const Router = () => {
             path="/Jobs/stats"
             //element={<StatsCollector />}
             element={
-              <StatsCollector>
+              <StatsCollector route="jobs/complete">
                 <JobsPerDate />
                 <JobsForNextDays />
                 <JobsPerClient rank={10} />
