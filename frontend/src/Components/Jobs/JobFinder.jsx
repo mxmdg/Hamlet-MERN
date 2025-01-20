@@ -40,7 +40,11 @@ import JobsPerType from "../utils/stats/JobsPerType";
 
 const JobFinder = () => {
   const [useURL, setURL] = useState(null);
-  const [useProperty, setProperty] = useState("");
+  const [useProperty, setProperty] = useState({
+    value: "Nombre",
+    label: "Nombre",
+    queryType: "string",
+  });
   const [useQuery, setQuery] = useState(null);
   const [useQueryType, setQueryType] = useState("string");
   const [useError, setError] = useState(null);
@@ -121,13 +125,12 @@ const JobFinder = () => {
       console.log(error);
       setError(error);
     }
-
     return;
   };
 
   const onSubmit = (e) => {
     e.preventDefault();
-    setURL(`jobs/complete?Q=${useQuery}&P=${useProperty.value.value}`);
+    setURL(`jobs/complete?Q=${useQuery}&P=${useProperty.value}`);
   };
 
   useEffect(() => {
@@ -148,10 +151,9 @@ const JobFinder = () => {
                   label={useProperty.label || "Propiedad"}
                   variant="outlined"
                   placeholder="Seleccionar Propiedad"
+                  value={useProperty}
                   onChange={(e) => {
-                    setProperty({
-                      value: e.target.value,
-                    });
+                    setProperty(e.target.value);
                     setQueryType(e.target.value.queryType);
                     setURL(null);
                   }}
@@ -169,7 +171,7 @@ const JobFinder = () => {
                   })}
                 </TextField>
               </Grid>
-              {useResponse !== null && useQueryType == "id" && (
+              {useResponse !== null && useQueryType === "id" && (
                 <Grid item xs={1} sm={2} md={4}>
                   <TextField
                     select
@@ -190,7 +192,7 @@ const JobFinder = () => {
                   </TextField>
                 </Grid>
               )}
-              {useResponse !== null && useQueryType == "id" && (
+              {useResponse !== null && useQueryType === "id" && (
                 <Grid item xs={1} sm={2} md={4}>
                   <TextField
                     select
@@ -211,7 +213,7 @@ const JobFinder = () => {
                   </TextField>
                 </Grid>
               )}
-              {useResponse !== null && useQueryType == "id" && (
+              {useResponse !== null && useQueryType === "id" && (
                 <Grid item xs={1} sm={2} md={4}>
                   <TextField
                     select
@@ -232,7 +234,7 @@ const JobFinder = () => {
                   </TextField>
                 </Grid>
               )}
-              {useResponse !== null && useQueryType == "id" && (
+              {useResponse !== null && useQueryType === "id" && (
                 <Grid item xs={1} sm={2} md={4}>
                   <TextField
                     select
@@ -253,7 +255,7 @@ const JobFinder = () => {
                   </TextField>
                 </Grid>
               )}
-              {useResponse !== null && useQueryType == "string" && (
+              {useResponse !== null && useQueryType === "string" && (
                 <Grid item xs={1} sm={2} md={4}>
                   <TextField
                     id="query"
@@ -267,7 +269,7 @@ const JobFinder = () => {
                   ></TextField>
                 </Grid>
               )}
-              {useResponse !== null && useQueryType == "number" && (
+              {useResponse !== null && useQueryType === "number" && (
                 <Grid item xs={1} sm={2} md={4}>
                   <TextField
                     type="number"

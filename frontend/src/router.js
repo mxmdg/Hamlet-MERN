@@ -189,7 +189,7 @@ const Router = () => {
                   <MainContainer entity={"empresas"} />
                 </Grid>
                 <Grid item columns={12}>
-                  <StatsCollector>
+                  <StatsCollector route="jobs/complete">
                     <JobsPerClient rank={10} />
                   </StatsCollector>
                 </Grid>
