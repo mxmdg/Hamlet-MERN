@@ -60,18 +60,18 @@ export const coloresIntermedios = [
   "#8FBC8F", // Verde mar medio
 ];
 
-
-export const vibrantColors = ["#8bff7e",
-"#fff85d",
-"#670694",
-"#e30168",
-"#ff6256",
-"#99b6ff",
-'#ff99ff',
-'#ffaeb7',
-'#ffdf94',
-'#fbffa1',]
-
+export const vibrantColors = [
+  "#8bff7e",
+  "#fff85d",
+  "#670694",
+  "#e30168",
+  "#ff6256",
+  "#99b6ff",
+  "#ff99ff",
+  "#ffaeb7",
+  "#ffdf94",
+  "#fbffa1",
+];
 
 export default function NewRadialBar(props) {
   for (let i = 0; i < props.data.length; i++) {
@@ -86,7 +86,7 @@ export default function NewRadialBar(props) {
       minWidth={200}
       width={"90%"}
       height={"100%"}
-    > 
+    >
       <RadialBarChart
         cx="50%"
         cy="30%"
@@ -95,22 +95,22 @@ export default function NewRadialBar(props) {
         barSize={10}
         data={props.data}
       >
-          <Typography>Titulo</Typography>
-          <RadialBar
-            minAngle={15}
-            label={{ position: "outsideStart", fill: "#000" }}
-            background="#ffffff88"
-            conunterClockWise
-            dataKey={props.dataKey}
-          />
-          <Legend
-            iconSize={10}
-            iconType="star"
-            layout="vertical"
-            verticalAlign="top"
-            wrapperStyle={myWrapperStyle}
-          /> 
-          <Tooltip />
+        <Typography>Titulo</Typography>
+        <RadialBar
+          minAngle={15}
+          label={{ position: "outsideStart", fill: "#000" }}
+          background="#ffffff88"
+          conunterClockWise
+          dataKey={props.dataKey}
+        />
+        <Legend
+          iconSize={10}
+          iconType="star"
+          layout="vertical"
+          verticalAlign="top"
+          wrapperStyle={myWrapperStyle}
+        />
+        <Tooltip />
       </RadialBarChart>
     </ResponsiveContainer>
   );

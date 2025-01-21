@@ -19,9 +19,9 @@ const JobsPerClient = (props) => {
 
   const topCustomers = Object.values(customers)
     .sort((a, b) => a.qJobs - b.qJobs)
-    .slice(-useRank)
+    .slice(-useRank);
 
-  return <NewRadialBar data={topCustomers} dataKey='qJobs' rank={props.rank} />
+  return <NewRadialBar data={topCustomers} dataKey="qJobs" rank={props.rank} />;
 };
 
 export default JobsPerClient;

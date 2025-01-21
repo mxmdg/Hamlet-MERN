@@ -56,7 +56,7 @@ const Home = () => {
               </Grid>
               <Grid item xs={1} sm={12} md={12} lg={12}>
                 <DarkWoodCard>
-                  <StatsCollector route="jobs/complete">
+                  <StatsCollector route="jobs/urg">
                     <JobsForNextDays />
                     <JobsPerDate />
                   </StatsCollector>

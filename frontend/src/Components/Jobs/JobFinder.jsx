@@ -7,6 +7,8 @@ import { useNavigate } from "react-router-dom";
 import {
   Autocomplete,
   Button,
+  Card,
+  CardContent,
   Container,
   FormGroup,
   FormControlLabel,
@@ -134,220 +136,259 @@ const JobFinder = () => {
   };
 
   useEffect(() => {
-    fetch();
-  }, [setURL, setQuery, setProperty, useProperty]);
+    try {
+      fetch();
+    } catch (error) {
+      setError(error);
+    }
+  }, [setURL]);
 
   const urlForm = (
-    <Container>
-      <FormControl fullWidth>
-        <form name="search" onSubmit={onSubmit}>
-          <FormGroup>
-            <Grid container columns={12} spacing={3} width={"100%"}>
-              <Grid item xs={12} sm={6} md={4}>
-                <TextField
-                  fullWidth
-                  id="url_P"
-                  select
-                  label={useProperty.label || "Propiedad"}
-                  variant="outlined"
-                  placeholder="Seleccionar Propiedad"
-                  value={useProperty.value}
-                  onChange={(e) => {
-                    e.preventDefault();
-                    setProperty(
-                      properties.find((item) => {
-                        if (item.value === e.target.value) {
-                          setQueryType(item.queryType);
-                          console.log(item.queryType);
-                          return item;
-                        }
-                      })
-                    );
-                    setURL(null);
-                  }}
-                >
-                  {properties.map((item) => {
-                    return (
-                      <MenuItem
-                        value={item.value}
-                        key={item.value}
-                        label={item.label}
+    <Grid container columns={12} spacing={1} width={"96%"} margin={2}>
+      <Grid item xs={12} sm={12} md={12}>
+        <Card elevation={6}>
+          <CardContent>
+            <FormControl fullWidth>
+              <form name="search" onSubmit={onSubmit}>
+                <FormGroup>
+                  <Grid container columns={12} spacing={3} width={"100%"}>
+                    <Grid item xs={12} sm={6} md={4}>
+                      <TextField
+                        fullWidth
+                        id="url_P"
+                        select
+                        label={useProperty.label || "Propiedad"}
+                        variant="outlined"
+                        placeholder="Seleccionar Propiedad"
+                        value={useProperty.value}
+                        onChange={(e) => {
+                          e.preventDefault();
+                          setProperty(
+                            properties.find((item) => {
+                              if (item.value === e.target.value) {
+                                setQueryType(item.queryType);
+                                console.log(item.queryType);
+                                return item;
+                              }
+                            })
+                          );
+                          setURL(null);
+                        }}
                       >
-                        {item.label}
-                      </MenuItem>
-                    );
-                  })}
-                </TextField>
-              </Grid>
-              {useResponse !== null &&
-                useQueryType === "id" &&
-                useProperty.label === "Tipo de Parte" && (
-                  <Grid item xs={1} sm={2} md={4}>
-                    <TextField
-                      select
-                      id="queryPartType"
-                      label="Tipo de Parte"
-                      variant="outlined"
-                      color="primary"
-                      fullWidth
-                      onChange={(e) => {
-                        setQuery(e.target.value);
-                      }}
+                        {properties.map((item) => {
+                          return (
+                            <MenuItem
+                              value={item.value}
+                              key={item.value}
+                              label={item.label}
+                            >
+                              {item.label}
+                            </MenuItem>
+                          );
+                        })}
+                      </TextField>
+                    </Grid>
+                    {useResponse !== null &&
+                      useQueryType === "id" &&
+                      useProperty.label === "Tipo de Parte" && (
+                        <Grid item xs={12} sm={12} md={4}>
+                          <TextField
+                            select
+                            id="queryPartType"
+                            label="Tipo de Parte"
+                            variant="outlined"
+                            color="primary"
+                            fullWidth
+                            onChange={(e) => {
+                              setURL(null);
+                              setQuery(e.target.value);
+                            }}
+                          >
+                            {useResponse.jobParts.map((part) => (
+                              <MenuItem value={part._id} key={part._id}>
+                                {part.Type}
+                              </MenuItem>
+                            ))}
+                          </TextField>
+                        </Grid>
+                      )}
+                    {useResponse !== null &&
+                      useQueryType === "id" &&
+                      useProperty.label === "Material de Parte" && (
+                        <Grid item xs={12} sm={12} md={4}>
+                          <Autocomplete
+                            id="queryStock"
+                            options={useResponse.stock}
+                            autoHighlight
+                            autoComplete={true}
+                            getOptionLabel={(option) =>
+                              `${option.Tipo} ${option.Gramaje} ${option.Marca} (${option.Ancho_Resma} x ${option.Alto_Resma})`
+                            }
+                            onChange={(event, newValue) => {
+                              if (newValue) {
+                                setURL(null);
+                                setQuery(newValue._id);
+                              } else {
+                                setQuery("");
+                              }
+                            }}
+                            renderInput={(params) => (
+                              <TextField
+                                {...params}
+                                label="Material"
+                                variant="outlined"
+                                fullWidth
+                              />
+                            )}
+                          />
+                        </Grid>
+                      )}
+                    {useResponse !== null &&
+                      useQueryType === "id" &&
+                      useProperty.label.startsWith("Acabado") && (
+                        <Grid item xs={12} sm={12} md={4}>
+                          <TextField
+                            select
+                            id="queryFinisher"
+                            label="Terminacion"
+                            variant="outlined"
+                            color="primary"
+                            fullWidth
+                            onChange={(e) => {
+                              setURL(null);
+                              setQuery(e.target.value);
+                            }}
+                          >
+                            {useResponse.finishings.map((finisher) => (
+                              <MenuItem value={finisher._id} key={finisher._id}>
+                                {`${finisher.Proceso} ${finisher.Modelo} ${finisher.Fabricante}`}
+                              </MenuItem>
+                            ))}
+                          </TextField>
+                        </Grid>
+                      )}
+                    {useResponse !== null &&
+                      useQueryType === "id" &&
+                      useProperty.label === "Cliente" && (
+                        <Grid item xs={12} sm={12} md={4}>
+                          <Autocomplete
+                            id="queryCompany"
+                            options={useResponse.companies}
+                            autoHighlight
+                            autoComplete={true}
+                            getOptionLabel={(option) => option.Nombre}
+                            onChange={(event, newValue) => {
+                              if (newValue) {
+                                setURL(null);
+                                setQuery(newValue._id);
+                              } else {
+                                setQuery("");
+                              }
+                            }}
+                            renderInput={(params) => (
+                              <TextField
+                                {...params}
+                                label="Cliente"
+                                variant="outlined"
+                                fullWidth
+                              />
+                            )}
+                          />
+                        </Grid>
+                      )}
+                    {useResponse !== null &&
+                      useQueryType === "id" &&
+                      useProperty.label === "Representante" && (
+                        <Grid item xs={12} sm={12} md={4}>
+                          <TextField
+                            select
+                            id="queryUsers"
+                            label="Representante"
+                            variant="outlined"
+                            color="primary"
+                            fullWidth
+                            onChange={(e) => {
+                              setURL(null);
+                              setQuery(e.target.value);
+                            }}
+                          >
+                            {useResponse.users.map((cust) => (
+                              <MenuItem value={cust._id} key={cust._id}>
+                                {`${cust.Name} ${cust.LastName}`}
+                              </MenuItem>
+                            ))}
+                          </TextField>
+                        </Grid>
+                      )}
+                    {useResponse !== null && useQueryType === "string" && (
+                      <Grid item xs={12} sm={12} md={4}>
+                        <TextField
+                          id="query"
+                          variant="outlined"
+                          color="primary"
+                          label="Buscar"
+                          fullWidth
+                          onChange={(e) => {
+                            setURL(null);
+                            setQuery(e.target.value);
+                          }}
+                        ></TextField>
+                      </Grid>
+                    )}
+                    {useResponse !== null && useQueryType === "number" && (
+                      <Grid item xs={12} sm={12} md={4}>
+                        <TextField
+                          type="number"
+                          id="query"
+                          variant="outlined"
+                          color="primary"
+                          label="Buscar"
+                          fullWidth
+                          onChange={(e) => {
+                            setURL(null);
+                            setQuery(e.target.value);
+                          }}
+                        ></TextField>
+                      </Grid>
+                    )}
+                    <Grid
+                      item
+                      xs={12}
+                      sm={12}
+                      md={12}
+                      sx={{ alignSelf: "center" }}
                     >
-                      {useResponse.jobParts.map((part) => (
-                        <MenuItem value={part._id} key={part._id}>
-                          {part.Type}
-                        </MenuItem>
-                      ))}
-                    </TextField>
+                      <Button type="submit" variant="contained" color="primary">
+                        Buscar
+                      </Button>
+                    </Grid>
                   </Grid>
-                )}
-              {useResponse !== null &&
-                useQueryType === "id" &&
-                useProperty.label === "Material de Parte" && (
-                  <Grid item xs={1} sm={2} md={4}>
-                    <TextField
-                      select
-                      id="queryStock"
-                      label="Material"
-                      variant="outlined"
-                      color="primary"
-                      fullWidth
-                      onChange={(e) => {
-                        setQuery(e.target.value);
-                      }}
-                    >
-                      {useResponse.stock.map((st) => (
-                        <MenuItem value={st._id} key={st._id}>
-                          {`${st.Tipo} ${st.Gramaje} ${st.Marca} (${st.Ancho_Resma} x ${st.Alto_Resma})`}
-                        </MenuItem>
-                      ))}
-                    </TextField>
-                  </Grid>
-                )}
-              {useResponse !== null &&
-                useQueryType === "id" &&
-                useProperty.label.startsWith("Acabado") && (
-                  <Grid item xs={1} sm={2} md={4}>
-                    <TextField
-                      select
-                      id="queryFinisher"
-                      label="Terminacion"
-                      variant="outlined"
-                      color="primary"
-                      fullWidth
-                      onChange={(e) => {
-                        setQuery(e.target.value);
-                      }}
-                    >
-                      {useResponse.finishings.map((finisher) => (
-                        <MenuItem value={finisher._id} key={finisher._id}>
-                          {`${finisher.Proceso} ${finisher.Modelo} ${finisher.Fabricante}`}
-                        </MenuItem>
-                      ))}
-                    </TextField>
-                  </Grid>
-                )}
-              {useResponse !== null &&
-                useQueryType === "id" &&
-                useProperty.label === "Cliente" && (
-                  <Grid item xs={1} sm={2} md={4}>
-                    <TextField
-                      select
-                      id="queryCompany"
-                      label="Cliente"
-                      variant="outlined"
-                      color="primary"
-                      fullWidth
-                      onChange={(e) => {
-                        setQuery(e.target.value);
-                      }}
-                    >
-                      {useResponse.companies.map((cust) => (
-                        <MenuItem value={cust._id} key={cust._id}>
-                          {`${cust.Nombre}`}
-                        </MenuItem>
-                      ))}
-                    </TextField>
-                  </Grid>
-                )}
-              {useResponse !== null &&
-                useQueryType === "id" &&
-                useProperty.label === "Representante" && (
-                  <Grid item xs={1} sm={2} md={4}>
-                    <TextField
-                      select
-                      id="queryUsers"
-                      label="Representante"
-                      variant="outlined"
-                      color="primary"
-                      fullWidth
-                      onChange={(e) => {
-                        setQuery(e.target.value);
-                      }}
-                    >
-                      {useResponse.users.map((cust) => (
-                        <MenuItem value={cust._id} key={cust._id}>
-                          {`${cust.Name} ${cust.LastName}`}
-                        </MenuItem>
-                      ))}
-                    </TextField>
-                  </Grid>
-                )}
-              {useResponse !== null && useQueryType === "string" && (
-                <Grid item xs={1} sm={2} md={4}>
-                  <TextField
-                    id="query"
-                    variant="outlined"
-                    color="primary"
-                    label="Buscar"
-                    fullWidth
-                    onChange={(e) => {
-                      setQuery(e.target.value);
-                    }}
-                  ></TextField>
-                </Grid>
-              )}
-              {useResponse !== null && useQueryType === "number" && (
-                <Grid item xs={1} sm={2} md={4}>
-                  <TextField
-                    type="number"
-                    id="query"
-                    variant="outlined"
-                    color="primary"
-                    label="Buscar"
-                    fullWidth
-                    onChange={(e) => {
-                      setQuery(e.target.value);
-                    }}
-                  ></TextField>
-                </Grid>
-              )}
-              <Grid item xs={12} sm={12} md={12} sx={{ alignSelf: "center" }}>
-                <Button type="submit" variant="contained" color="primary">
-                  Buscar
-                </Button>
-              </Grid>
-            </Grid>
-          </FormGroup>
-        </form>
-      </FormControl>
+                </FormGroup>
+              </form>
+            </FormControl>
+          </CardContent>
+        </Card>
+      </Grid>
       {useURL !== null && (
-        <Container>
-          <FullJobsRender
-            route={useURL}
-            settings={{ title: "Pedidos", column: "emited", order: "asc" }}
-          />
-          <StatsCollector route={useURL}>
-            <JobsPerDate />
-            <JobsForNextDays />
-            <JobsPerClient rank={10} />
-            <JobsPerSeller />
-            <JobsPerType />
-          </StatsCollector>
-        </Container>
+        <Grid container columns={12} spacing={2} width={"100%"} margin={2}>
+          <Grid item xs={12} sm={12} md={12}>
+            <FullJobsRender
+              route={useURL}
+              settings={{ title: "Pedidos", column: "emited", order: "asc" }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={12} md={12}>
+            <StatsCollector route={useURL}>
+              <JobsPerDate />
+              <JobsForNextDays />
+              <JobsPerClient rank={10} />
+              <JobsPerSeller />
+              <JobsPerType />
+            </StatsCollector>
+          </Grid>
+        </Grid>
       )}
-    </Container>
+    </Grid>
   );
 
   const inCaseOfError = (
