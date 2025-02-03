@@ -112,10 +112,9 @@ const NewStackedBarChart = (props) => {
 
   return (
     <>
-      <ResponsiveContainer width="100%" height="100%" minWidth={"300px"} minHeight={"500px"}>
+      <ResponsiveContainer width="100%" height="100%" minWidth={"300px"}>
         <BarChart
           width={500}
-          height={300}
           data={statsData}
           margin={{
             top: 20,

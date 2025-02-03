@@ -25,15 +25,11 @@ export const NewSimpleLineChart = (props) => {
 
   return (
     <ResponsiveContainer
-      width="98%"
-      height="100%"
-      minWidth={"300px"}
-      minHeight={"200px"}
-      maxHeight={"280px"}
+    width="100%" height="100%" minWidth={"300px"}
     >
       <LineChart
-        width={500}
-        height={300}
+        width={"100%"}
+        height={"100%"}
         data={props.data}
         margin={{
           top: 5,

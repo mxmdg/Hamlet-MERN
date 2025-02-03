@@ -132,7 +132,9 @@ const JobFinder = () => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    setURL(`jobs/complete?Q=${useQuery}&P=${useProperty.value}`);
+    useQuery !== null 
+    ? setURL(`jobs/complete?Q=${useQuery}&P=${useProperty.value}`) 
+    : setURL(`jobs/complete`);
   };
 
   useEffect(() => {

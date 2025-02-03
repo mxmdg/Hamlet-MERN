@@ -1,5 +1,5 @@
 import { Backdrop, Typography } from "@mui/material";
-import { borderRadius, fontSize, margin, textAlign } from "@mui/system";
+import { borderRadius, fontSize, height, margin, textAlign } from "@mui/system";
 import React from "react";
 import {
   RadialBarChart,
@@ -14,11 +14,13 @@ export const myWrapperStyle = {
   left: "5%",
   width: "90%",
   lineHeight: "1.5em",
-  fontSize: "1.1em",
+  fontSize: "1em",
   textAlign: "left",
   fontWeight: "800",
-  padding: "15px",
+  padding: "10px",
   borderTop: "1px solid #666",
+  columns: "2",
+  height: "fit-content",
 };
 
 export const coloresPasteles = [

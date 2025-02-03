@@ -20,6 +20,7 @@ import StatsCollector from "./utils/stats/StatsCollector";
 import JobsForNextDays from "./utils/stats/JobsForNextWeeks";
 import JobsPerDate from "./utils/stats/JobsPerDate";
 import JobsPerClient from "./utils/stats/JobsPerClient";
+import JobsPerSeller from "./utils/stats/JobsPerSeller";
 //MUI Material Imports
 import { Container } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
@@ -59,6 +60,8 @@ const Home = () => {
                   <StatsCollector route="jobs/urg">
                     <JobsForNextDays />
                     <JobsPerDate />
+                    <JobsPerClient rank={5}/>
+                    <JobsPerSeller />
                   </StatsCollector>
                 </DarkWoodCard>
               </Grid>
