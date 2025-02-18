@@ -25,7 +25,7 @@ export const NewSimpleLineChart = (props) => {
 
   return (
     <ResponsiveContainer
-    width="100%" height="100%" minWidth={"300px"}
+    width="100%" height="100%" minWidth="300px" minHeight="200px"
     >
       <LineChart
         width={"100%"}

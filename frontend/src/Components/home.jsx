@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState, useEffect } from "react";
 import { AuthContext } from "./context/AuthContext";
 
 import Canvas from "./utils/impo/Canvas";
@@ -25,11 +25,14 @@ import JobsPerSeller from "./utils/stats/JobsPerSeller";
 import { Container } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 
-const Home = () => {
+const Home = (props) => {
+  const [useRoute, setUseRoute] = useState(props.route || "jobs/urg");
   const getToken = () => {
     const tkn = localStorage.getItem("token");
     return tkn;
   };
+
+
 
   const context = useContext(AuthContext);
 
@@ -46,7 +49,7 @@ const Home = () => {
               <Grid item xs={1} sm={12} md={12}>
                 <DarkWoodCard>
                   <FullJobsRender
-                    route="jobs/urg"
+                    route={useRoute}
                     settings={{
                       title: "Proximas entregas",
                       column: "deadLine",
@@ -57,7 +60,7 @@ const Home = () => {
               </Grid>
               <Grid item xs={1} sm={12} md={12} lg={12}>
                 <DarkWoodCard>
-                  <StatsCollector route="jobs/urg">
+                  <StatsCollector route={useRoute}>
                     <JobsForNextDays />
                     <JobsPerDate />
                     <JobsPerClient rank={5}/>

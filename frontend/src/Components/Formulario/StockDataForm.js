@@ -39,6 +39,7 @@ let PrintersDataForm = [
       { text: "Ledesma", value: "Ledesma" },
       { text: "Suzanno", value: "Suzanno" },
       { text: "Fasson", value: "Fasson" },
+      { text: "Colacril", value: "Colacril" },
     ],
   },
   {
@@ -53,6 +54,7 @@ let PrintersDataForm = [
     options: [
       { text: "Obra", value: "Obra" },
       { text: "Bookcell", value: "Bookcell" },
+      { text: "Nat (Reciclado)", value: "Nat" },
       { text: "Ilustracion Mate", value: "Ilustracion Mate" },
       { text: "Ilustracion Brillo", value: "Ilustracion Brillo" },
       { text: "Autoadhesivo Ilustracion", value: "Autoadhesivo Ilustracion" },
@@ -60,6 +62,7 @@ let PrintersDataForm = [
       { text: "Opp blanco", value: "Opp blanco" },
       { text: "Opp transparente", value: "Opp transparente" },
       { text: "Cartulina", value: "Cartulina" },
+      { text: "Comercial", value: "Comercial" },
       { text: "Cartón", value: "Cartón" },
     ],
   },

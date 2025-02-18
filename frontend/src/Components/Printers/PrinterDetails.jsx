@@ -193,12 +193,13 @@ const PrinterDetails = (props) => {
               </Grid>
             </Grid>
 
-            <Box>
+            <Container sx={{ width: "100%", height: "100%" }}>
+              <Typography variant="subtitle2">Impresiones por mes</Typography>
               <NewSimpleLineChart
                 dataKey={["mmyy", "Black", "Color", "Large", "Small", "Total"]}
                 data={currentData}
               />
-            </Box>
+            </Container>
           </CardContent>
           <CardActions>
             <ButtonGroup>
