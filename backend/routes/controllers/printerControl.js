@@ -148,10 +148,16 @@ printerControl.updatePrinter = async (req, res) => {
 };
 
 printerControl.deletePrinter = async (req, res) => {
-  const impresora = await printers.esquema.findByIdAndDelete(req.params.id);
-  res.json({
+  try {
+    const impresora = await printers.esquema.findByIdAndDelete(req.params.id);
+   res.json({
     message: `${impresora.Fabricante} ${impresora.Modelo} eliminada`,
   });
+  } catch (error) {
+    console.log(e);
+    res.json({ message: "Error: " + e });
+  }
+  
 };
 
 module.exports = printerControl;

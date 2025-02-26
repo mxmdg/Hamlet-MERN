@@ -16,6 +16,7 @@ import { serverURL, databaseURL } from "../Config/config";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import { AuthContext } from "../context/AuthContext";
 import { useContext } from "react";
+import Spinner from "../General/Spinner";
 
 export const Login = () => {
   const {
@@ -29,7 +30,7 @@ export const Login = () => {
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [showForgotPasswordForm, setShowForgotPasswordForm] = useState(false);
-
+  const [useLoading, setLoading] = useState(false);
   const navigate = useNavigate();
   const context = useContext(AuthContext);
 
@@ -39,6 +40,7 @@ export const Login = () => {
 
   const onSubmit = async (data) => {
     try {
+      setLoading(true); // Set loading to true when starting the login request
       const token = await axios.post(databaseURL + "users/login", data);
       console.log(token);
       if (token.data.message) {
@@ -61,24 +63,32 @@ export const Login = () => {
         action: resetError(),
       });
       return e;
+    } finally {
+      setLoading(false); // Set loading to false after the login request is done
     }
   };
 
   const forgottenPassword = async (data) => {
     try {
+      setLoading(true); // Set loading to true when starting the password recovery request
       const response = await axios.post(
         "http://localhost:5000/forgot-password",
         data
       );
       setSuccessMessage(response.data.message);
+      setLoading(false);
     } catch (e) {
       console.log(e);
       setError({
         message:
-          "Error al enviar el correo electrónico de recuperación de contraseña" + response.data.message,
+          "Error al enviar el correo electrónico de recuperación de contraseña" +
+          response.data.message,
         severity: "warning",
         action: resetError(),
       });
+      setLoading(false);
+    } finally {
+      setLoading(false); // Set loading to false after the password recovery request is done
     }
   };
 
@@ -194,22 +204,32 @@ export const Login = () => {
     );
   };
 
+  const loading = <Spinner />;
+
   return (
     <Card elevation={2}>
       <CardHeader title="Login" />
       <CardContent>
-        {context.userLogged !== null && (
-          <Box>
-            <Typography>
-              Correo electronico: {context.userLogged.email}
-            </Typography>
-            <br></br>
-            <Typography>Rol: {context.userLogged.Role}</Typography>
-            <br></br>
-          </Box>
-        )}
-        {context.userLogged === null && (
-          <>{!showForgotPasswordForm ? <LoginForm /> : <ForgotPassword />}</>
+        {useLoading ? (
+          <Spinner color="secondary" /> // Show Spinner when loading
+        ) : (
+          <>
+            {context.userLogged !== null && (
+              <Box>
+                <Typography>
+                  Correo electronico: {context.userLogged.email}
+                </Typography>
+                <br></br>
+                <Typography>Rol: {context.userLogged.Role}</Typography>
+                <br></br>
+              </Box>
+            )}
+            {context.userLogged === null && (
+              <>
+                {!showForgotPasswordForm ? <LoginForm /> : <ForgotPassword />}
+              </>
+            )}
+          </>
         )}
       </CardContent>
     </Card>

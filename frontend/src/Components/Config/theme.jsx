@@ -9,60 +9,64 @@ import { useTheme, ThemeProvider, createTheme } from "@mui/material/styles";
 export const themeMxm = createTheme({
   spacing: 4,
   palette: {
-    mode: "dark",
+    mode: "light",
     primary: {
-      main: "#59e3ea",
-      light: "#5ad3ff",
-      dark: "#26a3aa",
+      main: "#09b4bd", // adjusted for better contrast
+      light: "#00e3e3",
+      dark: "#1c8a90",
       contrastText: "#ffffff",
     },
     secondary: {
-      main: "#f87527",
-      light: "#f73378",
-      dark: "#ab003c",
+      main: "#e86622", // adjusted for better contrast
+      light: "#e42d5d",
+      dark: "#900032",
       contrastText: "#ffffff",
     },
     divider: "#fff",
     background: {
       paper: "#222222",
-      default: "#aef",
+      default: "#9cf", // adjusted for better contrast
     },
     text: {
       primary: "#ffffff",
-      secondary: "#dddddd",
-      disabled: "#888888",
-      hint: "#aaffff",
+      secondary: "#cccccc",
+      disabled: "#777777", // adjusted for better contrast
+      hint: "#99ffff",
     },
     error: {
-      main: "#ff1744",
-      light: "#ff4569",
-      dark: "#b2102f",
+      main: "#e31436", // adjusted for better contrast
+      light: "#e32f59",
+      dark: "#99122a",
       contrastText: "#ffffff",
     },
     warning: {
-      main: "#ffa727",
-      light: "#ffb851",
-      dark: "#b2741a",
+      main: "#ff9727", // adjusted for better contrast
+      light: "#ffa44b",
+      dark: "#a5611a",
       contrastText: "#291a05",
     },
     info: {
-      main: "#29b6f8",
-      light: "#53c4fa",
-      dark: "#1c7fae",
+      main: "#1ba0e6", // adjusted for better contrast
+      light: "#46aefa",
+      dark: "#17648e",
       contrastText: "#092a3b",
     },
     success: {
-      main: "#66bb6a",
-      light: "#84ca87",
-      dark: "#478f4a",
+      main: "#57a95b", // adjusted for better contrast
+      light: "#73b978",
+      dark: "#3d6d3e",
       contrastText: "#162910",
+    },
+    background: {
+      default: "linear-gradient(45deg, #D9AFD9 0%, #97D9E1 100%)",
+      paper: "rgb(240, 234, 231)",
     },
   },
 });
 
 const themeOptions = createTheme({
   palette: {
-    mode: "dark",
+    mode: "light",
     primary: {
       main: "#26c2a3",
       light: "#62f6ca",
@@ -124,34 +128,37 @@ const themeOptions = createTheme({
 export default ThemeProv; */
 
 const ThemeProv = (props) => {
-  themeOptions.palette.mode = props.mode ? "dark" : "light";
+  //props.theme.palette.mode = props.mode ? "light" : "dark";
   if (props.mode) {
-    themeOptions.palette.mode = "dark";
-    themeOptions.palette.background = {
-      default: "#ede7de",
-      paper: "#000000",
+    props.theme.palette.mode = "light";
+    props.theme.palette.background = {
+      default: "linear-gradient(135deg, #06222d 0%, #1f003b 100%)",
+      paper: "rgb(240, 234, 231)",
     };
-    themeOptions.palette.text = {
-      primary: "#ffffff",
-      secondary: "#aaaaaa",
-      disabled: "#888888",
-      hint: "#000000",
+    props.theme.palette.text = {
+      primary: "#000",
+      secondary: "#000",
+      disabled: "#aaa",
+      hint: "#067",
     };
   } else {
-    themeOptions.palette.mode = "light";
-    themeOptions.palette.background = {
-      default: "#000",
-      paper: "#F7FBEF",
+    props.theme.palette.mode = "dark";
+    props.theme.palette.background = {
+      default: "linear-gradient(45deg, #D9AFD9 0%, #97D9E1 100%)",
+      paper: " #06222d",
     };
-    themeOptions.palette.text = {
-      primary: "#222",
-      secondary: "#333",
-      disabled: "#666",
-      hint: "#098",
+    props.theme.palette.text = {
+      primary: "#eee",
+      secondary: "#3ef",
+      disabled: "#888",
+      hint: "#0ab",
     };
   }
 
-  return <ThemeProvider theme={themeOptions}>{props.children}</ThemeProvider>;
+  //background-color: #D9AFD9;
+  //background-image: linear-gradient(0deg, #D9AFD9 0%, #97D9E1 100%);
+
+  return <ThemeProvider theme={themeMxm}>{props.children}</ThemeProvider>;
 };
 export { themeOptions };
 export default ThemeProv;

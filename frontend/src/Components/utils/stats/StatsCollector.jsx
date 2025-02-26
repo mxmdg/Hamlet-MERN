@@ -2,6 +2,7 @@ import React from "react";
 import { getPrivateElements } from "../../customHooks/FetchDataHook";
 import ErrorMessage from "../../ErrorMessage/ErrorMessage";
 import { CircularProgress, Grid, Paper } from "@mui/material";
+import Spinner from "../../General/Spinner"
 
 const StatsCollector = ({ children, route }) => {
   const [jobsList, setJobsList] = React.useState([]);
@@ -31,7 +32,7 @@ const StatsCollector = ({ children, route }) => {
     fetchData();
   }, [route]);
 
-  if (loading) return <CircularProgress />;
+  if (loading) return <Spinner color={'secondary'}/>;
   if (useError !== null)
     return <ErrorMessage message={useError} action={clearError} />;
 

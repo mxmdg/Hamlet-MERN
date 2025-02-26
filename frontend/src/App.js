@@ -9,6 +9,7 @@ import AuthProvider from "./Components/context/AuthContext";
 import { BrowserRouter } from "react-router-dom";
 import Router from "./router";
 import { themeOptions } from "./Components/Config/theme";
+import { themeMxm } from "./Components/Config/theme";
 
 function App() {
   const [useMode, setMode] = useState("dark");
@@ -19,13 +20,13 @@ function App() {
   };
 
   return (
-    <ThemeProv mode={useMode}>
+    <ThemeProv theme={themeMxm} mode={useMode}>
       <Box
         sx={{
           width: "100%",
           minHeight: "100vh",
           maxHeight: "100%",
-          background: themeOptions.palette.background.default,
+          background: themeMxm.palette.background.default,
         }}
       >
         <BrowserRouter>
@@ -41,7 +42,7 @@ function App() {
                 minHeight: "90vh",
                 alignItems: "center",
                 justifyContent: "center",
-                background: themeOptions.palette.background.default,
+                background: themeMxm.palette.background.default,
               }}
             >
               <Router />

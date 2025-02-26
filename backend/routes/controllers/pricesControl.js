@@ -93,8 +93,15 @@ pricesControl.updatePrice = async (req, res) => {
 };
 
 pricesControl.deletePrice = async (req, res) => {
-  const price = await prices.esquema.findByIdAndDelete(req.params.id);
-  res.json({ Message: "Formula eliminado" });
+  try {
+    const price = await prices.esquema.findByIdAndDelete(req.params.id);
+    res.json({ Message: "Formula eliminado" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error al eliminar el costo" });
+    
+  }
+  
 };
 
 module.exports = pricesControl;
