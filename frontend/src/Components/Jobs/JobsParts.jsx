@@ -80,8 +80,8 @@ const JobParts = (props) => {
           stock.Gramaje >= currentPart.minStockWeight &&
           stock.Gramaje <= currentPart.maxStockWeight
         ) {
-          console.log("Filtrando los papelesde una parte nueva");
-          console.log(stock);
+          // console.log("Filtrando los papelesde una parte nueva");
+          // console.log(stock);
           return stock;
         } else if (
           props.editPart !== null &&
@@ -173,8 +173,8 @@ const JobParts = (props) => {
         props.job.Partes.map((p) => {
           p.Finishing.push(arr);
         });
-        console.log(arr);
-        setSelectedFinishings(arr);
+        const Finishers = arrayNormalizer(arr);
+        setSelectedFinishings(Finishers);
       } catch (error) {
         console.log(error);
       }

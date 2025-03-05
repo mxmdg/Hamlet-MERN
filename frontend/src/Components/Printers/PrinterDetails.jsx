@@ -72,8 +72,12 @@ const PrinterDetails = (props) => {
     B.mmyy = procesarFechaISO(B.Fecha);
   });
 
-  const titleType = { color: "primary.text", variant: "title" };
-  const subtitleType = { color: "secondary.text", variant: "h5" };
+  const titleType = { color: "primary.text", variant: "title", align: "right" };
+  const subtitleType = {
+    color: "danger.main",
+    variant: "h5",
+    align: "right",
+  };
 
   const Show = () => {
     try {
@@ -86,7 +90,7 @@ const PrinterDetails = (props) => {
           <CardContent>
             <Cmyk colores={props.pd.Colores} />
             <Grid container columns={12} spacing={1} divider={true}>
-              <Grid item columns={5}>
+              <Grid item columns={12} sx={{ width: "49%" }}>
                 <List>
                   <ListItem divider={true}>
                     <ListItemText primary="Contadores" />
@@ -134,7 +138,7 @@ const PrinterDetails = (props) => {
                 </List>
               </Grid>
               <Divider />
-              <Grid item columns={5}>
+              <Grid item columns={6} sx={{ width: "49%" }}>
                 <List>
                   <ListItem divider={true}>
                     <ListItemText primary="Ultimo Mes" />

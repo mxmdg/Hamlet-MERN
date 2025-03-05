@@ -22,7 +22,11 @@ import ListItemText from "@mui/material/ListItemText";
 // Mis componentes
 import { objectToArray } from "../General/ObjectToArrayFilter";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
-import { roundCents } from "../utils/generalData/numbersAndCurrencies";
+import {
+  roundCents,
+  roundInteger,
+} from "../utils/generalData/numbersAndCurrencies";
+import ListItemNumbers from "./ListItemNumbers";
 
 // Mis Hooks
 import { getPrivateElements } from "../customHooks/FetchDataHook";
@@ -119,27 +123,26 @@ const ProductionPlan = (props) => {
         entrada,
         largoPliego
       ) => {
-        if (
-          (printerSelector.Colores === 1 &&
-            printerSelector.Modelo.includes("nuvera")) ||
-          printerSelector.Modelo.includes("Nuvera")
-        ) {
+        if (printerSelector.Colores === 1 && data.colores === 1) {
           console.log("Formula seleccionada segun caso Nuvera");
+          console.log(printerSelector.Colores, data.colores);
           return Nuvera(valor, minimo, cantidad, entrada, largoPliego);
-        } else if (
-          (printerSelector.Colores === 1 &&
-            !printerSelector.Modelo.includes("nuvera")) ||
-          (printerSelector.Colores === 1 &&
-            !printerSelector.Modelo.includes("Nuvera"))
-        ) {
+        } else if (printerSelector.Colores >= 4 && data.colores === 1) {
           console.log("Formula seleccionada segun caso iGenBN");
+          console.log(printerSelector.Colores, data.colores);
           return iGenBN(valor, minimo, cantidad, entrada, largoPliego);
-        } else if (printerSelector.Colores === 4) {
+        } else if (printerSelector.Colores >= 4 && data.colores === 4) {
           console.log("Formula seleccionada segun caso Color");
+          console.log(printerSelector.Colores, data.colores);
           return iGenColor(valor, minimo, cantidad, entrada, largoPliego);
-        } else if (printerSelector.Colores === 6) {
+        } else if (printerSelector.Colores > 4 && data.colores > 4) {
           console.log("Formula seleccionada segun caso 6 colores");
+          console.log(printerSelector.Colores, data.colores);
           return iGenColor(valor * 1.3, minimo, cantidad, entrada, largoPliego);
+        } else {
+          console.error("Caso no contemplado");
+          setError("Error: Configuración de impresión no contemplada.");
+          return null; // O alguna acción por defecto
         }
       };
 
@@ -153,8 +156,6 @@ const ProductionPlan = (props) => {
           }
         }
 
-        console.log(paperPrice);
-
         const surface =
           parseFloat(data.stock.Ancho_Resma) *
           parseFloat(data.stock.Alto_Resma);
@@ -162,7 +163,6 @@ const ProductionPlan = (props) => {
         const weight = (totalPaper / 1000000) * parseFloat(data.stock.Gramaje);
         const cost = Math.ceil((weight / 1000) * parseFloat(paperPrice));
 
-        console.log(surface, totalPaper, "Peso " + weight, cost);
         return { surface, totalPaper, weight, cost };
       };
 
@@ -179,9 +179,6 @@ const ProductionPlan = (props) => {
       totals[key].stockCost = stockCost(totals[key].totalHojas);
     });
 
-    console.log("Totales 1:");
-    console.log(totals);
-
     // Costo total:
     try {
       const prodsets = Object.getOwnPropertyNames(totals);
@@ -192,22 +189,16 @@ const ProductionPlan = (props) => {
       }
       totals.totalCost = totalCost;
     } catch (error) {
-      console.log(error);
       setError(error);
     }
-
-    console.log("Totales 2:");
-    console.log(totals);
 
     return Object.values(totals);
   };
 
   const resumen = totalResume(AllData);
-  console.log(resumen);
 
   useEffect(() => {
     const fetchPrices = async () => {
-      console.log("Cargando precios");
       try {
         setLoading(true); // Set loading state to true before fetching
         const priceList = await getPrivateElements("Precios");
@@ -227,8 +218,6 @@ const ProductionPlan = (props) => {
   const success = (
     <Grid container columns={12} spacing={2} padding={2}>
       {resumen.slice(0, resumen.length - 1).map((data) => {
-        console.log("Data");
-        console.log(data);
         return (
           <Grid
             item
@@ -248,44 +237,29 @@ const ProductionPlan = (props) => {
               <CardContent>
                 <List dense>
                   <ListItem alignItems="flex-start">
-                    <ListItemText
+                    <ListItemNumbers
                       primary={`${data.impresiones}`}
                       secondary={"Impresiones"}
-                      secondaryTypographyProps={{
-                        variant: "body1",
-                        fontSize: 12,
-                      }}
-                      primaryTypographyProps={{ variant: "h3", fontSize: 16 }}
                     />
                   </ListItem>
                   <Divider />
                   <ListItem alignItems="flex-start">
-                    <ListItemText
+                    <ListItemNumbers
                       primary={`${data.totalPliegos} `}
                       secondary={"Pliegos"}
-                      secondaryTypographyProps={{
-                        variant: "body1",
-                        fontSize: 12,
-                      }}
-                      primaryTypographyProps={{ variant: "h3", fontSize: 16 }}
                     />
                   </ListItem>
                   <Divider />
 
                   <ListItem alignItems="flex-start">
-                    <ListItemText
+                    <ListItemNumbers
                       secondary={`${data.stock.Tipo} ${data.stock.Gramaje} gramos`}
                       primary={`${data.sheetOriginalSize?.width} x ${data.sheetOriginalSize?.height} mm.`}
-                      secondaryTypographyProps={{
-                        variant: "body1",
-                        fontSize: 12,
-                      }}
-                      primaryTypographyProps={{ variant: "h3", fontSize: 16 }}
                     />
                   </ListItem>
                   <Divider />
                   <ListItem alignItems="flex-start">
-                    <ListItemText
+                    <ListItemNumbers
                       primary={`$ ${data.printPrice.Unitario}`}
                       secondary={"Unitario"}
                       secondaryTypographyProps={{
@@ -297,44 +271,25 @@ const ProductionPlan = (props) => {
                   </ListItem>
                   <Divider />
                   <ListItem alignItems="flex-start">
-                    <ListItemText
+                    <ListItemNumbers
                       secondary={"Costo final impreiones"}
                       primary={`$ ${Math.ceil(data.printPrice.Total)}`}
-                      secondaryTypographyProps={{
-                        variant: "body1",
-                        fontSize: 12,
-                      }}
-                      primaryTypographyProps={{ variant: "h3", fontSize: 16 }}
                     />
                   </ListItem>
                   <Divider />
                   <ListItem alignItems="flex-start">
-                    <ListItemText
+                    <ListItemNumbers
                       primary={`$ ${data.stockCost.cost}.-`}
                       secondary={`${data.totalHojas} Pliegos de ${data.stock.Ancho_Resma} x ${data.stock.Alto_Resma} mm.`}
-                      secondaryTypographyProps={{
-                        variant: "body1",
-                        fontSize: 12,
-                      }}
-                      primaryTypographyProps={{ variant: "h3", fontSize: 16 }}
                     />
                   </ListItem>
                   <Divider />
                   <ListItem alignItems="flex-start">
-                    <ListItemText
-                      primary={`$ ${roundCents(
+                    <ListItemNumbers
+                      primary={`$ ${roundInteger(
                         data.printPrice.Total + data.stockCost.cost
                       )} -`}
-                      primaryTypographyProps={{
-                        variant: "subtitle2",
-                        fontSize: 16,
-                        color: "primary",
-                      }}
                       secondary={`Total`}
-                      secondaryTypographyProps={{
-                        variant: "subtitle2",
-                        fontSize: 14,
-                      }}
                     />
                   </ListItem>
                   <Divider />
@@ -356,48 +311,32 @@ const ProductionPlan = (props) => {
           <Divider />
           <CardContent>
             <List>
-              <ListItemText
-                primary={`$ ${roundCents(resumen[resumen.length - 1].print)}`}
+              <ListItemNumbers
+                primary={`$ ${roundInteger(resumen[resumen.length - 1].print)}`}
                 primaryTypographyProps={{
                   variant: "subtitle2",
                   fontSize: 16,
                   color: "primary",
+                  align: "right",
                 }}
                 secondary={`Impresion total`}
                 secondaryTypographyProps={{
                   variant: "subtitle2",
                   fontSize: 14,
+                  align: "right",
                 }}
               />
-              <ListItemText
-                primary={`$ ${roundCents(resumen[resumen.length - 1].stock)}`}
-                primaryTypographyProps={{
-                  variant: "subtitle2",
-                  fontSize: 16,
-                  color: "primary",
-                }}
+              <ListItemNumbers
+                primary={`$ ${roundInteger(resumen[resumen.length - 1].stock)}`}
                 secondary={`Material total`}
-                secondaryTypographyProps={{
-                  variant: "subtitle2",
-                  fontSize: 14,
-                }}
               />
               <Divider />
-              <ListItemText
-                primary={`$ ${roundCents(
+              <ListItemNumbers
+                primary={`$ ${roundInteger(
                   resumen[resumen.length - 1].print +
                     resumen[resumen.length - 1].stock
                 )}`}
-                primaryTypographyProps={{
-                  variant: "subtitle2",
-                  fontSize: 16,
-                  color: "primary",
-                }}
                 secondary={` Costo total`}
-                secondaryTypographyProps={{
-                  variant: "subtitle2",
-                  fontSize: 14,
-                }}
               />
             </List>
           </CardContent>

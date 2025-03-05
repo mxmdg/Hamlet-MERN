@@ -44,7 +44,7 @@ const JobsForm = (props) => {
   );
   // This state intializes chebox value
   // const [useValue, setMyValue] = useState({ value: "" });
-  const [useJobType, setJobType] = useState(props.jobType.name || null);
+  const [useJobType, setJobType] = useState(props.jobType?.name || null);
   const context = useContext(AuthContext);
   const [useLoading, setLoading] = useState(true);
   const [useError, setError] = useState(false);
@@ -385,8 +385,9 @@ const JobsForm = (props) => {
                           return 0;
                         })
                         .map((Finisher) => {
+                          console.log(Finisher);
                           const isChecked = selectedFinishings.some(
-                            (f) => f._id === Finisher._id
+                            (f) => f === Finisher._id || f._id === Finisher._id
                           );
                           if (
                             Finisher.jobTypesAllowed &&

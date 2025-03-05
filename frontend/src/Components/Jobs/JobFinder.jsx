@@ -40,7 +40,7 @@ import JobsPerClient from "../utils/stats/JobsPerClient";
 import JobsPerSeller from "../utils/stats/JobsPerSeller";
 import JobsPerType from "../utils/stats/JobsPerType";
 
-const JobFinder = () => {
+const JobFinder = (props) => {
   const [useURL, setURL] = useState(null);
   const [useProperty, setProperty] = useState({
     value: "Nombre",
@@ -53,6 +53,7 @@ const JobFinder = () => {
   const [useResponse, setResponse] = useState(null);
   const [useLoading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const inputsVariant = props.inputsVariant || "outlined";
 
   const properties = [
     { value: "Nombre", label: "Nombre", queryType: "string" },
@@ -132,9 +133,9 @@ const JobFinder = () => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    useQuery !== null 
-    ? setURL(`jobs/complete?Q=${useQuery}&P=${useProperty.value}`) 
-    : setURL(`jobs/complete`);
+    useQuery !== null
+      ? setURL(`jobs/complete?Q=${useQuery}&P=${useProperty.value}`)
+      : setURL(`jobs/complete`);
   };
 
   useEffect(() => {
@@ -160,7 +161,7 @@ const JobFinder = () => {
                         id="url_P"
                         select
                         label={useProperty.label || "Propiedad"}
-                        variant="outlined"
+                        variant={inputsVariant}
                         placeholder="Seleccionar Propiedad"
                         value={useProperty.value}
                         onChange={(e) => {
@@ -198,7 +199,7 @@ const JobFinder = () => {
                             select
                             id="queryPartType"
                             label="Tipo de Parte"
-                            variant="outlined"
+                            variant={inputsVariant}
                             color="primary"
                             fullWidth
                             onChange={(e) => {
@@ -238,7 +239,7 @@ const JobFinder = () => {
                               <TextField
                                 {...params}
                                 label="Material"
-                                variant="outlined"
+                                variant={inputsVariant}
                                 fullWidth
                               />
                             )}
@@ -253,7 +254,7 @@ const JobFinder = () => {
                             select
                             id="queryFinisher"
                             label="Terminacion"
-                            variant="outlined"
+                            variant={inputsVariant}
                             color="primary"
                             fullWidth
                             onChange={(e) => {
@@ -291,7 +292,7 @@ const JobFinder = () => {
                               <TextField
                                 {...params}
                                 label="Cliente"
-                                variant="outlined"
+                                variant={inputsVariant}
                                 fullWidth
                               />
                             )}
@@ -306,7 +307,7 @@ const JobFinder = () => {
                             select
                             id="queryUsers"
                             label="Representante"
-                            variant="outlined"
+                            variant={inputsVariant}
                             color="primary"
                             fullWidth
                             onChange={(e) => {
@@ -326,7 +327,7 @@ const JobFinder = () => {
                       <Grid item xs={12} sm={12} md={4}>
                         <TextField
                           id="query"
-                          variant="outlined"
+                          variant={inputsVariant}
                           color="primary"
                           label="Buscar"
                           fullWidth
@@ -342,7 +343,7 @@ const JobFinder = () => {
                         <TextField
                           type="number"
                           id="query"
-                          variant="outlined"
+                          variant={inputsVariant}
                           color="primary"
                           label="Buscar"
                           fullWidth

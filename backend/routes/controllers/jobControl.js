@@ -56,6 +56,11 @@ jobControl.getCompleteJobs = async (req, res) => {
           model: finishers.esquema,
           select: "-Costo.Historial -jobTypesAllowed -partTypesAllowed",
         })
+        .populate({
+          path: "Finishing",
+          model: finishers.esquema,
+          select: "-Costo.Historial -jobTypesAllowed -partTypesAllowed",
+        })
         .sort({ Fecha: -1 });
       res.json(jobList);
     } catch (e) {
@@ -117,6 +122,11 @@ jobControl.getUrgentJobs = async (req, res) => {
           select: "Nombre email",
         })
         .populate({ path: "Partes.partStock", model: stocks.esquema })
+        .populate({
+          path: "Partes.Finishing",
+          model: finishers.esquema,
+          select: "-Costo.Historial -jobTypesAllowed -partTypesAllowed",
+        })
         .sort({ Entrega: +1 });
       //.select("Nombre Cantidad Fecha Entrega Emision Deadline");
       res.json(jobList);

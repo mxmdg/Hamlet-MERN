@@ -15,17 +15,21 @@ import {
   List,
   ListItem,
   ListItemText,
+  Paper,
   Typography,
 } from "@mui/material";
+import { styled } from "@mui/material/styles";
 
 import { calcularLomo } from "../jobViewer/JobDetail";
 import arrayNormalizer from "../utils/generalData/arrayNormalizer";
 import { getPrivateElementByID } from "../customHooks/FetchDataHook";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import Spinner from "../General/Spinner";
+import DialogModal from "./DialogModal";
+
+const DeletePartMessage = "Estas seguro de eliminar esta parte?";
 
 const PartCard = (props) => {
-  const [part, setPart] = React.useState(props.part);
   const [index, setIndex] = React.useState(props.index);
   const [useFinishers, setFinishers] = React.useState([]);
   const [useLoading, setLoading] = React.useState(false);
@@ -47,43 +51,51 @@ const PartCard = (props) => {
     }
   };
 
+  const StyledCard = styled(Paper)(({ theme }) => ({
+    marginTop: "20px",
+    background: theme.palette.background.dark,
+    height: "100%",
+    display: "flex",
+    flexFlow: "column",
+    alignContent: "space-between",
+    border: "1px solid",
+    borderColor: theme.palette.primary.main,
+  }));
+
   React.useEffect(() => {
-    const Finishing = arrayNormalizer(part.Finishing, getFinishers);
+    const Finishing = arrayNormalizer(props.part.Finishing, getFinishers);
     setFinishers(Finishing);
     setLoading(false);
-  }, []);
+  }, [props.part, props.part.Finishing]);
 
-  const success = (
-    <Card
-      variant="outlined"
-      sx={{
-        marginTop: "20px",
-        border: "1px solid #666",
-        background: "transparent",
-        height: "100%",
-        display: "flex",
-        flexFlow: "column",
-        alignContent: "space-between",
-      }}
-    >
+  const alert = (
+    <ErrorMessage message={useError.message} action={() => setError(false)} />
+  );
+  const loading = <Spinner color="info" />;
+
+  if (useLoading) return <Spinner />;
+  if (useError) return <ErrorMessage message={useError} />;
+
+  return (
+    <StyledCard variant="elevation" square={true} elevation={10}>
       <CardHeader
-        title={part.Name}
-        subheader={part.jobParts[0]?.Type}
+        title={props.part.Name}
+        subheader={props.part.jobParts[0]?.Type}
       ></CardHeader>
       <CardContent sx={{ flexGrow: 1 }}>
         <Typography variant="body2">
-          Paginas: {part.Pages}
+          Paginas: {props.part.Pages}
           <br />
-          Formato: {part.Ancho} x {part.Alto}
+          Formato: {props.part.Ancho} x {props.part.Alto}
           <br />
-          Impresion: {part.ColoresFrente}/{part.ColoresDorso}
+          Impresion: {props.part.ColoresFrente}/{props.part.ColoresDorso}
           <br />
-          Material: {part.partStock.Nombre_Material}
-          {part.Pages > 10 ? (
+          Material: {props.part.partStock.Nombre_Material}
+          {props.part.Pages > 10 ? (
             <>
               {` (Lomo: ${calcularLomo(
-                part.Pages,
-                part.partStock.Espesor_Resma
+                props.part.Pages,
+                props.part.partStock.Espesor_Resma
               )} mm.)`}
             </>
           ) : (
@@ -98,7 +110,7 @@ const PartCard = (props) => {
             <List dense disablePadding>
               {useFinishers.map((f) => {
                 return (
-                  <ListItem disableGutters key={`${f._id}${part._id}`}>
+                  <ListItem disableGutters key={`${f._id}${props.part._id}`}>
                     <ListItemText
                       primary={`Proceso: ${f.Proceso}`}
                       secondary={`Modelo ${f.Modelo}`}
@@ -111,7 +123,7 @@ const PartCard = (props) => {
         )}
       </CardContent>
       <CardActions>
-        <ButtonGroup size="small" variant="text">
+        <ButtonGroup size="small" variant="contained">
           <Button
             color="primary"
             onClick={(e) => {
@@ -137,24 +149,19 @@ const PartCard = (props) => {
           >
             Copiar
           </Button> */}
-          <Button
-            color="error"
-            onClick={() => {
-              props.removePart(index);
-            }}
-          >
-            Eliminar
-          </Button>
+
+          <DialogModal
+            title={`Eliminar ${props.part.Name}`}
+            color="warning"
+            message={DeletePartMessage}
+            closeAction={props.removePart}
+            index={props.index}
+            btnTxt="Eliminar"
+          />
         </ButtonGroup>
       </CardActions>
-    </Card>
+    </StyledCard>
   );
-  const alert = (
-    <ErrorMessage message={useError.message} action={() => setError(false)} />
-  );
-  const loading = <Spinner color="info" />;
-
-  return useLoading ? loading : useError ? alert : success;
 };
 
 export default PartCard;

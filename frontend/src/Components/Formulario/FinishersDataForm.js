@@ -112,6 +112,8 @@ const FinishersDataForm = (props) => {
               { text: "Longitud", value: "cm" },
               { text: "Peso", value: "kg" },
               { text: "Superficie", value: "m2" },
+              { text: "Costo Fijo", value: "CF" },
+              { text: "Porcentaje", value: "PerCent" },
             ],
             required: true,
           },

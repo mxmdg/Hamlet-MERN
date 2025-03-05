@@ -105,6 +105,9 @@ const FormMaterial = (props) => {
   // In props.form you must provide the object model
   let dataForm = props.form;
 
+  //New props.variant to define the form variant
+  const variant = props.variant || "outlined";
+
   // React Hook Form
   const {
     register,
@@ -268,7 +271,7 @@ const FormMaterial = (props) => {
               id={inp.id}
               select
               label={inp.label || inp.inputName}
-              variant="outlined"
+              variant={variant}
               color="success"
               size="small"
               defaultValue={
@@ -304,7 +307,7 @@ const FormMaterial = (props) => {
       return (
         <Grid item xs={4} sm={4} md={6}>
           <Button
-            variant="outlined"
+            variant={variant}
             inputName={inp.inputName}
             color="primary"
             key={inp.id}
@@ -369,7 +372,7 @@ const FormMaterial = (props) => {
               border: "1px solid #555",
               borderRadius: "5px",
             }}
-            variant="outlined"
+            variant={variant}
           >
             <CardHeader subheader={inp.label || inp.inputName} />
             <CardContent>
@@ -462,7 +465,7 @@ const FormMaterial = (props) => {
             id={inp.id}
             type={inp.type}
             label={inp.label || inp.inputName}
-            variant="outlined"
+            variant={variant}
             defaultValue={
               useItem !== "new"
                 ? useItem.data[inp.inputName]

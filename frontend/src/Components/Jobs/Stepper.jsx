@@ -39,6 +39,12 @@ import { calcularLomo } from "../jobViewer/JobDetail";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import PartCard from "./PartCard";
 
+import {
+  addElementToArray,
+  removeElementFromArray,
+  replaceElementInArray,
+} from "../utils/generalData/arrayNormalizer";
+
 export default function MyStepper(props) {
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set());
@@ -49,6 +55,7 @@ export default function MyStepper(props) {
   const [useJob, setJob] = React.useState(props.job || null);
   const [useError, setError] = React.useState(null);
   const [stocks, setStocks] = React.useState([]);
+  const [useModal, setModal] = React.useState(false);
   const context = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -82,8 +89,7 @@ export default function MyStepper(props) {
     const part = parts.filter((part) => part._id === newPart.jobParts);
     newPart.jobParts = part;
 
-    let partes = useParts;
-    partes.push(newPart);
+    let partes = addElementToArray(newPart, useParts);
 
     try {
       setParts(partes);
@@ -98,15 +104,11 @@ export default function MyStepper(props) {
   };
 
   const removePart = (n) => {
-    const partsOk = useParts.splice(n, 1);
-    console.log(`Eliminar la parte ${n} de ${partsOk}`);
-    console.log(partsOk);
+    const partsOk = removeElementFromArray(n, useParts);
+    setParts(partsOk);
   };
 
   const replacePart = (newPart) => {
-    console.table(useParts);
-    console.table(newPart);
-
     try {
       const getStock = async (id) => {
         const stock = await getPrivateElementByID("materiales", id);
@@ -126,8 +128,12 @@ export default function MyStepper(props) {
     const part = parts.filter((part) => part._id === newPart.jobParts);
     newPart.jobParts = part;
 
-    const partsOk = useParts.splice(usePartToEdit.index, 1, newPart);
-    console.table(partsOk);
+    const partsOk = replaceElementInArray(
+      newPart,
+      useParts[usePartToEdit.index],
+      useParts
+    );
+    setParts(partsOk);
     //console.log(`Reemplazar la parte ${n + 1} de ${partsOk.length}`);
     //console.log(partsOk);
     setPartToEdit(null);
@@ -190,6 +196,9 @@ export default function MyStepper(props) {
   const handlePost = async () => {
     const Job = useJob;
     Job.Partes = useParts;
+    Job.Partes.forEach((part) => {
+      part.Finishing = part.Finishing.map((f) => f._id);
+    });
     Job.Tipo = useJobType;
     console.log(Job);
     try {
@@ -281,9 +290,21 @@ export default function MyStepper(props) {
     } catch (error) {
       setError(error);
     }
-  }, [useJob, usePartToEdit]);
+  }, [useJob, useParts]);
 
-  const statusOk = (
+  const statusError = (
+    <>
+      {useError !== null && (
+        <ErrorMessage
+          message={useError.response.data.message || useError.message}
+          color="success"
+          action={resetError}
+        />
+      )}
+    </>
+  );
+
+  return (
     <Box
       sx={{
         width: "100%",
@@ -360,7 +381,7 @@ export default function MyStepper(props) {
                       mb: 1,
                     }}
                   >
-                    <ButtonGroup variant="outlined">
+                    <ButtonGroup variant="contained">
                       <Button
                         color="success"
                         disabled={activeStep === 0}
@@ -406,7 +427,7 @@ export default function MyStepper(props) {
                 <Grid
                   container
                   columns={{ xs: 4, sm: 8, md: 12 }}
-                  spacing={1}
+                  spacing={3}
                   overflow={"false"}
                   sx={{ height: "98%" }}
                 >
@@ -420,6 +441,7 @@ export default function MyStepper(props) {
                           addPart={addParts}
                           setActiveStep={setActiveStep}
                           removePart={removePart}
+                          step={activeStep}
                         />
                       </Grid>
                     );
@@ -432,18 +454,4 @@ export default function MyStepper(props) {
       </Card>
     </Box>
   );
-
-  const statusError = (
-    <>
-      {useError !== null && (
-        <ErrorMessage
-          message={useError.response.data.message || useError.message}
-          color="success"
-          action={resetError}
-        />
-      )}
-    </>
-  );
-
-  return useError !== null ? statusError : statusOk;
 }

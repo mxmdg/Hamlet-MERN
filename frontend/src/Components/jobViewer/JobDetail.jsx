@@ -34,7 +34,7 @@ import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 // Imposition imports
 import { ImpoContext } from "../utils/impo/ImpoContext";
@@ -52,6 +52,7 @@ import DarkWoodCard from "../utils/DarkWoodCard";
 import JobRow from "../Jobs/jobsTable/JobRow";
 import ProductionPlan from "./ProductionPlan";
 import arrayNormalizer from "../utils/generalData/arrayNormalizer";
+import ListItemNumbers from "./ListItemNumbers";
 
 export const calcularLomo = (pags, resma) => {
   return Math.ceil(Math.ceil(pags / 2) * (resma / 500));
@@ -70,7 +71,10 @@ const JobDetail = (props) => {
   };
 
   const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === "dark" ? "#222" : "#aaa",
+    backgroundColor:
+      theme.palette.mode === "dark"
+        ? theme.palette.info.dark
+        : theme.palette.info.light,
     ...theme.typography.subtitle2,
     padding: theme.spacing(2),
     textAlign: "left",
@@ -80,8 +84,8 @@ const JobDetail = (props) => {
   const Item2 = styled(Paper)(({ theme }) => ({
     backgroundColor:
       theme.palette.mode === "dark"
-        ? theme.palette.info.dark
-        : theme.palette.info.light,
+        ? theme.palette.warning.dark
+        : theme.palette.warning.light,
     ...theme.typography.subtitle2,
     padding: theme.spacing(2),
     textAlign: "left",
@@ -138,6 +142,7 @@ const JobDetail = (props) => {
       partCosts.tirada = Math.ceil(job.Cantidad / usePoses);
       partCosts.id = part._id;
       partCosts.stock = part.partStock;
+      partCosts.colores = Math.max(part.ColoresFrente, part.ColoresDorso);
       partCosts.impresiones =
         Math.ceil(part.Pages * (job.coloresDorso > 0 ? 2 : 1)) *
         Math.ceil(job.Cantidad / usePoses);
@@ -217,31 +222,38 @@ const JobDetail = (props) => {
                   <Item>
                     Impresion: {part.ColoresFrente} / {part.ColoresDorso}
                   </Item>
-                  <Item>
-                    {part.partStock.Tipo} {part.partStock.Gramaje}{" "}
-                    {useImpoData
-                      ? ` - ${useImpoData.sheetOriginalSize.width} x ${useImpoData.sheetOriginalSize.height}`
-                      : ""}
-                  </Item>
-
-                  {usePoses && (
-                    <>
-                      <Item2 elevation={4}>Poses: {usePoses}</Item2>
-                      <Item2 elevation={4}>
+                  <Item2>
+                    <Typography variant="h6">
+                      {part.partStock.Tipo} {part.partStock.Gramaje}{" "}
+                      {useImpoData
+                        ? ` - ${useImpoData.sheetOriginalSize.width} x ${
+                            useImpoData.sheetOriginalSize.height
+                          } ${
+                            Math.max(part.ColoresFrente, part.ColoresDorso) > 1
+                              ? "CMYK"
+                              : "K"
+                          }`
+                        : ""}
+                    </Typography>
+                    {usePoses && (
+                      <Typography variant="h6">
                         Tirada: {Math.ceil(job.Cantidad / usePoses)}
-                      </Item2>
-                      <Item2 elevation={4}>
+                        <br />
                         Pliegos: {stockCalculated.cantidadDePliegos} - Salen:{" "}
                         {stockCalculated.pliegosPorHoja} del{" "}
                         {part.partStock.Ancho_Resma} x{" "}
                         {part.partStock.Alto_Resma}
-                      </Item2>
-                      <Item2 elevation={4}>
+                        <br />
                         Cantidad de resmas:{" "}
                         {Math.ceil((stockCalculated.totalHojas / 500) * 100) /
                           100}{" "}
                         {`(${stockCalculated.totalHojas} hojas)`}
-                      </Item2>
+                      </Typography>
+                    )}
+                  </Item2>
+
+                  {usePoses && (
+                    <>
                       {useData !== null && (
                         <ImpoProvider>
                           <Card elevation={10}>
@@ -408,11 +420,10 @@ const JobDetail = (props) => {
                     {job.Finishing.map((f) => {
                       return (
                         <ListItem key={"j" + f._id}>
-                          <ListItemText>
-                            <Typography>
-                              {f.Proceso} / {f.Modelo}
-                            </Typography>
-                          </ListItemText>
+                          <ListItemNumbers
+                            primary={f.Costo.Valor * job.Cantidad}
+                            secondary={`${f.Proceso} / ${f.Modelo}`}
+                          />
                         </ListItem>
                       );
                     })}

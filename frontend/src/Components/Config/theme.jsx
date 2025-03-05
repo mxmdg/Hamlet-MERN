@@ -1,6 +1,7 @@
 import * as React from "react";
 import { ThemeOptions } from "@mui/material/styles";
 import { useTheme, ThemeProvider, createTheme } from "@mui/material/styles";
+import { themeIndependiente, themeBocaJuniors } from "./TemasAFA";
 
 //Color Pallete Checker http://a11yrocks.com/colorPalette/
 // #3f51b5,#f50057,#ff1744,#29b6f8,#66bb6a,#222222

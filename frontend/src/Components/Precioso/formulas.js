@@ -1,6 +1,7 @@
 import { roundCents } from "./formSimulators";
 
-export const productoPorUnidad = (valor, minimo, cantidad, entrada) => {
+export const productoPorUnidad = (price, cantidad) => {
+  const { valor, minimo, entrada } = price;
   let resultado =
     parseFloat(entrada) + parseFloat(cantidad) * parseFloat(valor);
   resultado = resultado < parseFloat(minimo) ? parseFloat(minimo) : resultado;

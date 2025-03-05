@@ -285,7 +285,7 @@ export default function CollapsibleTable(props) {
           hover={true}
           selected={open ? true : false}
           onDoubleClick={() => {
-            navigate(`/jobs/edit/${row._id}`);
+            window.open(`/jobs/edit/${row._id}`, "_blank");
           }}
         >
           <TableCell>

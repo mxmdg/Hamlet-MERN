@@ -10,6 +10,10 @@ import { BrowserRouter } from "react-router-dom";
 import Router from "./router";
 import { themeOptions } from "./Components/Config/theme";
 import { themeMxm } from "./Components/Config/theme";
+import {
+  themeIndependiente,
+  themeBocaJuniors,
+} from "./Components/Config/TemasAFA";
 
 function App() {
   const [useMode, setMode] = useState("dark");
