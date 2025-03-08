@@ -60,8 +60,9 @@ finishersControl.addFinisher = async (req, res, next) => {
 
 finishersControl.getFinisher = async (req, res, next) => {
   try {
-    const finisher = await finishers.esquema.findById(req.params.id);
-    //.populate({ path: "Costo", model: prices.esquema });
+    const finisher = await finishers.esquema.findById(req.params.id)
+    .populate({ path: "Costo", model: prices.esquema })
+    .select("-Costo.Historial");
     if (finisher) {
       res.json(finisher);
     } else {

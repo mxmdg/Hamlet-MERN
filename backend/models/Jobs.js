@@ -58,7 +58,9 @@ const jobSchema = new Schema({
   Partes: [partSchema],
   Owner: { type: mongoose.Schema.ObjectId, ref: "Users", required: true },
   Company: { type: mongoose.Schema.ObjectId, ref: "Empresas", required: true },
-  Finishing: [{ type: mongoose.Schema.ObjectId, ref: "Finishers" }],
+  //Finishing: { type: Object, required: false, default: [] },
+  //Finishing: [{ type: mongoose.Schema.ObjectId || Object, ref: "Finishers" }],
+  Finishing: { type: [mongoose.Schema.Types.Mixed], default: [] },
 });
 
 // Definimos una función que se ejecutará antes de guardar cada parte
@@ -70,6 +72,16 @@ partSchema.pre("save", function (next) {
   next();
 });
 
+jobSchema.path("Finishing").get(function (finishing) {
+  if (!finishing) return [];
+
+  return Array.isArray(finishing)
+    ? finishing.map((item) => (typeof item === "object" && item._id ? item._id : item))
+    : typeof finishing === "object" && finishing._id
+    ? [finishing._id]
+    : [finishing];
+});
+
 jobSchema.virtual("Emision").get(function () {
   return timeAgo(this.Fecha);
 });
@@ -77,6 +89,7 @@ jobSchema.virtual("Emision").get(function () {
 jobSchema.virtual("DeadLine").get(function () {
   return timeAgo(this.Entrega);
 });
+
 
 jobSchema.set("toJSON", { virtuals: true });
 

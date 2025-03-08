@@ -2,7 +2,7 @@ function isObject(obj) {
   return obj !== null && typeof obj === "object" && !Array.isArray(obj);
 }
 
-const arrayNormalizer = (element, errManager = Function) => {
+const arrayNormalizer = (element= Array, errManager = Function) => {
   try {
     if (isObject(element)) {
       console.log("Object to Array");
@@ -21,6 +21,7 @@ const arrayNormalizer = (element, errManager = Function) => {
       const id = [];
       id.push(element);
       errManager(id);
+      return(id)
     }
   } catch (error) {
     console.log(error);

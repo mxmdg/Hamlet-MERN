@@ -56,11 +56,11 @@ jobControl.getCompleteJobs = async (req, res) => {
           model: finishers.esquema,
           select: "-Costo.Historial -jobTypesAllowed -partTypesAllowed",
         })
-        .populate({
+        /* .populate({
           path: "Finishing",
           model: finishers.esquema,
           select: "-Costo.Historial -jobTypesAllowed -partTypesAllowed",
-        })
+        }) */
         .sort({ Fecha: -1 });
       res.json(jobList);
     } catch (e) {
@@ -127,6 +127,11 @@ jobControl.getUrgentJobs = async (req, res) => {
           model: finishers.esquema,
           select: "-Costo.Historial -jobTypesAllowed -partTypesAllowed",
         })
+        /* .populate({
+          path: "Finishing",
+          model: finishers.esquema,
+          select: "-Costo.Historial -jobTypesAllowed -partTypesAllowed",
+        }) */
         .sort({ Entrega: +1 });
       //.select("Nombre Cantidad Fecha Entrega Emision Deadline");
       res.json(jobList);
@@ -248,7 +253,12 @@ jobControl.getJob = async (req, res) => {
         path: "Partes.Finishing",
         model: finishers.esquema,
         select: "-Costo.Historial -jobTypesAllowed -partTypesAllowed",
-      });
+      })
+      /* .populate({
+        path: "Finishing",
+        model: finishers.esquema,
+        select: "-Costo.Historial -jobTypesAllowed -partTypesAllowed",
+      }); */
     res.json(job);
   } catch (e) {
     res.status(404).json({ message: "Trabajo no encontrado: " + e.message });

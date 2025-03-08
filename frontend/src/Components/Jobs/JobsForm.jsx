@@ -63,11 +63,11 @@ const JobsForm = (props) => {
   const changeHandler = (e, useFinishingList, Finisher) => {
     if (e.target.checked) {
       // Agregar el objeto seleccionado al array
-      setSelectedFinishings((prevSelected) => [...prevSelected, Finisher]);
+      setSelectedFinishings((prevSelected) => [...prevSelected, Finisher._id]);
     } else {
       // Remover el objeto si se deselecciona
       setSelectedFinishings((prevSelected) =>
-        prevSelected.filter((item) => item._id !== Finisher._id)
+        prevSelected.filter((item) => item !== Finisher._id)
       );
     }
   };

@@ -329,7 +329,7 @@ const JobDetail = (props) => {
                 boxShadow: "5px 5px 10px #00000066",
               }}
             >
-              <MenuBookIcon color="error" />
+              <MenuBookIcon color="success" />
             </Avatar>
           }
           action={
@@ -389,10 +389,11 @@ const JobDetail = (props) => {
               ? `${job.Owner.Name} ${job.Owner.LastName} - ${job.Owner.email}`
               : ""
           }
-          te={job.Cantidad}
+          titleTypographyProps={{ variant: "h5" }}
+          subheaderTypographyProps={{ variant: "h6" }}
         />
         <CardContent>
-          <Typography variant="title" fontSize={20} color={"secondary"}>
+          <Typography variant="h6" fontSize={20} color={"secondary"}>
             Partes:{" "}
           </Typography>
           <Divider />
@@ -417,16 +418,33 @@ const JobDetail = (props) => {
                 <CardHeader subheader="Procesos" />
                 <CardContent>
                   <List>
-                    {job.Finishing.map((f) => {
-                      return (
-                        <ListItem key={"j" + f._id}>
-                          <ListItemNumbers
-                            primary={f.Costo.Valor * job.Cantidad}
-                            secondary={`${f.Proceso} / ${f.Modelo}`}
-                          />
-                        </ListItem>
-                      );
-                    })}
+                    {()=>{
+                      if (typeof job.Finishing[0] === "string" ) {
+                        const FinishingIds = arrayNormalizer(job.Finishing, (ids) => { return ids });
+                        console.log(FinishingIds);
+                        return FinishingIds.map((f) => {
+                          return (
+                            <ListItem key={"j" + f}>
+                              <ListItemNumbers
+                                primary={f + ' x ' + job.Cantidad}
+                              />
+                            </ListItem>
+                          );
+                        });
+                      } else {
+                        job.Finishing.map((f) => {
+                           return (
+                          <ListItem key={"j" + f._id}>
+                            <ListItemNumbers
+                              primary={f.Costo?.Valor * job.Cantidad}
+                              secondary={`${f.Proceso} / ${f.Modelo}`}
+                            />
+                          </ListItem>
+                        );
+                      });
+                      }
+                    }}
+                    
                   </List>
                 </CardContent>
               </Card>

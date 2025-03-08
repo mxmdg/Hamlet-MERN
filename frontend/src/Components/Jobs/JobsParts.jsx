@@ -125,12 +125,12 @@ const JobParts = (props) => {
       console.log("Finisher varias opciones");
       console.log(Finisher);
       console.log(e);
-
-      setSelectedFinishings((prevSelected) => [...prevSelected, Finisher]);
+      setSelectedFinishings((prevSelected) => [...prevSelected, Finisher._id]);
+      
     } else if (e.target.checked && useFinishingList.length === 1) {
       console.log("Finisher una sola opcion");
       console.log(Finisher);
-      setSelectedFinishings([Finisher]);
+      setSelectedFinishings([Finisher._id]);
     } else {
       // Remover el objeto si se deselecciona
       setSelectedFinishings((prevSelected) =>

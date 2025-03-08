@@ -196,9 +196,10 @@ export default function MyStepper(props) {
   const handlePost = async () => {
     const Job = useJob;
     Job.Partes = useParts;
-    Job.Partes.forEach((part) => {
+    // Este forEach me parece que no hace falta...
+    /* Job.Partes.forEach((part) => {
       part.Finishing = part.Finishing.map((f) => f._id);
-    });
+    }); */
     Job.Tipo = useJobType;
     console.log(Job);
     try {
