@@ -14,7 +14,7 @@ import {
 } from "../customHooks/FetchDataHook";
 
 export const JobViewer = (props) => {
-  const [useCurrentJob, setCurrentJob] = useState(null);
+  const [useCurrentJob, setCurrentJob] = useState(props.job || null);
   const [useLoading, setLoading] = useState(true);
   const [useError, setError] = useState(null);
   const navigate = useNavigate();

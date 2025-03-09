@@ -71,12 +71,16 @@ export default function DialogModal(props) {
           <Typography gutterBottom>{props.message}</Typography>
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={handleClose} color={"success"}>
-            Cancelar
-          </Button>
-          <Button autoFocus onClick={handleCloseAndDelete} color={props.color}>
-            {props.btnTxt}
-          </Button>
+          {props.CancelBtnTxt && (
+            <Button autoFocus onClick={handleClose} color={"success"}>
+              {props.CancelBtnTxt}
+            </Button>
+          )}
+          {props.OkBtnTxt && (
+            <Button autoFocus onClick={handleCloseAndDelete} color={"error"}>
+              {props.OkBtnTxt}
+            </Button>
+          )}
         </DialogActions>
       </MyDialogue>
     </React.Fragment>

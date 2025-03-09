@@ -157,6 +157,8 @@ const PartCard = (props) => {
             closeAction={props.removePart}
             index={props.index}
             btnTxt="Eliminar"
+            OkBtnTxt="Si"
+            CancelBtnTxt="No"
           />
         </ButtonGroup>
       </CardActions>

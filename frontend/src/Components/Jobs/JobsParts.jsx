@@ -126,7 +126,6 @@ const JobParts = (props) => {
       console.log(Finisher);
       console.log(e);
       setSelectedFinishings((prevSelected) => [...prevSelected, Finisher._id]);
-      
     } else if (e.target.checked && useFinishingList.length === 1) {
       console.log("Finisher una sola opcion");
       console.log(Finisher);

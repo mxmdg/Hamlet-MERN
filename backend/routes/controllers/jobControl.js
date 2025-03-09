@@ -248,17 +248,17 @@ jobControl.getJob = async (req, res) => {
         model: companies.esquema,
         select: "Nombre email",
       })
-      .populate({ path: "Partes.partStock", model: stocks.esquema })
-      .populate({
+      .populate({ path: "Partes.partStock", model: stocks.esquema });
+    /* .populate({
         path: "Partes.Finishing",
         model: finishers.esquema,
         select: "-Costo.Historial -jobTypesAllowed -partTypesAllowed",
-      })
-      /* .populate({
-        path: "Finishing",
-        model: finishers.esquema,
-        select: "-Costo.Historial -jobTypesAllowed -partTypesAllowed",
       }); */
+
+    // Comprobar si hay partes vacías
+    job.Partes.Finishing && job.Partes.Finishing[0] === null
+      ? (job.Partes.Finishing = [])
+      : job.Partes.Finishing;
     res.json(job);
   } catch (e) {
     res.status(404).json({ message: "Trabajo no encontrado: " + e.message });

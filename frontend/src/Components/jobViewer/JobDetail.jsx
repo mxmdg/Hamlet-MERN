@@ -53,6 +53,7 @@ import JobRow from "../Jobs/jobsTable/JobRow";
 import ProductionPlan from "./ProductionPlan";
 import arrayNormalizer from "../utils/generalData/arrayNormalizer";
 import ListItemNumbers from "./ListItemNumbers";
+import FinishingList from "./FinishingList";
 
 export const calcularLomo = (pags, resma) => {
   return Math.ceil(Math.ceil(pags / 2) * (resma / 500));
@@ -280,20 +281,9 @@ const JobDetail = (props) => {
                       </Button>
                     </>
                   )}
-                  {Finishing && (
+                  {part.Finishing && (
                     <Item>
-                      <List dense={true} disablePadding={true}>
-                        {Finishing.map((pf) => {
-                          return (
-                            <ListItem divider={true} key={pf._id}>
-                              <ListItemText
-                                primary={pf.Proceso}
-                                secondary={pf.Modelo}
-                              />
-                            </ListItem>
-                          );
-                        })}
-                      </List>
+                      <FinishingList finishing={part.Finishing} />
                     </Item>
                   )}
                 </Stack>
@@ -401,54 +391,9 @@ const JobDetail = (props) => {
             return PartDetail(parte);
           })}
           {job.Finishing && (
-            <Accordion
-              key={"fn-" + productionPlan.id}
-              id={"fn-" + productionPlan.id}
-              expanded={expanded === "fn-" + productionPlan.id}
-              onChange={handleChange("fn-" + productionPlan.id)}
-            >
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel1bh-content"
-                id="panel1bh-header"
-              >
-                <Typography color={"primary"}>Terminacion:</Typography>
-              </AccordionSummary>
-              <Card>
-                <CardHeader subheader="Procesos" />
-                <CardContent>
-                  <List>
-                    {()=>{
-                      if (typeof job.Finishing[0] === "string" ) {
-                        const FinishingIds = arrayNormalizer(job.Finishing, (ids) => { return ids });
-                        console.log(FinishingIds);
-                        return FinishingIds.map((f) => {
-                          return (
-                            <ListItem key={"j" + f}>
-                              <ListItemNumbers
-                                primary={f + ' x ' + job.Cantidad}
-                              />
-                            </ListItem>
-                          );
-                        });
-                      } else {
-                        job.Finishing.map((f) => {
-                           return (
-                          <ListItem key={"j" + f._id}>
-                            <ListItemNumbers
-                              primary={f.Costo?.Valor * job.Cantidad}
-                              secondary={`${f.Proceso} / ${f.Modelo}`}
-                            />
-                          </ListItem>
-                        );
-                      });
-                      }
-                    }}
-                    
-                  </List>
-                </CardContent>
-              </Card>
-            </Accordion>
+            <Item>
+              <FinishingList finishing={job.Finishing} />
+            </Item>
           )}
 
           {productionPlanAvaible && (
