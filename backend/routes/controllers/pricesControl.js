@@ -1,5 +1,10 @@
 const prices = require("../../models/prices");
 
+//Modelos de las categorias, para verificar que los costos no esten asociados a procesos de terminación
+const Finishers = require("../../models/finishers");
+const printers = require("../../models/printers");
+const materiales = require("../../models/materiales");
+
 const pricesControl = {};
 
 pricesControl.getPrices = async (req, res) => {
@@ -76,7 +81,7 @@ pricesControl.updatePrice = async (req, res) => {
       historialItem,
       historialCurrent
     );
-    price.Categoria= Categoria;
+    price.Categoria = Categoria;
     price.Valor = Valor;
     price.Minimo = Minimo;
     price.Entrada = Entrada;
@@ -94,14 +99,44 @@ pricesControl.updatePrice = async (req, res) => {
 
 pricesControl.deletePrice = async (req, res) => {
   try {
-    const price = await prices.esquema.findByIdAndDelete(req.params.id);
-    res.json({ Message: "Formula eliminado" });
+    const priceId = req.params.id;
+
+    // Verificar si el precio está en uso en algún proceso
+    const finishersConEsteCosto = await Finishers.esquema.countDocuments({
+      Costo: priceId,
+    });
+    const printersConEsteCosto = await printers.esquema.countDocuments({
+      Costo: priceId,
+    });
+    const materialesConEsteCosto = await materiales.esquema.countDocuments({
+      Precio_x_Kilo: priceId,
+    });
+
+    const procesosConEsteCosto =
+      finishersConEsteCosto + printersConEsteCosto + materialesConEsteCosto;
+
+    console.log(
+      `No se puede eliminar este costo porque está siendo utilizado en otros ${procesosConEsteCosto} procesos.`
+    );
+
+    if (procesosConEsteCosto > 0) {
+      return res.status(400).json({
+        message: `No se puede eliminar este costo porque está siendo utilizado en otros ${procesosConEsteCosto} procesos.`,
+      });
+    }
+
+    // Si no está en uso, eliminar el precio
+    const price = await prices.esquema.findByIdAndDelete(priceId);
+
+    if (!price) {
+      return res.status(404).json({ message: "Costo no encontrado" });
+    }
+
+    res.json({ message: "Costo eliminado correctamente" });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Error al eliminar el costo" });
-    
+    res.status(500).json({ error });
   }
-  
 };
 
 module.exports = pricesControl;

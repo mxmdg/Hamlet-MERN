@@ -385,7 +385,6 @@ const JobsForm = (props) => {
                           return 0;
                         })
                         .map((Finisher) => {
-                          console.log(Finisher);
                           const isChecked = selectedFinishings.some(
                             (f) => f === Finisher._id || f._id === Finisher._id
                           );

@@ -1,10 +1,5 @@
 import "../../Styles/hamlet.css";
-import axios from "axios";
-import { databaseURL } from "../Config/config";
-import Form from "../Formulario/Form";
 import { useState, useEffect } from "react";
-import { Grid } from "@mui/material";
-//import { DataGrid } from '@mui/x-data-grid';
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import Paper from "@mui/material/Paper";
@@ -30,18 +25,28 @@ import {
   getPrivateElements,
   deletePrivateElement,
 } from "../customHooks/FetchDataHook";
+import Spinner from "../General/Spinner";
+import ErrorMessage from "../ErrorMessage/ErrorMessage";
 
 const PriceTable = (props) => {
-  const [useView, setView] = useState("viewer");
-  const [useItemToEdit, setItemToEdit] = useState({});
-  const [useTask, setTask] = useState("new");
   const [isThereHistory, setIsThereHistory] = useState();
   const [showHistory, setShowHistory] = useState(false);
   const [showSim, setShowSim] = useState(false);
+  const [useLoading, setLoading] = useState(false);
+  const [useError, setError] = useState(false);
   const navigate = useNavigate();
 
   const getElements = async () => {
-    const items = await getPrivateElements(`${props.collection}/`);
+    try {
+      const items = await getPrivateElements(`${props.collection}/`);
+      setLoading(false);
+      return items;
+    } catch (error) {
+      setError(true);
+      setLoading(false);
+      console.log(error);
+      return error;
+    }
   };
 
   const deleteClickHandler = async (id) => {
@@ -59,35 +64,11 @@ const PriceTable = (props) => {
         await deletePrivateElement(props.collection, id);
         getElements();
         props.editor(true);
+        setLoading(false);
       } catch (e) {
-        alert(e);
+        console.log(e);
+        alert(e.response.data.message);
       }
-    }
-  };
-
-  const editClickHandler = async (id) => {
-    try {
-      const itemToEdit = await axios.get(
-        `${databaseURL + props.collection}/${id}`
-      );
-      /* let history = [
-        {
-          Valor: itemToEdit.data.Valor,
-          Entrada: itemToEdit.data.Entrada,
-          Minimo: itemToEdit.data.Minimo,
-          Fecha: itemToEdit.data.Fecha,
-        },
-      ]; */
-
-      setTask("edit");
-      setView("editor");
-      setItemToEdit(itemToEdit);
-      /* useHistory.push(history);
-
-      console.log(props.priceHistory);
-      console.log(useHistory); */
-    } catch (e) {
-      console.log(e);
     }
   };
 
@@ -109,7 +90,8 @@ const PriceTable = (props) => {
         setShowHistory(true);
       }
     } catch (e) {
-      alert(e.message);
+      console.log(e.response.data.message);
+      alert(e.response.data.message);
     }
   };
 
@@ -119,20 +101,7 @@ const PriceTable = (props) => {
 
   useEffect(() => {
     checkHistory();
-  }, [useView, useTask, useItemToEdit]);
-  // const rows: GridRowsProp = props.pd
-
-  const editor = (
-    <Form
-      form={props.formData}
-      collection={props.collection}
-      item={useItemToEdit}
-      view={setView}
-      task={useTask}
-      _id={props.pd._id}
-      editor={props.editor}
-    />
-  );
+  }, []);
 
   const viewer = (
     <>
@@ -265,7 +234,17 @@ const PriceTable = (props) => {
     </>
   );
 
-  return useView === "viewer" ? viewer : editor;
+  const loader = <Spinner />;
+  const error = (
+    <ErrorMessage
+      message="No hay datos en el historial"
+      severity="info"
+      action={() => setError(false)}
+      buttonTxt="Cerrar"
+    />
+  );
+
+  return useLoading ? loader : useError ? error : viewer;
 };
 
 export default PriceTable;

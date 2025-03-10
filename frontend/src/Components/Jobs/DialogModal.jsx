@@ -33,7 +33,7 @@ export default function DialogModal(props) {
   const handleClose = () => {
     setOpen(false);
   };
-  const handleCloseAndDelete = () => {
+  const handleCloseAndDoAction = () => {
     props.closeAction(props.index);
     setOpen(false);
   };
@@ -77,7 +77,7 @@ export default function DialogModal(props) {
             </Button>
           )}
           {props.OkBtnTxt && (
-            <Button autoFocus onClick={handleCloseAndDelete} color={"error"}>
+            <Button autoFocus onClick={handleCloseAndDoAction} color={"error"}>
               {props.OkBtnTxt}
             </Button>
           )}

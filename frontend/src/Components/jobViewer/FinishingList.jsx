@@ -1,7 +1,7 @@
 import React from "react";
 import { useEffect, useState } from "react";
 
-import { List, ListItem, ListItemText } from "@mui/material";
+import { List, ListItem, ListItemText, Typography } from "@mui/material";
 
 import { getPrivateElementByID } from "../customHooks/FetchDataHook";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
@@ -16,9 +16,14 @@ const FinishingList = (props) => {
     const fetchFinishingDetails = async () => {
       try {
         if (Array.isArray(props.finishing) && props.finishing.length > 0) {
+          console.log("Tenemos un array: props.finishing", props.finishing);
           if (typeof props.finishing[0] === "object") {
-            setFinishing(props.finishing);
+            console.log("Es un array de objetos");
+            props.finishing[0] !== null
+              ? setFinishing(props.finishing)
+              : setFinishing([]);
           } else {
+            console.log("Es un array de IDs");
             const finisherList = [];
             for (const finisher of props.finishing) {
               const finishing = await getPrivateElementByID(
@@ -28,6 +33,7 @@ const FinishingList = (props) => {
               finisherList.push(finishing.data);
             }
             setFinishing(finisherList);
+            console.log("finisherList", finisherList);
           }
         }
       } catch (error) {
@@ -56,10 +62,9 @@ const FinishingList = (props) => {
     <List dense>
       {useFinishing.map((item, index) => (
         <ListItem key={index}>
-          <ListItemText
-            primary={`${item.Proceso} ${item.Costo.Valor}`}
-            secondary={item.Fabricante}
-          />
+          <Typography variant="h6">
+            {`${item.Proceso} $${item.Costo.Valor}`}
+          </Typography>
         </ListItem>
       ))}
     </List>

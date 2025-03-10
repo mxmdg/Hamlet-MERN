@@ -569,9 +569,9 @@ const JobParts = (props) => {
                       return 0;
                     })
                     .map((Finisher) => {
-                      const isChecked = selectedFinishings.some(
-                        (f) => f._id === Finisher._id
-                      );
+                      const isChecked = Array.isArray(selectedFinishings)
+                        ? selectedFinishings.some((f) => f._id === Finisher._id)
+                        : [];
                       if (
                         Finisher.partTypesAllowed &&
                         Finisher.partTypesAllowed.includes(

@@ -19,8 +19,6 @@ const handleDate = (date) => {
 };
 
 export default function MyLineChart(props) {
-  console.log(props.data);
-
   const valorMillar = (data) => {
     const newData = [];
     for (let item of data) {
@@ -33,10 +31,8 @@ export default function MyLineChart(props) {
 
   const newData = valorMillar(props.data);
 
-  console.log(props.newData);
-
   const chart = (interval) => (
-    <ResponsiveContainer height={250} width="95%" >
+    <ResponsiveContainer height={250} width="95%">
       <LineChart data={newData} margin={{ right: 25, top: 10 }}>
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="" interval={handleDate(interval)} />
