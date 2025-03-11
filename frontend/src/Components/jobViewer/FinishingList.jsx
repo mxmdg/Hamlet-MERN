@@ -26,11 +26,16 @@ const FinishingList = (props) => {
             console.log("Es un array de IDs");
             const finisherList = [];
             for (const finisher of props.finishing) {
-              const finishing = await getPrivateElementByID(
-                "finishers",
-                finisher
-              );
-              finisherList.push(finishing.data);
+              try {
+                const finishing = await getPrivateElementByID(
+                  "finishers",
+                  finisher
+                );
+                finisherList.push(finishing.data);
+              } catch (error) {
+                console.log(error);
+                setError(error);
+              }
             }
             setFinishing(finisherList);
             console.log("finisherList", finisherList);
@@ -63,7 +68,7 @@ const FinishingList = (props) => {
       {useFinishing.map((item, index) => (
         <ListItem key={index}>
           <Typography variant="h6">
-            {`${item.Proceso} $${item.Costo.Valor}`}
+            {`${item.Proceso} $${item.Costo?.Valor}`}
           </Typography>
         </ListItem>
       ))}

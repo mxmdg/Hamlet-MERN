@@ -3,6 +3,7 @@ const mongoose = require("../dbConnection");
 const timeAgo = require("node-time-ago");
 
 function orientation(x, y) {
+  const formato = `${x} x ${y}`;
   let orientacion;
   console.log(x, y);
   if (x > y) {
@@ -12,7 +13,7 @@ function orientation(x, y) {
   } else if (x === y) {
     orientacion = "Cuadrado";
   }
-  return orientacion;
+  return { orientacion, formato };
 }
 
 const partTypeSchema = new Schema({
@@ -41,6 +42,7 @@ const partSchema = new Schema({
   Pages: { type: Number, required: true },
   Ancho: { type: Number, required: true },
   Alto: { type: Number, required: true },
+  Formato: { type: String },
   Orientacion: { type: String },
   ColoresFrente: { type: Number, required: true },
   ColoresDorso: { type: Number, required: false, default: 0 },
@@ -73,9 +75,10 @@ const jobSchema = new Schema({
 // Definimos una función que se ejecutará antes de guardar cada parte
 partSchema.pre("save", function (next) {
   // Accedemos a Ancho y Alto de la instancia actual (this)
-  const orientacion = orientation(this.Ancho, this.Alto);
-  console.log("PreSave: " + this.Ancho + " " + this.Alto);
-  this.Orientacion = orientacion; // Asignamos la orientación calculada a la propiedad Orientacion
+  const { orientacion, formato } = orientation(this.Ancho, this.Alto);
+  // Definimos el formato a partir de Ancho y Alto
+  this.Orientacion = orientacion; // Asignamos la orientación calculada a la propiedad Orientacion;
+  this.Formato = formato;
   next();
 });
 

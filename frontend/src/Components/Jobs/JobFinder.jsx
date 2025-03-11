@@ -56,8 +56,18 @@ const JobFinder = (props) => {
   const inputsVariant = props.inputsVariant || "outlined";
 
   const properties = [
-    { value: "Nombre", label: "Nombre", queryType: "string" },
-    { value: "Cantidad", label: "Cantidad", queryType: "number" },
+    {
+      value: "Nombre",
+      label: "Nombre",
+      queryType: "string",
+      queryLabel: "Nombre",
+    },
+    {
+      value: "Cantidad",
+      label: "Cantidad",
+      queryType: "number",
+      queryLabel: "Cantidad",
+    },
     {
       value: "Partes.jobParts._id",
       label: "Tipo de Parte",
@@ -76,11 +86,29 @@ const JobFinder = (props) => {
       queryLabel: "Partes Pages",
     },
     {
+      value: "Partes.Ancho",
+      label: "Ancho",
+      queryType: "string",
+      queryLabel: "Ancho",
+    },
+    {
+      value: "Partes.Alto",
+      label: "Alto",
+      queryType: "string",
+      queryLabel: "Alto",
+    },
+    {
+      value: "Partes.Formato",
+      label: "Formato",
+      queryType: "string",
+      queryLabel: "Formato",
+    },
+    {
       value: "Partes.partStock",
       label: "Material de Parte",
       queryType: "id",
       queryLabel:
-        "stock.Tipo stock.Gramaje sotck.Marca (stock.Ancho_Resma x stock.Alto_Resma)",
+        "stock.Tipo stock.Gramaje sotck.Marca (stock.Alto_Resma x stock.Alto_Resma)",
     },
     {
       value: "Partes.Finishing",
@@ -162,7 +190,7 @@ const JobFinder = (props) => {
                         select
                         label={useProperty.label || "Propiedad"}
                         variant={inputsVariant}
-                        placeholder="Seleccionar Propiedad"
+                        placeholder={useProperty.queryLabel}
                         value={useProperty.value}
                         onChange={(e) => {
                           e.preventDefault();

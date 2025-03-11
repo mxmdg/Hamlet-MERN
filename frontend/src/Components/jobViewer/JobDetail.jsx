@@ -238,7 +238,8 @@ const JobDetail = (props) => {
                     </Typography>
                     {usePoses && (
                       <Typography variant="h6">
-                        Tirada: {Math.ceil(job.Cantidad / usePoses)}
+                        Poses: {usePoses} / Tirada:{" "}
+                        {Math.ceil(job.Cantidad / usePoses)}
                         <br />
                         Pliegos: {stockCalculated.cantidadDePliegos} - Salen:{" "}
                         {stockCalculated.pliegosPorHoja} del{" "}

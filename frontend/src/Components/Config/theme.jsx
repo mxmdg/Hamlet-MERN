@@ -134,7 +134,7 @@ const ThemeProv = (props) => {
     props.theme.palette.mode = "light";
     props.theme.palette.background = {
       default: "linear-gradient(135deg, #06222d 0%, #1f003b 100%)",
-      paper: "rgb(240, 234, 231)",
+      paper: "rgb(255, 255, 255)",
     };
     props.theme.palette.text = {
       primary: "#000",
