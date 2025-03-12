@@ -9,6 +9,8 @@ import {
   Tooltip,
 } from "recharts";
 
+import { ToolTipNice } from "./ToolTipNice";
+
 export const myWrapperStyle = {
   bottom: "0",
   left: "5%",
@@ -112,7 +114,7 @@ export default function NewRadialBar(props) {
           verticalAlign="top"
           wrapperStyle={myWrapperStyle}
         />
-        <Tooltip />
+        <Tooltip content={<ToolTipNice />} />
       </RadialBarChart>
     </ResponsiveContainer>
   );

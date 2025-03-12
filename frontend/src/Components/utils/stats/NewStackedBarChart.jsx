@@ -10,7 +10,15 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-import { coloresSaturados, coloresPasteles, coloresIntermedios, vibrantColors, myWrapperStyle } from "./NewRadialBar";
+import { ToolTipNice } from "./ToolTipNice";
+
+import {
+  coloresSaturados,
+  coloresPasteles,
+  coloresIntermedios,
+  vibrantColors,
+  myWrapperStyle,
+} from "./NewRadialBar";
 
 import { convertirFecha } from "../generalData/fechaDiccionario";
 import { getPrivateElements } from "../../customHooks/FetchDataHook";
@@ -72,27 +80,6 @@ const NewStackedBarChart = (props) => {
     console.table(jobs); */
   };
 
-  const CustomTooltip = ({ active, payload, label }) => {
-    if (active && payload && payload.length) {
-      return (
-        <Card elevation={20}>
-          <CardHeader subheader={label} />
-          <CardContent>
-            {payload.map((item, index) => {
-              return (
-                <Typography color="primary" key={index + item.name}>
-                  {item.name}: <b>{item.value}</b>
-                </Typography>
-              );
-            })}
-          </CardContent>
-        </Card>
-      );
-    }
-
-    return null;
-  };
-
   React.useEffect(() => {
     function filtrarTipoTrabajo(data, tipoTrabajo) {
       return data.map((item) => {
@@ -126,7 +113,7 @@ const NewStackedBarChart = (props) => {
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="name" />
           <YAxis />
-          <Tooltip content={<CustomTooltip />} />
+          <Tooltip content={<ToolTipNice />} />
 
           <Legend
             iconSize={10}

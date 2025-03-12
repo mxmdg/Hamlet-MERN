@@ -9,23 +9,36 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import {
+  Modal,
+  Box,
+  TextField,
+  Card,
+  CardHeader,
+  CardContent,
+  Typography,
+} from "@mui/material";
 
 import { coloresIntermedios, myWrapperStyle } from "./NewRadialBar";
+import { ToolTipNice } from "./ToolTipNice";
 import { handleDate, procesarFechaISO } from "../generalData/fechaDiccionario";
 
 export const NewSimpleLineChart = (props) => {
   const myDataKey = [];
 
   for (let date of props.data) {
-    console.log(date)
+    console.log(date);
     const formatedDate = procesarFechaISO(date.Fecha);
-    console.log(formatedDate)
+    console.log(formatedDate);
     myDataKey.push(formatedDate);
   }
 
   return (
     <ResponsiveContainer
-    width="100%" height="100%" minWidth="300px" minHeight="200px"
+      width="100%"
+      height="100%"
+      minWidth="300px"
+      minHeight="200px"
     >
       <LineChart
         width={"100%"}
@@ -41,7 +54,7 @@ export const NewSimpleLineChart = (props) => {
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey={props.dataKey[0]} />
         <YAxis />
-        <Tooltip />
+        <Tooltip content={<ToolTipNice />} />
         <Legend
           iconSize={10}
           iconType="circle"
