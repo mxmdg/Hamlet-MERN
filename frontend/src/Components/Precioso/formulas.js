@@ -1,12 +1,14 @@
-import { roundCents } from "./formSimulators";
+import { roundCents } from "../utils/generalData/numbersAndCurrencies";
 
 export const productoPorUnidad = (price, cantidad) => {
-  const { valor, minimo, entrada } = price;
+  const { Valor, Minimo, Entrada } = price;
+  console.log(price, cantidad, Valor, Minimo, Entrada);
   let resultado =
-    parseFloat(entrada) + parseFloat(cantidad) * parseFloat(valor);
-  resultado = resultado < parseFloat(minimo) ? parseFloat(minimo) : resultado;
+    parseFloat(Entrada) + parseFloat(cantidad) * parseFloat(Valor);
+  console.log("Resultado: " + resultado);
+  resultado = resultado < parseFloat(Minimo) ? parseFloat(Minimo) : resultado;
   let valorUnitario = roundCents(resultado / cantidad);
-  const papyrusExport = `(${entrada} + (Cab_Cant_Millar * 1000))`;
+  const papyrusExport = `(${Entrada} + (Cab_Cant_Millar * 1000))`;
   return {
     Unitario: valorUnitario,
     Cantidad: cantidad,
@@ -19,7 +21,7 @@ export const pliegoPorLongitud = (
   valor,
   minimo,
   cantidad,
-  entrada,
+  Entrada,
   largoPliego,
   breakPoint
 ) => {
@@ -28,7 +30,7 @@ export const pliegoPorLongitud = (
       ? parseFloat(valor) * parseFloat(1.15)
       : parseFloat(valor);
   let resultado =
-    parseFloat(entrada) +
+    parseFloat(Entrada) +
     parseFloat(largoPliego) * parseFloat(cantidad) * parseFloat(currentValue);
   resultado = resultado < parseFloat(minimo) ? parseFloat(minimo) : resultado;
   let valorUnitario = roundCents(resultado / cantidad);

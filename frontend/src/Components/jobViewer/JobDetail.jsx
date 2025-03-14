@@ -284,7 +284,10 @@ const JobDetail = (props) => {
                   )}
                   {part.Finishing && (
                     <Item>
-                      <FinishingList finishing={part.Finishing} />
+                      <FinishingList
+                        finishing={part.Finishing}
+                        cantidad={job.Cantidad}
+                      />
                     </Item>
                   )}
                 </Stack>
@@ -393,7 +396,10 @@ const JobDetail = (props) => {
           })}
           {job.Finishing && (
             <Item>
-              <FinishingList finishing={job.Finishing} />
+              <FinishingList
+                finishing={job.Finishing}
+                cantidad={job.Cantidad}
+              />
             </Item>
           )}
 

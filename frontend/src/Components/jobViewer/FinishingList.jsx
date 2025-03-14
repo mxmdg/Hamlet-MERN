@@ -6,6 +6,7 @@ import { List, ListItem, ListItemText, Typography } from "@mui/material";
 import { getPrivateElementByID } from "../customHooks/FetchDataHook";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import Spinner from "../General/Spinner";
+import { pliegoPorLongitud, productoPorUnidad } from "../Precioso/formulas";
 
 const FinishingList = (props) => {
   const [useFinishing, setFinishing] = useState(props.finishing || null);
@@ -19,8 +20,15 @@ const FinishingList = (props) => {
           console.log("Tenemos un array: props.finishing", props.finishing);
           if (typeof props.finishing[0] === "object") {
             console.log("Es un array de objetos");
+            const finisherList = [];
             props.finishing[0] !== null
-              ? setFinishing(props.finishing)
+              ? finisherList((prev) => [
+                  ...prev,
+                  {
+                    Finisher: props.finishing,
+                    Cost: productoPorUnidad(props.finishing, props.cantidad),
+                  },
+                ])
               : setFinishing([]);
           } else {
             console.log("Es un array de IDs");
@@ -31,7 +39,10 @@ const FinishingList = (props) => {
                   "finishers",
                   finisher
                 );
-                finisherList.push(finishing.data);
+                finisherList.push({
+                  Finisher: finishing.data,
+                  Cost: productoPorUnidad(finishing.data.Costo, props.cantidad),
+                });
               } catch (error) {
                 console.log(error);
                 setError(error);
@@ -42,7 +53,10 @@ const FinishingList = (props) => {
           }
         }
       } catch (error) {
-        setError(error);
+        setError({
+          message:
+            "Error accediendo a los procesos de terminacion: " + error.message,
+        });
       } finally {
         setLoading(false);
       }
@@ -53,23 +67,16 @@ const FinishingList = (props) => {
 
   if (useLoading) return <Spinner color="primary" />;
   if (useError)
-    return (
-      <ErrorMessage
-        message={useError.message}
-        severity={"warning"}
-        action={() => {
-          setError(null);
-        }}
-      />
-    );
+    return <ErrorMessage message={useError.message} severity={"error"} />;
 
   return (
     <List dense>
       {useFinishing.map((item, index) => (
         <ListItem key={index}>
           <Typography variant="h6">
-            {`${item.Proceso} $${item.Costo?.Valor}`}
+            {`${item.Finisher.Proceso} $${item.Cost.Total} (Unitario: $${item.Cost.Unitario})`}
           </Typography>
+          <Typography variant="body"></Typography>
         </ListItem>
       ))}
     </List>
