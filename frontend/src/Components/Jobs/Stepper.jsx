@@ -270,7 +270,7 @@ export default function MyStepper(props) {
         <List sx={{ listStyleType: "bullet" }}>
           {useParts.map((part, index) => {
             return (
-              <ListItem divider key={`${index}-Parte_${part.Finishing.length}`}>
+              <ListItem divider key={`${index}-Parte`}>
                 <ListItemText
                   sx={{ display: "list-item" }}
                   primary={part.Name}

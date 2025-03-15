@@ -290,8 +290,10 @@ jobControl.updateJob = async (req, res) => {
         { _id: req.params.id },
         { Nombre, Tipo, Cantidad, Partes, Entrega, Owner, Company, Finishing }
       );
-      console.log(`Trabajo agregado`);
-      res.json({ message: newJob.Nombre + " guardado OK" });
+      console.log(newJob.Nombre + " guardado OK");
+      res.json({
+        message: newJob.Nombre + " guardado OK" + newJob.Finishing[0],
+      });
     } catch (e) {
       res.status(404).json({ message: "Error: " + e.message });
     }

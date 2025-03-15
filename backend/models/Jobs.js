@@ -51,7 +51,7 @@ const partSchema = new Schema({
     {
       type: mongoose.Schema.ObjectId,
       ref: "Finishers",
-      required: false,
+      required: true,
       default: [],
     },
   ],
@@ -69,7 +69,11 @@ const jobSchema = new Schema({
   Company: { type: mongoose.Schema.ObjectId, ref: "Empresas", required: true },
   //Finishing: { type: Object, required: false, default: [] },
   //Finishing: [{ type: mongoose.Schema.ObjectId || Object, ref: "Finishers" }],
-  Finishing: { type: [mongoose.Schema.Types.Mixed], default: [] },
+  Finishing: {
+    type: [mongoose.Schema.Types.Mixed],
+    required: true,
+    default: [],
+  },
 });
 
 // Definimos una función que se ejecutará antes de guardar cada parte

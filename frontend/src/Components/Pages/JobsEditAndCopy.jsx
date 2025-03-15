@@ -53,11 +53,40 @@ const JobsEditAndCopy = () => {
     const getItem = async () => {
       try {
         const res = await getPrivateElementByID("jobs", id);
+
+        const getId = (res) => {
+          res = res.filter((word) => word !== null);
+          console.log("res 1 Filtra null: " + res);
+          res = res.filter((word) => word !== "");
+          console.log("res 2 filtra vacios: " + res);
+          const newArr = [];
+          if (res.length > 0) {
+            res.map((item) => {
+              if (item._id) {
+                newArr.push(item._id);
+              } else {
+                newArr.push(item);
+              }
+            });
+          }
+          console.log(newArr);
+          return newArr;
+        };
+
+        console.log(res.data.Finishing);
+        const result = Array.isArray(res.data.Finishing)
+          ? getId(res.data.Finishing)
+          : [];
+        console.log("Resultado del array de finishers: " + result);
+
+        res.data.Finishing = result;
+
         setJob(res.data);
         setError(null);
         setLoading(false);
       } catch (e) {
         setError(e);
+        setLoading(false);
         console.log(e);
         return;
       }

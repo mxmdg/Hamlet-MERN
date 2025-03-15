@@ -132,9 +132,13 @@ const JobParts = (props) => {
       setSelectedFinishings([Finisher._id]);
     } else {
       // Remover el objeto si se deselecciona
-      setSelectedFinishings((prevSelected) =>
-        prevSelected.filter((item) => item._id !== Finisher._id)
-      );
+      try {
+        setSelectedFinishings((prevSelected) =>
+          prevSelected.filter((item) => item._id !== Finisher._id)
+        );
+      } catch (error) {
+        setError(error);
+      }
     }
   };
 

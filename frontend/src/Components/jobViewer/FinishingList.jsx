@@ -14,7 +14,7 @@ const FinishingList = (props) => {
   const [useError, setError] = useState(null);
 
   useEffect(() => {
-    const fetchFinishingDetails = async () => {
+    const fetchFinishingDetails = async (costFunction = Function) => {
       try {
         if (Array.isArray(props.finishing) && props.finishing.length > 0) {
           console.log("Tenemos un array: props.finishing", props.finishing);
@@ -26,7 +26,7 @@ const FinishingList = (props) => {
                   ...prev,
                   {
                     Finisher: props.finishing,
-                    Cost: productoPorUnidad(props.finishing, props.cantidad),
+                    Cost: costFunction(props.finishing, props.cantidad),
                   },
                 ])
               : setFinishing([]);
@@ -41,7 +41,7 @@ const FinishingList = (props) => {
                 );
                 finisherList.push({
                   Finisher: finishing.data,
-                  Cost: productoPorUnidad(finishing.data.Costo, props.cantidad),
+                  Cost: costFunction(finishing.data.Costo, props.cantidad),
                 });
               } catch (error) {
                 console.log(error);
@@ -62,7 +62,7 @@ const FinishingList = (props) => {
       }
     };
 
-    fetchFinishingDetails();
+    fetchFinishingDetails(productoPorUnidad);
   }, [props.finishing]);
 
   if (useLoading) return <Spinner color="primary" />;
