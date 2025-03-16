@@ -65,7 +65,11 @@ const JobsForNextDays = (props) => {
   }
 
   return useError === null ? (
-    <NewStackedBarChart data={jobsPerOutDate} dataKey={dataKeys} />
+    <NewStackedBarChart
+      data={jobsPerOutDate}
+      dataKey={dataKeys}
+      title={"Trabajos para la proxima semana"}
+    />
   ) : (
     <ErrorMessage
       message={useError.message}

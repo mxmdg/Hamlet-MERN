@@ -1,37 +1,54 @@
 import React, { useState, useEffect } from "react";
 import NewRadialBar from "./NewRadialBar";
+import SimpleRadarChart from "./SimpleRadarChart";
 import ErrorMessage from "../../ErrorMessage/ErrorMessage";
 
 const JobsPerType = (props) => {
-    const [useRank, setRank] = useState(6);
-    const [useError, setError] = useState(null);
-    const [topCustomers, setTopCustomers] = useState([]);
+  const [useRank, setRank] = useState(6);
+  const [useError, setError] = useState(null);
+  const [topProducts, setTopProducts] = useState([]);
 
-    useEffect(() => {
-        let customers = {};
+  useEffect(() => {
+    let products = {};
 
-        try {
-            for (let job of props.jobs) {
-                if (customers[job.Tipo[0].name]) {
-                    customers[job.Tipo[0].name].qJobs >= 1
-                        ? customers[job.Tipo[0].name].qJobs += 1
-                        : customers[job.Tipo[0].name].qJobs = 1;
-                } else {
-                    customers[job.Tipo[0].name] = { qJobs: 1, name: `${job.Tipo[0].name}` };
-                }
-            }
-
-            const sortedCustomers = Object.values(customers).sort((a, b) => a.qJobs - b.qJobs).slice(-useRank);
-            setTopCustomers(sortedCustomers);
-        } catch (error) {
-            setError(error);
+    try {
+      for (let job of props.jobs) {
+        if (products[job.Tipo[0].name]) {
+          products[job.Tipo[0].name].qJobs >= 1
+            ? (products[job.Tipo[0].name].qJobs += 1)
+            : (products[job.Tipo[0].name].qJobs = 1);
+        } else {
+          products[job.Tipo[0].name] = {
+            qJobs: 1,
+            name: `${job.Tipo[0].name}`,
+          };
         }
-    }, [props.jobs, useRank]);
+      }
 
-    const success = <NewRadialBar data={topCustomers} dataKey="qJobs" />;
-    const errorComponent = <ErrorMessage message={"Error recopilando los datos"} action={() => setError(null)} />;
+      const sortedProducts = Object.values(products)
+        .sort((a, b) => a.qJobs - b.qJobs)
+        .slice(-useRank);
+      setTopProducts(sortedProducts);
+    } catch (error) {
+      setError(error);
+    }
+  }, [props.jobs, useRank]);
 
-    return useError === null ? success : errorComponent;
+  const success = (
+    <SimpleRadarChart
+      data={topProducts}
+      dataKey={{ cat: "name", qty: "qJobs" }}
+      title={"Trabajos por tipo"}
+    />
+  );
+  const errorComponent = (
+    <ErrorMessage
+      message={"Error recopilando los datos"}
+      action={() => setError(null)}
+    />
+  );
+
+  return useError === null ? success : errorComponent;
 };
 
 export default JobsPerType;

@@ -10,6 +10,7 @@ import {
 } from "recharts";
 
 import { ToolTipNice } from "./ToolTipNice";
+import { Title } from "./Title";
 
 export const myWrapperStyle = {
   bottom: "0",
@@ -22,6 +23,22 @@ export const myWrapperStyle = {
   padding: "10px",
   borderTop: "1px solid #666",
   columns: "2",
+  height: "fit-content",
+};
+
+export const myWrapperStyleRight = {
+  top: "0",
+  left: "75%",
+  right: "0",
+  width: "25%",
+  lineHeight: "1.5em",
+  fontSize: "1em",
+  textAlign: "left",
+  horizontalAlign: "left",
+  fontWeight: "800",
+  padding: "10px",
+  borderLeft: "1px solid #666",
+  columns: "1",
   height: "fit-content",
 };
 
@@ -84,38 +101,34 @@ export default function NewRadialBar(props) {
   }
 
   return (
-    <ResponsiveContainer
-      maxHeight="900px"
-      minHeight="200px"
-      minWidth={200}
-      width={"90%"}
-      height={"100%"}
-    >
-      <RadialBarChart
-        cx="50%"
-        cy="30%"
-        innerRadius="20%"
-        outerRadius="80%"
-        barSize={10}
-        data={props.data}
-      >
-        <Typography>Titulo</Typography>
-        <RadialBar
-          minAngle={15}
-          label={{ position: "outsideStart", fill: "#000" }}
-          background="#ffffff88"
-          conunterClockWise
-          dataKey={props.dataKey}
-        />
-        <Legend
-          iconSize={10}
-          iconType="star"
-          layout="vertical"
-          verticalAlign="top"
-          wrapperStyle={myWrapperStyle}
-        />
-        <Tooltip content={<ToolTipNice />} />
-      </RadialBarChart>
-    </ResponsiveContainer>
+    <>
+      {props.title && <Title title={props.title} />}
+      <ResponsiveContainer width={"100%"} height={"100%"} minWidth={300}>
+        <RadialBarChart
+          cx="50%"
+          cy="30%"
+          innerRadius="20%"
+          outerRadius="80%"
+          barSize={10}
+          data={props.data}
+        >
+          <RadialBar
+            minAngle={15}
+            label={{ position: "outsideStart", fill: "#000" }}
+            background="rgb(248, 35, 35)"
+            dataKey={props.dataKey.qty}
+          />
+          <Legend
+            iconSize={7}
+            iconType="diamond"
+            layout="vertical"
+            align="bottom"
+            verticalAlign="bottom"
+            wrapperStyle={myWrapperStyle}
+          />
+          <Tooltip content={<ToolTipNice />} />
+        </RadialBarChart>
+      </ResponsiveContainer>
+    </>
   );
 }

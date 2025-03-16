@@ -27,18 +27,20 @@ import {
   Modal,
   Box,
   TextField,
+  Divider,
   Card,
   CardHeader,
   CardContent,
   Typography,
 } from "@mui/material";
+import { Title } from "./Title";
 
 const NewStackedBarChart = (props) => {
   const [jobsForDay, setJobsForDay] = React.useState(null);
   const [open, setOpen] = React.useState(false);
   const [filter, setFilter] = React.useState(null);
   const [statsData, setStatsData] = React.useState(props.data);
-  const [useTitle, setTitle] = React.useState("");
+  const [useTitle, setTitle] = React.useState(props?.title || "Estadisticas");
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
@@ -99,18 +101,28 @@ const NewStackedBarChart = (props) => {
 
   return (
     <>
-      <ResponsiveContainer width="100%" height="100%" minWidth={"300px"}>
+      {props.title && <Title title={props.title} />}
+      <ResponsiveContainer
+        maxHeight="900px"
+        minHeight="200px"
+        minWidth={200}
+        width={"90%"}
+        height={"100%"}
+      >
         <BarChart
           width={500}
+          height={400}
           data={statsData}
+          barCategoryGap={2}
+          reverseStackOrder={true}
           margin={{
-            top: 20,
-            right: 30,
-            left: 20,
-            bottom: 5,
+            top: 10,
+            right: 10,
+            left: 10,
+            bottom: 0,
           }}
         >
-          <CartesianGrid strokeDasharray="3 3" />
+          <CartesianGrid strokeDasharray="1 3" />
           <XAxis dataKey="name" />
           <YAxis />
           <Tooltip content={<ToolTipNice />} />
@@ -132,7 +144,7 @@ const NewStackedBarChart = (props) => {
               <Bar
                 dataKey={item}
                 key={index}
-                stackId="a"
+                stackId="b"
                 fill={coloresIntermedios[index + 1]}
                 onClick={(e) => handleBarClick(e.payload.name)}
               />

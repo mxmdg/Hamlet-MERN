@@ -9,6 +9,7 @@ import CircularColor from "./Spinner";
 import { Paper, Container, TextField, MenuItem, Stack } from "@mui/material";
 import EnhancedTable from "./TableGrid";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
+import Spinner from "./Spinner";
 import DarkWoodCard from "../utils/DarkWoodCard";
 import { useNavigate } from "react-router-dom";
 import { fechtData, getPrivateElements } from "../customHooks/FetchDataHook";
@@ -64,14 +65,13 @@ const Fetch = (props) => {
       for (let item of useList) {
         try {
           const cellToString = item[col].toString().toLowerCase();
-        if (cellToString.includes(query.toString())) {
-          console.log(item[col], query);
-          results.push(item);
-        }
+          if (cellToString.includes(query.toString())) {
+            console.log(item[col], query);
+            results.push(item);
+          }
         } catch (error) {
           setErrMessage("Error en la busqueda: " + error.message);
         }
-        
       }
     };
 
@@ -120,11 +120,7 @@ const Fetch = (props) => {
     console.log(useList);
   }, [useDeleted, props.collection]);
 
-  const Loading = (
-    <Container>
-      <CircularColor />
-    </Container>
-  );
+  const Loading = <Spinner />;
 
   const AlertError = (
     <ErrorMessage

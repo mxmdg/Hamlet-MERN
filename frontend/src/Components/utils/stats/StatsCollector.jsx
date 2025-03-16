@@ -2,11 +2,11 @@ import React from "react";
 import { getPrivateElements } from "../../customHooks/FetchDataHook";
 import ErrorMessage from "../../ErrorMessage/ErrorMessage";
 import { CircularProgress, Grid, Paper } from "@mui/material";
-import Spinner from "../../General/Spinner"
+import Spinner from "../../General/Spinner";
 
 const StatsCollector = ({ children, route }) => {
   const [jobsList, setJobsList] = React.useState([]);
-  const [partsList, setPartsList] = React.useState([]);
+  //const [partsList, setPartsList] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
 
   // Manejo de errores
@@ -19,9 +19,9 @@ const StatsCollector = ({ children, route }) => {
     const fetchData = async () => {
       try {
         const jobs = await getPrivateElements(route);
-        const parts = await getPrivateElements("jobs/partes");
+        //const parts = await getPrivateElements("jobs/partes");
         setJobsList(jobs);
-        setPartsList(parts);
+        //setPartsList(parts);
         setLoading(false);
       } catch (e) {
         console.log(e);
@@ -32,7 +32,8 @@ const StatsCollector = ({ children, route }) => {
     fetchData();
   }, [route]);
 
-  if (loading) return <Spinner color={'secondary'}/>;
+  if (loading)
+    return <Spinner title={`Cargando Estadisticas`} color={"primary"} />;
   if (useError !== null)
     return <ErrorMessage message={useError} action={clearError} />;
 
@@ -48,18 +49,19 @@ const StatsCollector = ({ children, route }) => {
           return (
             <Grid item xs={12} sm={6} xl={6}>
               <Paper
-                elevation={10}
+                elevation={2}
                 sx={{
-                  borderRadius: 4,
-                  height: "450px",
+                  borderRadius: 1,
+                  height: "auto",
+                  minHeight: "fit-content",
+                  minWidth: "fit-content",
                   boxShadow: 10,
                   p: 2,
-                  border: "1px solid #666",
                 }}
               >
                 {React.cloneElement(child, {
                   jobs: jobsList,
-                  parts: partsList,
+                  //parts: partsList,
                 })}
               </Paper>
             </Grid>
@@ -67,9 +69,7 @@ const StatsCollector = ({ children, route }) => {
         }
         return (
           <Grid item xs={12} sm={6} md={6} key={child.key}>
-            <Paper elevation={10} sx={{ p: 2, height: "500px", width: "100%" }}>
-              {child}
-            </Paper>
+            <Paper elevation={2}>{child}</Paper>
           </Grid>
         );
       })}

@@ -1,5 +1,6 @@
 import React from "react";
 import NewRadialBar from "./NewRadialBar";
+import SimpleRadarChart from "./SimpleRadarChart";
 
 const JobsPerClient = (props) => {
   // Calcular la cantidad de trabajos por cliente.
@@ -21,7 +22,14 @@ const JobsPerClient = (props) => {
     .sort((a, b) => a.qJobs - b.qJobs)
     .slice(-useRank);
 
-  return <NewRadialBar data={topCustomers} dataKey="qJobs" rank={props.rank} />;
+  return (
+    <SimpleRadarChart
+      data={topCustomers}
+      dataKey={{ cat: "name", qty: "qJobs" }}
+      rank={props.rank}
+      title={"Trabajos por Cliente"}
+    />
+  );
 };
 
 export default JobsPerClient;

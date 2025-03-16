@@ -15,6 +15,7 @@ import TableRow from "@mui/material/TableRow";
 import TablePagination from "@mui/material/TablePagination";
 import LastSeen from "./LastUpdate";
 import MyLineChart from "./LineChart";
+import SimpleAreaChart from "../utils/stats/SimpleAreaChart";
 
 const style = {
   position: "absolute",
@@ -147,7 +148,10 @@ export default function Historial(props) {
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
-          <MyLineChart data={props.data} />
+          <SimpleAreaChart
+            data={props.data}
+            dataKey={["", "Valor", "Entrada", "Minimo"]}
+          />
         </Paper>
       </Modal>
     </div>

@@ -1,5 +1,6 @@
 import React from "react";
 import { NewSimpleLineChart } from "./NewSimpleLineChart";
+import SimpleAreaChart from "./SimpleAreaChart";
 
 const JobsPerDate = (props) => {
   // Calcular la cantidad de trabajos por cliente.
@@ -61,9 +62,10 @@ const JobsPerDate = (props) => {
   });
 
   return (
-    <NewSimpleLineChart
+    <SimpleAreaChart
       data={jobsPerInDate}
       dataKey={["name", "inJobs", "outJobs"]}
+      title={"Trabajos por fecha de entrada y salida"}
     />
   );
 };

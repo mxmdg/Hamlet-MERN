@@ -21,6 +21,7 @@ import Simulator from "./Simulator";
 import LastSeen from "./LastUpdate";
 import { useNavigate } from "react-router-dom";
 import MyLineChart from "./LineChart";
+import SimpleAreaChart from "../utils/stats/SimpleAreaChart";
 import {
   getPrivateElements,
   deletePrivateElement,
@@ -168,7 +169,12 @@ const PriceTable = (props) => {
               </TableBody>
             </Table>
           </TableContainer>
-          {isThereHistory && <MyLineChart data={props.pd.Historial} />}
+          {isThereHistory && (
+            <SimpleAreaChart
+              data={props.pd.Historial}
+              dataKey={["", "Valor", "Entrada", "Minimo"]}
+            />
+          )}
         </CardContent>
 
         <CardActions

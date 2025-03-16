@@ -10,7 +10,7 @@ import { themeIndependiente, themeBocaJuniors } from "./TemasAFA";
 export const themeMxm = createTheme({
   spacing: 4,
   palette: {
-    mode: "light",
+    mode: "dark",
     primary: {
       main: "#09b4bd", // adjusted for better contrast
       light: "#00e3e3",
