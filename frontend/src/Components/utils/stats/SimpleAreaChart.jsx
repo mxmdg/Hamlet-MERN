@@ -90,10 +90,10 @@ export default class Example extends PureComponent {
                 myLine = (
                   <Area
                     key={index + line}
-                    type="monotone"
+                    type="duotone"
                     dataKey={this.props.dataKey[index]}
                     stroke={coloresIntermedios[index]}
-                    fill={"rgba(78, 237, 168, 0.52)"}
+                    fill={"rgba(25, 237, 244, 0.23)"}
                   />
                 );
               } else {

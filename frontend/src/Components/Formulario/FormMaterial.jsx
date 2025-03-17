@@ -513,11 +513,15 @@ const FormMaterial = (props) => {
               <FormControl>
                 <form
                   onSubmit={handleSubmit((values) => {
-                    submitHandler(
-                      values,
-                      props.collection,
-                      useItem !== "new" ? useItem.data._id : ""
-                    );
+                    if (props.action) {
+                      props.action(values);
+                    } else {
+                      submitHandler(
+                        values,
+                        props.collection,
+                        useItem !== "new" ? useItem.data._id : ""
+                      );
+                    }
                   })}
                 >
                   <Grid

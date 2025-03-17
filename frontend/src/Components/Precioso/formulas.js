@@ -1,8 +1,6 @@
 import { roundCents } from "../utils/generalData/numbersAndCurrencies";
 
-export const productoPorUnidad = (price, cantidad) => {
-  const { Valor, Minimo, Entrada } = price;
-  console.log(price, cantidad, Valor, Minimo, Entrada);
+export const productoPorUnidad = (Valor, Minimo, Entrada, cantidad) => {
   let resultado =
     parseFloat(Entrada) + parseFloat(cantidad) * parseFloat(Valor);
   console.log("Resultado: " + resultado);
@@ -20,13 +18,13 @@ export const productoPorUnidad = (price, cantidad) => {
 export const pliegoPorLongitud = (
   valor,
   minimo,
-  cantidad,
   Entrada,
+  cantidad,
   largoPliego,
   breakPoint
 ) => {
   const currentValue =
-    breakPoint && parseFloat(largoPliego) > breakPoint
+    breakPoint[0] && parseFloat(largoPliego) > breakPoint[0]
       ? parseFloat(valor) * parseFloat(1.15)
       : parseFloat(valor);
   let resultado =
@@ -34,7 +32,7 @@ export const pliegoPorLongitud = (
     parseFloat(largoPliego) * parseFloat(cantidad) * parseFloat(currentValue);
   resultado = resultado < parseFloat(minimo) ? parseFloat(minimo) : resultado;
   let valorUnitario = roundCents(resultado / cantidad);
-  const papyrusExport = `${valor} * (${cantidad} * ((${largoPliego}>${breakPoint})?${largoPliego} * 1.15)) * ${largoPliego}`;
+  const papyrusExport = `${valor} * (${cantidad} * ((${largoPliego}>${breakPoint[0]})?${largoPliego} * 1.15)) * ${largoPliego}`;
   return {
     Unitario: valorUnitario,
     Cantidad: cantidad,
