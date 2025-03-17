@@ -81,6 +81,11 @@ const JobsEditAndCopy = () => {
 
         res.data.Finishing = result;
 
+        res.data.Partes.forEach((element) => {
+          const res = getId(element.Finishing);
+          element.Finishing = res;
+        });
+
         setJob(res.data);
         setError(null);
         setLoading(false);

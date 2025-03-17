@@ -26,7 +26,12 @@ const FinishingList = (props) => {
                   ...prev,
                   {
                     Finisher: props.finishing,
-                    Cost: costFunction(props.finishing, props.cantidad),
+                    Cost: costFunction(
+                      props.finishing.Valor,
+                      props.finishing.Enrada,
+                      props.finishing.Minimo,
+                      props.cantidad
+                    ),
                   },
                 ])
               : setFinishing([]);
@@ -41,7 +46,12 @@ const FinishingList = (props) => {
                 );
                 finisherList.push({
                   Finisher: finishing.data,
-                  Cost: costFunction(finishing.data.Costo, props.cantidad),
+                  Cost: costFunction(
+                    finishing.data.Costo.Valor,
+                    finishing.data.Costo.Entrada,
+                    finishing.data.Costo.Minimo,
+                    props.cantidad
+                  ),
                 });
               } catch (error) {
                 console.log(error);
