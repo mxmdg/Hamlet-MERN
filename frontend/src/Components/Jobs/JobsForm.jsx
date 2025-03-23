@@ -215,7 +215,7 @@ const JobsForm = (props) => {
                     {...register("Cantidad", {
                       required: true,
                       min: 1,
-                      max: 50000,
+                      max: 100000,
                     })}
                     onBlur={() => {
                       trigger("Cantidad");
@@ -229,7 +229,7 @@ const JobsForm = (props) => {
                     <FormHelperText>La cantidad minima es 1</FormHelperText>
                   )}
                   {errors.Cantidad?.type === "max" && (
-                    <FormHelperText>La cantidad máxima es 50000</FormHelperText>
+                    <FormHelperText>La cantidad máxima es 100000</FormHelperText>
                   )}
                 </Grid>
                 <Grid item xs={1} sm={2} md={4}>

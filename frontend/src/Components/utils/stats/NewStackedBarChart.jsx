@@ -104,7 +104,7 @@ const NewStackedBarChart = (props) => {
       {props.title && <Title title={props.title} />}
       <ResponsiveContainer
         maxHeight="900px"
-        minHeight="200px"
+        minHeight="300px"
         minWidth={200}
         width={"90%"}
         height={"100%"}

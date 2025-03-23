@@ -175,7 +175,7 @@ export default function MyStepper(props) {
 
   const resetError = () => {
     setError(null);
-    handleBack();
+    setJob(props.job)
   };
 
   const handleSkip = () => {
@@ -300,6 +300,7 @@ export default function MyStepper(props) {
           message={useError.response.data.message || useError.message}
           color="success"
           action={resetError}
+          buttonTxt="Reintentar"
         />
       )}
     </>

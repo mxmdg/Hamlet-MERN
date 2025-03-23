@@ -41,7 +41,7 @@ const JobsPerSeller = (props) => {
       <Box>
         <ErrorMessaage
           message={"Hubo un error al cargar la informacion"}
-          severity={"danger"}
+          severity={"error"}
           action={() => alert(error.message)}
         />
       </Box>

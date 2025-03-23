@@ -68,7 +68,7 @@ const JobsEditAndCopy = () => {
                 newArr.push(item);
               }
             });
-          }
+          } 
           console.log(newArr);
           return newArr;
         };
@@ -82,8 +82,13 @@ const JobsEditAndCopy = () => {
         res.data.Finishing = result;
 
         res.data.Partes.forEach((element) => {
-          const res = getId(element.Finishing);
-          element.Finishing = res;
+          if (element.Finishing) {
+            const res = getId(element.Finishing);
+            element.Finishing = res;
+          } else {
+            element.Finishing = []
+          }
+          
         });
 
         setJob(res.data);

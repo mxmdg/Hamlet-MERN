@@ -306,7 +306,7 @@ const Router = () => {
             element={
               <StatsCollector route="jobs/complete">
                 <JobsPerDate />
-                <JobsForNextDays />
+                <JobsPerType />
                 <JobsPerClient rank={6} />
                 <JobsPerSeller />
                 <JobsPerType />

@@ -41,7 +41,7 @@ export const NewSimpleLineChart = (props) => {
         width="100%"
         height="100%"
         minWidth="300px"
-        minHeight="200px"
+        minHeight="300px"
       >
         <LineChart
           width={"100%"}

@@ -113,6 +113,7 @@ const JobDetail = (props) => {
   const PartDetail = (part) => {
     const [usePoses, setPoses] = useState(null);
     const [useImpoData, setImpoData] = useState(null);
+    const [useFinishingData, setFinishingData] = useState(null)
     const [imposed, setImposed] = useState(false);
     const [useData, setData] = useState(null);
     let partNumber = job.Partes.indexOf(part) + 1;
@@ -287,6 +288,7 @@ const JobDetail = (props) => {
                       <FinishingList
                         finishing={part.Finishing}
                         cantidad={job.Cantidad}
+                        sendFinishingData={setFinishingData}
                       />
                     </Item>
                   )}
@@ -329,7 +331,7 @@ const JobDetail = (props) => {
           action={
             <Button
               onClick={() => {
-                navigate(`/jobs/copy/${job._id}`);
+                navigate(`/jobs/copy/${props.job._id}`);
               }}
             >
               Editar

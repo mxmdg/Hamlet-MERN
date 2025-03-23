@@ -244,49 +244,6 @@ const PrinterDetails = (props) => {
     />
   );
 
-  const deprecatiedEdit = (
-    <div id={props.pd._id} className="frame">
-      <div className="frame__title">
-        <input type="text" defaultValue={props.pd.Modelo}></input>{" "}
-        <input type="text" defaultValue={props.pd.Fabricante}></input>
-      </div>
-      <input
-        type="number"
-        placeholder="Colores"
-        defaultValue={props.pd.Colores}
-        aria-label="Colores"
-      ></input>
-      <input
-        type="number"
-        placeholder="Paginas por minuto"
-        defaultValue={props.pd.Paginas_por_minuto}
-      ></input>
-      <input
-        type="number"
-        placeholder="Ancho Minimo"
-        defaultValue={props.pd.X_Minimo}
-      ></input>{" "}
-      -{" "}
-      <input
-        type="number"
-        placeholder="Ancho Maximo"
-        defaultValue={props.pd.X_Maximo}
-      ></input>
-      <input
-        type="number"
-        placeholder="Alto Minimo"
-        defaultValue={props.pd.Y_Minimo}
-      ></input>{" "}
-      -{" "}
-      <input
-        type="number"
-        placeholder="Alto Maximo"
-        defaultValue={props.pd.Y_Maximo}
-      ></input>
-      <button onClick={saveClickHandler}>Guardar</button>
-      <button onClick={cancelClickHandler}>Cancelar</button>
-    </div>
-  );
 
   const error = (
     <ErrorMessage
