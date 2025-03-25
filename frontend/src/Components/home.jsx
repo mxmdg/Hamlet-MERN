@@ -33,47 +33,41 @@ const Home = (props) => {
     return tkn;
   };
 
-
-
   const context = useContext(AuthContext);
 
   const homePage = (
-    <Container fullwidth disableGutters maxWidth={false}>
+    <Container fullwidth disableGutters maxWidth={false} sx={{ paddingTop: 3 }}>
       <Grid container columns={{ xs: 1, sm: 12, md: 12, lg: 16 }} spacing={0}>
         <Grid item xs={1} sm={12} md={12} lg={10}>
           <Container>
             <Grid
               container
-              spacing={{ xs: 0, sm: 1, md: 4 }}
+              spacing={{ xs: 0, sm: 1, md: 3 }}
               columns={{ xs: 1, sm: 12, md: 12 }}
             >
               <Grid item xs={1} sm={12} md={12}>
-                <DarkWoodCard>
-                  <FullJobsRender
-                    route={useRoute}
-                    settings={{
-                      title: "Proximas entregas",
-                      column: "deadLine",
-                      order: "asc",
-                    }}
-                  />
-                </DarkWoodCard>
+                <FullJobsRender
+                  route={useRoute}
+                  settings={{
+                    title: "Proximas entregas",
+                    column: "deadLine",
+                    order: "asc",
+                  }}
+                />
               </Grid>
               <Grid item xs={1} sm={12} md={12} lg={12}>
-                <DarkWoodCard>
-                  <StatsCollector route={useRoute}>
-                    <JobsForNextDays />
-                    <JobsPerType />
-                    <JobsPerClient rank={10}/>
-                    <JobsPerSeller />
-                  </StatsCollector>
-                </DarkWoodCard>
+                <StatsCollector route={useRoute}>
+                  <JobsForNextDays />
+                  <JobsPerType />
+                  <JobsPerClient rank={10} />
+                  <JobsPerSeller />
+                </StatsCollector>
               </Grid>
             </Grid>
           </Container>
         </Grid>
         <Grid item xs={1} sm={12} md={12} lg={6}>
-          <Grid container columns={12} spacing={1}>
+          <Grid container columns={12} spacing={{ xs: 0, sm: 1, md: 3 }}>
             <Grid item xs={12} sm={12} md={10} lg={10}>
               <MyStepper />
             </Grid>

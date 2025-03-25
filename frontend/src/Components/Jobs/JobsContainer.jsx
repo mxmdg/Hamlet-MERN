@@ -24,11 +24,9 @@ const JobsContainer = (props) => {
   );*/
 
   return (
-    <Grid container spacing={10} justifyContent="center" alignItems="center">
-      <Grid item xs={12} sm={6} md={9}>
-        <Fetch collection={props.entity} />
-      </Grid>
-    </Grid>
+    <>
+      <Fetch collection={props.entity} />
+    </>
   );
 };
 

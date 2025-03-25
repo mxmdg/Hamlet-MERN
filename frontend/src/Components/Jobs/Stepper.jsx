@@ -175,7 +175,7 @@ export default function MyStepper(props) {
 
   const resetError = () => {
     setError(null);
-    setJob(props.job)
+    setJob(props.job);
   };
 
   const handleSkip = () => {
@@ -307,12 +307,7 @@ export default function MyStepper(props) {
   );
 
   return (
-    <Box
-      sx={{
-        width: "100%",
-        padding: "2%",
-      }}
-    >
+    <>
       <Card raised sx={{ gap: "20px" }} color="info">
         <CardHeader
           title={useJob?.Nombre || "Nuevo Pedido"}
@@ -454,6 +449,6 @@ export default function MyStepper(props) {
           </Grid>
         </CardContent>
       </Card>
-    </Box>
+    </>
   );
 }

@@ -44,19 +44,18 @@ export const Filter = (props) => {
       props.setFilteredList([,]);
     }
   };
-  
 
   useEffect(() => {
     if (props.filter) {
-      setTimeout(()=>{
+      setTimeout(() => {
         filterList(props.filter, useColumn);
-        console.log("0.05 seconds")
-      },0);
+        console.log("0.05 seconds");
+      }, 0);
     }
-  }, [props.filter, useColumn, useDataList, useHeaders,props.setFilteredList]); // Observar cambios relevantes
+  }, [props.filter, useColumn, useDataList, useHeaders, props.setFilteredList]); // Observar cambios relevantes
 
   return (
-    <Paper elevation={4} color="info" sx={{ padding: "10px" }}>
+    <>
       <Stack direction="row" spacing={4}>
         <TextField
           select
@@ -91,9 +90,8 @@ export const Filter = (props) => {
           color="success"
           size="small"
           focused={true}
-
         ></TextField>
       </Stack>
-    </Paper>
+    </>
   );
 };

@@ -470,7 +470,7 @@ export default function CollapsibleTable(props) {
         deleted={props.deleted}
         resetSelected={setSelected}
       />
-      <TableContainer component={Box}>
+      <TableContainer component={"div"}>
         <Table
           aria-label="collapsible table"
           padding="normal"

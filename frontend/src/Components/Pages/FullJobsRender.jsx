@@ -61,7 +61,7 @@ const FullJobsRender = (props) => {
   }, [useDeleted]);
 
   return (
-    <Container>
+    <>
       {loading ? (
         <Spinner color="primary" />
       ) : error !== null ? (
@@ -85,7 +85,7 @@ const FullJobsRender = (props) => {
       ) : (
         <Typography color={"error"}> NO Data </Typography>
       )}
-    </Container>
+    </>
   );
 };
 
