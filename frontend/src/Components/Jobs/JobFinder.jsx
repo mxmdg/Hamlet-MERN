@@ -117,7 +117,7 @@ const JobFinder = (props) => {
       queryLabel: "finishings.Proceso finishings.Modelo",
     },
     {
-      value: "Finishing._id",
+      value: "Finishing",
       label: "Acabado del producto",
       queryType: "id",
       queryLabel: "finishings.Proceso finishings.Modelo",
