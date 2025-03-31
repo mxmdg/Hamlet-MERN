@@ -223,7 +223,7 @@ jobControl.addJob = async (req, res) => {
         Finishing,
       });
       await newJob.save();
-      console.log(`Trabajo agregado`);
+      console.log(`${Nombre} agregado`);
       res.json({ message: newJob.Nombre + " guardado OK" });
     } catch (e) {
       res.status(404).json({ message: "Error: " + e.message });

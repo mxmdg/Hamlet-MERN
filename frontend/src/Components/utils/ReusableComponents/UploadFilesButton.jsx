@@ -24,7 +24,28 @@ export const handleUploadSuccess = (data) => {
   alert(`Uploaded PDF with ${data.pages} pages and size ${data.size} KB.`);
 };
 
-export default function UploadFilesButton({ uploadUrl, onUploadSuccess }) {
+const calculateMostCommonSize = (pages) => {
+  const sizeMap = new Map();
+  pages.forEach((page) => {
+    const sizeKey = `${Math.round(page.size.trimbox.width)}x${Math.round(
+      page.size.trimbox.height
+    )}`;
+    sizeMap.set(sizeKey, (sizeMap.get(sizeKey) || 0) + 1);
+  });
+
+  let mostCommonSize = null;
+  let maxCount = 0;
+  sizeMap.forEach((count, size) => {
+    if (count > maxCount) {
+      maxCount = count;
+      mostCommonSize = size;
+    }
+  });
+
+  return mostCommonSize;
+};
+
+export default function UploadFilesButton({ uploadUrl, onUploadSuccess, expectedPageCount, expectedSize }) {
   const [fileInfo, setFileInfo] = useState(null);
 
   const handleFileUpload = async (files) => {
@@ -58,7 +79,36 @@ export default function UploadFilesButton({ uploadUrl, onUploadSuccess }) {
 
       const data = await response.json();
       setFileInfo(data);
-      console.log(data);
+
+      const mostCommonSize = calculateMostCommonSize(data.pages);
+      const mismatchedPages = data.pages.filter(
+        (page) =>
+          `${Math.round(page.size.trimbox.width)}x${Math.round(
+            page.size.trimbox.height
+          )}` !== mostCommonSize
+      );
+
+      if (mismatchedPages.length > 0) {
+        alert(
+          `Warning: The following pages have sizes that do not match the most common size (${mostCommonSize}):\n` +
+            mismatchedPages
+              .map(
+                (page) =>
+                  `Page ${page.page_number}: ${Math.round(
+                    page.size.trimbox.width
+                  )}x${Math.round(page.size.trimbox.height)} mm`
+              )
+              .join("\n")
+        );
+      }
+
+      if (data.page_count !== expectedPageCount || mostCommonSize !== expectedSize) {
+        alert(
+          `Mismatch detected:\nExpected pages: ${expectedPageCount}, Actual: ${data.page_count}\n` +
+            `Expected size: ${expectedSize}, Most common size: ${mostCommonSize}`
+        );
+      }
+
       if (onUploadSuccess) {
         onUploadSuccess(data);
       }
@@ -94,17 +144,32 @@ export default function UploadFilesButton({ uploadUrl, onUploadSuccess }) {
         </Button>
 
         {fileInfo && (
-          <List title={fileInfo.pdf_info.filename} sx={{ marginTop: 2 }}>
-            {fileInfo.pages_info.map((file) => (
-              <ListItem key={file.id}>
-                <ListItemText
-                  primary={`Pagina: ${file.page_number}`}
-                  secondary={`Tamaño: ${Math.round(
-                    file.trim_width_mm
-                  )} x ${Math.round(file.trim_height_mm)} mm`}
-                />
-              </ListItem>
-            ))}
+          <List sx={{ marginTop: 2 }}>
+            <ListItem>
+              <ListItemText
+                primary={`${fileInfo.file_name} (${fileInfo.page_count} paginas)`}
+                secondary={`Tamaño principal: ${calculateMostCommonSize(
+                  fileInfo.pages
+                )}`}
+              />
+            </ListItem>
+            {fileInfo.pages
+              .filter(
+                (file) =>
+                  `${Math.round(file.size.trimbox.width)}x${Math.round(
+                    file.size.trimbox.height
+                  )}` !== calculateMostCommonSize(fileInfo.pages)
+              )
+              .map((file) => (
+                <ListItem key={file.id}>
+                  <ListItemText
+                    primary={`Pagina: ${file.page_number}`}
+                    secondary={`Tamaño: ${Math.round(
+                      parseFloat(file.size.trimbox.width)
+                    )} x ${Math.round(parseFloat(file.size.trimbox.height))} mm`}
+                  />
+                </ListItem>
+              ))}
           </List>
         )}
       </Paper>
