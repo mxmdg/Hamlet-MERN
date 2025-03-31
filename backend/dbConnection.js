@@ -26,7 +26,7 @@ const dbSwitch = [
     title: "Digital Pritner",
   },
 ];
-const DB = dbSwitch[3];
+const DB = dbSwitch[1];
 
 mongoose.connect(URI + DB.printer, {
   useNewUrlParser: true,

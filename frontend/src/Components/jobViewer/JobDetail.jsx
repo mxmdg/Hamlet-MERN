@@ -113,7 +113,7 @@ const JobDetail = (props) => {
   const PartDetail = (part) => {
     const [usePoses, setPoses] = useState(null);
     const [useImpoData, setImpoData] = useState(null);
-    const [useFinishingData, setFinishingData] = useState(null)
+    const [useFinishingData, setFinishingData] = useState(null);
     const [imposed, setImposed] = useState(false);
     const [useData, setData] = useState(null);
     let partNumber = job.Partes.indexOf(part) + 1;

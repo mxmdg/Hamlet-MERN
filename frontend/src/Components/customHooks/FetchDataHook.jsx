@@ -53,6 +53,17 @@ export const addPrivateElement = async (collection, formData) => {
   }
 };
 
+export const uploadFile = async (endpoint, data) => {
+  console.log(endpoint);
+  console.log(data);
+  try {
+    const elements = await axios.post(`${endpoint}`, data[0], {});
+    return elements;
+  } catch (e) {
+    throw e;
+  }
+};
+
 export const putPrivateElement = async (itemURL, formData) => {
   const token = localStorage.getItem("token");
   try {

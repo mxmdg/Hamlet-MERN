@@ -146,6 +146,13 @@ export default function MyStepper(props) {
     return res;
   };
 
+  const addCopiedPart = (part) => {
+    console.log("Agregando parte copiada...");
+    console.log(part);
+    const partes = addElementToArray(part, useParts);
+    setParts(partes);
+  };
+
   // El siguiente array contiene los componentes
   // que se rendarizan en cada paso del stepper:
 
@@ -430,12 +437,20 @@ export default function MyStepper(props) {
                 >
                   {useParts?.map((part, index) => {
                     return (
-                      <Grid item xs={4} sm={4} md={6} key={"Parte-" + index}>
+                      <Grid
+                        item
+                        xs={12}
+                        sm={12}
+                        md={12}
+                        lg={6}
+                        key={"Parte-" + index}
+                      >
                         <PartCard
                           part={part}
                           index={index}
                           editPart={editPart}
                           addPart={addParts}
+                          copyPart={addCopiedPart}
                           setActiveStep={setActiveStep}
                           removePart={removePart}
                           step={activeStep}
