@@ -11,11 +11,15 @@ const JobsPerClient = (props) => {
   let customers = {};
 
   for (let job of props.jobs) {
-    if (customers[job.Company._id]) {
+    if (job.Company !== null && customers[job.Company?._id]) {
       customers[job.Company._id].qJobs >= 1
         ? (customers[job.Company._id].qJobs += 1)
         : (customers[job.Company._id].qJobs = 1);
-    } else customers[job.Company._id] = { qJobs: 1, name: job.Company.Nombre };
+    } else if (job.Company !== null) {
+      customers[job.Company._id] = { qJobs: 1, name: job.Company.Nombre };
+    } else {
+      customers["Cliente Eliminado"] = { qJobs: 1, name: "Cliente Eliminado" };
+    }
   }
 
   const topCustomers = Object.values(customers)

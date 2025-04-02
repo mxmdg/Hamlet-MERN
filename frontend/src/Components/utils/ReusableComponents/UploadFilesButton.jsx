@@ -6,7 +6,7 @@ import { useState } from "react";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
-import { Divider, Paper } from "@mui/material";
+import { Divider, Paper, Typography } from "@mui/material";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -21,7 +21,9 @@ const VisuallyHiddenInput = styled("input")({
 });
 
 export const handleUploadSuccess = (data) => {
-  alert(`Uploaded PDF with ${data.pages} pages and size ${data.size} KB.`);
+  alert(
+    `Uploaded PDF with ${data.pages.length} pages and size ${data.size} KB.`
+  );
 };
 
 const calculateMostCommonSize = (pages) => {
@@ -45,7 +47,12 @@ const calculateMostCommonSize = (pages) => {
   return mostCommonSize;
 };
 
-export default function UploadFilesButton({ uploadUrl, onUploadSuccess, expectedPageCount, expectedSize }) {
+export default function UploadFilesButton({
+  uploadUrl = "http://127.0.0.1:8000/upload",
+  onUploadSuccess,
+  expectedPageCount,
+  expectedSize,
+}) {
   const [fileInfo, setFileInfo] = useState(null);
 
   const handleFileUpload = async (files) => {
@@ -102,7 +109,10 @@ export default function UploadFilesButton({ uploadUrl, onUploadSuccess, expected
         );
       }
 
-      if (data.page_count !== expectedPageCount || mostCommonSize !== expectedSize) {
+      if (
+        data.page_count !== expectedPageCount ||
+        mostCommonSize !== expectedSize
+      ) {
         alert(
           `Mismatch detected:\nExpected pages: ${expectedPageCount}, Actual: ${data.page_count}\n` +
             `Expected size: ${expectedSize}, Most common size: ${mostCommonSize}`
@@ -153,6 +163,17 @@ export default function UploadFilesButton({ uploadUrl, onUploadSuccess, expected
                 )}`}
               />
             </ListItem>
+            <Typography variant="body2" color="text.secondary">
+              Informacion del documento
+              <br />
+              Productor: {fileInfo.metadata["/Producer"]}
+              <br />
+              Creador: {fileInfo.metadata["/Creator"]}
+              <br />
+              Creado: {fileInfo.metadata["/CreationDate"]}
+              <br />
+              Modificado: {fileInfo.metadata["/ModDate"]}
+            </Typography>
             {fileInfo.pages
               .filter(
                 (file) =>
@@ -166,7 +187,9 @@ export default function UploadFilesButton({ uploadUrl, onUploadSuccess, expected
                     primary={`Pagina: ${file.page_number}`}
                     secondary={`Tamaño: ${Math.round(
                       parseFloat(file.size.trimbox.width)
-                    )} x ${Math.round(parseFloat(file.size.trimbox.height))} mm`}
+                    )} x ${Math.round(
+                      parseFloat(file.size.trimbox.height)
+                    )} mm`}
                   />
                 </ListItem>
               ))}

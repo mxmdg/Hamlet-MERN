@@ -105,7 +105,7 @@ const PartCard = (props) => {
           )}
           <br />
           <UploadFilesButton
-            uploadUrl="http://192.168.1.46:8000/upload"
+            uploadUrl={process.env.VALIDATE_PDF}
             onUploadSuccess={handleUploadSuccess}
             expectedPageCount={props.part.Pages}
             expectedSize={`${props.part.Ancho}x${props.part.Alto}`}

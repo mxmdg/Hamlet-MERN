@@ -366,7 +366,7 @@ export default function CollapsibleTable(props) {
             job.Nombre,
             job.Tipo[0]?.name,
             job.Cantidad,
-            job.Company.Nombre,
+            job.Company?.Nombre,
             job.Owner?.Name + " " + job.Owner?.LastName,
             job.Emision,
             job.DeadLine,
