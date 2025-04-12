@@ -48,7 +48,7 @@ const calculateMostCommonSize = (pages) => {
 };
 
 export default function UploadFilesButton({
-  uploadUrl = "http://127.0.0.1:8000/upload",
+  uploadUrl = "http://192.168.1.46:8000/upload",
   onUploadSuccess,
   expectedPageCount,
   expectedSize,

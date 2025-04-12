@@ -25,6 +25,7 @@ import JobsPerType from "./utils/stats/JobsPerType";
 //MUI Material Imports
 import { Container } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
+import UploadFilesButton from "./utils/ReusableComponents/UploadFilesButton";
 
 const Home = (props) => {
   const [useRoute, setUseRoute] = useState(props.route || "jobs/urg");
@@ -69,6 +70,7 @@ const Home = (props) => {
         <Grid item xs={1} sm={12} md={12} lg={6}>
           <Grid container columns={12} spacing={{ xs: 0, sm: 1, md: 3 }}>
             <Grid item xs={12} sm={12} md={10} lg={10}>
+              <UploadFilesButton />
               <MyStepper />
             </Grid>
             <Grid item xs={12} sm={12} md={11} lg={10}>
