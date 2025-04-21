@@ -66,7 +66,8 @@ const JobDetail = (props) => {
   // El siguiente estado es para almacenar la informacion de la imposicion en todas las partes.
   const [productionPlan, setProductionPlan] = useState({});
   const [productionPlanAvaible, setProductionPlanAvaible] = useState(false);
-
+  const [useJobFinishingData, setJobFinishingData] = useState(null);
+  const [usePartFinishingData, setPartFinishingData] = useState([]);
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
@@ -74,19 +75,19 @@ const JobDetail = (props) => {
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor:
       theme.palette.mode === "dark"
-        ? theme.palette.info.dark
-        : theme.palette.info.light,
+        ? theme.palette.success.dark
+        : theme.palette.success.light,
     ...theme.typography.subtitle2,
     padding: theme.spacing(2),
     textAlign: "left",
-    color: theme.palette.text.secondary,
+    color: theme.palette.text.primary,
   }));
 
   const Item2 = styled(Paper)(({ theme }) => ({
     backgroundColor:
       theme.palette.mode === "dark"
-        ? theme.palette.warning.dark
-        : theme.palette.warning.light,
+        ? theme.palette.info.dark
+        : theme.palette.info.light,
     ...theme.typography.subtitle2,
     padding: theme.spacing(2),
     textAlign: "left",
@@ -110,19 +111,21 @@ const JobDetail = (props) => {
     }
   };
 
+  const sumTotalPartsFinishingCosts = () => {
+    let total = 0;
+    usePartFinishingData.forEach((item) => {
+      total += item.finishingData;
+    });
+    return total;
+  };
+
   const PartDetail = (part) => {
     const [usePoses, setPoses] = useState(null);
     const [useImpoData, setImpoData] = useState(null);
-    const [useFinishingData, setFinishingData] = useState(null);
     const [imposed, setImposed] = useState(false);
     const [useData, setData] = useState(null);
     let partNumber = job.Partes.indexOf(part) + 1;
     let myKey = part._id + partNumber;
-
-    const partCosts = {
-      Poses: usePoses,
-      ImpositionData: useImpoData,
-    };
 
     const Finishing = arrayNormalizer(part.Finishing);
 
@@ -137,6 +140,13 @@ const JobDetail = (props) => {
           usePoses
         )
       : "";
+
+    const partCosts = {
+      Poses: usePoses,
+      totalPliegos: stockCalculated.cantidadDePliegos,
+      impositionData: useImpoData,
+      finishingData: usePartFinishingData,
+    };
 
     const saveProductionPlan = () => {
       partCosts.totalPliegos = stockCalculated.cantidadDePliegos;
@@ -166,7 +176,7 @@ const JobDetail = (props) => {
           Calle: 0,
         });
       }
-    }, [useImpoData, stockCalculated.cantidadDePliegos]);
+    }, [useImpoData, stockCalculated.cantidadDePliegos, setPartFinishingData]);
 
     return (
       <Box key={part._id} mb={1}>
@@ -279,7 +289,7 @@ const JobDetail = (props) => {
                         color="primary"
                         startIcon={<SaveIcon />}
                       >
-                        Guardar Imposicion
+                        Guardar Imposición
                       </Button>
                     </>
                   )}
@@ -288,7 +298,31 @@ const JobDetail = (props) => {
                       <FinishingList
                         finishing={part.Finishing}
                         cantidad={job.Cantidad}
-                        sendFinishingData={setFinishingData}
+                        imposition={
+                          useImpoData !== null
+                            ? partCosts
+                            : "Guardar Imposición"
+                        }
+                        sendFinishingData={(finishingData) => {
+                          setPartFinishingData((prevData) => {
+                            const existingIndex = prevData.findIndex(
+                              (item) => item.partId === part._id
+                            );
+                            const updatedData = {
+                              partId: part._id,
+                              finishingData,
+                            };
+                            if (existingIndex !== -1) {
+                              // Reemplazar el costo existente
+                              const newData = [...prevData];
+                              newData[existingIndex] = updatedData;
+                              return newData;
+                            } else {
+                              // Agregar un nuevo costo
+                              return [...prevData, updatedData];
+                            }
+                          });
+                        }}
                       />
                     </Item>
                   )}
@@ -312,6 +346,8 @@ const JobDetail = (props) => {
       </Box>
     );
   };
+
+  useEffect(() => {}, [setJobFinishingData, setPartFinishingData]);
 
   return (
     <Container>
@@ -401,6 +437,7 @@ const JobDetail = (props) => {
               <FinishingList
                 finishing={job.Finishing}
                 cantidad={job.Cantidad}
+                sendFinishingData={setJobFinishingData}
               />
             </Item>
           )}
@@ -419,7 +456,15 @@ const JobDetail = (props) => {
               >
                 <Typography color={"primary"}>Costo:</Typography>
               </AccordionSummary>
-              <ProductionPlan impositionData={productionPlan} job={job} />
+              <ProductionPlan
+                impositionData={productionPlan}
+                job={job}
+                finishingData={useJobFinishingData}
+                partFinishingData={usePartFinishingData}
+                totalFinishingCosts={
+                  useJobFinishingData + sumTotalPartsFinishingCosts()
+                }
+              />
             </Accordion>
           )}
         </CardContent>

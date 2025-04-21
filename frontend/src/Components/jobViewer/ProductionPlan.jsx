@@ -27,6 +27,7 @@ import {
   roundInteger,
 } from "../utils/generalData/numbersAndCurrencies";
 import ListItemNumbers from "./ListItemNumbers";
+import FinishingList from "./FinishingList";
 
 // Mis Hooks
 import { getPrivateElements } from "../customHooks/FetchDataHook";
@@ -41,7 +42,7 @@ const ProductionPlan = (props) => {
   /* Modelo del datos:
   {
     "Poses": 4,
-    "ImpositionData": {
+    "impositionData": {
         "printerSelector": {
             "_id": "65bbac3b822997b0e013e97d",
             "Modelo": "nuvera 157",
@@ -97,10 +98,11 @@ const ProductionPlan = (props) => {
   const totalResume = (arr) => {
     const totals = {};
 
-    arr.forEach((data) => {
-      const { printerSelector, stock, formatSelector } = data.ImpositionData;
+    arr.forEach((data, index) => {
+      console.log("Data: ", data);
+      const { printerSelector, stock, formatSelector } = data.impositionData;
       const key = `${printerSelector.Fabricante} ${printerSelector.Modelo} - ${data.stock._id} - ${formatSelector._id} - ${data.stock._id}`;
-      const cost = data.ImpositionData.printerSelector.Costo;
+      const cost = data.impositionData.printerSelector.Costo;
 
       if (!totals[key]) {
         totals[key] = {
@@ -108,11 +110,11 @@ const ProductionPlan = (props) => {
           stock: data.stock,
           format: formatSelector,
           totalPliegos: 0,
-          widthSheet: data.ImpositionData.widthSheet,
-          heightSheet: data.ImpositionData.heightSheet,
+          widthSheet: data.impositionData.widthSheet,
+          heightSheet: data.impositionData.heightSheet,
           totalHojas: 0,
           impresiones: 0,
-          sheetOriginalSize: data.ImpositionData.sheetOriginalSize,
+          sheetOriginalSize: data.impositionData.sheetOriginalSize,
         };
       }
 
@@ -177,15 +179,21 @@ const ProductionPlan = (props) => {
         Math.max(totals[key].format.Alto, totals[key].format.Ancho)
       );
       totals[key].stockCost = stockCost(totals[key].totalHojas);
+      totals[key].FinishingCost = props.partFinishingData[index].finishingData;
     });
 
     // Costo total:
     try {
       const prodsets = Object.getOwnPropertyNames(totals);
-      let totalCost = { print: 0, stock: 0 };
+      let totalCost = {
+        print: 0,
+        stock: 0,
+        finishing: props.totalFinishingCosts || 0,
+      };
       for (let set of prodsets) {
         totalCost.print += totals[set].printPrice.Total;
         totalCost.stock += totals[set].stockCost.cost;
+        totalCost.finishing += totals[set].FinishingCost;
       }
       totals.totalCost = totalCost;
     } catch (error) {
@@ -286,8 +294,17 @@ const ProductionPlan = (props) => {
                   <Divider />
                   <ListItem alignItems="flex-start">
                     <ListItemNumbers
+                      primary={`$ ${roundInteger(data.FinishingCost)} -`}
+                      secondary={`Costo Terminacion`}
+                    />
+                  </ListItem>
+                  <Divider />
+                  <ListItem alignItems="flex-start">
+                    <ListItemNumbers
                       primary={`$ ${roundInteger(
-                        data.printPrice.Total + data.stockCost.cost
+                        data.printPrice.Total +
+                          data.stockCost.cost +
+                          data.FinishingCost
                       )} -`}
                       secondary={`Total`}
                     />
@@ -330,11 +347,20 @@ const ProductionPlan = (props) => {
                 primary={`$ ${roundInteger(resumen[resumen.length - 1].stock)}`}
                 secondary={`Material total`}
               />
+              <ListItemNumbers
+                primary={`${roundInteger(props.finishingData)}`}
+                secondary={`Terminacion trabajo final`}
+              />
+              <ListItemNumbers
+                primary={`${roundInteger(props.totalFinishingCosts)}`}
+                secondary={`Terminacion total`}
+              />
               <Divider />
               <ListItemNumbers
                 primary={`$ ${roundInteger(
                   resumen[resumen.length - 1].print +
-                    resumen[resumen.length - 1].stock
+                    resumen[resumen.length - 1].stock +
+                    props.totalFinishingCosts
                 )}`}
                 secondary={` Costo total`}
               />
