@@ -154,8 +154,9 @@ const PartCard = (props) => {
                 e.preventDefault();
                 const copiedPart = { ...props.part };
                 delete copiedPart._id;
+                copiedPart.jobParts = copiedPart.jobParts.slice(0, 1);
                 console.log("ID Job Part: " + copiedPart.jobParts[0]._id);
-                copiedPart.jobParts.push(props.part.jobParts[0]._id);
+                //copiedPart.jobParts.push(props.part.jobParts[0]._id);
                 props.copyPart(copiedPart);
                 props.setActiveStep(2);
               }}

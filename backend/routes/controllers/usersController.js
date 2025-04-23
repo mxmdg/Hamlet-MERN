@@ -159,7 +159,7 @@ const forgotPassword = async (req, res, next) => {
       }
     });
 
-    const resetPasswordLink = `${URL}:${uiPort}/users/reset-password/${token}`;
+    const resetPasswordLink = `${URL}${uiPort}/users/reset-password/${token}`;
     const mailOptions = {
       from: "webapproval@imprentadorrego.com.ar",
       to: email,
@@ -195,7 +195,7 @@ const resetPassword = async (req, res, next) => {
     // Buscar el usuario por el token de restablecimiento de contraseña
     const user = await usersModel.esquema.findOne({
       resetPasswordToken: token,
-      resetPasswordExpires: { $gt: Date.now() }, // Verificar que el token aún no haya expirado
+      resetPasswordExpires: { $gt: Date.now() },  // Verificar que el token aún no haya expirado
     });
 
     if (!user) {
