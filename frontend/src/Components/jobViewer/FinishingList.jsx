@@ -7,6 +7,7 @@ import {
   ListItem,
   ListItemText,
   Typography,
+  Alert,
 } from "@mui/material";
 
 import { getPrivateElementByID } from "../customHooks/FetchDataHook";
@@ -145,15 +146,21 @@ const FinishingList = (props) => {
 
   return (
     <List dense>
-      {useFinishingCosts.map((item, index) => (
-        <ListItem key={index}>
-          <ListItemText
-            primary={item.Finisher.Proceso}
-            secondary={`$${item.Cost.Total} (Unitario: $${item.Cost.Unitario})`}
-          />
-        </ListItem>
-      ))}
-      {useFinishingCosts !== null && (
+      {Array.isArray(useFinishingCosts) && useFinishingCosts.length > 0 ? (
+        useFinishingCosts.map((item, index) => (
+          <ListItem key={index}>
+            <ListItemText
+              primary={item.Finisher.Proceso}
+              secondary={`$${item.Cost.Total} (Unitario: $${item.Cost.Unitario})`}
+            />
+          </ListItem>
+        ))
+      ) : (
+        <Alert severity="warning" variant="filled">
+          No hay procesos de terminacion seleccionados.
+        </Alert>
+      )}
+      {Array.isArray(useFinishingCosts) && useFinishingCosts.length > 0 && (
         <ListItem>
           <ListItemText
             primary="Total"
@@ -169,7 +176,7 @@ const FinishingList = (props) => {
         color="secondary"
         onClick={() => handleSendData()}
       >
-        Enviar Datos{" "}
+        Enviar Datos
       </Button>
     </List>
   );
