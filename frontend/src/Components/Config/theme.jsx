@@ -18,7 +18,7 @@ export const themeMxm = createTheme({
       contrastText: "#ffffff",
     },
     secondary: {
-      main: "#e86622", // adjusted for better contrast
+      main: "#bd00b4", // adjusted for better contrast
       light: "#e42d5d",
       dark: "#900032",
       contrastText: "#ffffff",
@@ -47,7 +47,7 @@ export const themeMxm = createTheme({
       contrastText: "#291a05",
     },
     info: {
-      main: "#1ba0e6", // adjusted for better contrast
+      main: "#3eceee", // adjusted for better contrast
       light: "#46aefa",
       dark: "#17648e",
       contrastText: "#092a3b",

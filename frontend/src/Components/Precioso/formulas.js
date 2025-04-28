@@ -3,7 +3,7 @@ import { roundCents } from "../utils/generalData/numbersAndCurrencies";
 export const productoPorUnidad = (Valor, Minimo, Entrada, cantidad) => {
   let resultado =
     parseFloat(Entrada) + parseFloat(cantidad) * parseFloat(Valor);
-  console.log("Resultado: " + resultado);
+  console.log("Resultado x un: " + resultado);
   console.log(Valor, Minimo, Entrada, cantidad);
   resultado = resultado < parseFloat(Minimo) ? parseFloat(Minimo) : resultado;
   let valorUnitario = roundCents(resultado / cantidad);
@@ -34,11 +34,20 @@ export const pliegoPorLongitud = (
   let resultado =
     parseFloat(Entrada) +
     parseFloat(largoPliego) * parseFloat(cantidad) * parseFloat(currentValue);
+  console.log("Resultado x cm: " + resultado);
   resultado = resultado < parseFloat(minimo) ? parseFloat(minimo) : resultado;
   let valorUnitario = roundCents(resultado / cantidad);
   const papyrusExport = `${valor} * (${cantidad} * ((${largoPliego}>${
-    breakPoint ? breakPoint[0] : "0"
+    breakPoint / 10 ? breakPoint[0] / 10 : "0"
   })?${largoPliego} * 1.15)) * ${largoPliego}`;
+
+  console.log({
+    Unitario: valorUnitario,
+    Cantidad: cantidad,
+    Total: roundCents(resultado),
+    Papyrus: papyrusExport,
+    Formula: "Centimetros",
+  });
   return {
     Unitario: valorUnitario,
     Cantidad: cantidad,

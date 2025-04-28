@@ -58,8 +58,10 @@ const FormulaEditor = () => {
 
   const graficar = (values) => {
     setParameters(values);
+    console.log(values);
+    const formulas = { productoPorUnidad, pliegoPorLongitud };
     const datos = formulaAnalisis(
-      productoPorUnidad,
+      formulas[values.Formula],
       Number(values.Valor),
       Number(values.Minimo),
       Number(values.Entrada),
