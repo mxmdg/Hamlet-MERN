@@ -44,6 +44,7 @@ import {
   removeElementFromArray,
   replaceElementInArray,
 } from "../utils/generalData/arrayNormalizer";
+import { use } from "react";
 
 export default function MyStepper(props) {
   const [activeStep, setActiveStep] = React.useState(0);
@@ -313,7 +314,7 @@ export default function MyStepper(props) {
     </>
   );
 
-  return (
+  const success = (
     <>
       <Card raised sx={{ gap: "20px" }} color="info">
         <CardHeader
@@ -466,4 +467,6 @@ export default function MyStepper(props) {
       </Card>
     </>
   );
+
+  return useError !== null ? statusError : success;
 }

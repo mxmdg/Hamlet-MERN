@@ -11,7 +11,7 @@ import {
 
 // Mui Material Imports
 import Container from "@mui/material/Container";
-import { Grid } from "@mui/material";
+import { Button, Grid } from "@mui/material";
 import { Card, CardHeader, CardContent, CardActions } from "@mui/material";
 import { Typography } from "@mui/material";
 import List from "@mui/material/List";
@@ -205,6 +205,16 @@ const ProductionPlan = (props) => {
 
   const resumen = totalResume(AllData);
 
+  const handleSaveProductionPlan = (resumen) => {
+    const data = {
+      jobId: props.job._id,
+      impositionData: props.impositionData,
+      resumen: resumen,
+    };
+    console.log("Resumen: ", resumen);
+    console.log("Data: ", data);
+  };
+
   useEffect(() => {
     const fetchPrices = async () => {
       try {
@@ -366,7 +376,19 @@ const ProductionPlan = (props) => {
               />
             </List>
           </CardContent>
+          <CardActions sx={{ justifyContent: "flex-end" }}>
+          <Button variant="contained" color="primary" size="small"
+            onClick={() => {  
+              handleSaveProductionPlan(resumen);
+            }
+            } 
+
+          >
+            Guardar Presupuesto
+          </Button>
+          </CardActions>
         </Card>
+        
       </Grid>
     </Grid>
   );
