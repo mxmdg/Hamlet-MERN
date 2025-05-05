@@ -28,6 +28,7 @@ import {
 } from "../utils/generalData/numbersAndCurrencies";
 import ListItemNumbers from "./ListItemNumbers";
 import FinishingList from "./FinishingList";
+import ProductionQuote from "./ProductionQuote";
 
 // Mis Hooks
 import { getPrivateElements } from "../customHooks/FetchDataHook";
@@ -125,26 +126,47 @@ const ProductionPlan = (props) => {
         entrada,
         largoPliego
       ) => {
-        if (printerSelector.Colores === 1 && data.colores === 1) {
-          console.log("Formula seleccionada segun caso Nuvera");
-          console.log(printerSelector.Colores, data.colores);
-          return Nuvera(valor, minimo, cantidad, entrada, largoPliego);
-        } else if (printerSelector.Colores >= 4 && data.colores === 1) {
-          console.log("Formula seleccionada segun caso iGenBN");
-          console.log(printerSelector.Colores, data.colores);
-          return iGenBN(valor, minimo, cantidad, entrada, largoPliego);
-        } else if (printerSelector.Colores >= 4 && data.colores === 4) {
-          console.log("Formula seleccionada segun caso Color");
-          console.log(printerSelector.Colores, data.colores);
-          return iGenColor(valor, minimo, cantidad, entrada, largoPliego);
-        } else if (printerSelector.Colores > 4 && data.colores > 4) {
-          console.log("Formula seleccionada segun caso 6 colores");
-          console.log(printerSelector.Colores, data.colores);
-          return iGenColor(valor * 1.3, minimo, cantidad, entrada, largoPliego);
-        } else {
-          console.error("Caso no contemplado");
-          setError("Error: Configuración de impresión no contemplada.");
-          return null; // O alguna acción por defecto
+        try {
+          if (printerSelector.Colores === 1 && data.colores === 1) {
+            console.log("Formula seleccionada segun caso Nuvera");
+            console.log(printerSelector.Colores, data.colores);
+            return Nuvera(valor, minimo, cantidad, entrada, largoPliego);
+          } else if (printerSelector.Colores >= 4 && data.colores === 1) {
+            console.log("Formula seleccionada segun caso iGenBN");
+            console.log(printerSelector.Colores, data.colores);
+            return iGenBN(valor, minimo, cantidad, entrada, largoPliego);
+          } else if (
+            printerSelector.Colores >= 4 &&
+            data.colores > 1 &&
+            data.colores <= 4
+          ) {
+            console.log("Formula seleccionada segun caso Color");
+            console.log(printerSelector.Colores, data.colores);
+            return iGenColor(valor, minimo, cantidad, entrada, largoPliego);
+          } else if (printerSelector.Colores > 4 && data.colores > 4) {
+            console.log("Formula seleccionada segun caso 6 colores");
+            console.log(printerSelector.Colores, data.colores);
+            return iGenColor(
+              valor * 1.3,
+              minimo,
+              cantidad,
+              entrada,
+              largoPliego
+            );
+          } else {
+            console.log("Caso no contemplado");
+            return () => {
+              return {
+                Unitario: 1,
+                Cantidad: 1,
+                Total: 1,
+                Papyrus: "",
+                Formula: "No definido",
+              };
+            };
+          }
+        } catch (error) {
+          setError(error);
         }
       };
 
@@ -168,6 +190,7 @@ const ProductionPlan = (props) => {
         return { surface, totalPaper, weight, cost };
       };
 
+      totals[key].key = key;
       totals[key].totalPliegos += data.totalPliegos;
       totals[key].totalHojas += data.totalHojas;
       totals[key].impresiones += data.impresiones;
@@ -204,6 +227,8 @@ const ProductionPlan = (props) => {
   };
 
   const resumen = totalResume(AllData);
+
+  console.log("Resumen: ", resumen);
 
   const handleSaveProductionPlan = (resumen) => {
     const data = {
@@ -377,18 +402,39 @@ const ProductionPlan = (props) => {
             </List>
           </CardContent>
           <CardActions sx={{ justifyContent: "flex-end" }}>
-          <Button variant="contained" color="primary" size="small"
-            onClick={() => {  
-              handleSaveProductionPlan(resumen);
-            }
-            } 
-
-          >
-            Guardar Presupuesto
-          </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              size="small"
+              onClick={() => {
+                handleSaveProductionPlan(resumen);
+              }}
+            >
+              Guardar Presupuesto
+            </Button>
           </CardActions>
         </Card>
-        
+      </Grid>
+      <Grid item xs={12} sm={6} lg={3} key={"ProductionQuote"}>
+        <Card elevation={8}>
+          <CardHeader
+            title={`Presupuesto`}
+            titleTypographyProps={{ color: "primary" }}
+            subheader={`Precio a pasar al cliente`}
+            subheaderTypographyProps={{ color: "secondary" }}
+          ></CardHeader>
+          <Divider />
+          <CardContent>
+            <ProductionQuote
+              costResume={roundInteger(
+                resumen[resumen.length - 1].print +
+                  resumen[resumen.length - 1].stock +
+                  props.totalFinishingCosts
+              )}
+              job={props.job._id}
+            />
+          </CardContent>
+        </Card>
       </Grid>
     </Grid>
   );
