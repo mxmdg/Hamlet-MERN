@@ -1,8 +1,15 @@
 import { roundCents } from "../utils/generalData/numbersAndCurrencies";
 
 export const productoPorUnidad = (Valor, Minimo, Entrada, cantidad) => {
+  // Agregamos esta funcion porque hay algunos costos que tiene el minimo expresado en cantidad de unidades
+  // y otros en valor monetario. Lo vamos a diferenciar si Valor / Entrada es mayor a 1, entonces el costo es por unidad
+  // y si es menor a 1, el costo es por valor monetario.
+
+  const unidadEntrada = parseFloat(Valor) / parseFloat(Entrada);
+
+
   let resultado =
-    parseFloat(Entrada) + parseFloat(cantidad) * parseFloat(Valor);
+    unidadEntrada >= 1 ? (parseFloat(Entrada) + parseFloat(cantidad) )* parseFloat(Valor) : parseFloat(Entrada) + parseFloat(cantidad) * parseFloat(Valor);
   console.log("Resultado x un: " + resultado);
   console.log(Valor, Minimo, Entrada, cantidad);
   resultado = resultado < parseFloat(Minimo) ? parseFloat(Minimo) : resultado;
