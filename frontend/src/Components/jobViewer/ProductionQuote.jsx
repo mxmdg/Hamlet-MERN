@@ -29,7 +29,10 @@ import {
 import Spinner from "../General/Spinner";
 import { getPrivateElementByID } from "../customHooks/FetchDataHook";
 import ListItemNumbers from "./ListItemNumbers";
-import { percentBefore } from "../utils/generalData/numbersAndCurrencies";
+import {
+  percentBefore,
+  currencyFormat,
+} from "../utils/generalData/numbersAndCurrencies";
 
 const ProductionQuote = (props) => {
   const {
@@ -136,7 +139,7 @@ const ProductionQuote = (props) => {
                   </Grid>
                   <Grid item xs={12} md={12}>
                     <ListItemNumbers
-                      primary={roundInteger(quote.gain)}
+                      primary={currencyFormat(roundInteger(quote.gain))}
                       secondary={`Utilidad (${quote.utilityPercentage} %)`}
                     />
                     {/* <Typography variant="h6" align="right">
@@ -171,7 +174,9 @@ const ProductionQuote = (props) => {
                   </Grid>
                   <Grid item xs={12} md={12}>
                     <ListItemNumbers
-                      primary={roundInteger(quote.salesCommission)}
+                      primary={currencyFormat(
+                        roundInteger(quote.salesCommission)
+                      )}
                       secondary={"Comisión"}
                     />
                   </Grid>
@@ -202,14 +207,14 @@ const ProductionQuote = (props) => {
                   </Grid>
                   <Grid item xs={12} md={12}>
                     <ListItemNumbers
-                      primary={roundInteger(quote.iva)}
+                      primary={currencyFormat(roundInteger(quote.iva))}
                       secondary={"IVA"}
                     />
                   </Grid>
                   <Divider />
                   <Grid item xs={12} md={12}>
                     <ListItemNumbers
-                      primary={roundInteger(quote.total)}
+                      primary={currencyFormat(roundInteger(quote.total))}
                       secondary={"Precio Final"}
                     />
                     {/* <Typography variant="h5" color="info">

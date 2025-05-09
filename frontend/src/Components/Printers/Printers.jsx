@@ -4,6 +4,7 @@ import PrinterDetails from "./PrinterDetails";
 import PrintersDataForm from "../Formulario/PrintersDataForm";
 import Spinner from "../General/Spinner";
 import { serverURL } from "../Config/config";
+import { spanishFormat } from "../utils/generalData/numbersAndCurrencies";
 import Grid from "@mui/material/Unstable_Grid2"; // Grid version 2
 import {
   Card,
@@ -133,23 +134,26 @@ const Printers = (props) => {
           </Box>
           <List>
             <ListItem divider={true}>
-              <ListItemText primary={useTotals.color} secondary="Color:" />
+              <ListItemText
+                primary={spanishFormat(useTotals.color)}
+                secondary="Color:"
+              />
             </ListItem>
             <ListItem divider={true}>
               <ListItemText
-                primary={useTotals.blackHQ}
+                primary={spanishFormat(useTotals.blackHQ)}
                 secondary="Total Blanco y negro Alta Calidad:"
               />
             </ListItem>
             <ListItem divider={true}>
               <ListItemText
-                primary={useTotals.large}
+                primary={spanishFormat(useTotals.large)}
                 secondary="Total blanco y negro Grandes:"
               />
             </ListItem>
             <ListItem divider={true}>
               <ListItemText
-                primary={useTotals.small}
+                primary={spanishFormat(useTotals.small)}
                 secondary="Total blanco y negro Chicas:"
               />
             </ListItem>

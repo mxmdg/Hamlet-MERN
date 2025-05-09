@@ -29,6 +29,10 @@ import {
 import ListItemNumbers from "./ListItemNumbers";
 import FinishingList from "./FinishingList";
 import ProductionQuote from "./ProductionQuote";
+import {
+  currencyFormat,
+  spanishFormat,
+} from "../utils/generalData/numbersAndCurrencies";
 
 // Mis Hooks
 import { getPrivateElements } from "../customHooks/FetchDataHook";
@@ -281,14 +285,14 @@ const ProductionPlan = (props) => {
                 <List dense>
                   <ListItem alignItems="flex-start">
                     <ListItemNumbers
-                      primary={`${data.impresiones}`}
+                      primary={`${spanishFormat(data.impresiones)}`}
                       secondary={"Impresiones"}
                     />
                   </ListItem>
                   <Divider />
                   <ListItem alignItems="flex-start">
                     <ListItemNumbers
-                      primary={`${data.totalPliegos} `}
+                      primary={`${spanishFormat(data.totalPliegos)} `}
                       secondary={"Pliegos"}
                     />
                   </ListItem>
@@ -303,7 +307,7 @@ const ProductionPlan = (props) => {
                   <Divider />
                   <ListItem alignItems="flex-start">
                     <ListItemNumbers
-                      primary={`$ ${data.printPrice.Unitario}`}
+                      primary={`${currencyFormat(data.printPrice.Unitario)}`}
                       secondary={"Unitario"}
                       secondaryTypographyProps={{
                         variant: "body1",
@@ -316,31 +320,37 @@ const ProductionPlan = (props) => {
                   <ListItem alignItems="flex-start">
                     <ListItemNumbers
                       secondary={"Costo final impreiones"}
-                      primary={`$ ${Math.ceil(data.printPrice.Total)}`}
+                      primary={`${currencyFormat(
+                        Math.ceil(data.printPrice.Total)
+                      )}`}
                     />
                   </ListItem>
                   <Divider />
                   <ListItem alignItems="flex-start">
                     <ListItemNumbers
-                      primary={`$ ${data.stockCost.cost}.-`}
+                      primary={`${currencyFormat(data.stockCost.cost)}`}
                       secondary={`${data.totalHojas} Pliegos de ${data.stock.Ancho_Resma} x ${data.stock.Alto_Resma} mm.`}
                     />
                   </ListItem>
                   <Divider />
                   <ListItem alignItems="flex-start">
                     <ListItemNumbers
-                      primary={`$ ${roundInteger(data.FinishingCost)} -`}
+                      primary={`${currencyFormat(
+                        roundInteger(data.FinishingCost)
+                      )}`}
                       secondary={`Costo Terminacion`}
                     />
                   </ListItem>
                   <Divider />
                   <ListItem alignItems="flex-start">
                     <ListItemNumbers
-                      primary={`$ ${roundInteger(
-                        data.printPrice.Total +
-                          data.stockCost.cost +
-                          data.FinishingCost
-                      )} -`}
+                      primary={`${currencyFormat(
+                        roundInteger(
+                          data.printPrice.Total +
+                            data.stockCost.cost +
+                            data.FinishingCost
+                        )
+                      )}`}
                       secondary={`Total`}
                     />
                   </ListItem>
@@ -364,7 +374,7 @@ const ProductionPlan = (props) => {
           <CardContent>
             <List>
               <ListItemNumbers
-                primary={`$ ${roundInteger(resumen[resumen.length - 1].print)}`}
+                primary={`${currencyFormat(resumen[resumen.length - 1].print)}`}
                 primaryTypographyProps={{
                   variant: "subtitle2",
                   fontSize: 16,
@@ -379,20 +389,20 @@ const ProductionPlan = (props) => {
                 }}
               />
               <ListItemNumbers
-                primary={`$ ${roundInteger(resumen[resumen.length - 1].stock)}`}
+                primary={`${currencyFormat(resumen[resumen.length - 1].stock)}`}
                 secondary={`Material total`}
               />
               <ListItemNumbers
-                primary={`${roundInteger(props.finishingData)}`}
+                primary={`${currencyFormat(props.finishingData)}`}
                 secondary={`Terminacion trabajo final`}
               />
               <ListItemNumbers
-                primary={`${roundInteger(props.totalFinishingCosts)}`}
+                primary={`${currencyFormat(props.totalFinishingCosts)}`}
                 secondary={`Terminacion total`}
               />
               <Divider />
               <ListItemNumbers
-                primary={`$ ${roundInteger(
+                primary={`${currencyFormat(
                   resumen[resumen.length - 1].print +
                     resumen[resumen.length - 1].stock +
                     props.totalFinishingCosts

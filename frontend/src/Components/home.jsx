@@ -37,7 +37,12 @@ const Home = (props) => {
   const context = useContext(AuthContext);
 
   const homePage = (
-    <Container fullwidth disableGutters maxWidth={false} sx={{ paddingTop: 3 }}>
+    <Container
+      fullwidth
+      disableGutters
+      maxWidth={"false"}
+      sx={{ paddingTop: 3 }}
+    >
       <Grid container columns={{ xs: 1, sm: 12, md: 12, lg: 16 }} spacing={0}>
         <Grid item xs={1} sm={12} md={12} lg={10}>
           <Container>

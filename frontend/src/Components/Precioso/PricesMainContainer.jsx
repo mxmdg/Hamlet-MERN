@@ -2,7 +2,7 @@ import Precioso from "./Precioso";
 import Form from "../Formulario/Form";
 import PricesDataForm from "../Formulario/PricesDataForm";
 //import "../../Styles/hamlet.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Typography,
   Button,
@@ -23,13 +23,19 @@ import AddFloatButton from "../General/AddFloatButton";
 import { AuthContext } from "../context/AuthContext";
 import { useContext } from "react";
 import Fetch from "../General/Fetch";
+import ErrorMessage from "../ErrorMessage/ErrorMessage";
+import { currencyCotization } from "../utils/generalData/numbersAndCurrencies";
+import { set } from "react-hook-form";
+import Spinner from "../General/Spinner";
 
 const PricesMainContainer = () => {
   const [useNewPrice, setNewPrice] = useState(false);
   const navigate = useNavigate();
   const collection = "precios";
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [useTable, setTable] = useState(false);
+  const [cotization, setCotization] = useState(0);
   const context = useContext(AuthContext);
 
   const validateAdminUser = () => {
@@ -47,12 +53,38 @@ const PricesMainContainer = () => {
     setTable(!useTable);
   };
 
-  return (
+  useEffect(() => {
+    const fetchCotization = async () => {
+      const data = await currencyCotization("usd");
+      if (data) {
+        const lastCotization = data;
+        setCotization(lastCotization);
+      }
+      setLoading(false);
+    };
+    try {
+      fetchCotization();
+    } catch (error) {
+      setError(error);
+      setLoading(false);
+    }
+  }, []);
+
+  const failure = <ErrorMessage message={error} />;
+
+  const loadingComponent = <Spinner />;
+
+  const success = (
     <Box sx={{ width: "100%" }}>
       {validateAdminUser() && (
         <Card>
           <CardHeader
             title={collection}
+            subheader={
+              cotization !== 0
+                ? `${cotization.results[0].detalle[0].descripcion}: $ ${cotization.results[0].detalle[0].tipoCotizacion}.-`
+                : "El codigo de la moneda es invalido"
+            }
             action={
               <ToggleButtonGroup
                 value={useTable}
@@ -85,6 +117,8 @@ const PricesMainContainer = () => {
       )}
     </Box>
   );
+
+  return loading ? loadingComponent : error ? failure : success;
 };
 
 export default PricesMainContainer;

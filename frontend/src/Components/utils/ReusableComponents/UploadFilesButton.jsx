@@ -138,7 +138,7 @@ export default function UploadFilesButton({
   return (
     <div>
       <Divider />
-      <Paper rounded={false} sx={{ padding: 2, marginTop: 2 }}>
+      <Paper rounded={"false"} sx={{ padding: 2, marginTop: 2 }}>
         <Button
           component="label"
           variant="text"

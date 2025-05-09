@@ -28,6 +28,10 @@ import {
 } from "../customHooks/FetchDataHook";
 import Spinner from "../General/Spinner";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
+import {
+  currencyFormat,
+  spanishFormat,
+} from "../utils/generalData/numbersAndCurrencies";
 
 const PriceTable = (props) => {
   const [isThereHistory, setIsThereHistory] = useState();

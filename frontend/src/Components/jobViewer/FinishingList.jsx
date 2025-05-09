@@ -14,6 +14,7 @@ import { getPrivateElementByID } from "../customHooks/FetchDataHook";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import Spinner from "../General/Spinner";
 import { pliegoPorLongitud, productoPorUnidad } from "../Precioso/formulas";
+import { currencyFormat } from "../utils/generalData/numbersAndCurrencies";
 
 const FinishingList = (props) => {
   const [useFinishingCosts, setFinishingCosts] = useState(null);
@@ -151,7 +152,9 @@ const FinishingList = (props) => {
           <ListItem key={index}>
             <ListItemText
               primary={item.Finisher.Proceso}
-              secondary={`$${item.Cost.Total} (Unitario: $${item.Cost.Unitario})`}
+              secondary={`${currencyFormat(
+                item.Cost.Total
+              )} (Unitario: ${currencyFormat(item.Cost.Unitario)})`}
             />
           </ListItem>
         ))
@@ -164,9 +167,8 @@ const FinishingList = (props) => {
         <ListItem>
           <ListItemText
             primary="Total"
-            secondary={`$${useFinishingCosts.reduce(
-              (acc, item) => acc + item.Cost.Total,
-              0
+            secondary={`${currencyFormat(
+              useFinishingCosts.reduce((acc, item) => acc + item.Cost.Total, 0)
             )}`}
           />
         </ListItem>

@@ -10,6 +10,7 @@ import FormMaterial from "../Formulario/FormMaterial";
 import PrintersDataForm from "../Formulario/PrintersDataForm";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import NewStackedBarChart from "../utils/stats/NewStackedBarChart";
+import { spanishFormat } from "../utils/generalData/numbersAndCurrencies";
 import {
   getMyDate,
   getWeekNumber,
@@ -98,7 +99,7 @@ const PrinterDetails = (props) => {
                   <ListItem divider={true}>
                     <ListItemText
                       primary="Total:"
-                      secondary={props.pd.TotalPrints || 0}
+                      secondary={spanishFormat(props.pd.TotalPrints) || 0}
                       primaryTypographyProps={titleType}
                       secondaryTypographyProps={subtitleType}
                     />
@@ -106,7 +107,7 @@ const PrinterDetails = (props) => {
                   <ListItem divider={true}>
                     <ListItemText
                       primary="Color:"
-                      secondary={props.pd.ColorPrints || 0}
+                      secondary={spanishFormat(props.pd.ColorPrints) || 0}
                       primaryTypographyProps={titleType}
                       secondaryTypographyProps={subtitleType}
                     />
@@ -114,7 +115,7 @@ const PrinterDetails = (props) => {
                   <ListItem divider={true}>
                     <ListItemText
                       primary="Blanco y negro:"
-                      secondary={props.pd.BlackPrints || 0}
+                      secondary={spanishFormat(props.pd.BlackPrints) || 0}
                       primaryTypographyProps={titleType}
                       secondaryTypographyProps={subtitleType}
                     />
@@ -122,7 +123,7 @@ const PrinterDetails = (props) => {
                   <ListItem divider={true}>
                     <ListItemText
                       primary="Grandes:"
-                      secondary={props.pd.LargePrints || 0}
+                      secondary={spanishFormat(props.pd.LargePrints) || 0}
                       primaryTypographyProps={titleType}
                       secondaryTypographyProps={subtitleType}
                     />
@@ -130,7 +131,7 @@ const PrinterDetails = (props) => {
                   <ListItem divider={true}>
                     <ListItemText
                       primary="Chicas:"
-                      secondary={props.pd.SmallPrints || 0}
+                      secondary={spanishFormat(props.pd.SmallPrints) || 0}
                       primaryTypographyProps={titleType}
                       secondaryTypographyProps={subtitleType}
                     />
@@ -147,7 +148,9 @@ const PrinterDetails = (props) => {
                     <ListItemText
                       primary="Total:"
                       secondary={
-                        props.pd.Billing[props.pd.Billing.length - 1].Total || 0
+                        spanishFormat(
+                          props.pd.Billing[props.pd.Billing.length - 1].Total
+                        ) || 0
                       }
                       primaryTypographyProps={titleType}
                       secondaryTypographyProps={subtitleType}
@@ -157,7 +160,9 @@ const PrinterDetails = (props) => {
                     <ListItemText
                       primary="Color:"
                       secondary={
-                        props.pd.Billing[props.pd.Billing.length - 1].Color || 0
+                        spanishFormat(
+                          props.pd.Billing[props.pd.Billing.length - 1].Color
+                        ) || 0
                       }
                       primaryTypographyProps={titleType}
                       secondaryTypographyProps={subtitleType}
@@ -167,7 +172,9 @@ const PrinterDetails = (props) => {
                     <ListItemText
                       primary="Blanco y negro:"
                       secondary={
-                        props.pd.Billing[props.pd.Billing.length - 1].Black || 0
+                        spanishFormat(
+                          props.pd.Billing[props.pd.Billing.length - 1].Black
+                        ) || 0
                       }
                       primaryTypographyProps={titleType}
                       secondaryTypographyProps={subtitleType}
@@ -177,7 +184,9 @@ const PrinterDetails = (props) => {
                     <ListItemText
                       primary="Grandes:"
                       secondary={
-                        props.pd.Billing[props.pd.Billing.length - 1].Large || 0
+                        spanishFormat(
+                          props.pd.Billing[props.pd.Billing.length - 1].Large
+                        ) || 0
                       }
                       primaryTypographyProps={titleType}
                       secondaryTypographyProps={subtitleType}
@@ -187,7 +196,9 @@ const PrinterDetails = (props) => {
                     <ListItemText
                       primary="Chicas:"
                       secondary={
-                        props.pd.Billing[props.pd.Billing.length - 1].Small || 0
+                        spanishFormat(
+                          props.pd.Billing[props.pd.Billing.length - 1].Small
+                        ) || 0
                       }
                       primaryTypographyProps={titleType}
                       secondaryTypographyProps={subtitleType}
@@ -243,7 +254,6 @@ const PrinterDetails = (props) => {
       task="edit"
     />
   );
-
 
   const error = (
     <ErrorMessage
