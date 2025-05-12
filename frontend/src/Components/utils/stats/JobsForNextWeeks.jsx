@@ -1,13 +1,20 @@
-import React from "react";
+import React, { useEffect } from "react";
 import NewStackedBarChart from "./NewStackedBarChart";
+import { NewSimpleLineChart } from "./NewSimpleLineChart";
 import JobTypes from "../../Jobs/JobTypes";
 import ErrorMessage from "../../ErrorMessage/ErrorMessage";
 
 const JobsForNextDays = (props) => {
   const [useError, setError] = React.useState(null);
-  const [from, setFrom] = React.useState(1);
-  const [to, setTo] = React.useState(60);
+  const [from, setFrom] = React.useState(props.from || 1);
+  const [to, setTo] = React.useState(props.to || 60); // next 60 days
   const errorRef = React.useRef(false); // Bandera de control
+
+  useEffect(() => {
+    // Aquí puedes agregar lógica adicional si es necesario cuando cambien las fechas
+    errorRef.current = false; // Resetea la bandera de error al cambiar las fechas
+    setError(null); // Limpia cualquier error previo
+  }, [from, to]);
 
   const getMyDate = (event) => {
     const dd = new Date(event).getUTCDate();
@@ -69,6 +76,9 @@ const JobsForNextDays = (props) => {
       data={jobsPerOutDate}
       dataKey={dataKeys}
       title={"Trabajos para la proxima semana"}
+      selectFrom={setFrom}
+      selectTo={setTo}
+      route={props.route}
     />
   ) : (
     <ErrorMessage

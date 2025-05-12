@@ -20,7 +20,10 @@ import {
   myWrapperStyle,
 } from "./NewRadialBar";
 
-import { convertirFecha } from "../generalData/fechaDiccionario";
+import {
+  convertirFecha,
+  calculateDaysBetweenDates,
+} from "../generalData/fechaDiccionario";
 import { getPrivateElements } from "../../customHooks/FetchDataHook";
 import FullJobsRender from "../../Pages/FullJobsRender";
 import {
@@ -32,6 +35,10 @@ import {
   CardHeader,
   CardContent,
   Typography,
+  ButtonGroup,
+  Button,
+  FormGroup,
+  Grid,
 } from "@mui/material";
 import { Title } from "./Title";
 
@@ -102,6 +109,37 @@ const NewStackedBarChart = (props) => {
   return (
     <>
       {props.title && <Title title={props.title} />}
+      <FormGroup>
+        <Grid container spacing={4}>
+          <Grid item xs={12} sm={6} md={4} lg={3} textAlign={"right"}>
+            <TextField
+              type="date"
+              label="Desde"
+              variant="standard"
+              size="small"
+              color="secondary"
+              onChange={(e) => {
+                props.selectFrom(
+                  calculateDaysBetweenDates(e.target.value, Date())
+                );
+              }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} md={4} lg={3}>
+            <TextField
+              type="date"
+              label="Hasta"
+              variant="standard"
+              size="small"
+              onChange={(e) => {
+                props.selectTo(
+                  calculateDaysBetweenDates(Date(), e.target.value)
+                );
+              }}
+            />
+          </Grid>
+        </Grid>
+      </FormGroup>
       <ResponsiveContainer
         maxHeight="900px"
         minHeight="300px"

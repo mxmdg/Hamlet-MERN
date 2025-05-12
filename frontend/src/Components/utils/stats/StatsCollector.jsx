@@ -47,7 +47,7 @@ const StatsCollector = ({ children, route }) => {
       {React.Children.map(children, (child) => {
         if (React.isValidElement(child)) {
           return (
-            <Grid item xs={12} sm={6} xl={6}>
+            <Grid item xs={12} sm={12} xl={6}>
               <Paper
                 elevation={2}
                 sx={{
@@ -61,6 +61,7 @@ const StatsCollector = ({ children, route }) => {
               >
                 {React.cloneElement(child, {
                   jobs: jobsList,
+                  route: route,
                   //parts: partsList,
                 })}
               </Paper>
@@ -68,7 +69,7 @@ const StatsCollector = ({ children, route }) => {
           );
         }
         return (
-          <Grid item xs={12} sm={6} md={6} key={child.key}>
+          <Grid item xs={12} sm={12} md={6} key={child.key}>
             <Paper elevation={2}>{child}</Paper>
           </Grid>
         );

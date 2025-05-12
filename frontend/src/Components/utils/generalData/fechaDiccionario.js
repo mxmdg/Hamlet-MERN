@@ -64,12 +64,34 @@ export const handleDate = (date) => {
 
 export function procesarFechaISO(fechaISO) {
   const fecha = new Date(fechaISO);
-  const ddmmyyhhmmss = { day: "numeric", month: "numeric", year: "numeric", hour: "numeric", minute: "numeric", second: "numeric" };
+  const ddmmyyhhmmss = {
+    day: "numeric",
+    month: "numeric",
+    year: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+    second: "numeric",
+  };
   const mmyy = { month: "numeric", year: "numeric" };
   const fechaFormateada = fecha.toLocaleDateString("es-ES", mmyy);
   const horaFormateada = fecha.toLocaleTimeString("es-ES", ddmmyyhhmmss);
   return `${fechaFormateada}`;
 }
 
+export const calculateDaysBetweenDates = (startDate, endDate) => {
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+
+  console.log(start, end);
+
+  // Calcular la diferencia en milisegundos
+  const diffTime = end - start;
+
+  // Convertir la diferencia a días
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  console.log(diffDays);
+
+  return diffDays;
+};
 
 export default diccionarioFechas;

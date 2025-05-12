@@ -24,8 +24,10 @@ import { AuthContext } from "../context/AuthContext";
 import { useContext } from "react";
 import Fetch from "../General/Fetch";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
-import { currencyCotization } from "../utils/generalData/numbersAndCurrencies";
-import { set } from "react-hook-form";
+import {
+  currencyCotization,
+  currencyFormat,
+} from "../utils/generalData/numbersAndCurrencies";
 import Spinner from "../General/Spinner";
 
 const PricesMainContainer = () => {
@@ -35,7 +37,7 @@ const PricesMainContainer = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [useTable, setTable] = useState(false);
-  const [cotization, setCotization] = useState(0);
+  const [cotizations, setCotizations] = useState([]);
   const context = useContext(AuthContext);
 
   const validateAdminUser = () => {
@@ -54,20 +56,20 @@ const PricesMainContainer = () => {
   };
 
   useEffect(() => {
-    const fetchCotization = async () => {
-      const data = await currencyCotization("usd");
-      if (data) {
-        const lastCotization = data;
-        setCotization(lastCotization);
+    const fetchCotization = async (codes) => {
+      try {
+        const results = await Promise.all(
+          codes.map((code) => currencyCotization(code))
+        );
+        setCotizations(results);
+      } catch (error) {
+        setError(error);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
-    try {
-      fetchCotization();
-    } catch (error) {
-      setError(error);
-      setLoading(false);
-    }
+
+    fetchCotization(["usd"]);
   }, []);
 
   const failure = <ErrorMessage message={error} />;
@@ -80,10 +82,22 @@ const PricesMainContainer = () => {
         <Card>
           <CardHeader
             title={collection}
+            subheaderTypographyProps={{
+              variant: "subtitle1",
+            }}
             subheader={
-              cotization !== 0
-                ? `${cotization.results[0].detalle[0].descripcion}: $ ${cotization.results[0].detalle[0].tipoCotizacion}.-`
-                : "El codigo de la moneda es invalido"
+              cotizations.length > 0
+                ? cotizations
+                    .map(
+                      (cot) =>
+                        `${
+                          cot.results[0].detalle[0].descripcion
+                        }: ${currencyFormat(
+                          cot.results[0].detalle[0].tipoCotizacion
+                        )}`
+                    )
+                    .join(", ")
+                : "No se encontraron cotizaciones válidas"
             }
             action={
               <ToggleButtonGroup

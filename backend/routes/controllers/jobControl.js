@@ -33,6 +33,8 @@ jobControl.getCompleteJobs = async (req, res) => {
           ? { [property]: { $regex: queryText, $options: "i" } }
           : property === "Cantidad"
           ? { [property]: { $eq: queryText } }
+          : property === "Partes"
+          ? { [property]: { $size: parseInt(queryText) } }
           : { [property]: queryText };
 
       const jobList = await jobs.esquema

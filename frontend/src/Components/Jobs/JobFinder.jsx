@@ -75,6 +75,12 @@ const JobFinder = (props) => {
       queryLabel: "jobParts.Type",
     },
     {
+      value: "Partes",
+      label: "Cantidad de Partes",
+      queryType: "number",
+      queryLabel: "Partes",
+    },
+    {
       value: "Partes.Name",
       label: "Nombre de Parte",
       queryType: "string",
@@ -410,8 +416,8 @@ const JobFinder = (props) => {
           </Grid>
           <Grid item xs={12} sm={12} md={12}>
             <StatsCollector route={useURL}>
+              <JobsForNextDays from={365} to={60} />
               <JobsPerDate />
-              <JobsForNextDays />
               <JobsPerClient rank={10} />
               <JobsPerSeller />
               <JobsPerType />
