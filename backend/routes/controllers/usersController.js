@@ -136,7 +136,7 @@ const forgotPassword = async (req, res, next) => {
 
     // Guardar el token en la base de datos junto con el usuario
     user.resetPasswordToken = token;
-    user.resetPasswordExpires = Date.now() + 36000; // 1 hora de expiración
+    user.resetPasswordExpires = Date.now() + 60 * 60 * 24; // 1 dia de expiración
     await user.save();
 
     // Enviar correo electrónico con el enlace para restablecer la contraseña
@@ -159,7 +159,7 @@ const forgotPassword = async (req, res, next) => {
       }
     });
 
-    const resetPasswordLink = `${URL}${uiPort}/users/reset-password/${token}`;
+    const resetPasswordLink = `${process.env.URL}${uiPort}/users/reset-password/${token}`;
     const mailOptions = {
       from: "webapproval@imprentadorrego.com.ar",
       to: email,

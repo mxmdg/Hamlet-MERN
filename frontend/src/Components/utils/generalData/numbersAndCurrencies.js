@@ -37,8 +37,8 @@ export const currencyCotization = async (code = "usd") => {
     console.log(data);
     return data;
   } catch (error) {
-    console.error("Error fetching currency data:", error);
-    return null;
+    console.log("Error fetching currency data:", error);
+    return error;
   }
 };
 

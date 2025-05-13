@@ -20,6 +20,7 @@ import {
   fechtData,
   getPrivateElementByID,
 } from "../../customHooks/FetchDataHook";
+import Autocomplete from "@mui/material/Autocomplete";
 
 import DarkWoodBackground from "../../../img/Dark_Wood_Background.jpg";
 
@@ -29,36 +30,38 @@ const QuickSpinCalc = (props) => {
   const [useStock, selectStock] = useState([]);
   const [useSpin, setSpin] = useState("0");
 
-  /* const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    control,
-  } = useForm(); */
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(useStock);
-    const spin = Math.ceil(
-      Math.ceil(usePages / 2) * (useStock.Espesor_Resma / 500)
-    );
-    setSpin(spin);
+  const calculateSpin = (pages, stock) => {
+    if (pages && stock?.Espesor_Resma) {
+      const spin = Math.ceil(
+        Math.ceil(pages / 2) * (stock.Espesor_Resma / 500)
+      );
+      setSpin(spin);
+    } else {
+      setSpin("0");
+    }
   };
 
   const handleChange = async (e) => {
     try {
-      console.log(e.target.value);
       const stock = await getPrivateElementByID("materiales", e.target.value);
-      console.log(stock.data);
       selectStock(stock.data);
+      calculateSpin(usePages, stock.data);
     } catch (e) {
       return { error: e.message };
     }
   };
 
   const handlePageChange = (e) => {
-    e.preventDefault();
-    setPages(e.target.value);
+    const pages = e.target.value;
+    setPages(pages);
+    calculateSpin(pages, useStock);
+  };
+
+  const handleMaterialChange = (event, value) => {
+    if (value) {
+      selectStock(value);
+      calculateSpin(usePages, value);
+    }
   };
 
   useEffect(() => {
@@ -71,10 +74,10 @@ const QuickSpinCalc = (props) => {
 
   return (
     <Card elevation={10}>
-      <CardHeader title="Calculadora de lomo" titleTypographyProps={{color: "secondary", fontWeight: "600"}}></CardHeader>
+      <CardHeader title="Calculadora de lomo" titleTypographyProps={{color: "primary", fontWeight: "600"}}></CardHeader>
       <Divider />
       <CardContent>
-        <form name="form2" action="" onSubmit={handleSubmit}>
+        <form name="form2" action="">
           <Grid
             container
             spacing={{ xs: 1, md: 2 }}
@@ -87,48 +90,32 @@ const QuickSpinCalc = (props) => {
                 label="Paginas"
                 variant="outlined"
                 name="Pages"
-                color="secondary"
+                color="primary"
                 size="small"
                 onChange={handlePageChange}
               />
             </Grid>
 
             <Grid item xs={1} sm={2} md={4}>
-              <FormControl sx={{ width: "90%" }}>
-                <InputLabel id="demo-simple-select-label">Material</InputLabel>
-                <Select
-                  name="partStock"
-                  id="partStock"
-                  label="Material"
-                  onChange={handleChange}
-                  defaultValue={""}
-                  variant="outlined"
-                  sx={{ width: "95%" }}
-                  color="secondary"
-                  size="small"
-                >
-                  {stocks.map((Stock) => (
-                    <MenuItem value={Stock._id} id={Stock._id} key={Stock._id}>
-                      {Stock.Nombre_Material} - {Stock.Marca}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+              <Autocomplete
+                options={stocks}
+                getOptionLabel={(option) =>
+                  `${option.Nombre_Material} - ${option.Marca}`
+                }
+                onChange={handleMaterialChange}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Material"
+                    variant="outlined"
+                    color="primary"
+                    size="small"
+                  />
+                )}
+              />
             </Grid>
             <Grid item xs={1} sm={2} md={4}>
-              <FormControl sx={{ width: "85%" }}>
-                <Button
-                  type="submit"
-                  size="large"
-                  variant="outlined"
-                  color="secondary"
-                >
-                  Calcular
-                </Button>
-              </FormControl>
-            </Grid>
-            <Grid item xs={1} sm={2} md={4}>
-              <Typography variant="h5" color="secondary">Lomo: {useSpin} mm</Typography>
+              <Typography variant="h5" color="primary">Lomo: {useSpin} mm</Typography>
             </Grid>
           </Grid>
         </form>

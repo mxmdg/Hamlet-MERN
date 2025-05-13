@@ -3,6 +3,7 @@ import { Container, Grid, Divider, Paper } from "@mui/material/";
 import { Register } from "./Register";
 import { Login } from "./Login";
 import QuickSpinCalc from "../utils/spinCalculator/QuickSpinCalc";
+import NumberGenerator from "../utils/generalData/NumberGenerator";
 import ImpoProvider from "../utils/impo/ImpoContext";
 import Canvas from "../utils/impo/Canvas";
 
@@ -20,6 +21,7 @@ export const LogPage = () => {
         </Grid>
         <Grid item xs={12} sm={4}>
           <QuickSpinCalc />
+          <NumberGenerator />
         </Grid>
         <Grid item xs={12} sm={8}>
           <Paper elevation={10}>

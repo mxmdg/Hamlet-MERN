@@ -10,6 +10,8 @@ import {
   Alert,
 } from "@mui/material";
 
+import {ListItemTypographyProps} from "../MaterialCustomStyles/MaterialCustomStyles";
+
 import { getPrivateElementByID } from "../customHooks/FetchDataHook";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import Spinner from "../General/Spinner";
@@ -155,11 +157,13 @@ const FinishingList = (props) => {
               secondary={`${currencyFormat(
                 item.Cost.Total
               )} (Unitario: ${currencyFormat(item.Cost.Unitario)})`}
+              primaryTypographyProps={ListItemTypographyProps.primary}
+              secondaryTypographyProps={ListItemTypographyProps.secondary}
             />
           </ListItem>
         ))
       ) : (
-        <Alert severity="warning" variant="filled">
+        <Alert severity="warning" variant="outlined">
           No hay procesos de terminacion seleccionados.
         </Alert>
       )}
@@ -170,6 +174,8 @@ const FinishingList = (props) => {
             secondary={`${currencyFormat(
               useFinishingCosts.reduce((acc, item) => acc + item.Cost.Total, 0)
             )}`}
+            primaryTypographyProps={ListItemTypographyProps.primary}
+            secondaryTypographyProps={ListItemTypographyProps.secondary}
           />
         </ListItem>
       )}

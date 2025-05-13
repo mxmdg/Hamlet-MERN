@@ -37,7 +37,7 @@ const PricesMainContainer = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [useTable, setTable] = useState(false);
-  const [cotizations, setCotizations] = useState([]);
+  const [cotizations, setCotizations] = useState(null);
   const context = useContext(AuthContext);
 
   const validateAdminUser = () => {
@@ -85,21 +85,21 @@ const PricesMainContainer = () => {
             subheaderTypographyProps={{
               variant: "subtitle1",
             }}
-            subheader={
-              cotizations.length > 0
+            /* subheader={
+              cotizations !== null && cotizations.length > 0
                 ? cotizations
                     .map(
                       (cot) =>
                         `${
-                          cot.results[0].detalle[0].descripcion
+                          cot?.results[0]?.detalle[0]?.descripcion
                         }: ${currencyFormat(
-                          cot.results[0].detalle[0].tipoCotizacion
+                          cot?.results[0]?.detalle[0]?.tipoCotizacion
                         )}`
                     )
                     .join(", ")
                 : "No se encontraron cotizaciones válidas"
-            }
-            action={
+            } */
+            action={  
               <ToggleButtonGroup
                 value={useTable}
                 exclusive
