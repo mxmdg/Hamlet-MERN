@@ -53,10 +53,10 @@ export const themeMxm = createTheme({
       contrastText: "#092a3b",
     },
     success: {
-      main: "#57a95b", // adjusted for better contrast
-      light: "#73b978",
-      dark: "#3d6d3e",
-      contrastText: "#162910",
+      main: "#2e7d32", // Verde principal (oscuro y elegante)
+      light: "#60ad5e", // Verde claro
+      dark: "rgb(15, 64, 69)", // Verde más oscuro
+      contrastText: "#ffffff", // Texto blanco para buen contraste
     },
     background: {
       default: "linear-gradient(45deg, #D9AFD9 0%, #97D9E1 100%)",

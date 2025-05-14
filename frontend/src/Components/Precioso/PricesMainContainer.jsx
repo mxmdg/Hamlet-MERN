@@ -37,7 +37,8 @@ const PricesMainContainer = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [useTable, setTable] = useState(false);
-  const [cotizations, setCotizations] = useState(null);
+  const [cotizations, setCotizations] = useState([]);
+  const [cotizationEnable, setCotizationEnable] = useState(false);
   const context = useContext(AuthContext);
 
   const validateAdminUser = () => {
@@ -61,10 +62,15 @@ const PricesMainContainer = () => {
         const results = await Promise.all(
           codes.map((code) => currencyCotization(code))
         );
+        if (!results || results.some((result) => result instanceof Error)) {
+          setCotizationEnable(false);
+          throw new Error("Error fetching one or more cotizations");
+        }
         setCotizations(results);
+        setCotizationEnable(true);
+        setLoading(false);
       } catch (error) {
-        setError(error);
-      } finally {
+        setError({ message: error.message || "Failed to fetch cotizations" });
         setLoading(false);
       }
     };
@@ -72,7 +78,17 @@ const PricesMainContainer = () => {
     fetchCotization(["usd"]);
   }, []);
 
-  const failure = <ErrorMessage message={error} />;
+  const failure = (
+    <Container>
+      <ErrorMessage
+        message={error?.message || "Unknown error"}
+        action={() => {
+          setError(null);
+          setCotizationEnable(false);
+        }}
+      />
+    </Container>
+  );
 
   const loadingComponent = <Spinner />;
 
@@ -85,21 +101,42 @@ const PricesMainContainer = () => {
             subheaderTypographyProps={{
               variant: "subtitle1",
             }}
-            /* subheader={
-              cotizations !== null && cotizations.length > 0
-                ? cotizations
+            subheader={
+              cotizationEnable ? (
+                cotizations.length > 0 ? (
+                  cotizations
                     .map(
                       (cot) =>
                         `${
-                          cot?.results[0]?.detalle[0]?.descripcion
+                          cot.results[0].detalle[0].descripcion
                         }: ${currencyFormat(
-                          cot?.results[0]?.detalle[0]?.tipoCotizacion
+                          cot.results[0].detalle[0].tipoCotizacion
                         )}`
                     )
                     .join(", ")
-                : "No se encontraron cotizaciones válidas"
-            } */
-            action={  
+                ) : (
+                  <Container>
+                    <ErrorMessage
+                      message={error?.message || "Cotizaciones no disponibles"}
+                      severity="info"
+                      variant="outlined"
+                    />
+                  </Container>
+                )
+              ) : (
+                <Container>
+                  <ErrorMessage
+                    message={
+                      error?.message ||
+                      "Cotizacion Moneda extranjera no disponible"
+                    }
+                    severity="info"
+                    variant="standard"
+                  />
+                </Container>
+              )
+            }
+            action={
               <ToggleButtonGroup
                 value={useTable}
                 exclusive
@@ -132,7 +169,7 @@ const PricesMainContainer = () => {
     </Box>
   );
 
-  return loading ? loadingComponent : error ? failure : success;
+  return loading ? loadingComponent : error !== null ? failure : success;
 };
 
 export default PricesMainContainer;

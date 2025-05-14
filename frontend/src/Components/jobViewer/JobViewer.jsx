@@ -12,6 +12,7 @@ import {
   putPrivateElement,
   deletePrivateElement,
 } from "../customHooks/FetchDataHook";
+import { Container, Box } from "@mui/material";
 
 export const JobViewer = (props) => {
   const [useCurrentJob, setCurrentJob] = useState(props.job || null);
@@ -53,15 +54,16 @@ export const JobViewer = (props) => {
       return preloader;
     }
   };
-  return useError ? (
-    <ErrorMessage
-      message={useError.message}
-      severity={"warning"}
-      action={() => {
-        navigate(-1);
+
+  return (
+    <Box
+      sx={{
+        padding: 0,
+        height: "100%",
+        width: "100%",
       }}
-    />
-  ) : (
-    output()
+    >
+      {useError ? <ErrorMessage message={useError.message} /> : output()}
+    </Box>
   );
 };

@@ -353,7 +353,7 @@ const JobDetail = (props) => {
     <Container>
       <Card elevation={16}>
         <CardHeader
-          avatar={
+          /* avatar={
             <Avatar
               variant="circle"
               sx={{
@@ -363,7 +363,7 @@ const JobDetail = (props) => {
             >
               <MenuBookIcon color="success" />
             </Avatar>
-          }
+          } */
           action={
             <Button
               onClick={() => {
@@ -411,10 +411,12 @@ const JobDetail = (props) => {
             </Box>
           } */
           title={
-            job.Cantidad +
-            " | " +
             job.Nombre +
-            (job.Company ? ` - ${job.Company.Nombre}` : "")
+            " | " +
+            (job.Company ? `${job.Company.Nombre}` : "") +
+            " | " +
+            "Cantidad: " +
+            job.Cantidad
           }
           subheader={
             job.Owner

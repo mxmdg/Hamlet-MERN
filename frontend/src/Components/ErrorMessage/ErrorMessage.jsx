@@ -40,7 +40,7 @@ const ErrorMessage = (props) => {
 
   const alert = (
     <Alert
-      variant="filled"
+      variant={props.variant || "filled"}
       severity={props.severity || "error"}
       action={props.action ? actionButton : ""}
     >

@@ -1,16 +1,17 @@
 import React from "react";
 import { useEffect, useState } from "react";
 
-import {
-  Button,
-  List,
-  ListItem,
-  ListItemText,
-  Typography,
-  Alert,
-} from "@mui/material";
+import { Button, Typography, Alert, Box } from "@mui/material";
 
-import {ListItemTypographyProps} from "../MaterialCustomStyles/MaterialCustomStyles";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+
+import { ListItemTypographyProps } from "../MaterialCustomStyles/MaterialCustomStyles";
 
 import { getPrivateElementByID } from "../customHooks/FetchDataHook";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
@@ -143,50 +144,91 @@ const FinishingList = (props) => {
       <ErrorMessage
         message={useError.message}
         severity={useError.severity || "error"}
+        variant="standard"
         action={() => setError(null)}
       />
     );
 
   return (
-    <List dense>
-      {Array.isArray(useFinishingCosts) && useFinishingCosts.length > 0 ? (
-        useFinishingCosts.map((item, index) => (
-          <ListItem key={index}>
-            <ListItemText
-              primary={item.Finisher.Proceso}
-              secondary={`${currencyFormat(
-                item.Cost.Total
-              )} (Unitario: ${currencyFormat(item.Cost.Unitario)})`}
-              primaryTypographyProps={ListItemTypographyProps.primary}
-              secondaryTypographyProps={ListItemTypographyProps.secondary}
-            />
-          </ListItem>
-        ))
-      ) : (
-        <Alert severity="warning" variant="outlined">
-          No hay procesos de terminacion seleccionados.
-        </Alert>
-      )}
-      {Array.isArray(useFinishingCosts) && useFinishingCosts.length > 0 && (
-        <ListItem>
-          <ListItemText
-            primary="Total"
-            secondary={`${currencyFormat(
-              useFinishingCosts.reduce((acc, item) => acc + item.Cost.Total, 0)
-            )}`}
-            primaryTypographyProps={ListItemTypographyProps.primary}
-            secondaryTypographyProps={ListItemTypographyProps.secondary}
-          />
-        </ListItem>
-      )}
-      <Button
-        variant="contained"
-        color="secondary"
-        onClick={() => handleSendData()}
-      >
-        Enviar Datos
-      </Button>
-    </List>
+    <TableContainer sx={{ margin: 0, padding: 0 }}>
+      <Table sx={{ minWidth: 300 }} size="small" aria-label="finishing table">
+        <TableHead>
+          <TableRow>
+            <TableCell sx={{ fontWeight: "bold", padding: "4px" }}>
+              Proceso
+            </TableCell>
+            <TableCell
+              align="right"
+              sx={{ fontWeight: "bold", padding: "4px" }}
+            >
+              Valor Unitario
+            </TableCell>
+            <TableCell
+              align="right"
+              sx={{ fontWeight: "bold", padding: "4px" }}
+            >
+              Total
+            </TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {Array.isArray(useFinishingCosts) && useFinishingCosts.length > 0 ? (
+            useFinishingCosts.map((item, index) => (
+              <TableRow key={index}>
+                <TableCell component="th" scope="row" sx={{ padding: "4px" }}>
+                  {item.Finisher.Proceso}
+                </TableCell>
+                <TableCell align="right" sx={{ padding: "4px" }}>
+                  {currencyFormat(item.Cost.Unitario)}
+                </TableCell>
+                <TableCell align="right" sx={{ padding: "4px" }}>
+                  {currencyFormat(item.Cost.Total)}
+                </TableCell>
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={3} align="center" sx={{ padding: "4px" }}>
+                No hay procesos de terminación seleccionados.
+              </TableCell>
+            </TableRow>
+          )}
+          {Array.isArray(useFinishingCosts) && useFinishingCosts.length > 0 && (
+            <TableRow>
+              <TableCell
+                component="th"
+                scope="row"
+                sx={{ fontWeight: "bold", padding: "4px" }}
+              >
+                Total
+              </TableCell>
+              <TableCell />
+              <TableCell
+                align="right"
+                sx={{ fontWeight: "bold", padding: "4px" }}
+              >
+                {currencyFormat(
+                  useFinishingCosts.reduce(
+                    (acc, item) => acc + item.Cost.Total,
+                    0
+                  )
+                )}
+              </TableCell>
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+      <Box sx={{ display: "flex", justifyContent: "flex-end", padding: "8px" }}>
+        <Button
+          variant="contained"
+          color="warning"
+          onClick={() => handleSendData()}
+          sx={{ fontSize: "0.8rem" }}
+        >
+          Enviar Datos
+        </Button>
+      </Box>
+    </TableContainer>
   );
 };
 

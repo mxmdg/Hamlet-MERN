@@ -52,6 +52,7 @@ import JobsPerClient from "./Components/utils/stats/JobsPerClient";
 import JobsPerSeller from "./Components/utils/stats/JobsPerSeller";
 import JobsPerType from "./Components/utils/stats/JobsPerType";
 import JobFinder from "./Components/Jobs/JobFinder";
+import { headers } from "./Components/Jobs/jobsTable/headers";
 
 const Router = () => {
   const context = useContext(AuthContext);
