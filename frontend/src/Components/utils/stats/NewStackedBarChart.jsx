@@ -118,6 +118,9 @@ const NewStackedBarChart = (props) => {
               variant="standard"
               size="small"
               color="secondary"
+              InputLabelProps={{
+                shrink: true, // Ensures the label stays above the input
+              }}
               onChange={(e) => {
                 props.selectFrom(
                   calculateDaysBetweenDates(e.target.value, Date())
@@ -131,6 +134,10 @@ const NewStackedBarChart = (props) => {
               label="Hasta"
               variant="standard"
               size="small"
+              color="secondary"
+              InputLabelProps={{
+                shrink: true, // Ensures the label stays above the input
+              }}
               onChange={(e) => {
                 props.selectTo(
                   calculateDaysBetweenDates(Date(), e.target.value)

@@ -16,6 +16,7 @@ import TablePagination from "@mui/material/TablePagination";
 import LastSeen from "./LastUpdate";
 import MyLineChart from "./LineChart";
 import SimpleAreaChart from "../utils/stats/SimpleAreaChart";
+import { currencyCotizationPerDate, roundCents } from "../utils/generalData/numbersAndCurrencies";
 
 const style = {
   position: "absolute",
@@ -32,6 +33,8 @@ export default function Historial(props) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [open, setOpen] = React.useState(true);
+  const [convertedValues, setConvertedValues] = React.useState({});
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
     setOpen(false);
@@ -45,7 +48,17 @@ export default function Historial(props) {
     return formattedDate;
   };
 
-  React.useEffect(() => {}, [open]);
+  React.useEffect(() => {
+    const fetchConvertedValues = async () => {
+      const conversions = {};
+      for (const row of props.data) {
+        const date = row.Fecha.substring(0, 10);
+        conversions[row.Fecha] = await convertToPastDollar(row.Valor, date);
+      }
+      setConvertedValues(conversions);
+    };
+    fetchConvertedValues();
+  }, [props.data]);
 
   const tableHead = ((data) => {
     try {
@@ -64,6 +77,18 @@ export default function Historial(props) {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
+
+  const convertToPastDollar = async (value, date) => {
+    try {
+      const cotization = await currencyCotizationPerDate("usd", date);
+    const cotizationValue = cotization.results[0].detalle[0].tipoCotizacion;
+    console.log(cotizationValue); 
+    return (value / cotizationValue).toFixed(4);
+    } catch (error) {
+      return "Error";
+    }
+    
+  }
 
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -118,9 +143,9 @@ export default function Historial(props) {
                 {props.data
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => (
-                    <TableRow>
+                    <TableRow key={row.Fecha}>
                       <TableCell component="th" scope="row" align="left">
-                        {row.Valor}
+                        {`${row.Valor} (u$d ${convertedValues[row.Fecha] || "Loading..."})`}
                       </TableCell>
                       <TableCell component="th" scope="row" align="left">
                         {row.Entrada}

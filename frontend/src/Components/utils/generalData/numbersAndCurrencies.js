@@ -48,7 +48,7 @@ export const currencyCotization = async (code = "usd") => {
 export const currencyCotizationPerDate = async (code = "usd", date) => {
   try {
     const response = await fetch(
-      `https://api.bcra.gob.ar/estadisticascambiarias/v1.0/Cotizaciones/${code}?fechaDesde=${date}fechaHasta=${date}`
+      `https://api.bcra.gob.ar/estadisticascambiarias/v1.0/Cotizaciones/${code}?fechaDesde=${date}&fechaHasta=${date}`
     );
     const data = await response.json();
     console.log(data);

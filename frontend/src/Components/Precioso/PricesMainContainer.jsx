@@ -75,7 +75,7 @@ const PricesMainContainer = () => {
       }
     };
 
-    fetchCotization(["usd"]);
+    fetchCotization(["usd", "eur", "cop"]);
   }, []);
 
   const failure = (
@@ -155,7 +155,7 @@ const PricesMainContainer = () => {
             {useTable ? (
               <Fetch collection="precios" title="Costos" />
             ) : (
-              <Precioso collection="precios" priceState={useNewPrice} />
+              <Precioso collection="precios" priceState={useNewPrice} cotization={cotizations[0] !== undefined ? cotizations[0].results[0].detalle[0].tipoCotizacion : 1}/>
             )}
           </CardContent>
           <CardActions>

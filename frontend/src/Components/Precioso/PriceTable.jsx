@@ -165,7 +165,9 @@ const PriceTable = (props) => {
                           modalText={value}
                         />
                       ) : (
-                        value
+                        key === "valor" 
+                        ? `${value} (u$d ${(value / props.cotization).toFixed(4)})`
+                        : value
                       )}
                     </TableCell>
                   </TableRow>

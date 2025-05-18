@@ -93,6 +93,7 @@ const Precioso = (props) => {
               formCLC={formulaCLC(price)}
               formData={PricesDataForm}
               editor={setEdit}
+              cotization={props.cotization}
             />
           </Grid>
         ))
