@@ -1,3 +1,4 @@
+// Convierte una fecha en formato "dd/mm/yyyy" a una cadena ISO 8601 (UTC).
 export function convertirFecha(fecha) {
   const partes = fecha.split("/");
   const dia = partes[0];
@@ -7,6 +8,8 @@ export function convertirFecha(fecha) {
   return fechaUTC.toISOString();
 }
 
+// Devuelve una cadena descriptiva para fechas relativas como "hace 1 día" o "en 1 día".
+// Por ejemplo, "hace 1 día" se convierte en "Ayer", y "en 1 día" en "Mañana".
 const diccionarioFechas = (cadena) => {
   switch (cadena) {
     case "en 1 día":
@@ -29,6 +32,8 @@ const diccionarioFechas = (cadena) => {
   }
 };
 
+// Calcula el número de la semana del año para una fecha dada.
+// Devuelve un array con el año y el número de la semana.
 export function getWeekNumber(d) {
   // Copy date so don't modify original
   d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
@@ -43,6 +48,10 @@ export function getWeekNumber(d) {
   return [d.getUTCFullYear(), weekNo];
 }
 
+// Devuelve un objeto con diferentes formatos de una fecha:
+// - `ddmmyy`: Fecha en formato "dd/mm/yyyy".
+// - `mmyy`: Fecha en formato "mm/yyyy".
+// - `ww`: Número de la semana del año.
 export const getMyDate = (event) => {
   const dd = new Date(event).getUTCDate();
   const mm = new Date(event).getUTCMonth();
@@ -55,6 +64,7 @@ export const getMyDate = (event) => {
   return { ddmmyy: MiDate, mmyy: MiMont, ww };
 };
 
+// Formatea una fecha en formato "dd/mm/yyyy" según la configuración regional "es-ES".
 export const handleDate = (date) => {
   const fecha = new Date(date);
   const options = { day: "numeric", month: "numeric", year: "numeric" };
@@ -62,6 +72,7 @@ export const handleDate = (date) => {
   return formattedDate;
 };
 
+// Procesa una fecha ISO y devuelve una cadena en formato "mm/yyyy".
 export function procesarFechaISO(fechaISO) {
   const fecha = new Date(fechaISO);
   const ddmmyyhhmmss = {
@@ -78,6 +89,8 @@ export function procesarFechaISO(fechaISO) {
   return `${fechaFormateada}`;
 }
 
+// Calcula la cantidad de días entre dos fechas dadas.
+// Devuelve un número entero que representa la diferencia en días.
 export const calculateDaysBetweenDates = (startDate, endDate) => {
   const start = new Date(startDate);
   const end = new Date(endDate);
@@ -93,5 +106,33 @@ export const calculateDaysBetweenDates = (startDate, endDate) => {
 
   return diffDays;
 };
+
+/**
+ * Extrae la fecha y la hora de una cadena en formato "D:20150812194038+03'00'" o "20150812194038+03'00'".
+ * Devuelve un objeto con las propiedades `fecha` y `hora`.
+ */
+export function getDateAndTime(cadena) {
+  
+  try {
+    const regex1 = /^D:(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/;
+    const regex2 = /(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/;
+    const match = cadena.match(regex1) || cadena.match(regex2);
+
+     if (!match) {
+        return ({dateAndTime: cadena});
+      }
+
+      
+      const [_, year, month, day, hour, minute, second] = match;
+      const date = `${day}/${month}/${year}`;
+      const time = `${hour}:${minute}:${second}`;
+
+      return { date, time, dateAndTime: `${date} ${time}` };
+  } catch (error) {
+    // Si ocurre un error, devuelve la cadena original
+      return ({dateAndTime: cadena});
+  }
+ 
+}
 
 export default diccionarioFechas;

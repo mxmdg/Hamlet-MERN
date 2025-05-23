@@ -462,7 +462,7 @@ export default function EnhancedTable(props) {
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
       <ButtonGroup>
-        <DownloadCSV data={props.rows} fileName={`${props.collection}`} />
+        <DownloadCSV head={props.headCells.map((h)=> h.label)} data={props.rows} fileName={`${props.collection}`} />
         <DownloadJSON data={props.rows} fileName={`${props.collection}`} />
       </ButtonGroup>
 

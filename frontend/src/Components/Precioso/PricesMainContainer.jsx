@@ -75,7 +75,7 @@ const PricesMainContainer = () => {
       }
     };
 
-    fetchCotization(["usd", "eur", "cop"]);
+    fetchCotization(["usd", "eur", "brl"]);
   }, []);
 
   const failure = (

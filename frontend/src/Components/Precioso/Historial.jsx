@@ -17,6 +17,8 @@ import LastSeen from "./LastUpdate";
 import MyLineChart from "./LineChart";
 import SimpleAreaChart from "../utils/stats/SimpleAreaChart";
 import { currencyCotizationPerDate, roundCents } from "../utils/generalData/numbersAndCurrencies";
+import DownloadCSV from "../utils/DownloadCSV/DownloadCSV";
+import DownloadJSON from "../utils/DownloadCSV/DownloadJSON";
 
 const style = {
   position: "absolute",
@@ -164,6 +166,8 @@ export default function Historial(props) {
               </TableBody>
             </Table>
           </TableContainer>
+          <DownloadCSV head={tableHead} data={props.data} fileName={`Historial ${props.process}`}/>
+          <DownloadJSON data={props.data} fileName={`Historial ${props.process}`}/>
           <TablePagination
             rowsPerPageOptions={[5, 10, 20]}
             component="div"

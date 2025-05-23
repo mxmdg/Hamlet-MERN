@@ -7,6 +7,7 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import { Divider, Paper, Typography } from "@mui/material";
+import { getDateAndTime } from "../generalData/fechaDiccionario";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -170,9 +171,9 @@ export default function UploadFilesButton({
               <br />
               Creador: {fileInfo.metadata["/Creator"]}
               <br />
-              Creado: {fileInfo.metadata["/CreationDate"]}
+              Creado: {getDateAndTime(fileInfo.metadata["/CreationDate"]).dateAndTime}
               <br />
-              Modificado: {fileInfo.metadata["/ModDate"]}
+              Modificado: {getDateAndTime(fileInfo.metadata["/ModDate"]).dateAndTime}
             </Typography>
             {fileInfo.pages
               .filter(

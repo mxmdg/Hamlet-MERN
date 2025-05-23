@@ -3,11 +3,16 @@ import { Button, IconButton } from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";
 import DownloadIcon from "@mui/icons-material/Download";
 
-const DownloadCSV = ({ data, fileName }) => {
+const DownloadCSV = ({ data, fileName, head }) => {
   const convertToCSV = (objArray) => {
     const array =
       typeof objArray !== "object" ? JSON.parse(objArray) : objArray;
     let str = "";
+
+    // Add headers if provided
+    if (head && Array.isArray(head)) {
+      str += head.join(",") + "\r\n";
+    }
 
     for (let i = 0; i < array.length; i++) {
       let line = "";

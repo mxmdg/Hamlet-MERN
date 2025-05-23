@@ -170,8 +170,8 @@ const JobDetail = (props) => {
         setData({
           widthSheet: part.partStock.Ancho_Resma,
           heightSheet: part.partStock.Alto_Resma,
-          widthPage: useImpoData.sheetOriginalSize.width,
-          heightPage: useImpoData.sheetOriginalSize.height,
+          widthPage: parseInt(useImpoData.sheetOriginalSize.width),
+          heightPage: parseInt(useImpoData.sheetOriginalSize.height),
           margenes: 0,
           Calle: 0,
         });
