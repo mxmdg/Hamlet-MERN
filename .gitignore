@@ -2,4 +2,5 @@ node_modules
 frontend/src/Components/Config/config.js
 frontend/src/Components/Config/config.js
 backend/dbConnection.js
-.env
+frontend/.env
+backend/.env

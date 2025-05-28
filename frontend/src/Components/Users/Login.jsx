@@ -24,6 +24,7 @@ import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import { AuthContext } from "../context/AuthContext";
 import { useContext } from "react";
 import { Profile } from "./Profile";
+import Spinner from "../General/Spinner";
 
 export const Login = () => {
   const {
@@ -39,7 +40,7 @@ export const Login = () => {
   const [showForgotPasswordForm, setShowForgotPasswordForm] =
     React.useState(false);
   const [successMessage, setSuccessMessage] = React.useState("");
-
+  const [loading, setLoading] = React.useState(false);
   const navigate = useNavigate();
   const context = useContext(AuthContext);
   //const params = useParams();
@@ -56,6 +57,8 @@ export const Login = () => {
 
   const onSubmit = async (data) => {
     try {
+      setLoading(true);
+      setError("");
       const token = await axios.post(databaseURL + "users/login", data);
       console.log(token);
       if (token.data.message) {
@@ -64,7 +67,8 @@ export const Login = () => {
           severity: "warning",
           action: { resetError },
         });
-        return
+        setLoading(false);
+        return;
       } else {
         context.handleLogin(token.data.token, token.data.expirationTime);
         context.setUserLogged(token.data.document);
@@ -74,7 +78,8 @@ export const Login = () => {
           severity: "success",
           action: { resetError },
         });
-        return
+        setLoading(false);
+        return;
       }
     } catch (e) {
       setError({
@@ -82,11 +87,13 @@ export const Login = () => {
         action: { resetError },
         severity: "error",
       });
-      return
+      return;
     }
   };
 
   const forgottenPassword = async (data) => {
+    setLoading(true);
+    setError("");
     try {
       const response = await axios.post(
         `${databaseURL}users/forgot-password`,
@@ -97,6 +104,7 @@ export const Login = () => {
         severity: "success",
         action: { resetSuccess },
       });
+      setLoading(false);
     } catch (e) {
       console.log(e);
       setError({
@@ -104,6 +112,7 @@ export const Login = () => {
         severity: "warning",
         action: { resetError },
       });
+      setLoading(false);
     }
   };
 
@@ -117,10 +126,17 @@ export const Login = () => {
     />
   );
 
+  const loadingRender = <Spinner color="primary" />;
+
   const success = (
     <Box>
       <Card elevation={10}>
-        {context.userLogged === null && <CardHeader title="Login" titleTypographyProps={{color: "secondary", fontWeight: "600"}}></CardHeader>}
+        {context.userLogged === null && (
+          <CardHeader
+            title="Login"
+            titleTypographyProps={{ color: "secondary", fontWeight: "600" }}
+          ></CardHeader>
+        )}
         {context.userLogged !== null && (
           <CardHeader
             title={`Bienvenido ${context.userLogged.Name}`}
@@ -203,57 +219,63 @@ export const Login = () => {
   );
 
   const ForgotPassword = (
-    <FormControl sx={{ width: "90%" }}>
-      <form onSubmit={handleSubmit(forgottenPassword)}>
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              id="email"
-              label="Correo Electrónico"
-              variant="outlined"
-              type="email"
-              {...register("email", {
-                required: "Este campo es requerido",
-                pattern: {
-                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                  message: "Correo electrónico inválido",
-                },
-              })}
+    <Card elevation={10}>
+      <FormControl sx={{ width: "90%" }}>
+        <form onSubmit={handleSubmit(forgottenPassword)}>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                id="email"
+                label="Correo Electrónico"
+                variant="outlined"
+                type="email"
+                {...register("email", {
+                  required: "Este campo es requerido",
+                  pattern: {
+                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                    message: "Correo electrónico inválido",
+                  },
+                })}
+              />
+              {errors.email && (
+                <FormHelperText>{errors.email.message}</FormHelperText>
+              )}
+            </Grid>
+            <Grid item xs={12}>
+              <Button type="submit" variant="contained" color="primary">
+                Enviar Correo de Recuperación
+              </Button>
+              <Button
+                onClick={() => setShowForgotPasswordForm(false)}
+                variant="text"
+                color="secondary"
+              >
+                Volver al Login
+              </Button>
+            </Grid>
+          </Grid>
+          {error && (
+            <ErrorMessage
+              message={error.message}
+              severity="warning"
+              action={resetError}
             />
-            {errors.email && (
-              <FormHelperText>{errors.email.message}</FormHelperText>
-            )}
-          </Grid>
-          <Grid item xs={12}>
-            <Button type="submit" variant="contained" color="primary">
-              Enviar Correo de Recuperación
-            </Button>
-            <Button
-              onClick={() => setShowForgotPasswordForm(false)}
-              variant="text"
-              color="secondary"
-            >
-              Volver al Login
-            </Button>
-          </Grid>
-        </Grid>
-        {error && (
-          <ErrorMessage
-            message={error.message}
-            severity="warning"
-            action={resetError}
-          />
-        )}
-        {successMessage && (
-          <ErrorMessage
-            message={successMessage.message}
-            severity="success"
-            action={resetSuccess}
-          />
-        )}
-      </form>
-    </FormControl>
+          )}
+          {successMessage && (
+            <ErrorMessage
+              message={successMessage.message}
+              severity="success"
+              action={resetSuccess}
+            />
+          )}
+        </form>
+      </FormControl>
+    </Card>
   );
 
-  return showForgotPasswordForm ? ForgotPassword : success;
+  return loading
+    ? loadingRender
+    : showForgotPasswordForm
+    ? ForgotPassword
+    : success;
 };

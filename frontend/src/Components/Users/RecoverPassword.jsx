@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import {
-  Box,
+  Paper,
   Card,
   CardContent,
   CardHeader,
@@ -21,6 +21,7 @@ const ResetPassword = () => {
   } = useForm();
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [loading, setLoading] = useState(false);
   const { token } = useParams(); // Obtiene el token de la URL
 
   const resetError = () => {
@@ -28,6 +29,8 @@ const ResetPassword = () => {
   };
 
   const onSubmit = async (data) => {
+    setLoading(true);
+    setError("");
     console.log(token);
     data.token = token;
     try {
@@ -41,7 +44,9 @@ const ResetPassword = () => {
     } catch (error) {
       console.log(error);
       setError({
-        msg: "Hubo un error al restablecer la contraseña: " + error.response.data.message,
+        msg:
+          "Hubo un error al restablecer la contraseña: " +
+          error.response.data.message,
         sev: "error",
         act: resetError,
       });
@@ -49,49 +54,57 @@ const ResetPassword = () => {
   };
 
   return (
-    <Box>
+    <Paper>
       <Card elevation={6}>
         <CardHeader title="Restablecer Contraseña" />
         <CardContent>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <TextField
-              label="Nueva Contraseña"
-              type="password"
-              {...register("newPassword", { required: true })}
-              error={!!errors.newPassword}
-              helperText={
-                errors.newPassword && "La nueva contraseña es requerida"
-              }
-              fullWidth
-              margin="normal"
-            />
-            <TextField
-              label="Confirmar Nueva Contraseña"
-              type="password"
-              {...register("confirmNewPassword", { required: true })}
-              error={!!errors.confirmNewPassword}
-              helperText={
-                errors.confirmNewPassword &&
-                "Por favor, confirme la nueva contraseña"
-              }
-              fullWidth
-              margin="normal"
-            />
-            {error && (
-              <ErrorMessage
-                message={error.msg}
-                severity={error.sev}
-                action={error.act}
+          {!loading && (
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <TextField
+                label="Nueva Contraseña"
+                type="password"
+                {...register("newPassword", { required: true })}
+                error={!!errors.newPassword}
+                helperText={
+                  errors.newPassword && "La nueva contraseña es requerida"
+                }
+                fullWidth
+                margin="normal"
               />
-            )}
-            {successMessage && <p>{successMessage}</p>}
-            <Button type="submit" variant="contained" color="primary">
-              Restablecer Contraseña
-            </Button>
-          </form>
+              <TextField
+                label="Confirmar Nueva Contraseña"
+                type="password"
+                {...register("confirmNewPassword", { required: true })}
+                error={!!errors.confirmNewPassword}
+                helperText={
+                  errors.confirmNewPassword &&
+                  "Por favor, confirme la nueva contraseña"
+                }
+                fullWidth
+                margin="normal"
+              />
+              {error && (
+                <ErrorMessage
+                  message={error.msg}
+                  severity={error.sev}
+                  action={error.act}
+                />
+              )}
+              {successMessage && <p>{successMessage}</p>}
+              <Button type="submit" variant="contained" color="primary">
+                Restablecer Contraseña
+              </Button>
+            </form>
+          )}
+          {loading && (
+            <ErrorMessage
+              message={"Restableciendo contraseña... Por favor, espere."}
+              severity="info"
+            />
+          )}
         </CardContent>
       </Card>
-    </Box>
+    </Paper>
   );
 };
 
