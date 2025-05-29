@@ -13,6 +13,7 @@ const FormulaEditor = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [data, setData] = useState([]);
+  const [papyrusExport, setPapyrusExport] = useState("");
   const [parameters, setParameters] = useState(null);
 
   const formulaAnalisis = (
@@ -37,6 +38,7 @@ const FormulaEditor = () => {
         largoPliego,
         Breakpoints
       );
+      setPapyrusExport(resultado.Papyrus);
       datos.push({
         Cantidad: i,
         Valor: Valor,
@@ -130,6 +132,13 @@ const FormulaEditor = () => {
         collection="precios"
         task="new"
       />
+      {data.length > 0 && (
+        <ErrorMessage
+          message={papyrusExport}
+          severity="success"
+          title="Exportación Papyrus"
+        />
+      )}
     </Box>
   );
 };

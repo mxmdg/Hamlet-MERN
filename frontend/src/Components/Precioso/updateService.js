@@ -35,13 +35,14 @@ export const formEncuadernacion = (valor, minimo, entrada) => {
 
 export const formLaminado = (valor, minimo, entrada) => {
   const formula =
-    "Pliegos * if ( Pliego_Largo >  Pliego_Ancho , if( Pliego_Largo > 520/10, Pliego_Largo * 115/100 , Pliego_Largo) , if( Pliego_Ancho > 520/10, Pliego_Ancho * 115/100 , Pliego_Ancho))";
+    `${Math.round(entrada / valor)} + Pliegos * if ( Pliego_Largo >  Pliego_Ancho , if( Pliego_Largo > 520/10, Pliego_Largo * 115/100 , Pliego_Largo) , if( Pliego_Ancho > 520/10, Pliego_Ancho * 115/100 , Pliego_Ancho))`;
   const resultado = {
     formula,
     "Valor Frente": valor,
     "Minimo Frente": minimo,
     "Valor Frente y Dorso": valor * 2,
     "Minimo Frente y Dorso": minimo / 2,
+    "Entrada": entrada,
   };
   return resultado;
 };

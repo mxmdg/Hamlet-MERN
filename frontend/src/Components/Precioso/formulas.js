@@ -34,19 +34,20 @@ export const pliegoPorLongitud = (
 ) => {
   console.log(valor, minimo, Entrada, cantidad, largoPliego);
   largoPliego = largoPliego / 10; // Convertir a centimetros
+
   const currentValue =
     breakPoint && parseFloat(largoPliego) > breakPoint[0] / 10
       ? parseFloat(valor) * parseFloat(1.15)
       : parseFloat(valor);
+
   let resultado =
-    parseFloat(Entrada) +
-    parseFloat(largoPliego) * parseFloat(cantidad) * parseFloat(currentValue);
-  console.log("Resultado x cm: " + resultado);
+    parseFloat(Entrada) + parseFloat(largoPliego) * parseFloat(cantidad)* parseFloat(currentValue);
+
   resultado = resultado < parseFloat(minimo) ? parseFloat(minimo) : resultado;
+
   let valorUnitario = roundCents(resultado / cantidad);
-  const papyrusExport = `${valor} * (${cantidad} * ((${largoPliego}>${
-    breakPoint / 10 ? breakPoint[0] / 10 : "0"
-  })?${largoPliego} * 1.15)) * ${largoPliego}`;
+
+  const papyrusExport = `${Math.round(Entrada / valor)} + Pliegos * if ( Pliego_Largo >  Pliego_Ancho , if( Pliego_Largo > 520/10, Pliego_Largo * 115/100 , Pliego_Largo) , if( Pliego_Ancho > 520/10, Pliego_Ancho * 115/100 , Pliego_Ancho))`;
 
   console.log({
     Unitario: valorUnitario,

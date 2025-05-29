@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   Paper,
   Card,
@@ -23,6 +23,7 @@ const ResetPassword = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const { token } = useParams(); // Obtiene el token de la URL
+  const navigate = useNavigate(); // Cambiar a useNavigate
 
   const resetError = () => {
     setError("");
@@ -30,7 +31,6 @@ const ResetPassword = () => {
 
   const onSubmit = async (data) => {
     setLoading(true);
-    setError("");
     console.log(token);
     data.token = token;
     try {
@@ -41,6 +41,7 @@ const ResetPassword = () => {
       );
       console.log(response.data);
       setSuccessMessage(response.data.message);
+      setLoading(false);
     } catch (error) {
       console.log(error);
       setError({
@@ -50,6 +51,8 @@ const ResetPassword = () => {
         sev: "error",
         act: resetError,
       });
+
+      setLoading(false);
     }
   };
 
@@ -88,9 +91,17 @@ const ResetPassword = () => {
                   message={error.msg}
                   severity={error.sev}
                   action={error.act}
+                  buttonTxt="Reintentar"
                 />
               )}
-              {successMessage && <p>{successMessage}</p>}
+              {successMessage && (
+                <ErrorMessage
+                  message={successMessage}
+                  severity={"success"}
+                  action={() => navigate("/login")} // Usar navigate aquí
+                  buttonTxt={"Ir a Login"}
+                />
+              )}
               <Button type="submit" variant="contained" color="primary">
                 Restablecer Contraseña
               </Button>
@@ -100,6 +111,7 @@ const ResetPassword = () => {
             <ErrorMessage
               message={"Restableciendo contraseña... Por favor, espere."}
               severity="info"
+              action={() => setLoading(false)}
             />
           )}
         </CardContent>

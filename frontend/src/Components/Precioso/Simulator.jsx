@@ -70,6 +70,7 @@ const Simulator = (props) => {
         break;
       case "laminado":
         simulation = Laminado(
+          props.data.Entrada,
           props.data.Valor,
           props.data.Minimo,
           quantity,
@@ -82,9 +83,9 @@ const Simulator = (props) => {
       case "anillado":
         simulation = Encuadernacion(
           props.data.Valor,
-          props.data.Minimo,
+          props.data.Entrada,
           quantity,
-          props.data.Entrada
+          props.data.Minimo
         );
         break;
       case "igen b&n":
@@ -117,7 +118,7 @@ const Simulator = (props) => {
     await fechtData("Formatos", setFormats);
   };
 
-  const cantidades = [100, 500, 1000];
+  const cantidades = [100, 1000];
   const pliegos = [
     { Ancho: 215, Alto: 315 },
     { Ancho: 470, Alto: 320 },

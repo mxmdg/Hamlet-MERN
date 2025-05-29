@@ -17,10 +17,10 @@ export const Encuadernacion = (valor, minimo, cantidad, entrada) => {
   };
 };
 
-export const Laminado = (valor, minimo, cantidad, largoPliego, duplex) => {
+export const Laminado = (entrada, valor, minimo, cantidad, largoPliego, duplex) => {
   let resultado =
     valor *
-    (cantidad *
+    ( Math.round(entrada / valor) + cantidad *
       (parseFloat(largoPliego) > 520
         ? (parseFloat(largoPliego) / 10) * 1.15
         : parseFloat(largoPliego) / 10));
@@ -28,7 +28,7 @@ export const Laminado = (valor, minimo, cantidad, largoPliego, duplex) => {
     resultado < parseFloat(minimo) ? parseFloat(minimo) : roundCents(resultado);
   console.log("Formula Laminado");
   console.log(
-    `${valor} * (${cantidad} * ((${largoPliego}>520)?${largoPliego} * 1.15)) * ${largoPliego}`
+    `${valor} * (${Math.round(entrada / valor)} + ${cantidad} * ((${largoPliego}>520)?${largoPliego} * 1.15)) * ${largoPliego}`
   );
   console.log(`Resultado: ${roundCents(resultado)}`);
 
