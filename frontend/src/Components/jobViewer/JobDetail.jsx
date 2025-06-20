@@ -210,6 +210,18 @@ const JobDetail = (props) => {
               spacing={2}
               alignItems={"start"}
             >
+               <Grid item xs={12} md={8}>
+                <ImpoProvider>
+                  <DarkWoodCard>
+                    <Canvas
+                      part={part}
+                      getPoses={setPoses}
+                      getSheet={setImpoData}
+                    ></Canvas>
+                  </DarkWoodCard>
+                </ImpoProvider>
+              </Grid>
+              <Divider />
               <Grid item xs={12} md={4}>
                 <Stack spacing={0.25} sx={{ p: "2px" }}>
                   <Item>{part.jobParts[0].Type}</Item>
@@ -328,18 +340,7 @@ const JobDetail = (props) => {
                   )}
                 </Stack>
               </Grid>
-              <Divider />
-              <Grid item xs={12} md={8}>
-                <ImpoProvider>
-                  <DarkWoodCard>
-                    <Canvas
-                      part={part}
-                      getPoses={setPoses}
-                      getSheet={setImpoData}
-                    ></Canvas>
-                  </DarkWoodCard>
-                </ImpoProvider>
-              </Grid>
+             
             </Grid>
           </AccordionDetails>
         </Accordion>

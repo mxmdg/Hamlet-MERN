@@ -8,6 +8,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import { Divider, Paper, Typography } from "@mui/material";
 import { getDateAndTime } from "../generalData/fechaDiccionario";
+import { VALIDATE_PDF } from "../../Config/config";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -49,7 +50,7 @@ const calculateMostCommonSize = (pages) => {
 };
 
 export default function UploadFilesButton({
-  uploadUrl = "http://192.168.1.46:8000/upload",
+  uploadUrl = VALIDATE_PDF, //|| "http://127.0.0.2:8000/upload",
   onUploadSuccess,
   expectedPageCount,
   expectedSize,
@@ -163,6 +164,11 @@ export default function UploadFilesButton({
                   fileInfo.pages
                 )}`}
               />
+            </ListItem>
+            <ListItem>
+              <ListItemText 
+                primary={`ubicacion del archivo: ${fileInfo.file_path}`}
+                />
             </ListItem>
             <Typography variant="body2" color="text.secondary">
               Informacion del documento

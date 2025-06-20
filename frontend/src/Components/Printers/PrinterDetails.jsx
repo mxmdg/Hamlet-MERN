@@ -85,7 +85,7 @@ const PrinterDetails = (props) => {
       return (
         <>
           <CardHeader
-            title={props.pd.Modelo}
+            title={`${props.pd.Modelo} (${props.pd.SerialNumber})` }
             subheader={props.pd.Fabricante}
           >{`Colores: ${props.pd.Colores}`}</CardHeader>
           <CardContent>
