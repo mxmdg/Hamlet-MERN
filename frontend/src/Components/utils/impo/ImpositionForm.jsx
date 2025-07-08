@@ -80,7 +80,7 @@ export const ImpositionForm = (props) => {
   const fetchingData = async () => {
     try {
       const gettedFormats = await getPrivateElements("formatos");
-      const getPrinters = await getPrivateElements("impresoras");
+      const getPrinters = await getPrivateElements("impresoras/simple");
 
       const filteredPrinters = filterPrinters(await getPrinters);
 

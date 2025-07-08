@@ -26,6 +26,7 @@ import MyStepper from "./Components/Jobs/Stepper";
 import JobsContainer from "./Components/Jobs/JobsContainer";
 import { JobViewer } from "./Components/jobViewer/JobViewer";
 import FormulaEditor from "./Components/Precioso/FormulaEditor";
+import CotFetcher from "./Components/cottizations/CotFetcher";
 
 // Job Context Files
 import { JobProvider, JobContext } from "./Components/Jobs/JobContext";
@@ -377,6 +378,17 @@ const Router = () => {
             }
           />
           <Route path="/precios/formula" element={<FormulaEditor />} />
+
+          {/* Quotations Routes */}
+
+          <Route
+            path="/quotations"
+            element={<MainContainer entity={"quotations"} />}
+          />
+          <Route
+            path="/quotations/edit/:id"
+            element={<CotFetcher />}
+          />
 
           {/* Configuracion Routes */}
           <Route path="/configuracion" element={<ConfigMainContainer />} />

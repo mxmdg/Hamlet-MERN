@@ -40,6 +40,8 @@ app.get("/", (rej, res) => {
 app.use("/Hamlet/jobs", require("./routes/jobs"));
 app.use("/Hamlet/jobs/urg", require("./routes/jobs"));
 app.use("/Hamlet/Impresoras", require("./routes/printers"));
+
+app.use("/Hamlet/Impresoras/simple", require("./routes/printers"));
 app.use("/Hamlet/finishers", require("./routes/finishers"));
 app.use("/Hamlet/formatos", require("./routes/formatos"));
 app.use("/Hamlet/empresas", require("./routes/empresas"));
@@ -51,6 +53,7 @@ app.use(
 app.use("/Hamlet/JobParts", require("./routes/jobParts"));
 app.use("/Hamlet/materiales", require("./routes/materiales"));
 app.use("/Hamlet/users", require("./routes/users"));
+app.use("/Hamlet/quotations", require("./routes/quotations"));
 
 // error handler
 app.use(function (err, req, res, next) {

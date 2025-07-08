@@ -54,6 +54,7 @@ import ProductionPlan from "./ProductionPlan";
 import arrayNormalizer from "../utils/generalData/arrayNormalizer";
 import ListItemNumbers from "./ListItemNumbers";
 import FinishingList from "./FinishingList";
+import CopyToClipboardWrapper from "../General/CopyToClipboardWrapper";
 
 export const calcularLomo = (pags, resma) => {
   return Math.ceil(Math.ceil(pags / 2) * (resma / 500));
@@ -64,6 +65,7 @@ const JobDetail = (props) => {
   const job = props.job;
   const navigate = useNavigate();
   // El siguiente estado es para almacenar la informacion de la imposicion en todas las partes.
+  const [stockRequired, setStockRequired] = useState([]);
   const [productionPlan, setProductionPlan] = useState({});
   const [productionPlanAvaible, setProductionPlanAvaible] = useState(false);
   const [useJobFinishingData, setJobFinishingData] = useState(null);
@@ -175,6 +177,22 @@ const JobDetail = (props) => {
           margenes: 0,
           Calle: 0,
         });
+        setStockRequired(`
+                        Poses: ${usePoses} / Tirada: ${Math.ceil(
+          job.Cantidad / usePoses
+        )}
+                        Pliegos: ${
+                          stockCalculated.cantidadDePliegos
+                        } - Salen: ${stockCalculated.pliegosPorHoja} del 
+                        ${part.partStock.Ancho_Resma} x 
+                        ${part.partStock.Alto_Resma}
+                        Cantidad de resmas: 
+                        ${
+                          Math.ceil((stockCalculated.totalHojas / 500) * 100) /
+                          100
+                        } 
+                        (${stockCalculated.totalHojas} hojas)
+          `);
       }
     }, [useImpoData, stockCalculated.cantidadDePliegos, setPartFinishingData]);
 
@@ -210,7 +228,7 @@ const JobDetail = (props) => {
               spacing={2}
               alignItems={"start"}
             >
-               <Grid item xs={12} md={8}>
+              <Grid item xs={12} md={8}>
                 <ImpoProvider>
                   <DarkWoodCard>
                     <Canvas
@@ -260,20 +278,52 @@ const JobDetail = (props) => {
                         : ""}
                     </Typography>
                     {usePoses && (
-                      <Typography variant="h6">
-                        Poses: {usePoses} / Tirada:{" "}
-                        {Math.ceil(job.Cantidad / usePoses)}
-                        <br />
-                        Pliegos: {stockCalculated.cantidadDePliegos} - Salen:{" "}
-                        {stockCalculated.pliegosPorHoja} del{" "}
-                        {part.partStock.Ancho_Resma} x{" "}
-                        {part.partStock.Alto_Resma}
-                        <br />
-                        Cantidad de resmas:{" "}
-                        {Math.ceil((stockCalculated.totalHojas / 500) * 100) /
-                          100}{" "}
-                        {`(${stockCalculated.totalHojas} hojas)`}
-                      </Typography>
+                      <CopyToClipboardWrapper
+                        text={`${part.partStock.Tipo} ${
+                          part.partStock.Gramaje
+                        } ${
+                          useImpoData
+                            ? `- ${useImpoData.sheetOriginalSize.width} x ${
+                                useImpoData.sheetOriginalSize.height
+                              } ${
+                                Math.max(
+                                  part.ColoresFrente,
+                                  part.ColoresDorso
+                                ) > 1
+                                  ? "CMYK"
+                                  : "K"
+                              }`
+                            : ""
+                        }\nPoses: ${usePoses} / Tirada: ${Math.ceil(
+                          job.Cantidad / usePoses
+                        )}\nPliegos: ${
+                          stockCalculated.cantidadDePliegos
+                        } - Salen: ${stockCalculated.pliegosPorHoja} del ${
+                          part.partStock.Ancho_Resma
+                        } x ${part.partStock.Alto_Resma}\nCantidad de resmas: ${
+                          Math.ceil((stockCalculated.totalHojas / 500) * 100) /
+                          100
+                        } (${stockCalculated.totalHojas} hojas)`}
+                      >
+                        <Typography
+                          variant="h6"
+                          style={{ whiteSpace: "pre-line" }}
+                        >
+                          {`Poses: ${usePoses} / Tirada: ${Math.ceil(
+                            job.Cantidad / usePoses
+                          )}\nPliegos: ${
+                            stockCalculated.cantidadDePliegos
+                          } - Salen: ${stockCalculated.pliegosPorHoja} del ${
+                            part.partStock.Ancho_Resma
+                          } x ${
+                            part.partStock.Alto_Resma
+                          }\nCantidad de resmas: ${
+                            Math.ceil(
+                              (stockCalculated.totalHojas / 500) * 100
+                            ) / 100
+                          } (${stockCalculated.totalHojas} hojas)`}
+                        </Typography>
+                      </CopyToClipboardWrapper>
                     )}
                   </Item2>
 
@@ -340,7 +390,6 @@ const JobDetail = (props) => {
                   )}
                 </Stack>
               </Grid>
-             
             </Grid>
           </AccordionDetails>
         </Accordion>

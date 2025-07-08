@@ -76,6 +76,47 @@ printerControl.getPrinter = async (req, res, next) => {
   }
 };
 
+printerControl.getPrinterSimple = async (req, res, next) => {
+  try {
+    const printer = await printers.esquema
+      .findById(req.params.id)
+      .select(
+        "-Billing -Costo.Historial -Costo.Formula -TotalPrints -ColorPrints -BlackPrints -LargePrints -SmallPrints"
+      );
+    if (printer) {
+      res.json(printer);
+    } else {
+      res.status(404).json({ message: "Impresora no encontrada" });
+    }
+  } catch (error) {
+    next(error);
+    res.status(500).json({ message: "Error al obtener la impresora" });
+  }
+};
+
+printerControl.getPrintersSimple = async (req, res, next) => {
+  try {
+    const printer = await printers.esquema
+      .find()
+      .select(
+        "-Billing -TotalPrints -ColorPrints -BlackPrints -LargePrints -SmallPrints"
+      )
+      .populate({
+        path: "Costo",
+        model: prices.esquema,
+        select: "-Historial -Formula",
+      });
+    if (printer) {
+      res.json(printer);
+    } else {
+      res.status(404).json({ message: "Impresora no encontrada" });
+    }
+  } catch (error) {
+    next(error);
+    res.status(500).json({ message: "Error al obtener la impresora" });
+  }
+};
+
 printerControl.updatePrinter = async (req, res) => {
   try {
     const {
@@ -150,14 +191,13 @@ printerControl.updatePrinter = async (req, res) => {
 printerControl.deletePrinter = async (req, res) => {
   try {
     const impresora = await printers.esquema.findByIdAndDelete(req.params.id);
-   res.json({
-    message: `${impresora.Fabricante} ${impresora.Modelo} eliminada`,
-  });
+    res.json({
+      message: `${impresora.Fabricante} ${impresora.Modelo} eliminada`,
+    });
   } catch (error) {
     console.log(e);
     res.json({ message: "Error: " + e });
   }
-  
 };
 
 module.exports = printerControl;

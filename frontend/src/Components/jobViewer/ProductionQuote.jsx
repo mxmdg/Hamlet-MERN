@@ -70,12 +70,22 @@ const ProductionQuote = (props) => {
   }, [props.job]);
 
   const calculateQuote = () => {
-    const gain = props.costResume * (percentBefore(gainPercentage) / 100);
-    const salesCommissionValue =
-      (props.costResume + gain) * (salesCommission / 100);
-    const iva =
-      (props.costResume + salesCommissionValue + gain) * (ivaPercentage / 100);
-    const total = props.costResume + iva + salesCommissionValue + gain;
+    // Sumamos los costos de impresión, terminación y material con la condicion de
+    // si el IVA no esta habilitado, se lo cargamos al material.
+    const costResume =
+      props.costResume.Print +
+      props.costResume.Finishing +
+      (isIvaEnabled
+        ? props.costResume.Stock
+        : props.costResume.Stock * (1 + 21 / 100));
+
+    const gain = costResume * (percentBefore(gainPercentage) / 100);
+    const salesCommissionValue = (costResume + gain) * (salesCommission / 100);
+    const iva = isIvaEnabled
+      ? (costResume + salesCommissionValue + gain) * (ivaPercentage / 100)
+      : props.costResume.Stock * (21 / 100);
+    const total =
+      costResume + (isIvaEnabled ? iva : 0) + salesCommissionValue + gain;
     const utilityPercentage = percentBefore(gainPercentage);
 
     return {
@@ -88,6 +98,19 @@ const ProductionQuote = (props) => {
   };
 
   const quote = calculateQuote();
+
+  useEffect(() => {
+    if (typeof props.quoteSettings === "function") {
+      props.quoteSettings({
+        gainPercentage: gainPercentage,
+        salesCommission: salesCommission,
+        ivaPercentage: ivaPercentage,
+        isIvaEnabled: isIvaEnabled,
+        quote: quote,
+      });
+    }
+    // eslint-disable-next-line
+  }, [gainPercentage, salesCommission, ivaPercentage, isIvaEnabled]);
 
   const failure = <ErrorMessage message={useError} />;
 
@@ -208,7 +231,7 @@ const ProductionQuote = (props) => {
                   <Grid item xs={12} md={12}>
                     <ListItemNumbers
                       primary={currencyFormat(roundInteger(quote.iva))}
-                      secondary={"IVA"}
+                      secondary={isIvaEnabled ? "IVA" : "IVA sobre el material"}
                     />
                   </Grid>
                   <Divider />

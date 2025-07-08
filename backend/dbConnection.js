@@ -26,7 +26,7 @@ const dbSwitch = [
     title: "Digital Pritner",
   },
 ];
-const DB = dbSwitch[3];
+const DB = dbSwitch[3]; // Change the index to switch between databases
 
 mongoose.connect(URI + DB.printer, {
   useNewUrlParser: true,

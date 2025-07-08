@@ -28,12 +28,14 @@ import LightModeIcon from "@mui/icons-material/LightMode";
 
 export const pages = [
   { text: "Pedidos", path: "jobs" },
+  { text: "Cotizaciones", path: "quotations" },
   { text: "Costos", path: "configuracion" },
   { text: "Formatos", path: "formatos" },
   { text: "Impresoras", path: "impresoras" },
   { text: "Partes de trabajo", path: "JobParts" },
   { text: "Materiales", path: "materiales" },
   { text: "Clientes", path: "empresas" },
+  { text: "Usuarios", path: "users" },
   { text: "Terminacion", path: "finishers" },
 ];
 

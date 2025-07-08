@@ -118,9 +118,9 @@ const FinishingList = (props) => {
             "Error accediendo a los procesos de terminacion: " + error.message,
         });
       } finally {
-        if (useFinishingCosts !== null) {
+        /* if (useFinishingCosts !== null) {
           props.sendFinishingData(totalCost());
-        }
+        } */
         setLoading(false);
       }
     };
@@ -130,6 +130,7 @@ const FinishingList = (props) => {
 
   const totalCost = () => {
     if (useFinishingCosts !== null) {
+      console.log("useFinishingCosts:", useFinishingCosts);
       return useFinishingCosts.reduce((acc, item) => acc + item.Cost.Total, 0);
     }
   };

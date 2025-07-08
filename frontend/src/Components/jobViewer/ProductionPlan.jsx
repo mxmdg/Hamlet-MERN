@@ -33,6 +33,10 @@ import {
   currencyFormat,
   spanishFormat,
 } from "../utils/generalData/numbersAndCurrencies";
+import {
+  addPrivateElement,
+  getPrivateElementByID,
+} from "../customHooks/FetchDataHook";
 
 // Mis Hooks
 import { getPrivateElements } from "../customHooks/FetchDataHook";
@@ -42,6 +46,7 @@ const ProductionPlan = (props) => {
   const [usePrices, setPrices] = useState();
   const [useLoading, setLoading] = useState(false);
   const [useError, setError] = useState(null);
+  const [useQuoteSettings, setQuoteSettings] = useState(null);
   const AllData = objectToArray(props.impositionData);
 
   /* Modelo del datos:
@@ -220,7 +225,7 @@ const ProductionPlan = (props) => {
       for (let set of prodsets) {
         totalCost.print += totals[set].printPrice.Total;
         totalCost.stock += totals[set].stockCost.cost;
-        totalCost.finishing += totals[set].FinishingCost;
+        //totalCost.finishing += totals[set].FinishingCost;
       }
       totals.totalCost = totalCost;
     } catch (error) {
@@ -234,14 +239,37 @@ const ProductionPlan = (props) => {
 
   console.log("Resumen: ", resumen);
 
-  const handleSaveProductionPlan = (resumen) => {
+  const handleSaveProductionPlan = async (resumen) => {
     const data = {
-      jobId: props.job._id,
       impositionData: props.impositionData,
       resumen: resumen,
+      quoteSettings: useQuoteSettings,
     };
-    console.log("Resumen: ", resumen);
-    console.log("Data: ", data);
+    try {
+      await addPrivateElement("quotations", {
+        name: props.job.Nombre,
+        customer: props.job.Company.Nombre,
+        quantity: props.job.Cantidad,
+        gain: useQuoteSettings?.quote?.gain || 0,
+        comission: useQuoteSettings?.quote?.salesCommission || 0,
+        taxes: useQuoteSettings?.quote?.iva || 0,
+        total: useQuoteSettings?.quote?.total || 0,
+        cost: Math.ceil(
+          parseFloat(
+            resumen[resumen.length - 1].print +
+              resumen[resumen.length - 1].stock +
+              resumen[resumen.length - 1].finishing
+          )
+        ),
+        data,
+        jobType: props.job.Tipo[0].name,
+        owner: props.job.owner,
+        jobId: props.job._id,
+        customerId: props.job.Company._id,
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
@@ -411,18 +439,6 @@ const ProductionPlan = (props) => {
               />
             </List>
           </CardContent>
-          <CardActions sx={{ justifyContent: "flex-end" }}>
-            <Button
-              variant="contained"
-              color="primary"
-              size="small"
-              onClick={() => {
-                handleSaveProductionPlan(resumen);
-              }}
-            >
-              Guardar Presupuesto
-            </Button>
-          </CardActions>
         </Card>
       </Grid>
       <Grid item xs={12} sm={6} lg={3} key={"ProductionQuote"}>
@@ -436,14 +452,28 @@ const ProductionPlan = (props) => {
           <Divider />
           <CardContent>
             <ProductionQuote
-              costResume={roundInteger(
-                resumen[resumen.length - 1].print +
-                  resumen[resumen.length - 1].stock +
-                  props.totalFinishingCosts
-              )}
+              costResume={{
+                Print: roundInteger(resumen[resumen.length - 1].print),
+                Stock: roundInteger(resumen[resumen.length - 1].stock),
+                Finishing: roundInteger(props.totalFinishingCosts),
+              }}
               job={props.job._id}
+              quoteSettings={setQuoteSettings}
             />
           </CardContent>
+          <CardActions sx={{ justifyContent: "flex-end" }}>
+            <Button
+              variant="contained"
+              color="primary"
+              size="small"
+              disabled={parseFloat(useQuoteSettings?.gainPercentage) < 35}
+              onClick={() => {
+                handleSaveProductionPlan(resumen);
+              }}
+            >
+              Guardar Presupuesto
+            </Button>
+          </CardActions>
         </Card>
       </Grid>
     </Grid>
@@ -451,7 +481,7 @@ const ProductionPlan = (props) => {
 
   const failure = (
     <ErrorMessage
-      message={useError}
+      message={useError || "Error al cargar los datos"}
       severity="error"
       action={() => setError(null)}
     />
