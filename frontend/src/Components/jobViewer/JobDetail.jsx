@@ -69,11 +69,27 @@ const JobDetail = (props) => {
     props.cot ? props.cot.data.impositionData : []
   );
   const [productionPlan, setProductionPlan] = useState(
-    props.cot ? props.cot.data.resumen : {}
+    props.cot ? props.cot.data.impositionData : {}
   );
   const [productionPlanAvaible, setProductionPlanAvaible] = useState(false);
   const [useJobFinishingData, setJobFinishingData] = useState(null);
-  const [usePartFinishingData, setPartFinishingData] = useState([]);
+  const [usePartFinishingData, setPartFinishingData] = useState(
+    props.cot
+      ? Object.values(props.cot.data.impositionData)
+          .map((impo) => {
+            // Si hay finishingData y es un array, agregamos cada objeto al array final
+            if (Array.isArray(impo.finishingData)) {
+              return impo.finishingData.map((fd) => ({
+                finishingData: fd.finishingData,
+                partId: fd.partId,
+              }));
+            }
+            // Si no hay finishingData, devolvemos un objeto vacío con partId si existe
+            return [];
+          })
+          .flat()
+      : []
+  );
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
@@ -540,6 +556,9 @@ const JobDetail = (props) => {
                 totalFinishingCosts={
                   useJobFinishingData + sumTotalPartsFinishingCosts()
                 }
+                {...(props.cot
+                  ? { quoteOptions: props.cot.data.quoteSettings }
+                  : null)}
               />
             </Accordion>
           )}

@@ -15,6 +15,7 @@ import {
   currencyFormat,
 } from "../utils/generalData/numbersAndCurrencies";
 import { JobViewer } from "../jobViewer/JobViewer";
+import ProductionPlan from "../jobViewer/ProductionPlan";
 
 /**
  * Renderiza los datos principales de una cotización.

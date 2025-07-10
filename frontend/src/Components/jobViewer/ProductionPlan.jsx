@@ -457,6 +457,7 @@ const ProductionPlan = (props) => {
                 Stock: roundInteger(resumen[resumen.length - 1].stock),
                 Finishing: roundInteger(props.totalFinishingCosts),
               }}
+              quoteOptions={props.quoteOptions}
               job={props.job._id}
               quoteSettings={setQuoteSettings}
             />

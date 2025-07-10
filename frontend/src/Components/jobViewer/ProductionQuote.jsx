@@ -42,14 +42,29 @@ const ProductionQuote = (props) => {
     watch,
     setValue,
   } = useForm({
-    mode: "onChange", //  "onBlur"
+    mode: "onChange",
+    defaultValues: {
+      gainPercentage:
+        props.quoteOptions && props.quoteOptions.gainPercentage !== undefined
+          ? parseFloat(props.quoteOptions.gainPercentage)
+          : 45,
+      salesCommission:
+        props.quoteOptions && props.quoteOptions.salesComision !== undefined
+          ? props.quoteOptions.salesComision
+          : 0,
+    },
   });
+
+  const [isIvaEnabled, setIsIvaEnabled] = useState(
+    props.quoteOptions && props.quoteOptions.isIvaEnabled !== undefined
+      ? props.quoteOptions.isIvaEnabled
+      : true
+  );
 
   const [useError, setUseError] = useState(null);
   const [useLoading, setUseLoading] = useState(false);
-  const [isIvaEnabled, setIsIvaEnabled] = useState(true);
 
-  const gainPercentage = watch("gainPercentage", 27); // Default value
+  const gainPercentage = watch("gainPercentage", 45); // Default value
   const salesCommission = watch("salesCommission", 0); // Default value
   const ivaPercentage = isIvaEnabled ? 21 : 0; // IVA is 0 if disabled
 
@@ -102,10 +117,24 @@ const ProductionQuote = (props) => {
   useEffect(() => {
     if (typeof props.quoteSettings === "function") {
       props.quoteSettings({
-        gainPercentage: gainPercentage,
-        salesCommission: salesCommission,
-        ivaPercentage: ivaPercentage,
-        isIvaEnabled: isIvaEnabled,
+        gainPercentage:
+          props.quoteOptions !== null
+            ? parseFloat(props.quoteOptions.gainPercentage)
+            : gainPercentage,
+        salesCommission:
+          props.quoteOptions !== null
+            ? props.quoteOptions.salesComision
+            : salesCommission,
+        ivaPercentage:
+          props.quoteOptions !== null &&
+          props.quoteOptions.ivaPercentage !== undefined
+            ? props.quoteOptions.ivaPercentage
+            : ivaPercentage,
+        isIvaEnabled:
+          props.quoteOptions !== null &&
+          props.quoteOptions.isIvaEnabled !== undefined
+            ? props.quoteOptions.isIvaEnabled
+            : isIvaEnabled,
         quote: quote,
       });
     }

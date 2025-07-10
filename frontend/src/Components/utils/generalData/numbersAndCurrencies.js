@@ -13,13 +13,17 @@ export const percentBefore = (p1) => {
 };
 
 export const spanishFormat = (value) => {
-  const res = value.toFixed(2); // Ensure two decimal places
-  return `${
-    res
-      .replace(/\./g, ",") // Replace decimal point with a comma
-      .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-      .replace(",00", "") // Remove cents if they are zero
-  }`; // Add dots as thousands separator
+  try {
+    const res = value.toFixed(2); // Ensure two decimal places
+    return `${
+      res
+        .replace(/\./g, ",") // Replace decimal point with a comma
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+        .replace(",00", "") // Remove cents if they are zero
+    }`; // Add dots as thousands separator
+  } catch (error) {
+    return value;
+  }
 };
 
 export const currencyFormat = (value) => {
