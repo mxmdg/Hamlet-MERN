@@ -118,7 +118,8 @@ const ProductionQuote = (props) => {
     if (typeof props.quoteSettings === "function") {
       props.quoteSettings({
         gainPercentage:
-          props.quoteOptions !== null
+          props.quoteOptions !== null &&
+          props.quoteOptions.gainPercentage !== undefined
             ? parseFloat(props.quoteOptions.gainPercentage)
             : gainPercentage,
         salesCommission:
