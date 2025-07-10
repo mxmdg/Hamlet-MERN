@@ -5,8 +5,7 @@ import { useParams } from "react-router-dom";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import Spinner from "../General/Spinner";
 import CotizacionCard from "./CotizacionCard";
-
-
+import { JobViewer } from "../jobViewer/JobViewer";
 
 const CotFetcher = () => {
   const [cotizacion, setCotizacion] = useState(null);
@@ -14,7 +13,7 @@ const CotFetcher = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
-    const id = useParams();
+  const id = useParams();
 
   useEffect(() => {
     const fetchCotizacion = async () => {
@@ -61,8 +60,6 @@ const CotFetcher = () => {
     );
   }
 
-    return (
-      <CotizacionCard cotizacion={cotizacion} job={useJob}/>
-    );
-}
+  return <CotizacionCard cotizacion={cotizacion} job={useJob} />;
+};
 export default CotFetcher;

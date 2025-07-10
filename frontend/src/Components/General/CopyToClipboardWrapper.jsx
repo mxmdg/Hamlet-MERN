@@ -1,5 +1,12 @@
 import React from "react";
-import { Button, Card, CardActions, CardContent } from "@mui/material";
+import {
+  Box,
+  Button,
+  ButtonGroup,
+  Card,
+  CardActions,
+  CardContent,
+} from "@mui/material";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import IconButton from "@mui/material/IconButton";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
@@ -51,20 +58,18 @@ const CopyToClipboardWrapper = ({ text, children }) => {
   );
 
   const success = (
-    <Card>
-      <CardActions>
+    <Box>
+      <ButtonGroup variant="contained" color="secondary">
         <IconButton
           onClick={handleCopy}
           title="Copiar al portapapeles"
-          style={{ position: "absolute", right: 0, top: 0 }}
           {...(copied ? { disabled: true } : {})}
         >
-          <ContentCopyIcon color={copied ? "warning" : "success"} />
+          <ContentCopyIcon color={"#fff"} />
         </IconButton>
-      </CardActions>
-
-      <CardContent>{children}</CardContent>
-    </Card>
+      </ButtonGroup>
+      <Box>{children}</Box>
+    </Box>
   );
 
   return error ? failure : success;

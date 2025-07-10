@@ -65,8 +65,12 @@ const JobDetail = (props) => {
   const job = props.job;
   const navigate = useNavigate();
   // El siguiente estado es para almacenar la informacion de la imposicion en todas las partes.
-  const [stockRequired, setStockRequired] = useState([]);
-  const [productionPlan, setProductionPlan] = useState({});
+  const [stockRequired, setStockRequired] = useState(
+    props.cot ? props.cot.data.impositionData : []
+  );
+  const [productionPlan, setProductionPlan] = useState(
+    props.cot ? props.cot.data.resumen : {}
+  );
   const [productionPlanAvaible, setProductionPlanAvaible] = useState(false);
   const [useJobFinishingData, setJobFinishingData] = useState(null);
   const [usePartFinishingData, setPartFinishingData] = useState([]);
@@ -122,9 +126,13 @@ const JobDetail = (props) => {
   };
 
   const PartDetail = (part) => {
-    const [usePoses, setPoses] = useState(null);
-    const [useImpoData, setImpoData] = useState(null);
-    const [imposed, setImposed] = useState(false);
+    const [usePoses, setPoses] = useState(
+      props.cot ? props.cot.data.impositionData[part._id].Poses : null
+    );
+    const [useImpoData, setImpoData] = useState(
+      props.cot ? props.cot.data.impositionData[part._id].impositionData : null
+    );
+    const [imposed, setImposed] = useState(props.cot ? true : false);
     const [useData, setData] = useState(null);
     let partNumber = job.Partes.indexOf(part) + 1;
     let myKey = part._id + partNumber;
@@ -194,7 +202,13 @@ const JobDetail = (props) => {
                         (${stockCalculated.totalHojas} hojas)
           `);
       }
-    }, [useImpoData, stockCalculated.cantidadDePliegos, setPartFinishingData]);
+    }, [
+      useImpoData,
+      usePoses,
+      stockCalculated.cantidadDePliegos,
+      setPartFinishingData,
+      props.cot,
+    ]);
 
     return (
       <Box key={part._id} mb={1}>
@@ -234,7 +248,9 @@ const JobDetail = (props) => {
                     <Canvas
                       part={part}
                       getPoses={setPoses}
+                      poses={usePoses}
                       getSheet={setImpoData}
+                      sheet={useImpoData}
                     ></Canvas>
                   </DarkWoodCard>
                 </ImpoProvider>
@@ -265,66 +281,74 @@ const JobDetail = (props) => {
                     Impresion: {part.ColoresFrente} / {part.ColoresDorso}
                   </Item>
                   <Item2>
-                    <Typography variant="h6">
-                      {part.partStock.Tipo} {part.partStock.Gramaje}{" "}
-                      {useImpoData
-                        ? ` - ${useImpoData.sheetOriginalSize.width} x ${
-                            useImpoData.sheetOriginalSize.height
-                          } ${
-                            Math.max(part.ColoresFrente, part.ColoresDorso) > 1
-                              ? "CMYK"
-                              : "K"
-                          }`
-                        : ""}
-                    </Typography>
-                    {usePoses && (
-                      <CopyToClipboardWrapper
-                        text={`${part.partStock.Tipo} ${
-                          part.partStock.Gramaje
-                        } ${
-                          useImpoData
-                            ? `- ${useImpoData.sheetOriginalSize.width} x ${
-                                useImpoData.sheetOriginalSize.height
-                              } ${
-                                Math.max(
-                                  part.ColoresFrente,
-                                  part.ColoresDorso
-                                ) > 1
-                                  ? "CMYK"
-                                  : "K"
-                              }`
-                            : ""
-                        }\nPoses: ${usePoses} / Tirada: ${Math.ceil(
-                          job.Cantidad / usePoses
-                        )}\nPliegos: ${
-                          stockCalculated.cantidadDePliegos
-                        } - Salen: ${stockCalculated.pliegosPorHoja} del ${
-                          part.partStock.Ancho_Resma
-                        } x ${part.partStock.Alto_Resma}\nCantidad de resmas: ${
-                          Math.ceil((stockCalculated.totalHojas / 500) * 100) /
-                          100
-                        } (${stockCalculated.totalHojas} hojas)`}
-                      >
-                        <Typography
-                          variant="h6"
-                          style={{ whiteSpace: "pre-line" }}
-                        >
-                          {`Poses: ${usePoses} / Tirada: ${Math.ceil(
-                            job.Cantidad / usePoses
-                          )}\nPliegos: ${
-                            stockCalculated.cantidadDePliegos
-                          } - Salen: ${stockCalculated.pliegosPorHoja} del ${
-                            part.partStock.Ancho_Resma
-                          } x ${
-                            part.partStock.Alto_Resma
-                          }\nCantidad de resmas: ${
-                            Math.ceil(
-                              (stockCalculated.totalHojas / 500) * 100
-                            ) / 100
-                          } (${stockCalculated.totalHojas} hojas)`}
-                        </Typography>
-                      </CopyToClipboardWrapper>
-                    )}
+                    <CopyToClipboardWrapper
+                      text={
+                        usePoses
+                          ? `${part.partStock.Tipo} ${part.partStock.Gramaje} ${
+                              useImpoData
+                                ? `- ${useImpoData.sheetOriginalSize.width} x ${
+                                    useImpoData.sheetOriginalSize.height
+                                  } ${
+                                    Math.max(
+                                      part.ColoresFrente,
+                                      part.ColoresDorso
+                                    ) > 1
+                                      ? "CMYK"
+                                      : "K"
+                                  }`
+                                : ""
+                            }\nPoses: ${usePoses} / Tirada: ${Math.ceil(
+                              job.Cantidad / usePoses
+                            )}\nPliegos: ${
+                              stockCalculated.cantidadDePliegos
+                            } - Salen: ${stockCalculated.pliegosPorHoja} del ${
+                              part.partStock.Ancho_Resma
+                            } x ${
+                              part.partStock.Alto_Resma
+                            }\nCantidad de resmas: ${
+                              Math.ceil(
+                                (stockCalculated.totalHojas / 500) * 100
+                              ) / 100
+                            } (${stockCalculated.totalHojas} hojas)`
+                          : `${part.partStock.Tipo} ${part.partStock.Gramaje}`
+                      }
+                    >
+                      <Typography variant="h6">
+                        {part.partStock.Tipo} {part.partStock.Gramaje}{" "}
+                        {useImpoData
+                          ? ` - ${useImpoData.sheetOriginalSize.width} x ${
+                              useImpoData.sheetOriginalSize.height
+                            } ${
+                              Math.max(part.ColoresFrente, part.ColoresDorso) >
+                              1
+                                ? "CMYK"
+                                : "K"
+                            }`
+                          : ""}
+                      </Typography>
+                      {usePoses && (
+                        <Box>
+                          <Typography
+                            variant="h6"
+                            style={{ whiteSpace: "pre-line" }}
+                          >
+                            {`Poses: ${usePoses} / Tirada: ${Math.ceil(
+                              job.Cantidad / usePoses
+                            )}\nPliegos: ${
+                              stockCalculated.cantidadDePliegos
+                            } - Salen: ${stockCalculated.pliegosPorHoja} del ${
+                              part.partStock.Ancho_Resma
+                            } x ${
+                              part.partStock.Alto_Resma
+                            }\nCantidad de resmas: ${
+                              Math.ceil(
+                                (stockCalculated.totalHojas / 500) * 100
+                              ) / 100
+                            } (${stockCalculated.totalHojas} hojas)`}
+                          </Typography>
+                        </Box>
+                      )}
+                    </CopyToClipboardWrapper>
                   </Item2>
 
                   {usePoses && (

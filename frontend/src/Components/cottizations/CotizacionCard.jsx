@@ -1,8 +1,20 @@
 import React from "react";
 import {
+  Card,
+  CardHeader,
+  CardContent,
+  Typography,
+  List,
+  ListItem,
+  ListItemText,
+  Divider,
+  Grid,
+} from "@mui/material";
+import {
   spanishFormat,
   currencyFormat,
 } from "../utils/generalData/numbersAndCurrencies";
+import { JobViewer } from "../jobViewer/JobViewer";
 
 /**
  * Renderiza los datos principales de una cotización.
@@ -11,97 +23,142 @@ import {
  */
 const CotizacionCard = ({ cotizacion, job }) => {
   if (!cotizacion) return null;
-  // Ejemplo de campos clave, ajusta según tu modelo real
   const index = cotizacion.data.index;
   const cliente = cotizacion.data.cliente || cotizacion.data.customer;
   const items = job?.Partes || [];
   const jobName = job?.Nombre || "Trabajo sin nombre";
   const resumen = cotizacion.data.data.resumen;
-  console.log("Resumen de cotización:", resumen);
   const total =
     resumen[resumen.length - 1].finishing +
     resumen[resumen.length - 1].print +
     resumen[resumen.length - 1].stock;
   const { fecha, estado, observaciones } = cotizacion.data;
 
+  const quote =
+    cotizacion.data?.data?.quoteSettings?.quote || cotizacion.data?.data?.quote;
+
   return (
-    <div
-      style={{
-        border: "1px solid #ccc",
-        borderRadius: 8,
-        padding: 16,
-        margin: 8,
-      }}
-    >
-      <h3>Cotización #{index}</h3>
-      <h4>
-        Trabajo: <a href={`/jobs/edit/${job?._id}`}>{jobName}</a>
-      </h4>
-      {cliente && (
-        <p>
-          <b>Cliente:</b> {cliente.nombre || cliente.razonSocial || cliente}
-        </p>
-      )}
-      {fecha && (
-        <p>
-          <b>Fecha:</b> {new Date(fecha).toLocaleDateString()}
-        </p>
-      )}
-      {estado && (
-        <p>
-          <b>Estado:</b> {estado}
-        </p>
-      )}
-      {observaciones && (
-        <p>
-          <b>Observaciones:</b> {observaciones}
-        </p>
-      )}
-      {items && Array.isArray(items) && items.length > 0 && (
-        <div>
-          <b>Items:</b>
-          <ul>
-            {items.map((item, idx) => (
-              <li key={idx}>
-                {`${item.Name} (${item.jobParts[0].Type})`} - Pags: {item.Pages}{" "}
-                - Material: {`${item.partStock.Tipo} ${item.partStock.Gramaje}`}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-      {total && <h4>Costo: {currencyFormat(total)}</h4>}
-      {/* Mostrar detalles de la cotización */}
-      {cotizacion.data?.data?.quoteSettings?.quote && (
-        <div style={{ marginTop: 12 }}>
-          <b>Detalles del presupuesto:</b>
-          <ul>
-            <li>
-              Ganancia:{" "}
-              {currencyFormat(cotizacion.data.data.quoteSettings.quote.gain)}
-            </li>
-            <li>
-              % Ganancia:{" "}
-              {cotizacion.data.data.quoteSettings.quote.utilityPercentage}%
-            </li>
-            <li>
-              Comisión de ventas:{" "}
-              {currencyFormat(
-                cotizacion.data.data.quoteSettings.quote.salesCommission
-              )}
-            </li>
-            <li>
-              IVA:{" "}
-              {currencyFormat(cotizacion.data.data.quoteSettings.quote.iva)}
-            </li>
-            <li>
-              <b>Total final:</b>{" "}
-              {currencyFormat(cotizacion.data.data.quoteSettings.quote.total)}
-            </li>
-          </ul>
-        </div>
-      )}
-    </div>
+    <Grid container spacing={2}>
+      <Grid item xs={12} md={4}>
+        <Card sx={{ borderRadius: 2, margin: 2 }}>
+          <CardHeader
+            title={`Cotización #${index}`}
+            subheader={
+              <span>
+                Trabajo:{" "}
+                <a
+                  href={`/jobs/edit/${job?._id}`}
+                  style={{ textDecoration: "none" }}
+                >
+                  {jobName}
+                </a>
+              </span>
+            }
+            titleTypographyProps={{ variant: "h6", color: "primary" }}
+            subheaderTypographyProps={{ variant: "subtitle1" }}
+          />
+          <Divider />
+          <CardContent>
+            {cliente && (
+              <Typography variant="body1" gutterBottom>
+                <b>Cliente:</b>{" "}
+                {cliente.nombre || cliente.razonSocial || cliente}
+              </Typography>
+            )}
+            {fecha && (
+              <Typography variant="body1" gutterBottom>
+                <b>Fecha:</b> {new Date(fecha).toLocaleDateString()}
+              </Typography>
+            )}
+            {estado && (
+              <Typography variant="body1" gutterBottom>
+                <b>Estado:</b> {estado}
+              </Typography>
+            )}
+            {observaciones && (
+              <Typography variant="body1" gutterBottom>
+                <b>Observaciones:</b> {observaciones}
+              </Typography>
+            )}
+            {items && Array.isArray(items) && items.length > 0 && (
+              <>
+                <Typography variant="body1" sx={{ mt: 1 }}>
+                  <b>Items:</b>
+                </Typography>
+                <List dense>
+                  {items.map((item, idx) => (
+                    <ListItem key={idx} sx={{ pl: 2 }}>
+                      <ListItemText
+                        primary={`${item.Name} (${item.jobParts[0].Type})`}
+                        secondary={
+                          <>
+                            Pags: {item.Pages} - Material:{" "}
+                            {`${item.partStock.Tipo} ${item.partStock.Gramaje}`}
+                          </>
+                        }
+                      />
+                    </ListItem>
+                  ))}
+                </List>
+              </>
+            )}
+            {total && (
+              <Typography variant="h6" color="primary" sx={{ mt: 2 }}>
+                Costo: {currencyFormat(total)}
+              </Typography>
+            )}
+            {/* Mostrar detalles de la cotización */}
+            {quote && (
+              <>
+                <Divider sx={{ my: 2 }} />
+                <Typography variant="subtitle1" sx={{ mb: 1 }}>
+                  <b>Detalles del presupuesto:</b>
+                </Typography>
+                <List dense>
+                  <ListItem>
+                    <ListItemText
+                      primary="Ganancia"
+                      secondary={currencyFormat(quote.gain)}
+                    />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText
+                      primary="% Ganancia"
+                      secondary={`${spanishFormat(quote.utilityPercentage)}%`}
+                    />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText
+                      primary="Comisión de ventas"
+                      secondary={currencyFormat(quote.salesCommission)}
+                    />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText
+                      primary="IVA"
+                      secondary={currencyFormat(quote.iva)}
+                    />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText
+                      primary={<b>Total final</b>}
+                      secondary={
+                        <Typography color="primary" variant="h6">
+                          {currencyFormat(quote.total)}
+                        </Typography>
+                      }
+                    />
+                  </ListItem>
+                </List>
+              </>
+            )}
+          </CardContent>
+        </Card>
+      </Grid>
+      <Grid item xs={12} md={8}>
+        <JobViewer job={job} cot={cotizacion.data} />
+      </Grid>
+    </Grid>
   );
 };
 

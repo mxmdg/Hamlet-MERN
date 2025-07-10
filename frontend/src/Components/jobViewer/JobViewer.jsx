@@ -15,31 +15,37 @@ import {
 import { Container, Box } from "@mui/material";
 
 export const JobViewer = (props) => {
-  const [useCurrentJob, setCurrentJob] = useState(props.job || null);
-  const [useLoading, setLoading] = useState(true);
+  const [useCurrentJob, setCurrentJob] = useState(props.job);
+  const [useLoading, setLoading] = useState(props.job ? false : true);
   const [useError, setError] = useState(null);
   const navigate = useNavigate();
   const params = useParams();
   const { id } = params;
 
   useEffect(() => {
-    const fetchJob = async () => {
+    if (props.job !== undefined) {
+      console.log("Usando trabajo cargado");
+      setCurrentJob(props.job);
+      setLoading(false);
+      setError(null);
+    } else {
       try {
-        const currentJob = await getPrivateElementByID(props.entity, id);
-        console.log(currentJob);
-        currentJob.data
-          ? setCurrentJob(currentJob.data)
-          : setError({ message: "Trabajo inexistente" });
+        const fetchJob = async () => {
+          const currentJob = await getPrivateElementByID(props.entity, id);
+          console.log(currentJob);
+          currentJob.data
+            ? setCurrentJob(currentJob.data)
+            : setError({ message: "Trabajo inexistente" });
+          setLoading(false);
+          console.log(currentJob.data);
+        };
+        fetchJob();
+      } catch (error) {
+        setError(error);
         setLoading(false);
-        console.log(currentJob.data);
-      } catch (e) {
-        setError(e);
-        setLoading(false);
-        console.log(e);
       }
-    };
-    fetchJob();
-  }, [setCurrentJob]);
+    }
+  }, [setCurrentJob, props.job, props.entity, id]);
 
   const preloader = (
     <>
@@ -49,7 +55,7 @@ export const JobViewer = (props) => {
 
   const output = () => {
     if (useLoading === false && useCurrentJob !== null) {
-      return <JobDetail job={useCurrentJob} />;
+      return <JobDetail job={useCurrentJob} cot={props.cot} />;
     } else {
       return preloader;
     }
