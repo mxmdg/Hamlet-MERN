@@ -45,12 +45,12 @@ const ProductionQuote = (props) => {
     mode: "onChange",
     defaultValues: {
       gainPercentage:
-        props.quoteOptions && props.quoteOptions.gainPercentage !== undefined
+        props.quoteOptions && props.quoteOptions?.gainPercentage !== undefined
           ? parseFloat(props.quoteOptions.gainPercentage)
           : 45,
       salesCommission:
-        props.quoteOptions && props.quoteOptions.salesComision !== undefined
-          ? props.quoteOptions.salesComision
+        props.quoteOptions && props.quoteOptions?.salesCommission !== undefined
+          ? props.quoteOptions.salesCommission
           : 0,
     },
   });
@@ -112,27 +112,25 @@ const ProductionQuote = (props) => {
     };
   };
 
-  const quote = calculateQuote();
-
   useEffect(() => {
     if (typeof props.quoteSettings === "function") {
       props.quoteSettings({
         gainPercentage:
-          props.quoteOptions !== null &&
+          props.quoteOptions !== undefined &&
           props.quoteOptions.gainPercentage !== undefined
             ? parseFloat(props.quoteOptions.gainPercentage)
             : gainPercentage,
         salesCommission:
-          props.quoteOptions !== null
-            ? props.quoteOptions.salesComision
+          props.quoteOptions !== undefined
+            ? props.quoteOptions.salesCommission
             : salesCommission,
         ivaPercentage:
-          props.quoteOptions !== null &&
+          props.quoteOptions !== undefined &&
           props.quoteOptions.ivaPercentage !== undefined
             ? props.quoteOptions.ivaPercentage
             : ivaPercentage,
         isIvaEnabled:
-          props.quoteOptions !== null &&
+          props.quoteOptions !== undefined &&
           props.quoteOptions.isIvaEnabled !== undefined
             ? props.quoteOptions.isIvaEnabled
             : isIvaEnabled,
@@ -141,6 +139,8 @@ const ProductionQuote = (props) => {
     }
     // eslint-disable-next-line
   }, [gainPercentage, salesCommission, ivaPercentage, isIvaEnabled]);
+
+  const quote = calculateQuote();
 
   const failure = <ErrorMessage message={useError} />;
 
