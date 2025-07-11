@@ -75,15 +75,29 @@ const JobDetail = (props) => {
   const [productionPlanAvaible, setProductionPlanAvaible] = useState(false);
   const [useJobFinishingData, setJobFinishingData] = useState(null);
   const [usePartFinishingData, setPartFinishingData] = useState(() => {
-    if (props.cot && props.cot.data && props.cot.data.impositionData) {
-      console.log("Finishing Data from COT", props.cot.data.impositionData);
-      // Convertir finishingData de objeto a array
-      const values = Object.values(props.cot.data.impositionData);
-      console.log("Finishing Data Array", values);
-      const arrayData = values[0].finishingData;
-      return arrayData;
+    if (!props.cot) return [];
+    // 1. Obtener todos los valores de impositionData
+    let arr = Object.values(props.cot.data.impositionData)
+      .flat(Infinity) // Aplana cualquier nivel de arrays anidados
+      .filter(
+        (item) =>
+          item &&
+          typeof item === "object" &&
+          "partId" in item &&
+          "finishingData" in item
+      );
+    // 2. Eliminar duplicados por partId, dejando el último
+    const unique = [];
+    const seen = new Set();
+    for (let i = arr.length - 1; i >= 0; i--) {
+      if (!seen.has(arr[i].partId)) {
+        unique.unshift(arr[i]);
+        seen.add(arr[i].partId);
+      }
     }
+    return unique;
   });
+
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
