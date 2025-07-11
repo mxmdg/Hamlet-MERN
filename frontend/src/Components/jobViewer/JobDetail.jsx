@@ -55,6 +55,7 @@ import arrayNormalizer from "../utils/generalData/arrayNormalizer";
 import ListItemNumbers from "./ListItemNumbers";
 import FinishingList from "./FinishingList";
 import CopyToClipboardWrapper from "../General/CopyToClipboardWrapper";
+import objectToArray from "../utils/generalData/arrayNormalizer";
 
 export const calcularLomo = (pags, resma) => {
   return Math.ceil(Math.ceil(pags / 2) * (resma / 500));
@@ -73,23 +74,16 @@ const JobDetail = (props) => {
   );
   const [productionPlanAvaible, setProductionPlanAvaible] = useState(false);
   const [useJobFinishingData, setJobFinishingData] = useState(null);
-  const [usePartFinishingData, setPartFinishingData] = useState(
-    props.cot
-      ? Object.values(props.cot.data.impositionData)
-          .map((impo) => {
-            // Si hay finishingData y es un array, agregamos cada objeto al array final
-            if (Array.isArray(impo.finishingData)) {
-              return impo.finishingData.map((fd) => ({
-                finishingData: fd.finishingData,
-                partId: fd.partId,
-              }));
-            }
-            // Si no hay finishingData, devolvemos un objeto vacío con partId si existe
-            return [];
-          })
-          .flat()
-      : []
-  );
+  const [usePartFinishingData, setPartFinishingData] = useState(() => {
+    if (props.cot && props.cot.data && props.cot.data.impositionData) {
+      console.log("Finishing Data from COT", props.cot.data.impositionData);
+      // Convertir finishingData de objeto a array
+      const values = Object.values(props.cot.data.impositionData);
+      console.log("Finishing Data Array", values);
+      const arrayData = values[0].finishingData;
+      return arrayData;
+    }
+  });
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
