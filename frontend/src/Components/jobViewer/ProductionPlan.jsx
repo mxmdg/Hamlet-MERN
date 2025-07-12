@@ -244,6 +244,8 @@ const ProductionPlan = (props) => {
       impositionData: props.impositionData,
       resumen: resumen,
       quoteSettings: useQuoteSettings,
+      partsFinishing: props.partFinishingData,
+      finishing: props.finishingData,
     };
     try {
       await addPrivateElement("quotations", {

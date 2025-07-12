@@ -73,30 +73,12 @@ const JobDetail = (props) => {
     props.cot ? props.cot.data.impositionData : {}
   );
   const [productionPlanAvaible, setProductionPlanAvaible] = useState(false);
-  const [useJobFinishingData, setJobFinishingData] = useState(null);
-  const [usePartFinishingData, setPartFinishingData] = useState(() => {
-    if (!props.cot) return [];
-    // 1. Obtener todos los valores de impositionData
-    let arr = Object.values(props.cot.data.impositionData)
-      .flat(Infinity) // Aplana cualquier nivel de arrays anidados
-      .filter(
-        (item) =>
-          item &&
-          typeof item === "object" &&
-          "partId" in item &&
-          "finishingData" in item
-      );
-    // 2. Eliminar duplicados por partId, dejando el último
-    const unique = [];
-    const seen = new Set();
-    for (let i = arr.length - 1; i >= 0; i--) {
-      if (!seen.has(arr[i].partId)) {
-        unique.unshift(arr[i]);
-        seen.add(arr[i].partId);
-      }
-    }
-    return unique;
-  });
+  const [useJobFinishingData, setJobFinishingData] = useState(
+    props.cot ? props.cot.data.finishing : null
+  );
+  const [usePartFinishingData, setPartFinishingData] = useState(
+    props.cot ? props.cot.data.partsFinishing : []
+  );
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
@@ -134,7 +116,10 @@ const JobDetail = (props) => {
 
   const showProductionPlan = () => {
     console.log(Object.keys(productionPlan), job.Partes.length);
-    if (Object.keys(productionPlan).length === job.Partes.length) {
+    if (
+      Object.keys(productionPlan).length === job.Partes.length &&
+      usePartFinishingData.length === job.Partes.length
+    ) {
       setProductionPlanAvaible(true);
     } else {
       alert("Calcular la imposicion de todas las partes");
@@ -161,7 +146,7 @@ const JobDetail = (props) => {
     let partNumber = job.Partes.indexOf(part) + 1;
     let myKey = part._id + partNumber;
 
-    const Finishing = arrayNormalizer(part.Finishing);
+    const Finishing = part.Finishing;
 
     const stockCalculated = useImpoData
       ? calculateStock(
@@ -179,7 +164,7 @@ const JobDetail = (props) => {
       Poses: usePoses,
       totalPliegos: stockCalculated.cantidadDePliegos,
       impositionData: useImpoData,
-      finishingData: usePartFinishingData,
+      //finishingData: usePartFinishingData,
     };
 
     const saveProductionPlan = () => {

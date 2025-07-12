@@ -8,7 +8,8 @@ quotationsControl.getQuotations = async (req, res) => {
   try {
     const allQuotations = await quotations.esquema
       .find()
-      .populate({ path: "jobId", model: Jobs.esquema, select: "Nombre" });
+      .populate({ path: "jobId", model: Jobs.esquema, select: "Nombre" })
+      .sort({ index: -1 }); // Ordenar por índice descendente
     res.json(allQuotations);
   } catch (error) {
     console.error(error);
