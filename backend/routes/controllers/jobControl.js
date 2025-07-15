@@ -31,6 +31,8 @@ jobControl.getCompleteJobs = async (req, res) => {
       const query =
         property === "Nombre"
           ? { [property]: { $regex: queryText, $options: "i" } }
+          : property === "Partes.Name"
+          ? { "Partes.Name": { $regex: queryText, $options: "i" } }
           : property === "Cantidad"
           ? { [property]: { $eq: queryText } }
           : property === "Partes"
