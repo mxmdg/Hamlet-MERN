@@ -26,6 +26,7 @@ import DarkWoodCard from "../utils/DarkWoodCard";
 import FullJobsRender from "../Pages/FullJobsRender";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import Spinner from "../General/Spinner";
+import Fetch from "../General/Fetch";
 
 //Custom Hooks
 import { Filter } from "../customHooks/Filter";
@@ -39,107 +40,36 @@ import JobsPerDate from "../utils/stats/JobsPerDate";
 import JobsPerClient from "../utils/stats/JobsPerClient";
 import JobsPerSeller from "../utils/stats/JobsPerSeller";
 import JobsPerType from "../utils/stats/JobsPerType";
+import JobTypes from "./JobTypes";
+
+/*  JobFinder component allows users to search for jobs based on various properties.
+    It provides a form to select properties, operators, and input queries.
+*/
 
 const JobFinder = (props) => {
+  // IMPORTANTE: props.entity y props.propertiesMap deben ser provistos por el componente padre
+  // props.entity: endpoint para las búsquedas (ejemplo: "jobs")
+  // props.propertiesMap: array de propiedades del modelo con sus tipos y etiquetas
+
   const [useURL, setURL] = useState(null);
-  const [useProperty, setProperty] = useState({
-    value: "Nombre",
-    label: "Nombre",
-    queryType: "string",
-  });
+  const [useProperty, setProperty] = useState(props.propertiesMap[0]);
   const [useQuery, setQuery] = useState(null);
   const [useQueryType, setQueryType] = useState("string");
+  const [useOperator, setOperator] = useState("eq");
   const [useError, setError] = useState(null);
   const [useResponse, setResponse] = useState(null);
   const [useLoading, setLoading] = useState(true);
+  const [properties, setProperties] = useState(props.propertiesMap || []);
   const navigate = useNavigate();
   const inputsVariant = props.inputsVariant || "outlined";
 
-  const properties = [
-    {
-      value: "Nombre",
-      label: "Nombre",
-      queryType: "string",
-      queryLabel: "Nombre",
-    },
-    {
-      value: "Cantidad",
-      label: "Cantidad",
-      queryType: "number",
-      queryLabel: "Cantidad",
-    },
-    {
-      value: "Partes.jobParts._id",
-      label: "Tipo de Parte",
-      queryType: "id",
-      queryLabel: "jobParts.Type",
-    },
-    {
-      value: "Partes",
-      label: "Cantidad de Partes",
-      queryType: "number",
-      queryLabel: "Partes",
-    },
-    {
-      value: "Partes.Name",
-      label: "Nombre de Parte",
-      queryType: "string",
-    },
-    {
-      value: "Partes.Pages",
-      label: "Paginas",
-      queryType: "number",
-      queryLabel: "Partes Pages",
-    },
-    {
-      value: "Partes.Ancho",
-      label: "Ancho",
-      queryType: "string",
-      queryLabel: "Ancho",
-    },
-    {
-      value: "Partes.Alto",
-      label: "Alto",
-      queryType: "string",
-      queryLabel: "Alto",
-    },
-    {
-      value: "Partes.Formato",
-      label: "Formato",
-      queryType: "string",
-      queryLabel: "Formato",
-    },
-    {
-      value: "Partes.partStock",
-      label: "Material de Parte",
-      queryType: "id",
-      queryLabel:
-        "stock.Tipo stock.Gramaje sotck.Marca (stock.Alto_Resma x stock.Alto_Resma)",
-    },
-    {
-      value: "Partes.Finishing",
-      label: "Acabado de las partes",
-      queryType: "id",
-      queryLabel: "finishings.Proceso finishings.Modelo",
-    },
-    {
-      value: "Finishing",
-      label: "Acabado del producto",
-      queryType: "id",
-      queryLabel: "finishings.Proceso finishings.Modelo",
-    },
-    {
-      value: "Owner",
-      label: "Representante",
-      queryType: "id",
-      queryLabel: "users.Name users.LastName",
-    },
-    {
-      value: "Company",
-      label: "Cliente",
-      queryType: "id",
-      queryLabel: "companies.Nombre",
-    },
+  const operators = [
+    { value: "eq", label: "Igual" },
+    { value: "ne", label: "Diferente" },
+    { value: "gt", label: "Mayor que" },
+    { value: "gte", label: "Mayor o igual que" },
+    { value: "lt", label: "Menor que" },
+    { value: "lte", label: "Menor o igual que" },
   ];
 
   const fetch = async () => {
@@ -168,8 +98,8 @@ const JobFinder = (props) => {
   const onSubmit = (e) => {
     e.preventDefault();
     useQuery !== null
-      ? setURL(`jobs/complete?Q=${useQuery}&P=${useProperty.value}`)
-      : setURL(`jobs/complete`);
+      ? setURL(`?Q=${useQuery}&P=${useProperty.value}&OP=${useOperator}`)
+      : setURL(``);
   };
 
   useEffect(() => {
@@ -212,17 +142,18 @@ const JobFinder = (props) => {
                           setURL(null);
                         }}
                       >
-                        {properties.map((item) => {
-                          return (
-                            <MenuItem
-                              value={item.value}
-                              key={item.value}
-                              label={item.label}
-                            >
-                              {item.label}
-                            </MenuItem>
-                          );
-                        })}
+                        {properties !== undefined &&
+                          properties.map((item) => {
+                            return (
+                              <MenuItem
+                                value={item.value}
+                                key={item.value}
+                                label={item.label}
+                              >
+                                {item.label}
+                              </MenuItem>
+                            );
+                          })}
                       </TextField>
                     </Grid>
                     {useResponse !== null &&
@@ -249,6 +180,31 @@ const JobFinder = (props) => {
                           </TextField>
                         </Grid>
                       )}
+                    {useResponse !== null &&
+                      useQueryType === "id" &&
+                      useProperty.label === "Tipo de Trabajo" && (
+                        <Grid item xs={12} sm={12} md={4}>
+                          <TextField
+                            select
+                            id="queryJobType"
+                            label="Tipo de Trabajo"
+                            variant={inputsVariant}
+                            color="primary"
+                            fullWidth
+                            onChange={(e) => {
+                              setURL(null);
+                              setQuery(e.target.value);
+                            }}
+                          >
+                            {JobTypes.map((jobType) => (
+                              <MenuItem value={jobType.name} key={jobType.id}>
+                                {jobType.name}
+                              </MenuItem>
+                            ))}
+                          </TextField>
+                        </Grid>
+                      )}
+
                     {useResponse !== null &&
                       useQueryType === "id" &&
                       useProperty.label === "Material de Parte" && (
@@ -373,20 +329,44 @@ const JobFinder = (props) => {
                       </Grid>
                     )}
                     {useResponse !== null && useQueryType === "number" && (
-                      <Grid item xs={12} sm={12} md={4}>
-                        <TextField
-                          type="number"
-                          id="query"
-                          variant={inputsVariant}
-                          color="primary"
-                          label="Buscar"
-                          fullWidth
-                          onChange={(e) => {
-                            setURL(null);
-                            setQuery(e.target.value);
-                          }}
-                        ></TextField>
-                      </Grid>
+                      <>
+                        <Grid item xs={12} sm={6} md={2}>
+                          <TextField
+                            type="Select"
+                            id="operator"
+                            select
+                            label="Operador"
+                            variant={inputsVariant}
+                            color="primary"
+                            fullWidth
+                            value={useOperator}
+                            onChange={(e) => {
+                              setURL(null);
+                              setOperator(e.target.value);
+                            }}
+                          >
+                            {operators.map((op) => (
+                              <MenuItem value={op.value} key={op.value}>
+                                {op.label}
+                              </MenuItem>
+                            ))}
+                          </TextField>
+                        </Grid>
+                        <Grid item xs={12} sm={6} md={2}>
+                          <TextField
+                            type="number"
+                            id="query"
+                            variant={inputsVariant}
+                            color="primary"
+                            label="Buscar"
+                            fullWidth
+                            onChange={(e) => {
+                              setURL(null);
+                              setQuery(e.target.value);
+                            }}
+                          ></TextField>
+                        </Grid>
+                      </>
                     )}
                     <Grid
                       item
@@ -406,23 +386,28 @@ const JobFinder = (props) => {
           </CardContent>
         </Card>
       </Grid>
-      {useURL !== null && (
+      {useURL !== null && props.entity === "jobs/complete" && (
         <Grid container columns={12} spacing={2} width={"100%"} margin={2}>
           <Grid item xs={12} sm={12} md={12}>
             <FullJobsRender
-              route={useURL}
+              route={props.entity + useURL}
               settings={{ title: "Pedidos", column: "emited", order: "asc" }}
             />
           </Grid>
           <Grid item xs={12} sm={12} md={12}>
-            <StatsCollector route={useURL}>
-              <JobsForNextDays from={365} to={60} />
+            <StatsCollector route={props.entity + useURL}>
+              <JobsForNextDays from={60} to={60} />
               <JobsPerDate />
               <JobsPerClient rank={10} />
               <JobsPerSeller />
               <JobsPerType />
             </StatsCollector>
           </Grid>
+        </Grid>
+      )}
+      {useURL !== null && props.entity !== "jobs/complete" && (
+        <Grid item xs={12} sm={12} md={12}>
+          <Fetch collection={"quotations"} subdir={useURL} />
         </Grid>
       )}
     </Grid>

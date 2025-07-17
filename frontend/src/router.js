@@ -53,6 +53,10 @@ import JobsPerClient from "./Components/utils/stats/JobsPerClient";
 import JobsPerSeller from "./Components/utils/stats/JobsPerSeller";
 import JobsPerType from "./Components/utils/stats/JobsPerType";
 import JobFinder from "./Components/Jobs/JobFinder";
+import {
+  JobProperties,
+  QuotationProperties,
+} from "./Components/utils/PropertiesMaps/jobsMap";
 import { headers } from "./Components/Jobs/jobsTable/headers";
 
 const Router = () => {
@@ -298,7 +302,15 @@ const Router = () => {
           />
 
           {/* Jobs Routes */}
-          <Route path="/Jobs" element={<JobFinder />} />
+          <Route
+            path="/Jobs"
+            element={
+              <JobFinder
+                entity={"jobs/complete"}
+                propertiesMap={JobProperties}
+              />
+            }
+          />
           <Route
             path="/Jobs/partes"
             element={<MainContainer entity={"jobs/partes"} />}
@@ -383,12 +395,14 @@ const Router = () => {
 
           <Route
             path="/quotations"
-            element={<MainContainer entity={"quotations"} />}
+            element={
+              <JobFinder
+                entity={"quotations"}
+                propertiesMap={QuotationProperties}
+              />
+            }
           />
-          <Route
-            path="/quotations/edit/:id"
-            element={<CotFetcher />}
-          />
+          <Route path="/quotations/edit/:id" element={<CotFetcher />} />
 
           {/* Configuracion Routes */}
           <Route path="/configuracion" element={<ConfigMainContainer />} />

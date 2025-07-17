@@ -11,7 +11,9 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import Typography from "@mui/material/Typography";
 
+// ErrorMessage component displays an error alert or dialog based on props
 const ErrorMessage = (props) => {
+  // State to control dialog open/close
   const [open, setOpen] = React.useState(true);
 
   const handleClickOpen = () => {
@@ -20,13 +22,17 @@ const ErrorMessage = (props) => {
   const handleClose = () => {
     setOpen(false);
   };
+
+  // Closes the dialog and triggers a delete/close action from parent
+
   const handleCloseAndDelete = () => {
-    props.closeAction(props.index);
+    props.action();
     setOpen(false);
   };
 
   const navigate = useNavigate();
 
+  // Optional action button for the alert, triggers props.action if provided
   const actionButton = (
     <Button
       variant="outlined"
@@ -69,13 +75,13 @@ const ErrorMessage = (props) => {
       </DialogContent>
       <DialogActions>
         <Button autoFocus onClick={handleCloseAndDelete}>
-          {props.buttonTxt}
+          {props.buttonTxt || "ok"}
         </Button>
       </DialogActions>
     </Dialog>
   );
 
-  return alert;
+  return props.title ? dialogError : alert;
 };
 
 export default ErrorMessage;

@@ -16,7 +16,11 @@ import { ListItemTypographyProps } from "../MaterialCustomStyles/MaterialCustomS
 import { getPrivateElementByID } from "../customHooks/FetchDataHook";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import Spinner from "../General/Spinner";
-import { pliegoPorLongitud, productoPorUnidad } from "../Precioso/formulas";
+import {
+  pliegoPorLongitud,
+  productoPorUnidad,
+  costoFijo,
+} from "../Precioso/formulas";
 import { currencyFormat } from "../utils/generalData/numbersAndCurrencies";
 
 const FinishingList = (props) => {
@@ -34,6 +38,9 @@ const FinishingList = (props) => {
             f.Costo.Entrada,
             cantidad
           );
+
+        case "CF":
+          return costoFijo(f.Costo.Valor);
         case "cm":
           try {
             return pliegoPorLongitud(
@@ -143,7 +150,7 @@ const FinishingList = (props) => {
   if (useError)
     return (
       <ErrorMessage
-        message={useError.message}
+        message={useError.response?.data?.message || useError.message}
         severity={useError.severity || "error"}
         variant="standard"
         action={() => setError(null)}

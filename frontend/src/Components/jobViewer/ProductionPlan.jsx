@@ -229,6 +229,7 @@ const ProductionPlan = (props) => {
       }
       totals.totalCost = totalCost;
     } catch (error) {
+      console.log(error);
       setError(error);
     }
 
@@ -269,8 +270,15 @@ const ProductionPlan = (props) => {
         jobId: props.job._id,
         customerId: props.job.Company._id,
       });
+      setError({
+        title: "Presupuesto guardado",
+        message: "Presupuesto guardado correctamente",
+        severity: "success",
+        action: () => setError(null),
+      });
     } catch (error) {
       console.log(error);
+      setError(error);
     }
   };
 
@@ -484,9 +492,10 @@ const ProductionPlan = (props) => {
 
   const failure = (
     <ErrorMessage
-      message={useError || "Error al cargar los datos"}
-      severity="error"
-      action={() => setError(null)}
+      title={useError?.title || null}
+      message={useError?.message || "Error al cargar los datos"}
+      severity={useError?.severity || "error"}
+      action={useError?.action || (() => setError(null))}
     />
   );
 

@@ -6,8 +6,31 @@ const quotationsControl = {};
 // Obtener todas las cotizaciones
 quotationsControl.getQuotations = async (req, res) => {
   try {
+    const queryText = req.query.Q || "";
+    const property = req.query.P || "name";
+    const operator = req.query.OP || "eq"; // Default to 'eq' if not provided
+    const schemaType = quotations.esquema.schema.paths[property]?.instance;
+
+    let query;
+    if (schemaType === "String") {
+      // Para texto, usar regex
+      query = { [property]: { $regex: queryText, $options: "i" } };
+    } else if (schemaType === "Number") {
+      // Para números, usar operador dinámico
+      query = { [property]: { [`$${operator}`]: Number(queryText) } };
+    } else if (schemaType === "ObjectID") {
+      // Para IDs, buscar por igualdad
+      query = { [property]: queryText };
+    } else if (property === "data.resumen") {
+      // Ejemplo para arrays
+      query = { [property]: { $size: parseInt(queryText) } };
+    } else {
+      // Por defecto, buscar por igualdad
+      query = { [property]: queryText };
+    }
+
     const allQuotations = await quotations.esquema
-      .find()
+      .find(query)
       .populate({ path: "jobId", model: Jobs.esquema, select: "Nombre" })
       .sort({ index: -1 }); // Ordenar por índice descendente
     res.json(allQuotations);

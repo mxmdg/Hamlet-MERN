@@ -7,9 +7,10 @@ export const productoPorUnidad = (Valor, Minimo, Entrada, cantidad) => {
 
   const unidadEntrada = parseFloat(Valor) / parseFloat(Entrada);
 
-
   let resultado =
-    unidadEntrada >= 1 ? (parseFloat(Entrada) + parseFloat(cantidad) )* parseFloat(Valor) : parseFloat(Entrada) + parseFloat(cantidad) * parseFloat(Valor);
+    unidadEntrada >= 1
+      ? (parseFloat(Entrada) + parseFloat(cantidad)) * parseFloat(Valor)
+      : parseFloat(Entrada) + parseFloat(cantidad) * parseFloat(Valor);
   console.log("Resultado x un: " + resultado);
   console.log(Valor, Minimo, Entrada, cantidad);
   resultado = resultado < parseFloat(Minimo) ? parseFloat(Minimo) : resultado;
@@ -41,13 +42,16 @@ export const pliegoPorLongitud = (
       : parseFloat(valor);
 
   let resultado =
-    parseFloat(Entrada) + parseFloat(largoPliego) * parseFloat(cantidad)* parseFloat(currentValue);
+    parseFloat(Entrada) +
+    parseFloat(largoPliego) * parseFloat(cantidad) * parseFloat(currentValue);
 
   resultado = resultado < parseFloat(minimo) ? parseFloat(minimo) : resultado;
 
   let valorUnitario = roundCents(resultado / cantidad);
 
-  const papyrusExport = `${Math.round(Entrada / valor)} + Pliegos * if ( Pliego_Largo >  Pliego_Ancho , if( Pliego_Largo > 520/10, Pliego_Largo * 115/100 , Pliego_Largo) , if( Pliego_Ancho > 520/10, Pliego_Ancho * 115/100 , Pliego_Ancho))`;
+  const papyrusExport = `${Math.round(
+    Entrada / valor
+  )} + Pliegos * if ( Pliego_Largo >  Pliego_Ancho , if( Pliego_Largo > 520/10, Pliego_Largo * 115/100 , Pliego_Largo) , if( Pliego_Ancho > 520/10, Pliego_Ancho * 115/100 , Pliego_Ancho))`;
 
   console.log({
     Unitario: valorUnitario,
@@ -62,5 +66,20 @@ export const pliegoPorLongitud = (
     Total: roundCents(resultado),
     Papyrus: papyrusExport,
     Formula: "Centimetros",
+  };
+};
+
+export const costoFijo = (valor) => {
+  // Esta funcion es para los costos fijos, que no dependen de la cantidad de unidades
+  // y se calcula como el valor del costo mas el minimo y la entrada.
+  let resultado = parseFloat(valor);
+  let valorUnitario = roundCents(resultado);
+  const papyrusExport = `${valor}`;
+  return {
+    Unitario: valorUnitario,
+    Cantidad: 1,
+    Total: resultado,
+    Papyrus: papyrusExport,
+    Formula: "Fijo",
   };
 };

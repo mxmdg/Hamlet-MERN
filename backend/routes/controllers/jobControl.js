@@ -28,16 +28,36 @@ jobControl.getCompleteJobs = async (req, res) => {
     try {
       const queryText = req.query.Q || "";
       const property = req.query.P || "Nombre";
-      const query =
-        property === "Nombre"
-          ? { [property]: { $regex: queryText, $options: "i" } }
-          : property === "Partes.Name"
-          ? { "Partes.Name": { $regex: queryText, $options: "i" } }
-          : property === "Cantidad"
-          ? { [property]: { $eq: queryText } }
-          : property === "Partes"
-          ? { [property]: { $size: parseInt(queryText) } }
-          : { [property]: queryText };
+      const operator = req.query.OP || "eq"; // Default to 'eq' if not provided
+      const schemaType = jobs.esquema.schema.paths[property]?.instance;
+
+      let query;
+      if (schemaType === "String") {
+        // Para texto, usar regex
+        query = { [property]: { $regex: queryText, $options: "i" } };
+      } else if (schemaType === "Number") {
+        // Para números, usar operador dinámico
+        query = { [property]: { [`$${operator}`]: Number(queryText) } };
+      } else if (
+        property === "Partes.Pages" ||
+        property === "Partes.Alto" ||
+        property === "Partes.Ancho"
+      ) {
+        // Para números, usar operador dinámico
+        query = { [property]: { [`$${operator}`]: Number(queryText) } };
+      } else if (schemaType === "ObjectID") {
+        // Para IDs, buscar por igualdad
+        query = { [property]: queryText };
+      } else if (property === "Tipo") {
+        // El tipo de trabajo es un array, hay que buscar la propiedad name en la posicion 0
+        query = { [Tipo[0].name]: { $regex: queryText, $options: "i" } };
+      } else if (property === "Partes") {
+        // Ejemplo para arrays
+        query = { [property]: { $size: parseInt(queryText) } };
+      } else {
+        // Por defecto, buscar por igualdad
+        query = { [property]: queryText };
+      }
 
       const jobList = await jobs.esquema
         .find(query)
