@@ -54,6 +54,7 @@ const JobFinder = (props) => {
   const [useURL, setURL] = useState(null);
   const [useProperty, setProperty] = useState(props.propertiesMap[0]);
   const [useQuery, setQuery] = useState(null);
+  const [useMax, setMax] = useState(null); // Estado para buscar rangos, este es el valor maximo, para el minimo usamos `useQuery`
   const [useQueryType, setQueryType] = useState("string");
   const [useOperator, setOperator] = useState("eq");
   const [useError, setError] = useState(null);
@@ -70,6 +71,7 @@ const JobFinder = (props) => {
     { value: "gte", label: "Mayor o igual que" },
     { value: "lt", label: "Menor que" },
     { value: "lte", label: "Menor o igual que" },
+    { value: "bt", label: "Entre..." },
   ];
 
   const fetch = async () => {
@@ -97,9 +99,25 @@ const JobFinder = (props) => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    useQuery !== null
-      ? setURL(`?Q=${useQuery}&P=${useProperty.value}&OP=${useOperator}`)
-      : setURL(``);
+
+    // Si no hay query, no buscar
+    if (!useQuery || useQuery === "") {
+      setURL("");
+      return;
+    }
+
+    // Construir los parámetros de la URL dinámicamente
+    const params = new URLSearchParams();
+    params.append("Q", useQuery);
+    params.append("P", useProperty.value);
+    params.append("OP", useOperator);
+
+    // Si el operador es "bt" (between), agregar el valor máximo
+    if (useOperator === "bt" && useMax) {
+      params.append("M", useMax);
+    }
+
+    setURL(`?${params.toString()}`);
   };
 
   useEffect(() => {
@@ -358,7 +376,7 @@ const JobFinder = (props) => {
                             id="query"
                             variant={inputsVariant}
                             color="primary"
-                            label="Buscar"
+                            label={useOperator === "bt" ? "Minimo" : "Buscar"}
                             fullWidth
                             onChange={(e) => {
                               setURL(null);
@@ -366,6 +384,24 @@ const JobFinder = (props) => {
                             }}
                           ></TextField>
                         </Grid>
+                        {useOperator === "bt" && (
+                          <>
+                            <Grid item xs={12} sm={6} md={2}>
+                              <TextField
+                                type="number"
+                                id="query2"
+                                variant={inputsVariant}
+                                color="primary"
+                                label="Maximo"
+                                fullWidth
+                                onBlur={(e) => {
+                                  setURL(null);
+                                  setMax(e.target.value);
+                                }}
+                              ></TextField>
+                            </Grid>
+                          </>
+                        )}
                       </>
                     )}
                     <Grid

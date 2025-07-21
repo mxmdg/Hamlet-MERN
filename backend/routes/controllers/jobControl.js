@@ -28,15 +28,21 @@ jobControl.getCompleteJobs = async (req, res) => {
     try {
       const queryText = req.query.Q || "";
       const property = req.query.P || "Nombre";
-      const operator = req.query.OP || "eq"; // Default to 'eq' if not provided
+      let operator = req.query.OP || "eq"; // Default to 'eq' if not provided
       const schemaType = jobs.esquema.schema.paths[property]?.instance;
+      const max = req.query.M || null;
 
       let query;
-      if (schemaType === "String") {
+      if (operator === "bt" && max !== null && property !== "Partes") {
+        query = {
+          [property]: { $gte: Number(queryText), $lte: Number(max) },
+        };
+      } else if (schemaType === "String") {
         // Para texto, usar regex
         query = { [property]: { $regex: queryText, $options: "i" } };
       } else if (schemaType === "Number") {
         // Para números, usar operador dinámico
+        operator === "bt" ? (operator = "eq") : operator;
         query = { [property]: { [`$${operator}`]: Number(queryText) } };
       } else if (
         property === "Partes.Pages" ||
