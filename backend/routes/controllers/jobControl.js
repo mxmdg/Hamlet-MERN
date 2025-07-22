@@ -23,6 +23,8 @@ jobControl.getJobs = async (req, res) => {
   }
 };
 
+// Obtener trabajos completos con filtros avanzados
+
 jobControl.getCompleteJobs = async (req, res) => {
   {
     try {

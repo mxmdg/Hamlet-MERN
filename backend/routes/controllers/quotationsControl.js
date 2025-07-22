@@ -3,7 +3,7 @@ const Jobs = require("../../models/Jobs");
 
 const quotationsControl = {};
 
-// Obtener todas las cotizaciones
+// Obtener todas las cotizaciones - Filtros avanzados
 quotationsControl.getQuotations = async (req, res) => {
   try {
     const queryText = req.query.Q || "";
