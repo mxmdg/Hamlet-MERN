@@ -103,26 +103,31 @@ export default function NewRadialBar(props) {
   return (
     <>
       {props.title && <Title title={props.title} />}
-      <ResponsiveContainer width={"100%"} height={"100%"} minWidth={300}>
+      <ResponsiveContainer
+        width={"100%"}
+        height={"100%"}
+        minWidth={150}
+        minHeight={300}
+      >
         <RadialBarChart
           cx="50%"
           cy="30%"
-          innerRadius="20%"
+          innerRadius="5%"
           outerRadius="80%"
           barSize={10}
           data={props.data}
         >
           <RadialBar
-            minAngle={15}
-            label={{ position: "outsideStart", fill: "#000" }}
+            minAngle={5}
+            label={{ position: "outside", fill: "#ff0" }}
             background="rgb(248, 35, 35)"
             dataKey={props.dataKey.qty}
           />
           <Legend
             iconSize={7}
             iconType="diamond"
-            layout="vertical"
-            align="bottom"
+            layout="horizontal"
+            align="left"
             verticalAlign="bottom"
             wrapperStyle={myWrapperStyle}
           />

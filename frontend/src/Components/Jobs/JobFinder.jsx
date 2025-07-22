@@ -41,6 +41,8 @@ import JobsPerClient from "../utils/stats/JobsPerClient";
 import JobsPerSeller from "../utils/stats/JobsPerSeller";
 import JobsPerType from "../utils/stats/JobsPerType";
 import JobTypes from "./JobTypes";
+import NewRadialBar from "../utils/stats/NewRadialBar";
+import StockCount from "../utils/stats/stockCount";
 
 /*  JobFinder component allows users to search for jobs based on various properties.
     It provides a form to select properties, operators, and input queries.
@@ -232,6 +234,7 @@ const JobFinder = (props) => {
                             options={useResponse.stock}
                             autoHighlight
                             autoComplete={true}
+                            required
                             getOptionLabel={(option) =>
                               `${option.Tipo} ${option.Gramaje} ${option.Marca} (${option.Ancho_Resma} x ${option.Alto_Resma})`
                             }
@@ -288,6 +291,7 @@ const JobFinder = (props) => {
                             autoHighlight
                             autoComplete={true}
                             getOptionLabel={(option) => option.Nombre}
+                            required
                             onChange={(event, newValue) => {
                               if (newValue) {
                                 setURL(null);
@@ -442,8 +446,15 @@ const JobFinder = (props) => {
         </Grid>
       )}
       {useURL !== null && props.entity !== "jobs/complete" && (
-        <Grid item xs={12} sm={12} md={12}>
-          <Fetch collection={"quotations"} subdir={useURL} />
+        <Grid container columns={12} spacing={2} width={"100%"} margin={2}>
+          <Grid item xs={12} sm={12} md={12}>
+            <Fetch collection={"quotations"} subdir={useURL} />
+          </Grid>
+          <Grid item xs={12} sm={12} md={12}>
+            <StatsCollector route={props.entity + useURL}>
+              <StockCount />
+            </StatsCollector>
+          </Grid>
         </Grid>
       )}
     </Grid>

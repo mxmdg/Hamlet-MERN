@@ -31,6 +31,7 @@ const JobsPerSeller = (props) => {
 
     return (
       <SimpleRadarChart
+        sx={{ width: "100%", height: "100%" }}
         data={topCustomers}
         dataKey={{ cat: "name", qty: "qJobs" }}
         title="Trabajos por vendedor"
