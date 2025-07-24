@@ -39,6 +39,10 @@ jobControl.getCompleteJobs = async (req, res) => {
         query = {
           [property]: { $gte: Number(queryText), $lte: Number(max) },
         };
+      } else if (property === "Partes.name") {
+        // Si es un array, buscar por nombre de parte
+        
+        query = { [property]: { $regex: queryText, $options: "i" } };
       } else if (schemaType === "String") {
         // Para texto, usar regex
         query = { [property]: { $regex: queryText, $options: "i" } };
@@ -64,7 +68,7 @@ jobControl.getCompleteJobs = async (req, res) => {
         query = { [property]: { $size: parseInt(queryText) } };
       } else {
         // Por defecto, buscar por igualdad
-        query = { [property]: queryText };
+        query = { [property]:  queryText};
       }
 
       const jobList = await jobs.esquema

@@ -136,10 +136,10 @@ const JobDetail = (props) => {
 
   const PartDetail = (part) => {
     const [usePoses, setPoses] = useState(
-      props.cot ? props.cot.data.impositionData[part._id].Poses : null
+      props.cot ? props.cot?.data?.impositionData[part._id]?.Poses : null
     );
     const [useImpoData, setImpoData] = useState(
-      props.cot ? props.cot.data.impositionData[part._id].impositionData : null
+      props.cot ? props.cot?.data?.impositionData[part._id]?.impositionData : null
     );
     const [imposed, setImposed] = useState(props.cot ? true : false);
     const [useData, setData] = useState(null);
@@ -189,8 +189,8 @@ const JobDetail = (props) => {
         setData({
           widthSheet: part.partStock.Ancho_Resma,
           heightSheet: part.partStock.Alto_Resma,
-          widthPage: parseInt(useImpoData.sheetOriginalSize.width),
-          heightPage: parseInt(useImpoData.sheetOriginalSize.height),
+          widthPage: parseInt(useImpoData?.sheetOriginalSize?.width),
+          heightPage: parseInt(useImpoData?.sheetOriginalSize?.height),
           margenes: 0,
           Calle: 0,
         });

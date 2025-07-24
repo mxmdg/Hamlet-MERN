@@ -175,7 +175,7 @@ const JobFinder = (props) => {
                             );
                           })}
                       </TextField>
-                    </Grid>
+                    </Grid> 
                     {useResponse !== null &&
                       useQueryType === "id" &&
                       useProperty.label === "Tipo de Parte" && (
@@ -339,6 +339,22 @@ const JobFinder = (props) => {
                       <Grid item xs={12} sm={12} md={4}>
                         <TextField
                           id="query"
+                          variant={inputsVariant}
+                          color="primary"
+                          label="Buscar"
+                          fullWidth
+                          onChange={(e) => {
+                            setURL(null);
+                            setQuery(e.target.value);
+                          }}
+                        ></TextField>
+                      </Grid>
+                    )}
+                    {useResponse !== null && useQueryType === "date" && (
+                      <Grid item xs={12} sm={12} md={4}>
+                        <TextField
+                          id="query"
+                          type="date"
                           variant={inputsVariant}
                           color="primary"
                           label="Buscar"

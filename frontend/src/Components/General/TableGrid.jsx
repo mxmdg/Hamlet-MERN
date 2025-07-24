@@ -32,6 +32,8 @@ import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import { pages } from "../NavigationBar/AppBarResponsive";
 import DownloadCSV from "../utils/DownloadCSV/DownloadCSV";
 import DownloadJSON from "../utils/DownloadCSV/DownloadJSON";
+import { spanishFormat, roundCents, currencyFormat } from "../utils/generalData/numbersAndCurrencies";
+import { procesarFechaISO, getDateAndTime, handleDate } from "../utils/generalData/fechaDiccionario";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -64,6 +66,9 @@ function stableSort(array, comparator) {
   });
   return stabilizedThis.map((el) => el[0]);
 }
+
+// Detecta fechas tipo 2024-09-25T00:55:56.243Z
+const isoDateRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/;
 
 export function EnhancedTableHead(props) {
   const {
@@ -430,7 +435,11 @@ export default function EnhancedTable(props) {
                       } else {
                         return (
                           <TableCell align="left" key={`${element}_${i}`}>
-                            {element}
+                            {typeof element === "number" 
+                              ? spanishFormat(element) 
+                              : isoDateRegex.test(element) 
+                              ? handleDate(element) 
+                              : element}
                           </TableCell>
                         );
                       }

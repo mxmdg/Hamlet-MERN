@@ -802,7 +802,7 @@ const StockCount = (props) => {
     <div>
       <h3>Resumen de Pliegos por Material y Formato</h3>
       <ul>
-        {stockSummary.map((item) => (
+        {stockSummary.sort((a, b) => b.totalPliegos - a.totalPliegos).map((item) => (
           <li key={item.key}>
             <b>{item.totalPliegos}</b> Pliegos - {item.key}
           </li>
@@ -810,7 +810,7 @@ const StockCount = (props) => {
       </ul>
       <h3>Resumen de Hojas Grandes (Resmas) por Material y Formato</h3>
       <ul>
-        {sheetSummary.map((item) => (
+        {sheetSummary.sort((a, b) => b.totalHojas - a.totalHojas).map((item) => (
           <li key={item.key}>
             <b>{item.totalHojas}</b> Hojas - {item.key}
           </li>

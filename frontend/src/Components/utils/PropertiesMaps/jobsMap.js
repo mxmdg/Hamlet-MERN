@@ -99,10 +99,10 @@ export const QuotationProperties = [
     queryLabel: "Nombre",
   },
   {
-    value: "jobId",
-    label: "Trabajo",
-    queryType: "id",
-    queryLabel: "jobId.id",
+    value: "fecha",
+    label: "Fecha",
+    queryType: "date",
+    queryLabel: "fecha",
   },
   {
     value: "quantity",
