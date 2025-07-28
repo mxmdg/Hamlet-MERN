@@ -421,7 +421,7 @@ export default function EnhancedTable(props) {
                     </TableCell> */}
 
                   {Object.values(row)
-                    .slice(1, -1)
+                    //.slice(1, -1)
                     .map((element) => {
                       i++;
                       if (typeof element === "object") {

@@ -5,7 +5,7 @@ const empresasControl = {};
 empresasControl.getCompanies = async (req, res, next) => {
   {
     try {
-      const empresa = await empresas.esquema.find().sort({ Nombre: 1 });
+      const empresa = await empresas.esquema.find().sort({ Nombre: 1 }).select("-__v");;
       res.json(empresa);
       //return formato
     } catch (e) {

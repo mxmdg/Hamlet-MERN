@@ -5,7 +5,7 @@ const materialControl = {};
 
 materialControl.getMaterials = async (req, res) => {
   {
-    const material = await materials.esquema.find();
+    const material = await materials.esquema.find().select("-__v");;
     //.populate({ path: "Precio_x_Kilo", model: prices.esquema });
 
     res.json(material);

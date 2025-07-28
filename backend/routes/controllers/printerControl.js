@@ -7,6 +7,7 @@ printerControl.getPrinters = async (req, res, next) => {
   {
     const printer = await printers.esquema
       .find()
+      .select("-__v")
       .populate({ path: "Costo", model: prices.esquema });
     res.json(printer);
   }

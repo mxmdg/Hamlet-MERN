@@ -1,5 +1,6 @@
 const quotations = require("../../models/quotations");
 const Jobs = require("../../models/Jobs");
+const Users = require("../../models/usersSchema")
 
 const quotationsControl = {};
 
@@ -48,13 +49,16 @@ quotationsControl.getQuotations = async (req, res) => {
 
     const allQuotations = await quotations.esquema
       .find(query)
-      .populate({ path: "jobId", model: Jobs.esquema, select: "Nombre" })
+      .populate({ path: "jobId", model: Jobs.esquema, select: "Nombre Owner Entrega" })
+      .populate({path: "owner", model: Users.esquema})
       .sort({ index: -1 }); // Ordenar por índice descendente
+
     res.json(allQuotations);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error al obtener las cotizaciones" });
   }
+
 };
 
 // Obtener una cotización por ID

@@ -21,6 +21,7 @@ const quotationsSchema = new Schema({
   fecha: { type: Date, default: Date.now, required: false },
   owner: { type: mongoose.Schema.ObjectId, ref: "usersSchema" },
   jobId: { type: mongoose.Schema.ObjectId, ref: "Jobs", required: false },
+  status: { type: String, required: false, default: "pending", enum: ["pending", "approved", "rejected"] },
   customerId: {
     type: mongoose.Schema.ObjectId,
     ref: "customers",
@@ -38,7 +39,7 @@ quotationsSchema.pre("save", async function (next) {
         { $inc: { seq: 1 } },
         { new: true, upsert: true }
       );
-      this.index = counter.seq;
+      this.index = counter.seq
       next();
     } catch (err) {
       next(err);

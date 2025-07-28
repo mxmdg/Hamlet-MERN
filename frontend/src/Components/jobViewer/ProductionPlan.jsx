@@ -266,7 +266,7 @@ const ProductionPlan = (props) => {
         ),
         data,
         jobType: props.job.Tipo[0].name,
-        owner: props.job.owner,
+        owner: props.job.Owner._id,
         jobId: props.job._id,
         customerId: props.job.Company._id,
       });

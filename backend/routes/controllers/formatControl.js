@@ -5,7 +5,9 @@ const formatControl = {};
 formatControl.getFormats = async (req, res, next) => {
   {
     try {
-      const formato = await formatos.esquema.find().sort({ Nombre: 1 });
+      const formato = await formatos.esquema.find()
+      .sort({ Nombre: 1 })
+      .select("-__v");
       res.json(formato);
       //return formato
     } catch (e) {

@@ -104,6 +104,19 @@ export const QuotationProperties = [
     queryType: "date",
     queryLabel: "fecha",
   },
+  
+  {
+    value: "Entrega",
+    label: "Fecha de entrega",
+    queryType: "date",
+    queryLabel: "fechaEntrega",
+  },
+  {
+    value: "jobId.Owner",
+    label: "Representante",
+    queryType: "id",
+    queryLabel: "owner",
+  },
   {
     value: "quantity",
     label: "Cantidad",

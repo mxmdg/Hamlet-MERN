@@ -28,17 +28,26 @@ const Fetch = (props) => {
 
   const navigate = useNavigate();
 
+  const orderObjectProperties = (obj, headers) => {
+  const ordered = {};
+  headers.forEach(h => {
+    if (obj.hasOwnProperty(h.id)) {
+      ordered[h.id] = obj[h.id];
+      console.log(h.id + ": " + obj[h.id])
+    }
+  });
+  return ordered;
+};
+
   const getElements = async () => {
     const elements = await getPrivateElements(
       props.collection + (props.subdir ? `/${props.subdir}` : "")
     );
 
-    setList(elements);
-
     setHeaders(() => {
       const arr = [];
       const labels = elements.length
-        ? Object.getOwnPropertyNames(elements[elements.length - 1]).slice(1, -1)
+        ? Object.getOwnPropertyNames(elements[0])
         : ["Error", "Datos inexistentes"];
       labels.map((e) => {
         const obj = {
@@ -47,8 +56,12 @@ const Fetch = (props) => {
           disablePadding: false,
           label: e,
         };
-        arr.push(obj);
+        // arr.push(obj)
+        e !== "id" && e !== "__v"  ? arr.push(obj) : console.log(e);
       });
+      const orderedElements = elements.map((e)=> orderObjectProperties(e,arr))
+      console.log(orderedElements)
+      setList(orderedElements)
       return arr;
     });
   };

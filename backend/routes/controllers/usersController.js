@@ -11,7 +11,7 @@ const URL = process.env.URL;
 
 const getAll = async (req, res, next) => {
   try {
-    const users = await usersModel.esquema.find();
+    const users = await usersModel.esquema.find().select("-__v");;
     res.json(users);
   } catch (e) {
     next(e);

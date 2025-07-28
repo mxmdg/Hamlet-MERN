@@ -4,7 +4,7 @@ const jobPartsControl = {};
 
 jobPartsControl.getJobParts = async (req, res) => {
   {
-    const jobPart = await jobParts.esquema.find();
+    const jobPart = await jobParts.esquema.find().select("-__v");;
     res.json(jobPart);
   }
 };
