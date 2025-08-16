@@ -275,7 +275,9 @@ const FormMaterial = (props) => {
               color="success"
               size="small"
               defaultValue={
-                useItem !== "new" ? useItem.data[inp.inputName] : ""
+                useItem !== "new" 
+                ? useItem.data[inp.inputName]._id || useItem.data[inp.inputName] 
+                : ""
               }
               name={inp.inputName}
               {...register(inp.inputName)}

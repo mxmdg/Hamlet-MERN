@@ -39,10 +39,11 @@ jobControl.getCompleteJobs = async (req, res) => {
         query = {
           [property]: { $gte: Number(queryText), $lte: Number(max) },
         };
-      } else if (property === "Partes.name") {
+      } else if (property === "Partes.Name") {
+        // buscar por igualdad
+        // query = { [property]:  queryText};
         // Si es un array, buscar por nombre de parte
-        
-        query = { [property]: { $regex: queryText, $options: "i" } };
+        query = { [property]: { $regex: queryText} };
       } else if (schemaType === "String") {
         // Para texto, usar regex
         query = { [property]: { $regex: queryText, $options: "i" } };
@@ -260,7 +261,7 @@ jobControl.addJob = async (req, res) => {
       });
       await newJob.save();
       console.log(`${Nombre} agregado`);
-      res.json({ message: newJob.Nombre + " guardado OK" });
+      res.json(newJob._id);
     } catch (e) {
       res.status(404).json({ message: "Error: " + e.message });
     }

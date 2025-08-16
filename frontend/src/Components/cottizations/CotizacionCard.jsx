@@ -25,6 +25,7 @@ import ProductionPlan from "../jobViewer/ProductionPlan";
 const CotizacionCard = ({ cotizacion, job }) => {
   if (!cotizacion) return null;
   const index = cotizacion.data.index;
+  const cantidad = cotizacion.data.cantidad || cotizacion.data.quantity;
   const cliente = cotizacion.data.cliente || cotizacion.data.customer;
   const items = job?.Partes || [];
   const jobName = job?.Nombre || "Trabajo sin nombre";
@@ -60,6 +61,7 @@ const CotizacionCard = ({ cotizacion, job }) => {
           />
           <Divider />
           <CardContent>
+            {cantidad && <Typography><b>Cantidad:</b> {cantidad}</Typography>}
             {cliente && (
               <Typography variant="body1" gutterBottom>
                 <b>Cliente:</b>{" "}

@@ -14,6 +14,7 @@ import {
   CardHeader,
   Typography,
   Button,
+  ButtonGroup,
   IconButton,
   Paper,
   Stack,
@@ -57,6 +58,11 @@ import FinishingList from "./FinishingList";
 import CopyToClipboardWrapper from "../General/CopyToClipboardWrapper";
 import objectToArray from "../utils/generalData/arrayNormalizer";
 
+// Mis hooks
+import { getPrivateElements } from "../customHooks/FetchDataHook";
+import { getMyDate } from "../utils/generalData/fechaDiccionario";
+import ColorSheetRangeGenerator from "../utils/generalData/ColorSheetRangeGenerator";
+
 export const calcularLomo = (pags, resma) => {
   return Math.ceil(Math.ceil(pags / 2) * (resma / 500));
 };
@@ -79,6 +85,7 @@ const JobDetail = (props) => {
   const [usePartFinishingData, setPartFinishingData] = useState(
     props.cot ? props.cot.data.partsFinishing : []
   );
+  const [previousCotizations, setPreviousCotizations] = useState([]);
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
@@ -293,7 +300,7 @@ const JobDetail = (props) => {
                     <CopyToClipboardWrapper
                       text={
                         usePoses
-                          ? `${part.partStock.Tipo} ${part.partStock.Gramaje} ${
+                          ? `${part.partStock.Nombre_Material} ${
                               useImpoData
                                 ? `- ${useImpoData.sheetOriginalSize.width} x ${
                                     useImpoData.sheetOriginalSize.height
@@ -323,7 +330,7 @@ const JobDetail = (props) => {
                       }
                     >
                       <Typography variant="h6">
-                        {part.partStock.Tipo} {part.partStock.Gramaje}{" "}
+                        {part.partStock.Nombre_Material} {"("}{part.partStock.Tipo} {part.partStock.Gramaje}{")"}
                         {useImpoData
                           ? ` - ${useImpoData.sheetOriginalSize.width} x ${
                               useImpoData.sheetOriginalSize.height
@@ -388,6 +395,7 @@ const JobDetail = (props) => {
                       </Button>
                     </>
                   )}
+                  <ColorSheetRangeGenerator />
                   {part.Finishing && (
                     <Item>
                       <FinishingList
@@ -430,7 +438,21 @@ const JobDetail = (props) => {
     );
   };
 
-  useEffect(() => {}, [setJobFinishingData, setPartFinishingData]);
+  useEffect(() => {
+    const fetchPreviousCotizations = async () => {
+      try {
+        const previousCotizations = await getPrivateElements(
+          `quotations/?P=jobId&Q=${job._id}`
+        );
+        console.log(previousCotizations);
+        setPreviousCotizations(previousCotizations);
+      } catch (error) {
+        console.error("Error al cargar los datos de la cotización:", error);
+      }
+    };
+
+    fetchPreviousCotizations();
+  }, [setJobFinishingData, setPartFinishingData, setPreviousCotizations]);
 
   return (
     <Container>
@@ -510,6 +532,20 @@ const JobDetail = (props) => {
           subheaderTypographyProps={{ variant: "h6" }}
         />
         <CardContent>
+          {previousCotizations.length > 0 && (
+            <>
+              <ButtonGroup variant="text" size="large">
+                <Button >
+                <b>Pesupuestos:{" "}</b>
+              </Button>
+              {previousCotizations.reverse().map((cotizacion) => (
+                <Button key={cotizacion.id}  onClick={() => navigate(`/quotations/edit/${cotizacion._id}`)}>
+                  <b># {cotizacion.index} </b> - {getMyDate(cotizacion.fecha).ddmmyy}
+                </Button>
+              ))}
+              </ButtonGroup>
+            </>
+          )}
           <Typography variant="h6" fontSize={20} color={"secondary"}>
             Partes:{" "}
           </Typography>

@@ -32,6 +32,7 @@ import Fetch from "../General/Fetch";
 import { Filter } from "../customHooks/Filter";
 import { fechtData, getPrivateElements } from "../customHooks/FetchDataHook";
 import { Form } from "react-router-dom";
+import { orderArrayByKey } from "../utils/generalData/arrayNormalizer";
 
 //Datos Estadisticos
 import StatsCollector from "../utils/stats/StatsCollector";
@@ -75,6 +76,8 @@ const JobFinder = (props) => {
     { value: "lte", label: "Menor o igual que" },
     { value: "bt", label: "Entre..." },
   ];
+
+ 
 
   const fetch = async () => {
     try {
@@ -192,7 +195,7 @@ const JobFinder = (props) => {
                               setQuery(e.target.value);
                             }}
                           >
-                            {useResponse.jobParts.map((part) => (
+                            {orderArrayByKey(useResponse.jobParts, "Type").map((part) => (
                               <MenuItem value={part._id} key={part._id}>
                                 {part.Type}
                               </MenuItem>
@@ -273,7 +276,7 @@ const JobFinder = (props) => {
                               setQuery(e.target.value);
                             }}
                           >
-                            {useResponse.finishings.map((finisher) => (
+                            {orderArrayByKey(useResponse.finishings, "Proceso").map((finisher) => (
                               <MenuItem value={finisher._id} key={finisher._id}>
                                 {`${finisher.Proceso} ${finisher.Modelo} ${finisher.Fabricante}`}
                               </MenuItem>

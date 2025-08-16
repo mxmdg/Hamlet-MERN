@@ -24,6 +24,7 @@ import { Grid, Autocomplete } from "@mui/material";
 import { fechtData, getPrivateElements } from "../customHooks/FetchDataHook";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import arrayNormalizer from "../utils/generalData/arrayNormalizer";
+import { orderArrayByKey } from "../utils/generalData/arrayNormalizer";
 
 const JobParts = (props) => {
   /* Props que recibe este componente>
@@ -185,7 +186,7 @@ const JobParts = (props) => {
 
     try {
       //console.table(filteredParts);
-      setPartsList(filteredParts);
+      setPartsList(orderArrayByKey(filteredParts, "Type"));
       getFinishers();
       updateStocks();
     } catch (e) {

@@ -6,6 +6,7 @@ import QuickSpinCalc from "../utils/spinCalculator/QuickSpinCalc";
 import NumberGenerator from "../utils/generalData/NumberGenerator";
 import ImpoProvider from "../utils/impo/ImpoContext";
 import Canvas from "../utils/impo/Canvas";
+import ColorSheetRangeGenerator from "../utils/generalData/ColorSheetRangeGenerator";
 
 export const LogPage = () => {
 
@@ -22,6 +23,7 @@ export const LogPage = () => {
         <Grid item xs={12} sm={4}>
           <QuickSpinCalc />
           <NumberGenerator />
+          <ColorSheetRangeGenerator />
         </Grid>
         <Grid item xs={12} sm={8}>
           <Paper elevation={10}>

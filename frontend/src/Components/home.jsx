@@ -15,6 +15,7 @@ import FullJobsRender from "./Pages/FullJobsRender";
 import { Login } from "./Users/Login";
 import { LogPage } from "./Users/LogPage";
 import NumberGenerator from "./utils/generalData/NumberGenerator";
+import ColorSheetRangeGenerator from "./utils/generalData/ColorSheetRangeGenerator";
 
 //Stats
 import StatsCollector from "./utils/stats/StatsCollector";
@@ -84,6 +85,9 @@ const Home = (props) => {
             </Grid>
             <Grid item xs={12} sm={12} md={11} lg={10}>
               <NumberGenerator />
+            </Grid>
+            <Grid item xs={12} sm={12} md={11} lg={10}>
+              <ColorSheetRangeGenerator />
             </Grid>
             <Grid item xs={12} sm={12} md={11} lg={10}>
               <ImpoProvider>

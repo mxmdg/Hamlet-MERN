@@ -135,6 +135,7 @@ const ProductionPlan = (props) => {
         entrada,
         largoPliego
       ) => {
+        largoPliego = (Math.max(parseInt(totals[key].sheetOriginalSize.width), parseInt(totals[key].sheetOriginalSize.height)));
         try {
           if (printerSelector.Colores === 1 && data.colores === 1) {
             console.log("Formula seleccionada segun caso Nuvera");

@@ -51,4 +51,25 @@ export const replaceElementInArray = (newElement, oldElement, array) => {
   return newArray;
 };
 
+export const updateElementInArray = (updatedElement, array) => {
+  const newArray = [...array];
+  const index = newArray.findIndex((el) => el._id === updatedElement._id);
+  if (index > -1) {
+    newArray.splice(index, 1, updatedElement);
+  }
+  return newArray;
+};
+
+export const orderArrayByKey = (array, key) => {
+  return array.sort((a, b) => {
+    if (a[key] < b[key]) {
+      return -1;
+    }
+    if (a[key] > b[key]) {
+      return 1;
+    }
+    return 0;
+  });
+};
+
 export default arrayNormalizer;

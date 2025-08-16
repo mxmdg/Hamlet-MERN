@@ -115,6 +115,7 @@ const PartDetail = ({
 
   return (
     <Box key={part._id} mb={1}>
+      
       <Accordion
         key={myKey}
         id={myKey}
@@ -134,7 +135,7 @@ const PartDetail = ({
             Parte {partNumber} de {job.Partes.length}
           </Typography>
           <Typography sx={{ color: "text.secondary" }}>
-            Material: {part.partStock.Nombre_Material}
+            Material pelpa: {part.partStock.Nombre_Material}
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
@@ -165,13 +166,14 @@ const PartDetail = ({
                     ""
                   )}
                 </Item>
-
+                  
+      <ColorSheetRangeGenerator />  
                 <Item>
                   Impresion: {part.ColoresFrente} / {part.ColoresDorso}
                 </Item>
                 <Item2>
                   <Typography variant="h6">
-                    {part.partStock.Tipo} {part.partStock.Gramaje}{" "}
+                    {part.partStock.Nombre_Material} {part.partStock.Tipo} {part.partStock.Gramaje}{" "}
                     {useImpoData
                       ? ` - ${useImpoData.sheetOriginalSize.width} x ${
                           useImpoData.sheetOriginalSize.height
@@ -198,6 +200,7 @@ const PartDetail = ({
                     </Typography>
                   )}
                 </Item2>
+                
 
                 {usePoses && (
                   <>

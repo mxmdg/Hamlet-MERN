@@ -7,12 +7,13 @@ import JobDetail from "./JobDetail";
 
 import {
   addPrivateElement,
-  getPrivateElments,
+  getPrivateElements,
   getPrivateElementByID,
   putPrivateElement,
   deletePrivateElement,
 } from "../customHooks/FetchDataHook";
 import { Container, Box } from "@mui/material";
+import { set } from "react-hook-form";
 
 export const JobViewer = (props) => {
   const [useCurrentJob, setCurrentJob] = useState(props.job);
@@ -32,12 +33,10 @@ export const JobViewer = (props) => {
       try {
         const fetchJob = async () => {
           const currentJob = await getPrivateElementByID(props.entity, id);
-          console.log(currentJob);
           currentJob.data
             ? setCurrentJob(currentJob.data)
             : setError({ message: "Trabajo inexistente" });
           setLoading(false);
-          console.log(currentJob.data);
         };
         fetchJob();
       } catch (error) {

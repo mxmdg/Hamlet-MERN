@@ -56,6 +56,7 @@ export default function MyStepper(props) {
   const [useJob, setJob] = React.useState(props.job || null);
   const [useError, setError] = React.useState(null);
   const [stocks, setStocks] = React.useState([]);
+  const [newJobId, setNewJobId] = React.useState(null)
   const [useModal, setModal] = React.useState(false);
   const context = useContext(AuthContext);
   const navigate = useNavigate();
@@ -213,6 +214,8 @@ export default function MyStepper(props) {
     try {
       console.log("Guardando...");
       const res = await addPrivateElement("Jobs", Job);
+      console.log(res)
+      setNewJobId(res.data)
       console.log(`Trabajo ${Job.Nombre} agregado`);
       handleNext();
     } catch (e) {
@@ -231,7 +234,7 @@ export default function MyStepper(props) {
         `${databaseURL}jobs/${props.job._id}`,
         Job
       );
-      console.log(`Trabajo ${Job.Nombre} actualizado`);
+      console.log(`Trabajo ${Job.Nombre} actualizado, ${res}`);
       handleNext();
     } catch (e) {
       console.log(e);
@@ -368,6 +371,12 @@ export default function MyStepper(props) {
                     <Box sx={{ flex: "1 1 auto" }} />
                     <Button onClick={handleReset} variant="filled">
                       Reset
+                    </Button>
+                    <Button 
+                      onClick={()=>navigate(`/jobs/edit/${newJobId}`)}
+                      disabled={newJobId === null}
+                      >
+                      Continuar...
                     </Button>
                   </Box>
                 </React.Fragment>
