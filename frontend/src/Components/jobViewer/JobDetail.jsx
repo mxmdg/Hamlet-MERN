@@ -94,8 +94,8 @@ const JobDetail = (props) => {
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor:
       theme.palette.mode === "dark"
-        ? theme.palette.success.dark
-        : theme.palette.success.light,
+        ? theme.palette.primary.dark
+        : theme.palette.primary.light,
     ...theme.typography.subtitle2,
     padding: theme.spacing(2),
     textAlign: "left",
@@ -146,7 +146,9 @@ const JobDetail = (props) => {
       props.cot ? props.cot?.data?.impositionData[part._id]?.Poses : null
     );
     const [useImpoData, setImpoData] = useState(
-      props.cot ? props.cot?.data?.impositionData[part._id]?.impositionData : null
+      props.cot
+        ? props.cot?.data?.impositionData[part._id]?.impositionData
+        : null
     );
     const [imposed, setImposed] = useState(props.cot ? true : false);
     const [useData, setData] = useState(null);
@@ -330,7 +332,9 @@ const JobDetail = (props) => {
                       }
                     >
                       <Typography variant="h6">
-                        {part.partStock.Nombre_Material} {"("}{part.partStock.Tipo} {part.partStock.Gramaje}{")"}
+                        {part.partStock.Nombre_Material} {"("}
+                        {part.partStock.Tipo} {part.partStock.Gramaje}
+                        {")"}
                         {useImpoData
                           ? ` - ${useImpoData.sheetOriginalSize.width} x ${
                               useImpoData.sheetOriginalSize.height
@@ -535,14 +539,20 @@ const JobDetail = (props) => {
           {previousCotizations.length > 0 && (
             <>
               <ButtonGroup variant="text" size="large">
-                <Button >
-                <b>Pesupuestos:{" "}</b>
-              </Button>
-              {previousCotizations.reverse().map((cotizacion) => (
-                <Button key={cotizacion.id}  onClick={() => navigate(`/quotations/edit/${cotizacion._id}`)}>
-                  <b># {cotizacion.index} </b> - {getMyDate(cotizacion.fecha).ddmmyy}
+                <Button>
+                  <Typography variant="button">Pesupuestos: </Typography>
                 </Button>
-              ))}
+                {previousCotizations.reverse().map((cotizacion) => (
+                  <Button
+                    key={cotizacion.id}
+                    onClick={() =>
+                      navigate(`/quotations/edit/${cotizacion._id}`)
+                    }
+                  >
+                    <b># {cotizacion.index} </b> -{" "}
+                    {getMyDate(cotizacion.fecha).ddmmyy}
+                  </Button>
+                ))}
               </ButtonGroup>
             </>
           )}

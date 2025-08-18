@@ -34,9 +34,7 @@ const ColorSheetRangeGenerator = () => {
     setError("");
     if (!validatePagesInput(pagesInput)) {
       setResult("");
-      setError(
-        "Formato inválido. Ejemplo válido: 3,5,7,8,10-19,23,38-44,50"
-      );
+      setError("Formato inválido. Ejemplo válido: 3,5,7,8,10-19,23,38-44,50");
       return;
     }
     if (!validateOffset(offset)) {
@@ -46,7 +44,10 @@ const ColorSheetRangeGenerator = () => {
     }
     try {
       const off = parseInt(offset) || 0;
-      const res = getColorSheetRanges(pagesInput.trim(), off).replace(/, $/, "");
+      const res = getColorSheetRanges(pagesInput.trim(), off).replace(
+        /, $/,
+        ""
+      );
       setResult(res);
     } catch (e) {
       setResult("");
@@ -114,11 +115,21 @@ const ColorSheetRangeGenerator = () => {
           </Grid>
           {result && !error && (
             <Grid item xs={12}>
-              <CopyToClipboardWrapper text={result}>
-                <Typography variant="body2" color="textSecondary">
-                  {result}
-                </Typography>
-              </CopyToClipboardWrapper>
+              <Card variant="elevation" sx={{ padding: 2 }}>
+                <CardHeader
+                  subheader="Copiar Rangos Generados"
+                  action={
+                    <CopyToClipboardWrapper
+                      text={result}
+                    ></CopyToClipboardWrapper>
+                  }
+                ></CardHeader>
+                <CardContent>
+                  <Typography variant="body2" color="textSecondary">
+                    {result}
+                  </Typography>{" "}
+                </CardContent>
+              </Card>
             </Grid>
           )}
         </Grid>

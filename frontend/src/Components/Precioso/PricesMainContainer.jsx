@@ -141,12 +141,14 @@ const PricesMainContainer = () => {
                 value={useTable}
                 exclusive
                 onChange={handleChange}
+                color="info"
+                orientation="horizontal"
               >
                 <ToggleButton value="list" aria-label="list">
-                  <ViewListIcon />
+                  <ViewListIcon color="info" />
                 </ToggleButton>
                 <ToggleButton value="module" aria-label="module">
-                  <ViewModuleIcon />
+                  <ViewModuleIcon color="info" variant="contained" />
                 </ToggleButton>
               </ToggleButtonGroup>
             }
@@ -155,7 +157,15 @@ const PricesMainContainer = () => {
             {useTable ? (
               <Fetch collection="precios" title="Costos" />
             ) : (
-              <Precioso collection="precios" priceState={useNewPrice} cotization={cotizations[0] !== undefined ? cotizations[0].results[0].detalle[0].tipoCotizacion : 1}/>
+              <Precioso
+                collection="precios"
+                priceState={useNewPrice}
+                cotization={
+                  cotizations[0] !== undefined
+                    ? cotizations[0].results[0].detalle[0].tipoCotizacion
+                    : 1
+                }
+              />
             )}
           </CardContent>
           <CardActions>

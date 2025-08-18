@@ -77,8 +77,6 @@ const JobFinder = (props) => {
     { value: "bt", label: "Entre..." },
   ];
 
- 
-
   const fetch = async () => {
     try {
       const stock = await getPrivateElements("materiales");
@@ -178,7 +176,7 @@ const JobFinder = (props) => {
                             );
                           })}
                       </TextField>
-                    </Grid> 
+                    </Grid>
                     {useResponse !== null &&
                       useQueryType === "id" &&
                       useProperty.label === "Tipo de Parte" && (
@@ -195,11 +193,13 @@ const JobFinder = (props) => {
                               setQuery(e.target.value);
                             }}
                           >
-                            {orderArrayByKey(useResponse.jobParts, "Type").map((part) => (
-                              <MenuItem value={part._id} key={part._id}>
-                                {part.Type}
-                              </MenuItem>
-                            ))}
+                            {orderArrayByKey(useResponse.jobParts, "Type").map(
+                              (part) => (
+                                <MenuItem value={part._id} key={part._id}>
+                                  {part.Type}
+                                </MenuItem>
+                              )
+                            )}
                           </TextField>
                         </Grid>
                       )}
@@ -276,7 +276,10 @@ const JobFinder = (props) => {
                               setQuery(e.target.value);
                             }}
                           >
-                            {orderArrayByKey(useResponse.finishings, "Proceso").map((finisher) => (
+                            {orderArrayByKey(
+                              useResponse.finishings,
+                              "Proceso"
+                            ).map((finisher) => (
                               <MenuItem value={finisher._id} key={finisher._id}>
                                 {`${finisher.Proceso} ${finisher.Modelo} ${finisher.Fabricante}`}
                               </MenuItem>

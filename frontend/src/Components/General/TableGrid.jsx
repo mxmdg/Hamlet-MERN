@@ -32,8 +32,16 @@ import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import { pages } from "../NavigationBar/AppBarResponsive";
 import DownloadCSV from "../utils/DownloadCSV/DownloadCSV";
 import DownloadJSON from "../utils/DownloadCSV/DownloadJSON";
-import { spanishFormat, roundCents, currencyFormat } from "../utils/generalData/numbersAndCurrencies";
-import { procesarFechaISO, getDateAndTime, handleDate } from "../utils/generalData/fechaDiccionario";
+import {
+  spanishFormat,
+  roundCents,
+  currencyFormat,
+} from "../utils/generalData/numbersAndCurrencies";
+import {
+  procesarFechaISO,
+  getDateAndTime,
+  handleDate,
+} from "../utils/generalData/fechaDiccionario";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -335,6 +343,30 @@ export default function EnhancedTable(props) {
     setDense(event.target.checked);
   };
 
+  // This function sums all numeric values in columns that are numbers and counts the number of items if they are strings.
+  // then add this row to the end of the table.
+  const sumColumns = (rows) => {
+    const sums = {};
+    rows.forEach((row) => {
+      Object.entries(row).forEach(([key, value]) => {
+        if (typeof value === "number") {
+          sums[key] = (sums[key] || 0) + value;
+        } else if (typeof value === "string") {
+          sums[key] = (sums[key] || 0) + 1; // Count strings
+        }
+      });
+    });
+    // add sums to the end of the table
+    console.log("Sums:", sums);
+    sums._id = "Total"; // Add an identifier for the sum row
+    const sumRow = { _id: "Total" };
+    rows.push(sums);
+  };
+
+  rows[rows.length - 1]._id !== "Total"
+    ? sumColumns(rows)
+    : console.log("No se suman columnas, no hay datos");
+
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
   // Avoid a layout jump when reaching the last page with empty rows.
@@ -427,18 +459,18 @@ export default function EnhancedTable(props) {
                       if (typeof element === "object") {
                         return (
                           <TableCell key={`${element}_${i}`}>
-                            <Typography variant="body1" color="#b12">
-                              Error
+                            <Typography variant="body1" noWrap>
+                              N/A
                             </Typography>
                           </TableCell>
                         );
                       } else {
                         return (
                           <TableCell align="left" key={`${element}_${i}`}>
-                            {typeof element === "number" 
-                              ? spanishFormat(element) 
-                              : isoDateRegex.test(element) 
-                              ? handleDate(element) 
+                            {typeof element === "number"
+                              ? spanishFormat(element)
+                              : isoDateRegex.test(element)
+                              ? handleDate(element)
                               : element}
                           </TableCell>
                         );
@@ -471,7 +503,11 @@ export default function EnhancedTable(props) {
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
       <ButtonGroup>
-        <DownloadCSV head={props.headCells.map((h)=> h.label)} data={props.rows} fileName={`${props.collection}`} />
+        <DownloadCSV
+          head={props.headCells.map((h) => h.label)}
+          data={props.rows}
+          fileName={`${props.collection}`}
+        />
         <DownloadJSON data={props.rows} fileName={`${props.collection}`} />
       </ButtonGroup>
 

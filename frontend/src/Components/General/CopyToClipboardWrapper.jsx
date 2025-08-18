@@ -65,7 +65,7 @@ const CopyToClipboardWrapper = ({ text, children }) => {
           title="Copiar al portapapeles"
           {...(copied ? { disabled: true } : {})}
         >
-          <ContentCopyIcon color={"#fff"} />
+          <ContentCopyIcon color={"info"} />
         </IconButton>
       </ButtonGroup>
       <Box>{children}</Box>

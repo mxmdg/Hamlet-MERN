@@ -2,7 +2,7 @@ function isObject(obj) {
   return obj !== null && typeof obj === "object" && !Array.isArray(obj);
 }
 
-const arrayNormalizer = (element= Array, errManager = Function) => {
+const arrayNormalizer = (element = Array, errManager = Function) => {
   try {
     if (isObject(element)) {
       console.log("Object to Array");
@@ -21,7 +21,7 @@ const arrayNormalizer = (element= Array, errManager = Function) => {
       const id = [];
       id.push(element);
       errManager(id);
-      return(id)
+      return id;
     }
   } catch (error) {
     console.log(error);
@@ -60,13 +60,14 @@ export const updateElementInArray = (updatedElement, array) => {
   return newArray;
 };
 
-export const orderArrayByKey = (array, key) => {
+export const orderArrayByKey = (array, key, asc = true) => {
+  const order = asc ? 1 : -1;
   return array.sort((a, b) => {
     if (a[key] < b[key]) {
-      return -1;
+      return -1 * order;
     }
     if (a[key] > b[key]) {
-      return 1;
+      return 1 * order;
     }
     return 0;
   });
