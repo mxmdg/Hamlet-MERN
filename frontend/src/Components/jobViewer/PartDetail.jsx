@@ -86,13 +86,13 @@ const PartDetail = ({
   const saveProductionPlan = () => {
     partCosts.totalPliegos = stockCalculated.cantidadDePliegos;
     partCosts.totalHojas = stockCalculated.totalHojas;
-    partCosts.tirada = Math.ceil(job.Cantidad / usePoses);
+    partCosts.tirada =
+      job.Cantidad > 1 ? Math.ceil(job.Cantidad / usePoses) : job.Cantidad;
     partCosts.id = part._id;
     partCosts.stock = part.partStock;
     partCosts.colores = Math.max(part.ColoresFrente, part.ColoresDorso);
     partCosts.impresiones =
-      Math.ceil(part.Pages * (job.coloresDorso > 0 ? 2 : 1)) *
-      Math.ceil(job.Cantidad / usePoses);
+      Math.ceil(part.Pages * (job.coloresDorso > 0 ? 2 : 1)) * partCosts.tirada;
     setProductionPlan((prevState) => ({
       ...prevState,
       [part._id]: partCosts,
@@ -115,7 +115,6 @@ const PartDetail = ({
 
   return (
     <Box key={part._id} mb={1}>
-      
       <Accordion
         key={myKey}
         id={myKey}
@@ -166,14 +165,15 @@ const PartDetail = ({
                     ""
                   )}
                 </Item>
-                  
-      <ColorSheetRangeGenerator />  
+
+                <ColorSheetRangeGenerator />
                 <Item>
                   Impresion: {part.ColoresFrente} / {part.ColoresDorso}
                 </Item>
                 <Item2>
                   <Typography variant="h6">
-                    {part.partStock.Nombre_Material} {part.partStock.Tipo} {part.partStock.Gramaje}{" "}
+                    {part.partStock.Nombre_Material} {part.partStock.Tipo}{" "}
+                    {part.partStock.Gramaje}{" "}
                     {useImpoData
                       ? ` - ${useImpoData.sheetOriginalSize.width} x ${
                           useImpoData.sheetOriginalSize.height
@@ -200,7 +200,6 @@ const PartDetail = ({
                     </Typography>
                   )}
                 </Item2>
-                
 
                 {usePoses && (
                   <>
