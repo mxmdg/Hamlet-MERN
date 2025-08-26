@@ -23,6 +23,7 @@ routerQuotation.route('/')
 routerQuotation.route('/:id')
   .get(getQuotation)
   .put(updateQuotation)
+  .patch(updateQuotation)
   .delete(deleteQuotation)
 
 

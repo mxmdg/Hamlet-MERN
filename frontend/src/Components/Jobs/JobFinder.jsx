@@ -44,6 +44,7 @@ import JobsPerType from "../utils/stats/JobsPerType";
 import JobTypes from "./JobTypes";
 import NewRadialBar from "../utils/stats/NewRadialBar";
 import StockCount from "../utils/stats/stockCount";
+import { use } from "react";
 
 /*  JobFinder component allows users to search for jobs based on various properties.
     It provides a form to select properties, operators, and input queries.
@@ -287,7 +288,30 @@ const JobFinder = (props) => {
                           </TextField>
                         </Grid>
                       )}
+                    {useResponse !== null && useQueryType === "select" && (
+                      <Grid item xs={12} sm={12} md={4}>
+                        <TextField
+                          select
+                          id="querySelect"
+                          label={useProperty.label}
+                          variant={inputsVariant}
+                          color="primary"
+                          fullWidth
+                          onChange={(e) => {
+                            setURL(null);
+                            setQuery(e.target.value);
+                          }}
+                        >
+                          {useProperty.options.map((option) => (
+                            <MenuItem value={option} key={option}>
+                              {option}
+                            </MenuItem>
+                          ))}
+                        </TextField>
+                      </Grid>
+                    )}
                     {useResponse !== null &&
+                  
                       useQueryType === "id" &&
                       useProperty.label === "Cliente" && (
                         <Grid item xs={12} sm={12} md={4}>

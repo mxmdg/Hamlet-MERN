@@ -179,13 +179,12 @@ const JobDetail = (props) => {
     const saveProductionPlan = () => {
       partCosts.totalPliegos = stockCalculated.cantidadDePliegos;
       partCosts.totalHojas = stockCalculated.totalHojas;
-      partCosts.tirada = Math.ceil(job.Cantidad / usePoses);
+      partCosts.tirada = Math.ceil(job.Cantidad > 1 ? job.Cantidad / partCosts.Poses : job.Cantidad);
       partCosts.id = part._id;
       partCosts.stock = part.partStock;
       partCosts.colores = Math.max(part.ColoresFrente, part.ColoresDorso);
-      partCosts.impresiones =
-        Math.ceil(part.Pages * (job.coloresDorso > 0 ? 2 : 1)) *
-        Math.ceil(job.Cantidad / usePoses);
+      partCosts.impresiones = Math.ceil(partCosts.totalPliegos * (part.ColoresDorso > 0 ? 2 : 1));
+
       setProductionPlan((prevState) => ({
         ...prevState,
         [part._id]: partCosts,
@@ -544,6 +543,8 @@ const JobDetail = (props) => {
                 </Button>
                 {previousCotizations.reverse().map((cotizacion) => (
                   <Button
+                    color={cotizacion.status === "Aprobada" ? "success" : cotizacion.status === "Rechazada" ? "error" : "primary"}
+                    //variant={cotizacion.status === "Aprobada" ? "contained" : cotizacion.status === "Rechazada" ? "contained" : "outlined"}
                     key={cotizacion.id}
                     onClick={() =>
                       navigate(`/quotations/edit/${cotizacion._id}`)

@@ -363,7 +363,7 @@ export default function EnhancedTable(props) {
     rows.push(sums);
   };
 
-  rows[rows.length - 1]._id !== "Total"
+  rows[rows.length - 1]?._id !== "Total"
     ? sumColumns(rows)
     : console.log("No se suman columnas, no hay datos");
 
@@ -424,15 +424,13 @@ export default function EnhancedTable(props) {
                   onClick={(event) => handleClick(event, row._id)}
                   key={row._id + index}
                   onDoubleClick={() => {
-                    navigate(
-                      `/${props.collection.replace("/urg", "")}/edit/${row._id}`
-                    );
+                    window.open(`/${props.collection.replace("/urg", "")}/edit/${row._id}`, "_blank");
                   }}
                   role="checkbox"
                   aria-checked={isItemSelected}
                   tabIndex={-1}
                   selected={isItemSelected}
-                  sx={{ cursor: "pointer" }}
+                  sx={{ cursor: "pointer", backgroundColor: index % 2 ? "#00000016" : "#ffffff00" }}
                 >
                   <TableCell padding="checkbox">
                     <Checkbox
@@ -492,7 +490,7 @@ export default function EnhancedTable(props) {
         </Table>
       </TableContainer>
       <TablePagination
-        rowsPerPageOptions={[5, 10, 15, 20]}
+        rowsPerPageOptions={[5, 10, 15, 20, rows.length]}
         component="div"
         count={rows.length}
         rowsPerPage={rowsPerPage}

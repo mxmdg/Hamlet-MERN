@@ -79,6 +79,20 @@ export const putPrivateElement = async (itemURL, formData) => {
   }
 };
 
+export const patchPrivateElement = async (collection, id, formData) => {
+  const token = localStorage.getItem("token");
+  try {
+    const elements = await axios.patch(`${databaseURL + collection}/${id}`, formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return elements;
+  } catch (e) {
+    throw e;
+  }
+};
+
 export const deletePrivateElement = async (collection, id) => {
   const token = localStorage.getItem("token");
   try {

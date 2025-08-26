@@ -1,3 +1,4 @@
+
 export const JobProperties = [
   {
     value: "Nombre",
@@ -104,7 +105,13 @@ export const QuotationProperties = [
     queryType: "date",
     queryLabel: "fecha",
   },
-  
+  {
+    value: "status",
+    label: "Estado",
+    queryType: "select",
+    queryLabel: "status",
+    options: ["Pendiente", "Aprobada", "Rechazada"],
+  },
   {
     value: "Entrega",
     label: "Fecha de entrega",

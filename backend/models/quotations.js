@@ -21,7 +21,7 @@ const quotationsSchema = new Schema({
   fecha: { type: Date, default: Date.now, required: false },
   owner: { type: mongoose.Schema.ObjectId, ref: "usersSchema" },
   jobId: { type: mongoose.Schema.ObjectId, ref: "Jobs", required: false },
-  status: { type: String, required: false, default: "pending", enum: ["pending", "approved", "rejected"] },
+  status: { type: String, required: false, default: "Pendiente", enum: ["Pendiente", "Enviado", "Aprobado", "Rechazado"] },
   customerId: {
     type: mongoose.Schema.ObjectId,
     ref: "customers",
