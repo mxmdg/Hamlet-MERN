@@ -39,6 +39,17 @@ jobControl.getCompleteJobs = async (req, res) => {
         query = {
           [property]: { $gte: Number(queryText), $lte: Number(max) },
         };
+      } else if (property === "Fecha" || property === "Entrega") {
+        // Buscar fechas parcialmente usando $expr y $dateToString
+  query = {
+    $expr: {
+      $regexMatch: {
+        input: { $dateToString: { format: "%Y-%m-%dT%H:%M:%S.%LZ", date: `$${property}` } },
+        regex: queryText,
+        options: "i"
+      }
+    }
+  };
       } else if (property === "Partes.Name") {
         // buscar por igualdad
         // query = { [property]:  queryText};

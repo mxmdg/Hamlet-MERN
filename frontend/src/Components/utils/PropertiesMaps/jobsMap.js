@@ -13,6 +13,18 @@ export const JobProperties = [
     queryLabel: "Cantidad",
   },
   {
+    value: "Fecha",
+    label: "Fecha de Ingreso",
+    queryType: "date",
+    queryLabel: "Fecha de Ingreso",
+  },
+  {
+    value: "Entrega",
+    label: "Fecha de Entrega",
+    queryType: "date",
+    queryLabel: "Fecha de Entrega",
+  },
+  {
     value: "Tipo.name",
     label: "Tipo de Trabajo",
     queryType: "id",

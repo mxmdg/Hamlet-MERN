@@ -126,7 +126,7 @@ export const Login = () => {
     />
   );
 
-  const loadingRender = <Spinner color="primary" title="Enviando correo de recuperación"/>;
+  const loadingRender = <Spinner color="primary" title="Procesando solicitud..."/>;
 
   const success = (
     <Box>
