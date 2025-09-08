@@ -1,6 +1,7 @@
 import React from "react";
 import { Button, IconButton } from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";
+import { StyledTooltip } from "../../General/TableGrid";
 import DownloadIcon from "@mui/icons-material/Download";
 
 const DownloadCSV = ({ data, fileName, head }) => {
@@ -40,11 +41,11 @@ const DownloadCSV = ({ data, fileName, head }) => {
   //{`Download ${fileName}.csv`}
 
   return (
-    <Tooltip title={`Download ${fileName}.csv`}>
+    <StyledTooltip title={`Download ${fileName}.csv`} arrow>
       <IconButton onClick={downloadCSV}>
         <DownloadIcon color="primary" />
       </IconButton>
-    </Tooltip>
+    </StyledTooltip>
   );
 };
 

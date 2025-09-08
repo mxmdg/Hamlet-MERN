@@ -6,9 +6,10 @@ import { useState } from "react";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
-import { Divider, Paper, Typography } from "@mui/material";
+import { Divider, Paper, Tooltip, Typography } from "@mui/material";
 import { getDateAndTime } from "../generalData/fechaDiccionario";
 import { VALIDATE_PDF } from "../../Config/config";
+import { StyledTooltip } from "../../General/TableGrid";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -141,11 +142,12 @@ export default function UploadFilesButton({
     <div>
       <Divider />
       <Paper rounded={"false"} sx={{ padding: 2, marginTop: 2 }}>
-        <Button
-          component="label"
-          variant="text"
-          color="info"
-          startIcon={<CloudUploadIcon />}
+        <StyledTooltip title="Subir y validar un archivo PDF" arrow>
+          <Button
+            component="label"
+            variant="text"
+            color="info"
+            startIcon={<CloudUploadIcon />}
         >
           Validar PDF
           <VisuallyHiddenInput
@@ -154,6 +156,7 @@ export default function UploadFilesButton({
             onChange={(event) => handleFileUpload(event.target.files)}
           />
         </Button>
+        </StyledTooltip>
 
         {fileInfo && (
           <List sx={{ marginTop: 2 }}>

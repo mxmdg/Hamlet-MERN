@@ -1,6 +1,7 @@
 import React from "react";
 import { Button, IconButton } from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";
+import { StyledTooltip } from "../../General/TableGrid";
 import DownloadIcon from "@mui/icons-material/Download";
 
 const DownloadJSON = ({ data, fileName }) => {
@@ -18,11 +19,11 @@ const DownloadJSON = ({ data, fileName }) => {
   };
 
   return (
-    <Tooltip title={`Descargar ${fileName}.json`}>
+    <StyledTooltip title={`Descargar ${fileName}.json`} arrow>
       <IconButton onClick={downloadJSON}>
         <DownloadIcon color="secondary" />
       </IconButton>
-    </Tooltip>
+    </StyledTooltip>
   );
 };
 

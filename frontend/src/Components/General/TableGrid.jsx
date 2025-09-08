@@ -144,12 +144,14 @@ export const StyledTooltip = styled(({ className, ...props }) => (
   <Tooltip {...props} classes={{ popper: className }} />
 ))(({ theme }) => ({
   [`& .${tooltipClasses.tooltip}`]: {
-    backgroundColor: "#111111bb",
-    color: "#ddd",
-    border: "1px solid #59e3ea",
-    boxShadow: "10px 10px 7px #00000066",
+    background: "linear-gradient(0deg,rgba(41, 125, 133, 1) 0%, rgba(89, 227, 234, 1) 100%)",
+    color: "#fff",
+    border: "2px solid #297D85",
+    borderRadius: 8,
+    boxShadow: "10px 10px 7px #00000033",
     padding: "10px",
     fontSize: 13,
+    textTransform: "uppercase",
   },
   [`& .${tooltipClasses.arrow}`]: {
     color: "#59e3ea",
@@ -160,11 +162,13 @@ export const DangerTooltip = styled(({ className, ...props }) => (
   <Tooltip {...props} classes={{ popper: className }} />
 ))(({ theme }) => ({
   [`& .${tooltipClasses.tooltip}`]: {
-    backgroundColor: "#a22",
-    color: "#000",
+    background: "linear-gradient(0deg,rgba(170, 34, 34, 1) 0%, rgba(255, 68, 68, 1) 100%)",
+    color: "#fff",
     boxShadow: "7px 10px 10px #00000077",
     padding: "10px",
     fontSize: 13,
+    border: "2px solid #a22",
+    borderRadius: 8,
   },
   [`& .${tooltipClasses.arrow}`]: {
     color: "#a22",

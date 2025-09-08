@@ -10,6 +10,7 @@ import DialogActions from "@mui/material/DialogActions";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import Typography from "@mui/material/Typography";
+import { Grid, Tooltip } from "@mui/material";
 
 // ErrorMessage component displays an error alert or dialog based on props
 const ErrorMessage = (props) => {
@@ -26,22 +27,26 @@ const ErrorMessage = (props) => {
   // Closes the dialog and triggers a delete/close action from parent
 
   const handleCloseAndDelete = () => {
-    props.action();
+    if (props.action) {
+      props.action();
+    } 
     setOpen(false);
   };
 
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
 
   // Optional action button for the alert, triggers props.action if provided
   const actionButton = (
+    <Tooltip title={props.tooltip || "Cerrar"}>
     <Button
       variant="outlined"
       color="inherit"
       size="small"
-      onClick={() => props.action()}
+      onClick={() => props.action ? props.action() : null}
     >
       {props.buttonTxt || "Ok"}
     </Button>
+    </Tooltip>
   );
 
   const alert = (
@@ -65,11 +70,18 @@ const ErrorMessage = (props) => {
         id="customized-dialog-title"
         color={"primary"}
       >
-        {props.title}
+        <Grid container alignItems="center" spacing={2}>
+          <Grid item>
+            {props.title}
+          </Grid>
+          <Grid item alignSelf={"flex-end"} sx={{ marginLeft: "auto" }}>
+            <IconButton aria-label="close" onClick={handleClose} color="primary">
+              <CloseIcon />
+            </IconButton>
+          </Grid>
+        </Grid>
       </DialogTitle>
-      <IconButton aria-label="close" onClick={handleClose}>
-        <CloseIcon />
-      </IconButton>
+      
       <DialogContent dividers>
         <Typography gutterBottom>{props.message}</Typography>
       </DialogContent>
