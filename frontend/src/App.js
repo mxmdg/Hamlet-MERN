@@ -38,6 +38,7 @@ function App() {
           width: "100%",
           minHeight: "100vh",
           maxHeight: "100%",
+          background: themeMxm.palette.background.default,
         }}
       >
         <BrowserRouter>
