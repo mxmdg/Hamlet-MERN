@@ -4,7 +4,7 @@ import AppBarResponsive from "./AppBarResponsive";
 const Header = (props) => {
   return (
     <header>
-      <AppBarResponsive toogle={props.toogleMode} />
+      <AppBarResponsive toogle={props.toogleMode} mode={props.mode} />
     </header>
   );
 };

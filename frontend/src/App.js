@@ -2,7 +2,7 @@
 import "./App.css";
 import "./Styles/hamlet.css";
 import Header from "./Components/NavigationBar/Header";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box } from "@mui/material";
 import ThemeProv from "./Components/Config/theme";
 import AuthProvider from "./Components/context/AuthContext";
@@ -16,11 +16,19 @@ import {
 } from "./Components/Config/TemasAFA";
 
 function App() {
-  const [useMode, setMode] = useState("dark");
+  // Verificar si el tema está almacenado en localStorage
+  const storedTheme = localStorage.getItem("appTheme");
+  const initialMode = storedTheme ? storedTheme : "light"; // Valor por defecto si no hay nada en localStorage
+  const [useMode, setMode] = useState(initialMode);
 
   const toogleMode = () => {
-    console.log(useMode);
-    useMode ? setMode(false) : setMode(true);
+    if (useMode === "light") {
+      setMode("dark");
+      localStorage.setItem("appTheme", "dark");
+    } else {
+      setMode("light");
+      localStorage.setItem("appTheme", "light");
+    }
   };
 
   return (
@@ -30,13 +38,12 @@ function App() {
           width: "100%",
           minHeight: "100vh",
           maxHeight: "100%",
-          background: themeMxm.palette.background.default,
         }}
       >
         <BrowserRouter>
           <AuthProvider>
             <Box sx={{ "@media print": { display: "none" } }}>
-              <Header toogleMode={toogleMode} />
+              <Header toogleMode={toogleMode} mode={useMode} />
             </Box>
             <Box
               sx={{

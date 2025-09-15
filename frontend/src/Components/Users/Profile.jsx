@@ -12,7 +12,7 @@ import Fetch from "../General/Fetch";
 import SessionTimer from "./SessionTimer";
 import ColorPalette from "../Config/Theme/ColorPallete";
 import FormMaterial from "../Formulario/FormMaterial";
-import NewMessageForm from "../Formulario/NewMessageForm";
+import preferencesForm from "../Formulario/NewMessageForm";
 
 export const Profile = () => {
   //User Profile
@@ -38,7 +38,15 @@ export const Profile = () => {
             <SessionTimer />
           </CardContent>
 
-          <FormMaterial form={NewMessageForm} task={"new"} />
+          <FormMaterial
+            form={preferencesForm}
+            task={"new"}
+            title={"Preferencias de usuario"}
+            collection="preferences"
+            action={(e) => {
+              console.log(e);
+            }}
+          />
           {/* <CardActions>
             <ColorPalette />
           </CardActions> */}

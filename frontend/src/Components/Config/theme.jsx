@@ -7,10 +7,13 @@ import { themeIndependiente, themeBocaJuniors } from "./TemasAFA";
 // #3f51b5,#f50057,#ff1744,#29b6f8,#66bb6a,#222222
 //0.0.988
 //d4b0108
+const storedTheme = localStorage.getItem("appTheme");
+const initialMode = storedTheme ? storedTheme : "light"; // o "light", según lo que necesites
+
 export const themeMxm = createTheme({
   spacing: 4,
   palette: {
-    mode: "dark",
+    mode: initialMode,
     primary: {
       main: "#09b4bd", // adjusted for better contrast
       light: "#00e3e3",
@@ -24,10 +27,6 @@ export const themeMxm = createTheme({
       contrastText: "#ffffff",
     },
     divider: "#fff",
-    background: {
-      paper: "#222222",
-      default: "#9cf", // adjusted for better contrast
-    },
     text: {
       primary: "#ffffff",
       secondary: "#cccccc",
@@ -58,10 +57,17 @@ export const themeMxm = createTheme({
       dark: "rgb(15, 64, 69)", // Verde más oscuro
       contrastText: "#ffffff", // Texto blanco para buen contraste
     },
-    background: {
-      default: "linear-gradient(45deg, #D9AFD9 0%, #97D9E1 100%)",
-      paper: "rgb(240, 234, 231)",
-    },
+
+    background:
+      initialMode === "light"
+        ? {
+            paper: "#fff", // white paper for light mode
+            default: "linear-gradient(45deg, #D9AFD9 0%, #97D9E1 100%)",
+          }
+        : {
+            paper: "#222", // dark paper for dark mode
+            default: "linear-gradient(135deg, #06222d 0%, #1f003b 100%)",
+          },
   },
 });
 
@@ -130,10 +136,11 @@ export default ThemeProv; */
 
 const ThemeProv = (props) => {
   //props.theme.palette.mode = props.mode ? "light" : "dark";
-  if (props.mode) {
+  if (props.mode === "light") {
     props.theme.palette.mode = "light";
     props.theme.palette.background = {
       default: "linear-gradient(135deg, #06222d 0%, #1f003b 100%)",
+      // default: "linear-gradient(45deg, #D9AFD9 0%, #97D9E1 100%)",
       paper: "rgb(255, 255, 255)",
     };
     props.theme.palette.text = {
@@ -142,9 +149,10 @@ const ThemeProv = (props) => {
       disabled: "#aaa",
       hint: "#067",
     };
-  } else {
+  } else if (props.mode === "dark") {
     props.theme.palette.mode = "dark";
     props.theme.palette.background = {
+      //default: "linear-gradient(135deg, #06222d 0%, #1f003b 100%)",
       default: "linear-gradient(45deg, #D9AFD9 0%, #97D9E1 100%)",
       paper: " #06222d",
     };

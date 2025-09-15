@@ -198,6 +198,7 @@ function ResponsiveAppBar(props) {
                   color="warning"
                   onChange={() => props.toogle()}
                   size="small"
+                  defaultChecked={props.mode === "dark" ? true : false}
                 ></Switch>
               }
               label="Dark Mode"
