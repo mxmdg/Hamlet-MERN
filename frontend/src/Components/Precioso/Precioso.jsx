@@ -64,7 +64,14 @@ const Precioso = (props) => {
   };
 
   const AlertError = (
-    <ErrorMessage message={priceList?.message} severity="warning" />
+    <ErrorMessage
+      message={priceList?.message}
+      severity="warning"
+      action={() => {
+        setErrorMessage(null);
+        setLoading(false);
+      }}
+    />
   );
 
   useEffect(() => {

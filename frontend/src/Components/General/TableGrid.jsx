@@ -144,7 +144,8 @@ export const StyledTooltip = styled(({ className, ...props }) => (
   <Tooltip {...props} classes={{ popper: className }} />
 ))(({ theme }) => ({
   [`& .${tooltipClasses.tooltip}`]: {
-    background: "linear-gradient(0deg,rgba(41, 125, 133, 1) 0%, rgba(89, 227, 234, 1) 100%)",
+    background:
+      "linear-gradient(0deg,rgba(41, 125, 133, 1) 0%, rgba(89, 227, 234, 1) 100%)",
     color: "#fff",
     border: "2px solid #297D85",
     borderRadius: 8,
@@ -162,7 +163,8 @@ export const DangerTooltip = styled(({ className, ...props }) => (
   <Tooltip {...props} classes={{ popper: className }} />
 ))(({ theme }) => ({
   [`& .${tooltipClasses.tooltip}`]: {
-    background: "linear-gradient(0deg,rgba(170, 34, 34, 1) 0%, rgba(255, 68, 68, 1) 100%)",
+    background:
+      "linear-gradient(0deg,rgba(170, 34, 34, 1) 0%, rgba(255, 68, 68, 1) 100%)",
     color: "#fff",
     boxShadow: "7px 10px 10px #00000077",
     padding: "10px",
@@ -428,13 +430,18 @@ export default function EnhancedTable(props) {
                   onClick={(event) => handleClick(event, row._id)}
                   key={row._id + index}
                   onDoubleClick={() => {
-                    window.open(`/${props.collection.replace("/urg", "")}/edit/${row._id}`, "_blank");
+                    navigate(
+                      `/${props.collection.replace("/urg", "")}/edit/${row._id}`
+                    );
                   }}
                   role="checkbox"
                   aria-checked={isItemSelected}
                   tabIndex={-1}
                   selected={isItemSelected}
-                  sx={{ cursor: "pointer", backgroundColor: index % 2 ? "#00000016" : "#ffffff00" }}
+                  sx={{
+                    cursor: "pointer",
+                    backgroundColor: index % 2 ? "#00000016" : "#ffffff00",
+                  }}
                 >
                   <TableCell padding="checkbox">
                     <Checkbox

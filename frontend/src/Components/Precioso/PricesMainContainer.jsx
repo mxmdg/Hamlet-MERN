@@ -48,7 +48,9 @@ const PricesMainContainer = () => {
     ) {
       return true;
     } else {
-      return false;
+      setError({ message: "Acceso denegado: Contacte al administrador" });
+      setLoading(false);
+      return;
     }
   };
 
@@ -57,6 +59,7 @@ const PricesMainContainer = () => {
   };
 
   useEffect(() => {
+    validateAdminUser();
     const fetchCotization = async (codes) => {
       try {
         const results = await Promise.all(
@@ -64,13 +67,13 @@ const PricesMainContainer = () => {
         );
         if (!results || results.some((result) => result instanceof Error)) {
           setCotizationEnable(false);
-          throw new Error("Error fetching one or more cotizations");
+          throw new Error("Error obteniendo cotizacion.");
         }
         setCotizations(results);
         setCotizationEnable(true);
         setLoading(false);
       } catch (error) {
-        setError({ message: error.message || "Failed to fetch cotizations" });
+        setError({ message: error.message || "Error obteniendo cotizacion" });
         setLoading(false);
       }
     };
@@ -83,9 +86,12 @@ const PricesMainContainer = () => {
       <ErrorMessage
         message={error?.message || "Unknown error"}
         action={() => {
-          setError(null);
+          navigate(-1);
+          setLoading(false);
           setCotizationEnable(false);
         }}
+        buttonTxt={"Volver"}
+        title="Error!"
       />
     </Container>
   );
@@ -94,7 +100,8 @@ const PricesMainContainer = () => {
 
   const success = (
     <Box sx={{ width: "100%" }}>
-      {validateAdminUser() && (
+      {
+        //validateAdminUser() &&
         <Card>
           <CardHeader
             title={collection}
@@ -175,7 +182,7 @@ const PricesMainContainer = () => {
             />
           </CardActions>
         </Card>
-      )}
+      }
     </Box>
   );
 

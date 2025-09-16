@@ -11,7 +11,7 @@ const URL = process.env.URL;
 
 const getAll = async (req, res, next) => {
   try {
-    const users = await usersModel.esquema.find().select("-__v");;
+    const users = await usersModel.esquema.find().select("-__v");
     res.json(users);
   } catch (e) {
     next(e);
@@ -74,7 +74,10 @@ const login = async (req, res, next) => {
     if (bcrypt.compareSync(req.body.password, document.password)) {
       try {
         const token = jwt.sign(
-          { userId: document._id },
+          {
+            userId: document._id,
+            role: document.Role, // <-- importante: Role con mayúscula en el modelo, minúscula en el token
+          },
           req.app.get("secretKey"),
           { expiresIn: "1d" }
         );
@@ -195,7 +198,7 @@ const resetPassword = async (req, res, next) => {
     // Buscar el usuario por el token de restablecimiento de contraseña
     const user = await usersModel.esquema.findOne({
       resetPasswordToken: token,
-      resetPasswordExpires: { $gt: Date.now() },  // Verificar que el token aún no haya expirado
+      resetPasswordExpires: { $gt: Date.now() }, // Verificar que el token aún no haya expirado
     });
 
     if (!user) {

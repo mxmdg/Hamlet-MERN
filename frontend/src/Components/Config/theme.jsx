@@ -71,9 +71,10 @@ export const themeMxm = createTheme({
   },
 });
 
-const themeOptions = createTheme({
+export const themeOptions = createTheme({
+  spacing: 1,
   palette: {
-    mode: "light",
+    mode: initialMode,
     primary: {
       main: "#26c2a3",
       light: "#62f6ca",
@@ -109,18 +110,29 @@ const themeOptions = createTheme({
       dark: "#204227",
       contrastText: "#fff",
     },
+
+    background:
+      initialMode === "light"
+        ? {
+            paper: "#ca7", // white paper for light mode
+            default: "linear-gradient(45deg, #D9AFD9 0%, #97D9E1 100%)",
+          }
+        : {
+            paper: "#222", // dark paper for dark mode
+            default: "linear-gradient(135deg, #06222d 0%, #1f003b 100%)",
+          },
   },
   typography: {
     fontFamily: "Montserrat, sans-serif",
-    fontSize: 16,
+    fontSize: 14,
     button: {
-      fontWeight: 600,
-      fontSize: "1.1rem",
+      fontWeight: 500,
+      fontSize: 12,
       fontFamily: "Roboto, sans-serif",
     },
     h6: {
       fontFamily: "Montserrat, sans-serif",
-      fontWeight: 900,
+      fontWeight: 500,
     },
     fontWeightLight: 100,
     fontWeightRegular: 400,
@@ -141,7 +153,7 @@ const ThemeProv = (props) => {
     props.theme.palette.background = {
       default: "linear-gradient(135deg, #06222d 0%, #1f003b 100%)",
       // default: "linear-gradient(45deg, #D9AFD9 0%, #97D9E1 100%)",
-      paper: "rgb(255, 255, 255)",
+      paper: "#edf6e3ff",
     };
     props.theme.palette.text = {
       primary: "#000",
@@ -167,7 +179,8 @@ const ThemeProv = (props) => {
   //background-color: #D9AFD9;
   //background-image: linear-gradient(0deg, #D9AFD9 0%, #97D9E1 100%);
 
+  //return <ThemeProvider theme={themeOptions}>{props.children}</ThemeProvider>;
   return <ThemeProvider theme={themeMxm}>{props.children}</ThemeProvider>;
 };
-export { themeOptions };
+
 export default ThemeProv;

@@ -31,14 +31,17 @@ function App() {
     }
   };
 
+  const themeInUse = themeMxm;
+  //const themeInUse = themeOptions;
+
   return (
-    <ThemeProv theme={themeMxm} mode={useMode}>
+    <ThemeProv theme={themeInUse} mode={useMode}>
       <Box
         sx={{
           width: "100%",
           minHeight: "100vh",
           maxHeight: "100%",
-          background: themeMxm.palette.background.default,
+          background: themeInUse.palette.background.default,
         }}
       >
         <BrowserRouter>
@@ -54,7 +57,7 @@ function App() {
                 minHeight: "90vh",
                 alignItems: "center",
                 justifyContent: "center",
-                background: themeMxm.palette.background.default,
+                background: themeInUse.palette.background.default,
               }}
             >
               <Router />

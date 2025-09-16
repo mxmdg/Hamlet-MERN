@@ -97,6 +97,7 @@ const JobFinder = (props) => {
     } catch (error) {
       console.log(error);
       setError(error);
+      return error;
     }
     return;
   };
@@ -311,7 +312,6 @@ const JobFinder = (props) => {
                       </Grid>
                     )}
                     {useResponse !== null &&
-                  
                       useQueryType === "id" &&
                       useProperty.label === "Cliente" && (
                         <Grid item xs={12} sm={12} md={4}>
