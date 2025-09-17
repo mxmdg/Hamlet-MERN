@@ -537,7 +537,7 @@ const JobDetail = (props) => {
         <CardContent>
           {previousCotizations.length > 0 && (
             <>
-              <ButtonGroup variant="text" size="large">
+              <ButtonGroup variant="text" size="small" orientation="vertical">
                 <Button>
                   <Typography variant="button">Pesupuestos: </Typography>
                 </Button>

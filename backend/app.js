@@ -175,7 +175,12 @@ app.use(
 app.use(
   "/Hamlet/precios",
   (req, res, next) => req.app.verifyToken(req, res, next),
-  requireRole("admin"), // Solo admin puede acceder
+  requireRoleByMethod({
+    get: ["admin", "manager"], // todos pueden hacer GET
+    post: ["admin", "manager"],
+    put: ["admin", "manager"],
+    delete: ["admin", "manager"],
+  }), // Solo admin puede acceder
   require("./routes/prices")
 );
 app.use("/Hamlet/JobParts", require("./routes/jobParts"));

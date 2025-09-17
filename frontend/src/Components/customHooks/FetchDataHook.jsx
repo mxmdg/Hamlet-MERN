@@ -109,7 +109,7 @@ export const deletePrivateElement = async (collection, id) => {
 
 export const deleteClickHandler = async (id, collection) => {
   try {
-    await axios.delete(`${databaseURL + collection}/${id}`);
+    await deletePrivateElement(collection, id);
   } catch (e) {
     throw e;
   }
