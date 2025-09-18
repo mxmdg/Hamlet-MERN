@@ -41,6 +41,7 @@ const CotFetcher = () => {
         error={error}
         action={() => setError(null)}
         severity="error"
+        title="Error"
       />
     );
   }

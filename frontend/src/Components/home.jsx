@@ -1,5 +1,6 @@
 import { useContext, useState, useEffect } from "react";
 import { AuthContext } from "./context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 import Canvas from "./utils/impo/Canvas";
 import ImpoProvider from "./utils/impo/ImpoContext";
@@ -28,6 +29,7 @@ import JobsPerType from "./utils/stats/JobsPerType";
 import { Container } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 import UploadFilesButton from "./utils/ReusableComponents/UploadFilesButton";
+import JobsPerPartType from "./utils/stats/JobsPerPartType";
 
 const Home = (props) => {
   const [useRoute, setUseRoute] = useState(props.route || "jobs/urg");
@@ -37,6 +39,24 @@ const Home = (props) => {
   };
 
   const context = useContext(AuthContext);
+
+  useEffect(() => {
+    // Verifica expiración del JWT
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const payload = JSON.parse(atob(token.split(".")[1]));
+        const now = Math.floor(Date.now() / 1000);
+        if (payload.exp && payload.exp < now) {
+          localStorage.removeItem("token");
+          // navigate("/", { replace: true }); // <-- revertido
+        }
+      } catch (e) {
+        localStorage.removeItem("token");
+        // navigate("/", { replace: true }); // <-- revertido
+      }
+    }
+  }, []);
 
   const homePage = (
     <Container
@@ -67,8 +87,10 @@ const Home = (props) => {
                 <StatsCollector route={useRoute}>
                   <JobsForNextDays />
                   <JobsPerType />
+                  <JobsPerPartType rank={10} />
                   <JobsPerClient rank={10} />
                   <JobsPerSeller />
+                
                 </StatsCollector>
               </Grid>
             </Grid>

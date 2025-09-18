@@ -796,7 +796,7 @@ const StockCount = (props) => {
   }, [props.jobs]);
 
   if (useLoading) return <Spinner />;
-  if (useError) return <ErrorMessage message={useError.message} />;
+  if (useError) return <ErrorMessage message={useError.message} action={()=>{setError(null)}} title={"Error al cargar datos"} />;
 
   return (
     <div>

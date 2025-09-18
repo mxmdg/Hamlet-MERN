@@ -150,6 +150,7 @@ const Fetch = (props) => {
       action={() => {
         setErrMessage(null);
       }}
+      title="Error"
     />
   );
 

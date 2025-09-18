@@ -89,7 +89,7 @@ function requireRoleByMethod(rolesByMethod) {
       if (!userRole || !allowed.includes(userRole)) {
         return res
           .status(403)
-          .json({ message: "Acceso denegado: rol insuficiente" });
+          .json({ message: "Acceso denegado, no tiene permiso para esta acción" });
       }
       req.user = payload;
       next();

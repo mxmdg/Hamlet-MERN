@@ -52,6 +52,7 @@ import JobsPerDate from "./Components/utils/stats/JobsPerDate";
 import JobsPerClient from "./Components/utils/stats/JobsPerClient";
 import JobsPerSeller from "./Components/utils/stats/JobsPerSeller";
 import JobsPerType from "./Components/utils/stats/JobsPerType";
+import JobsPerPartType from "./Components/utils/stats/JobsPerPartType";
 import JobFinder from "./Components/Jobs/JobFinder";
 import {
   JobProperties,
@@ -252,7 +253,16 @@ const Router = () => {
           {/* JobParts Routes */}
           <Route
             path="/JobParts"
-            element={<MainContainer entity={"JobParts"} />}
+            element={<Grid container columns={12}>
+                <Grid item columns={4}>
+                  <MainContainer entity={"JobParts"} />
+                </Grid>
+                <Grid item columns={4} width={"30%"}>
+                  <StatsCollector route="jobs/complete">
+                    <JobsPerPartType rank={10} />
+                  </StatsCollector>
+                </Grid>
+              </Grid>}
           />
           <Route
             path="/JobParts/add"

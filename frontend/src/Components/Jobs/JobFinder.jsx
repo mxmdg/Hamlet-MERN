@@ -41,6 +41,7 @@ import JobsPerDate from "../utils/stats/JobsPerDate";
 import JobsPerClient from "../utils/stats/JobsPerClient";
 import JobsPerSeller from "../utils/stats/JobsPerSeller";
 import JobsPerType from "../utils/stats/JobsPerType";
+import JobsPerPartType from "../utils/stats/JobsPerPartType";
 import JobTypes from "./JobTypes";
 import NewRadialBar from "../utils/stats/NewRadialBar";
 import StockCount from "../utils/stats/stockCount";
@@ -487,6 +488,7 @@ const JobFinder = (props) => {
               <JobsPerClient rank={10} />
               <JobsPerSeller />
               <JobsPerType />
+                  <JobsPerPartType rank={10} />
             </StatsCollector>
           </Grid>
         </Grid>
@@ -513,6 +515,7 @@ const JobFinder = (props) => {
       action={() => {
         setError(null);
       }}
+      title={"Error al cargar datos"}
     />
   );
 
