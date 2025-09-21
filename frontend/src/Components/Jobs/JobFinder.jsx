@@ -56,7 +56,8 @@ const JobFinder = (props) => {
   // props.entity: endpoint para las búsquedas (ejemplo: "jobs")
   // props.propertiesMap: array de propiedades del modelo con sus tipos y etiquetas
 
-  const [useURL, setURL] = useState(null);
+  const [useURL, setURL] = useState();
+  const [entity, setEntity] = useState(props.entity);
   const [useProperty, setProperty] = useState(props.propertiesMap[0]);
   const [useQuery, setQuery] = useState(null);
   const [useMax, setMax] = useState(null); // Estado para buscar rangos, este es el valor maximo, para el minimo usamos `useQuery`
@@ -65,9 +66,9 @@ const JobFinder = (props) => {
   const [useError, setError] = useState(null);
   const [useResponse, setResponse] = useState(null);
   const [useLoading, setLoading] = useState(true);
-  const [properties, setProperties] = useState(props.propertiesMap || []);
-  const navigate = useNavigate();
+  const [properties, setProperties] = useState();
   const inputsVariant = props.inputsVariant || "outlined";
+  const inputsColor = props.inputsColor || "primary";
 
   const operators = [
     { value: "eq", label: "Igual" },
@@ -124,6 +125,10 @@ const JobFinder = (props) => {
     }
 
     setURL(`?${params.toString()}`);
+    localStorage.setItem(
+      props.entity + "lastJobSearch",
+      `?${params.toString()}`
+    );
   };
 
   useEffect(() => {
@@ -132,7 +137,13 @@ const JobFinder = (props) => {
     } catch (error) {
       setError(error);
     }
-  }, [setURL]);
+  }, []);
+
+  useEffect(() => {
+    setEntity(props.entity);
+    setProperties(props.propertiesMap || []);
+    setURL(localStorage.getItem(props.entity + "lastJobSearch") || null);
+  }, [setURL, setProperties, entity, props.propertiesMap]);
 
   const urlForm = (
     <Grid container columns={12} spacing={1} width={"96%"} margin={2}>
@@ -150,8 +161,10 @@ const JobFinder = (props) => {
                         select
                         label={useProperty.label || "Propiedad"}
                         variant={inputsVariant}
+                        color={inputsColor}
                         placeholder={useProperty.queryLabel}
                         value={useProperty.value}
+                        defaultValue={useProperty.value}
                         onChange={(e) => {
                           e.preventDefault();
                           setProperty(
@@ -189,7 +202,7 @@ const JobFinder = (props) => {
                             id="queryPartType"
                             label="Tipo de Parte"
                             variant={inputsVariant}
-                            color="primary"
+                            color={inputsColor}
                             fullWidth
                             onChange={(e) => {
                               setURL(null);
@@ -215,7 +228,7 @@ const JobFinder = (props) => {
                             id="queryJobType"
                             label="Tipo de Trabajo"
                             variant={inputsVariant}
-                            color="primary"
+                            color={inputsColor}
                             fullWidth
                             onChange={(e) => {
                               setURL(null);
@@ -257,6 +270,7 @@ const JobFinder = (props) => {
                                 {...params}
                                 label="Material"
                                 variant={inputsVariant}
+                                color={inputsColor}
                                 fullWidth
                               />
                             )}
@@ -272,7 +286,7 @@ const JobFinder = (props) => {
                             id="queryFinisher"
                             label="Terminacion"
                             variant={inputsVariant}
-                            color="primary"
+                            color={inputsColor}
                             fullWidth
                             onChange={(e) => {
                               setURL(null);
@@ -297,7 +311,8 @@ const JobFinder = (props) => {
                           id="querySelect"
                           label={useProperty.label}
                           variant={inputsVariant}
-                          color="primary"
+                          color={inputsColor}
+                          defaultValue={""}
                           fullWidth
                           onChange={(e) => {
                             setURL(null);
@@ -351,7 +366,7 @@ const JobFinder = (props) => {
                             id="queryUsers"
                             label="Representante"
                             variant={inputsVariant}
-                            color="primary"
+                            color={inputsColor}
                             fullWidth
                             onChange={(e) => {
                               setURL(null);
@@ -371,7 +386,7 @@ const JobFinder = (props) => {
                         <TextField
                           id="query"
                           variant={inputsVariant}
-                          color="primary"
+                          color={inputsColor}
                           label="Buscar"
                           fullWidth
                           onChange={(e) => {
@@ -387,7 +402,7 @@ const JobFinder = (props) => {
                           id="query"
                           type="date"
                           variant={inputsVariant}
-                          color="primary"
+                          color={inputsColor}
                           label="Buscar"
                           fullWidth
                           onChange={(e) => {
@@ -406,7 +421,7 @@ const JobFinder = (props) => {
                             select
                             label="Operador"
                             variant={inputsVariant}
-                            color="primary"
+                            color={inputsColor}
                             fullWidth
                             value={useOperator}
                             onChange={(e) => {
@@ -426,7 +441,7 @@ const JobFinder = (props) => {
                             type="number"
                             id="query"
                             variant={inputsVariant}
-                            color="primary"
+                            color={inputsColor}
                             label={useOperator === "bt" ? "Minimo" : "Buscar"}
                             fullWidth
                             onChange={(e) => {
@@ -442,7 +457,7 @@ const JobFinder = (props) => {
                                 type="number"
                                 id="query2"
                                 variant={inputsVariant}
-                                color="primary"
+                                color={inputsColor}
                                 label="Maximo"
                                 fullWidth
                                 onBlur={(e) => {
@@ -462,8 +477,25 @@ const JobFinder = (props) => {
                       md={12}
                       sx={{ alignSelf: "center" }}
                     >
-                      <Button type="submit" variant="contained" color="primary">
+                      <Button
+                        type="submit"
+                        variant="contained"
+                        color={inputsColor}
+                      >
                         Buscar
+                      </Button>
+                      <Button
+                        variant="outlined"
+                        color={inputsColor}
+                        onClick={() => {
+                          setURL(null);
+                          localStorage.removeItem(
+                            props.entity + "lastJobSearch"
+                          );
+                          setQuery(null);
+                        }}
+                      >
+                        Reset
                       </Button>
                     </Grid>
                   </Grid>
@@ -488,7 +520,7 @@ const JobFinder = (props) => {
               <JobsPerClient rank={10} />
               <JobsPerSeller />
               <JobsPerType />
-                  <JobsPerPartType rank={10} />
+              <JobsPerPartType rank={10} />
             </StatsCollector>
           </Grid>
         </Grid>

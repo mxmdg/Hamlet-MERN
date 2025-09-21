@@ -1,4 +1,3 @@
-
 export const JobProperties = [
   {
     value: "Nombre",

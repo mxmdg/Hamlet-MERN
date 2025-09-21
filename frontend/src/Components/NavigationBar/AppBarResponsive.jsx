@@ -71,15 +71,11 @@ function ResponsiveAppBar(props) {
   };
 
   const handleCloseNavMenu = (goTo) => {
-    console.log("handleCloseNavMenu ");
-    console.log(goTo);
     goTo ? navigate("/" + goTo) : console.log("Me quedo aca");
     setAnchorElNav(null);
   };
 
   const handleCloseUserMenu = (goTo) => {
-    console.log("handleCloseUserMenu ");
-    console.log(goTo);
     goTo ? navigate("/" + goTo) : console.log("Me quedo aca");
     setAnchorElUser(null);
   };
@@ -97,7 +93,14 @@ function ResponsiveAppBar(props) {
 
   const dropMenu = context.useLogin ? userMenu : settings;
 
-  const colorList = ["primary", "secondary", "info", "warning", "error"];
+  const colorList = [
+    "primary",
+    "secondary",
+    "success",
+    "info",
+    "warning",
+    "error",
+  ];
 
   const Navigate = useNavigate();
 

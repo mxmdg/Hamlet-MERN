@@ -58,10 +58,11 @@ export const getMyDate = (event) => {
   const yy = new Date(event).getFullYear();
   const ww = getWeekNumber(new Date(event));
 
-  const MiDate = `${dd}/${mm + 1}/${yy}`;
-  const MiMont = `${mm + 1}/${yy}`.toString();
+  const ddmmyy = `${dd}/${mm + 1}/${yy}`;
+  const mmyy = `${mm + 1}/${yy}`.toString();
+  const yymmdd = `${yy}-${mm + 1}-${dd}`;
 
-  return { ddmmyy: MiDate, mmyy: MiMont, ww };
+  return { ddmmyy, mmyy, ww, yymmdd };
 };
 
 // Formatea una fecha en formato "dd/mm/yyyy" según la configuración regional "es-ES".
@@ -112,27 +113,24 @@ export const calculateDaysBetweenDates = (startDate, endDate) => {
  * Devuelve un objeto con las propiedades `fecha` y `hora`.
  */
 export function getDateAndTime(cadena) {
-  
   try {
     const regex1 = /^D:(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/;
     const regex2 = /(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/;
     const match = cadena.match(regex1) || cadena.match(regex2);
 
-     if (!match) {
-        return ({dateAndTime: cadena});
-      }
+    if (!match) {
+      return { dateAndTime: cadena };
+    }
 
-      
-      const [_, year, month, day, hour, minute, second] = match;
-      const date = `${day}/${month}/${year}`;
-      const time = `${hour}:${minute}:${second}`;
+    const [_, year, month, day, hour, minute, second] = match;
+    const date = `${day}/${month}/${year}`;
+    const time = `${hour}:${minute}:${second}`;
 
-      return { date, time, dateAndTime: `${date} ${time}` };
+    return { date, time, dateAndTime: `${date} ${time}` };
   } catch (error) {
     // Si ocurre un error, devuelve la cadena original
-      return ({dateAndTime: cadena});
+    return { dateAndTime: cadena };
   }
- 
 }
 
 export default diccionarioFechas;
