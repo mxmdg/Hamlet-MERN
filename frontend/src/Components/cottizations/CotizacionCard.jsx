@@ -95,13 +95,15 @@ Precio final: ${cotizacion.data.total} (IVA incluido)
 
   const quoteMessageHTML = `
   <h2>Presupuesto Número ${cotizacion.data.index}</h2>
-  <p><b>Trabajo:</b> ${jobName} <br/>
+  <h3>${cliente.nombre || cliente.razonSocial || cliente}</h3>
+  <h4><b>Trabajo:</b> ${jobName} </h4>
+  <p>
   <b>Tipo:</b> ${cotizacion.data.jobType} <br/>
   <b>Cantidad:</b> ${cotizacion.data.quantity}</p>
   ${
     items && items.length > 0
       ? `
-    <h3>Items</h3>
+    <h3>Detalle</h3>
     <ul>
       ${items
         .map(
@@ -119,15 +121,47 @@ Precio final: ${cotizacion.data.total} (IVA incluido)
     cotizacion.data.total
   )} (IVA incluido)</p>
   <hr/>
+  <p>
+  <a 
+    href={"${databaseURL}/quotations/${cotizacion.data._id}/"} 
+    style={{
+      backgroundColor: "#4CAF50",
+      color: "white",
+      padding: "10px 15px",
+      textDecoration: "none",
+      borderRadius: "5px",
+      marginRight: "10px"
+    }}
+  >
+    ✅ Aprobar
+  </a>
+  
+  <a 
+    href={"${databaseURL}/quotations/${cotizacion.data._id}/"} 
+    style={{
+      backgroundColor: "#F44336",
+      color: "white",
+      padding: "10px 15px",
+      textDecoration: "none",
+      borderRadius: "5px"
+    }}
+  >
+    ❌ Rechazar
+  </a>
+</p>
+  <p>Este presupuesto es válido por 30 días a partir de la fecha de emisión.</p>
+  <p>Si tiene alguna consulta o desea proceder con el pedido, no dude en contactarnos.</p>
   <p>Muchas gracias por su consulta,<br/>
   <em>Equipo de Impresiones</em></p>
 `;
 
   const sendQuotation = async () => {
+    setLoading(true);
+
     const body = {
       quotationId: cotizacion.data._id,
-      toEmail: "maxiomaro@gmail.com",
-      subject: `Presupuesto Número ${cotizacion.data.index}`,
+      toEmail: "maxiomaro@gmail.com", // cliente.email,
+      subject: `Presupuesto Número ${cotizacion.data.index} - ${jobName}`,
       message: quoteMessagePlain, // versión texto
       html: quoteMessageHTML, // versión HTML
     };
@@ -142,6 +176,7 @@ Precio final: ${cotizacion.data.total} (IVA incluido)
         severity: "success",
         title: "Presupusto enviado!",
       });
+      statusUpdater("Enviado");
       return res.data;
     } catch (error) {
       setError(error);
@@ -223,6 +258,8 @@ Precio final: ${cotizacion.data.total} (IVA incluido)
                             ? "success"
                             : localStatus === "Rechazada"
                             ? "error"
+                            : localStatus === "Enviado"
+                            ? "success"
                             : "warning"
                         }
                       >
@@ -318,9 +355,11 @@ Precio final: ${cotizacion.data.total} (IVA incluido)
                   key={"sendMail"}
                   onClick={() => sendQuotation(cotizacion)}
                   variant="contained"
-                  color="primary"
+                  color={localStatus === "Enviado" ? "success" : "primary"}
                 >
-                  Enviar
+                  {localStatus === "Enviado"
+                    ? "Reenviar Presupuesto"
+                    : "Enviar Presupuesto"}
                 </Button>
               </ButtonGroup>
             </CardActions>
