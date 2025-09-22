@@ -121,7 +121,7 @@ export const QuotationProperties = [
     label: "Estado",
     queryType: "select",
     queryLabel: "status",
-    options: ["Pendiente", "Aprobada", "Rechazada"],
+    options: ["Pendiente", "Aprobada", "Rechazada", "Enviado"],
   },
   {
     value: "Entrega",
