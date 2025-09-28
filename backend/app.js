@@ -55,7 +55,7 @@ function requireRole(role) {
       ) {
         return res
           .status(403)
-          .json({ message: "Acceso denegado: rol insuficiente" });
+          .json({ message: "Acceso denegado: rol no admitido" });
       }
       req.user = payload;
       next();

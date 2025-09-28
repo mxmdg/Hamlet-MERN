@@ -128,13 +128,14 @@ const FormMaterial = (props) => {
       const { id } = params || props.id;
 
       const fetchItem = async () => {
-        setLoading(true);
+        //setLoading(true);
         try {
           const itemToEdit = await getPrivateElementByID(
             `${props.collection}`,
             id
           );
           setItem(itemToEdit);
+          setLoading(false);
 
           // Recorremos el dataForm y si hay un checkbox, cargamos el array en el estado, a ver si anda... Anduvo!
           try {
@@ -152,6 +153,7 @@ const FormMaterial = (props) => {
             }
           } catch (e) {
             setErrorMessage(e.message);
+            setLoading(false);
           }
 
           setLoading(false);
@@ -159,6 +161,7 @@ const FormMaterial = (props) => {
           console.log(dataForm);
         } catch (e) {
           setErrorMessage(e.message);
+            setLoading(false);
         }
       };
       fetchItem();

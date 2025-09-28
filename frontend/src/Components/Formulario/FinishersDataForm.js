@@ -30,17 +30,21 @@ const FinishersDataForm = (props) => {
         const partsList = [];
 
         parts.map((pt) => partsList.push(pt.Type));
-        res.map((item) => {
-          if (item.Categoria === "finishing") {
-            costsList.push({
-              text: `${item.Proceso} ($ ${item.Valor}.-)`,
-              value: item._id,
-              id: item._id,
-            });
-          }
-        });
-
-        console.log(partsList);
+        try {
+            res.map((item) => {
+            if (item.Categoria === "finishing") {
+              costsList.push({
+                text: `${item.Proceso} ($ ${item.Valor}.-)`,
+                value: item._id,
+                id: item._id,
+              });
+            }
+          });
+        } catch (error) {
+          ;
+          setError({message: "Error cargando lista de precios"});
+        }
+        
 
         setFinishersDataForm([
           {
@@ -134,7 +138,9 @@ const FinishersDataForm = (props) => {
         ]);
         setLoading(false);
       } catch (error) {
+        console.log(error);
         setError(error);
+        setLoading(false);
       }
     };
     fetchData();
@@ -150,10 +156,11 @@ const FinishersDataForm = (props) => {
 
   const errorRender = (
     <ErrorMessage
-      message={useError}
+      message={useError?.message || useError || "Error Inesperado"}
       action={() => {
         setError(null);
       }}
+      title={"Error al cargar datos"}
     />
   );
 

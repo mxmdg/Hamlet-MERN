@@ -15,6 +15,7 @@ finishersControl.getFinishers = async (req, res, next) => {
     } catch (error) {
       console.log(error);
       next(error);
+      res.status(500).json({ message: error.message || "Error al obtener los acabados" });
     }
   }
 };
@@ -71,7 +72,7 @@ finishersControl.getFinisher = async (req, res, next) => {
   } catch (error) {
     console.log(error);
     next(error);
-    res.status(500).json({ message: "Error al obtener la Maquinaria" });
+    res.status(500).json({ message: error.message || "Error al obtener la Maquinaria" });
   }
 };
 
