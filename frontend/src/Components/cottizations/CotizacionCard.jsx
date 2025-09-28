@@ -108,7 +108,7 @@ Precio final: ${cotizacion.data.total} (IVA incluido)
       ${items
         .map(
           (item) => `
-        <li><b>${item.Name}</b> ${item.jobParts[0].Type}: ${item.partStock.Tipo} ${item.partStock.Gramaje} — ${item.Pages} páginas formato ${item.Ancho} x ${item.Alto}</li>
+        <li><b>${item.Name}</b> ${item.jobParts[0].Type}: ${item.partStock.Tipo} ${item.partStock.Gramaje} — ${item.Pages} páginas ${item.ColoresFrente}/${item.ColoresDorso} formato ${item.Ancho} x ${item.Alto}</li>
       `
         )
         .join("")}

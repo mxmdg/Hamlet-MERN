@@ -40,11 +40,12 @@ export const Profile = () => {
 
           <FormMaterial
             form={preferencesForm}
-            task={"new"}
+            task="new"
             title={"Preferencias de usuario"}
-            collection="preferences"
             action={(e) => {
               console.log(e);
+              localStorage.setItem("appTheme", e.colorTheme);
+              window.location.reload();
             }}
           />
           {/* <CardActions>

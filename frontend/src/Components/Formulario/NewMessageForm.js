@@ -25,6 +25,8 @@ let preferencesForm = [
     type: "Select",
     id: "id_001",
     required: true,
+    defaultValue: localStorage.getItem("appTheme") || "light",
+    placeHolder: "Seleccione un tema",
     options: [
       { text: "Claro", value: "light" },
       { text: "Oscuro", value: "dark" },

@@ -37,13 +37,19 @@ const NumberGenerator = () => {
 
     const a = document.createElement("a");
     a.href = url;
-    a.download = `Numerador del ${String(startNum).padStart(digitCount, "0")} al ${String(endNum).padStart(digitCount, "0")}.txt`;
+    a.download = `Numerador del ${String(startNum).padStart(
+      digitCount,
+      "0"
+    )} al ${String(endNum).padStart(digitCount, "0")}.txt`;
     a.click();
   };
 
   return (
     <Card elevation={10}>
-      <CardHeader title="Numerador" titleTypographyProps={{ color: "primary", fontWeight: "600" }} />
+      <CardHeader
+        title="Numerador"
+        titleTypographyProps={{ color: "primary", fontWeight: "600" }}
+      />
       <Divider />
       <CardContent>
         <Grid container spacing={2}>

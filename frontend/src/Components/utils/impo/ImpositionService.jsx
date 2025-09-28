@@ -140,11 +140,11 @@ export const drawSimpleCutting = (
   let izq = x3;
   let top = y3;
 
-  ctx.strokeStyle = "#a20";
+  ctx.strokeStyle = "rgba(253, 49, 161, 1)";
 
   ctx.strokeRect(izq, top, x1, y1);
 
-  ctx.strokeStyle = "#0ff";
+  ctx.strokeStyle = "rgba(255, 0, 170, 1)";
 
   if (n1 >= n2 && n1 > 0) {
     top = top - y2 - calle / 2;
@@ -236,13 +236,14 @@ export const drawOptimusCutting = (
   console.log("izq: " + izq);
   console.log("top: " + top);
 
-  ctx.strokeStyle = "#fff";
+  ctx.strokeStyle = "rgba(1, 140, 117, 1)";
   ctx.strokeWidth = "1";
   ctx.strokeRect(izq, top, x1, y1);
-  ctx.strokeStyle = "#999";
+  ctx.strokeStyle = "rgba(1, 140, 117, 1)";
   ctx.strokeRect(izq + margen, top + margen, printAreaX, printAreaY);
 
-  ctx.strokeStyle = "#fd0";
+  ctx.strokeStyle = "#f700ffed";
+  ctx.fillStyle = "#f387ffff";
 
   izq = izq + margen;
   let izq2 = izq;
@@ -332,7 +333,10 @@ export const calculateStock = (
   );
 
   const cantidadDePliegos =
-    job.Cantidad <= 1 ? Math.ceil(part.Pages / (part.ColoresDorso > 0 ? 2 : 1) / poses) : Math.ceil(part.Pages / (part.ColoresDorso > 0 ? 2 : 1)) * Math.ceil(job.Cantidad / poses);
+    job.Cantidad <= 1
+      ? Math.ceil(part.Pages / (part.ColoresDorso > 0 ? 2 : 1) / poses)
+      : Math.ceil(part.Pages / (part.ColoresDorso > 0 ? 2 : 1)) *
+        Math.ceil(job.Cantidad / poses);
 
   console.log(
     "Cantidad de pliegos calculada: ",
@@ -349,7 +353,7 @@ export const calculateStock = (
     cantidadDePliegos,
     "Total de hojas: ",
     totalHojas
-  );  
+  );
 
   return { pliegosPorHoja, cantidadDePliegos, totalHojas };
 };
