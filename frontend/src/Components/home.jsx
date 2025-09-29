@@ -90,7 +90,6 @@ const Home = (props) => {
                   <JobsPerPartType rank={10} />
                   <JobsPerClient rank={10} />
                   <JobsPerSeller />
-                
                 </StatsCollector>
               </Grid>
             </Grid>
@@ -118,7 +117,6 @@ const Home = (props) => {
                 </DarkWoodCard>
               </ImpoProvider>
             </Grid>
-            
           </Grid>
         </Grid>
       </Grid>

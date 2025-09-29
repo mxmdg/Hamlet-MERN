@@ -22,7 +22,6 @@ import {
 import { getPrivateElements } from "../../customHooks/FetchDataHook";
 import { ImpoContext } from "./ImpoContext";
 import ErrorMessage from "../../ErrorMessage/ErrorMessage";
-import Cmyk from "../../Printers/Cmyk";
 
 export const ImpositionForm = (props) => {
   const context = useContext(ImpoContext);
@@ -98,7 +97,7 @@ export const ImpositionForm = (props) => {
 
   const onSubmit = (values) => {
     values.printerSelector = useSelectedPrinter;
-    values.formatSelector = selectedFormat;
+    values.formatSelector = customFormat ? "Personalizado" : selectedFormat;
     context.setImpoData(values);
     props.doImposition(values);
   };
@@ -107,7 +106,48 @@ export const ImpositionForm = (props) => {
 
   useEffect(() => {
     fetchingData();
-  }, [setFormats, setCustomFormat]);
+    if (props.impositionSettings?.printerSelector) {
+      setSelectedPrinter(props.impositionSettings?.printerSelector);
+    }
+    // Inicializar formato y tamaño personalizado si corresponde
+    if (props.impositionSettings?.formatSelector === "Personalizado") {
+      setCustomFormat(true);
+      setSelectedFormat("Personalizado");
+    } else if (props.impositionSettings?.formatSelector) {
+      setSelectedFormat(props.impositionSettings?.formatSelector);
+      setCustomFormat(false);
+    }
+    if (props.impositionSettings) {
+      setValue(
+        "printerSelector",
+        props.impositionSettings?.printerSelector?._id
+      );
+      setValue("widthPage", props.part?.Ancho || "");
+      setValue("heightPage", props.part?.Alto || "");
+      setValue(
+        "formatSelector",
+        props.impositionSettings?.formatSelector?._id || ""
+      );
+      // Si es personalizado, seteamos los valores originales
+      if (props.impositionSettings?.formatSelector === "Personalizado") {
+        setValue("formatSelector", "Personalizado");
+      }
+      setValue(
+        "widthSheet",
+        props.impositionSettings?.sheetOriginalSize?.width || ""
+      );
+      setValue(
+        "heightSheet",
+        props.impositionSettings?.sheetOriginalSize?.height || ""
+      );
+    }
+  }, []);
+
+  useEffect(() => {
+    if (props.impositionSettings) {
+      handleSubmit(onSubmit)();
+    }
+  }, [JSON.stringify(props.impositionSettings), props.canvasSize]);
 
   return (
     <FormControl sx={{ width: "100%" }}>
@@ -120,17 +160,20 @@ export const ImpositionForm = (props) => {
                 name={"printerSelector"}
                 variant="outlined"
                 color="primary"
-                defaultValue={""}
+                value={useSelectedPrinter._id || ""}
                 label="Impresora"
                 size="small"
                 margin="dense"
                 {...register("printerSelector", { required: false })}
                 onChange={(e) => {
-                  console.log(e.target.value);
+                  const selectedId = e.target.value;
+                  const selectedPrinter = usePrinters.find(
+                    (p) => p._id === selectedId
+                  );
+                  setSelectedPrinter(selectedPrinter || {});
+                  setValue("printerSelector", selectedId);
                 }}
-                onBlur={(e) => {
-                  setSelectedPrinter(e.target.value);
-                  console.log(useSelectedPrinter);
+                onBlur={() => {
                   trigger("printerSelector");
                 }}
               >
@@ -141,7 +184,7 @@ export const ImpositionForm = (props) => {
                 ) : (
                   usePrinters?.map((Printer) => (
                     <MenuItem
-                      value={Printer}
+                      value={Printer._id}
                       id={usePrinters.indexOf(Printer) + Printer._id}
                       key={usePrinters.indexOf(Printer) + Printer._id}
                     >
@@ -225,7 +268,7 @@ export const ImpositionForm = (props) => {
                 label="Calle"
                 variant="outlined"
                 name="Calle"
-                defaultValue={0}
+                defaultValue={props.impositionSettings?.Calle || 0}
                 {...register("Calle", {
                   required: false,
                 })}
@@ -244,7 +287,7 @@ export const ImpositionForm = (props) => {
                 label="Margenes"
                 variant="outlined"
                 name="margenes"
-                defaultValue={0}
+                defaultValue={props.impositionSettings?.margenes || 0}
                 {...register("margenes", {
                   required: false,
                 })}
@@ -263,28 +306,40 @@ export const ImpositionForm = (props) => {
                 name={"formatSelector"}
                 variant="outlined"
                 color="primary"
-                defaultValue={""}
+                value={
+                  customFormat ? "Personalizado" : selectedFormat?._id || ""
+                }
                 label="Formato"
                 size="small"
                 margin="dense"
                 {...register("formatSelector", { required: false })}
                 onChange={(e) => {
-                  console.log(e.target.value);
-                  setCustomFormat(false);
-                  setValue("widthSheet", parseFloat(e.target.value.Ancho), {
-                    shouldValidate: false,
-                    shouldTouch: true,
-                    shouldDirty: true,
-                  });
-                  setValue("heightSheet", parseFloat(e.target.value.Alto), {
-                    shouldValidate: false,
-                    shouldTouch: true,
-                    shouldDirty: true,
-                  });
+                  const value = e.target.value;
+                  if (value === "Personalizado") {
+                    setCustomFormat(true);
+                    setSelectedFormat("Personalizado");
+                    setValue("formatSelector", "Personalizado");
+                    // Si hay valores originales, los ponemos
+                    setValue(
+                      "widthSheet",
+                      props.impositionSettings?.sheetOriginalSize?.width || ""
+                    );
+                    setValue(
+                      "heightSheet",
+                      props.impositionSettings?.sheetOriginalSize?.height || ""
+                    );
+                  } else {
+                    setCustomFormat(false);
+                    const formatObj = useFormatsFiltered.find(
+                      (f) => f._id === value
+                    );
+                    setSelectedFormat(formatObj || "");
+                    setValue("formatSelector", formatObj);
+                    setValue("widthSheet", formatObj?.Ancho || "");
+                    setValue("heightSheet", formatObj?.Alto || "");
+                  }
                 }}
-                onBlur={(e) => {
-                  setSelectedFormat(e.target.value);
-                  console.log(selectedFormat);
+                onBlur={() => {
                   trigger("formatSelector");
                 }}
               >
@@ -295,16 +350,10 @@ export const ImpositionForm = (props) => {
                 ) : (
                   useFormatsFiltered?.map((Format) => (
                     <MenuItem
-                      value={Format}
+                      value={Format._id}
                       id={useFormats.indexOf(Format) + Format._id}
                       key={useFormats.indexOf(Format) + Format._id}
                     >
-                      {/* <Chip
-                        variant="filled"
-                        color="success"
-                        size="large"
-                        label={Format.Nombre}
-                      /> */}
                       <Typography variant="button">{Format.Nombre}</Typography>
                     </MenuItem>
                   ))
@@ -313,7 +362,6 @@ export const ImpositionForm = (props) => {
                   value={"Personalizado"}
                   id={"FormatoPersonalizado"}
                   key={"FormatoPersonalizado"}
-                  onBlur={() => setCustomFormat(true)}
                   dense={true}
                 >
                   <Chip
@@ -325,7 +373,6 @@ export const ImpositionForm = (props) => {
                 </MenuItem>
               </TextField>
             </FormControl>
-
             {errors.formatSelector?.type === "required" && (
               <FormHelperText>Seleccione un formato</FormHelperText>
             )}
@@ -334,42 +381,44 @@ export const ImpositionForm = (props) => {
             <FormControl>
               <TextField
                 type="number"
-                label={!customFormat ? "" : "Ancho Pliego"}
-                disabled={customFormat ? false : true}
+                label={customFormat ? "Ancho Pliego" : ""}
+                disabled={!customFormat}
                 variant="outlined"
                 name="widthSheet"
+                defaultValue={
+                  props.impositionSettings?.sheetOriginalSize?.width || ""
+                }
                 onChange={() => {
                   setCustomFormat(true);
-                  setValue("formatSelector", { Nombre: "Personalizado" });
+                  setValue("formatSelector", "Personalizado");
                 }}
                 {...register("widthSheet", {
-                  required: true,
+                  required: customFormat,
                 })}
                 onBlur={() => {
                   setCustomFormat(true);
-                  setValue("formatSelector", { Nombre: "Personalizado" });
-                  trigger("widthSheet", {
-                    required: true,
-                  });
+                  setValue("formatSelector", "Personalizado");
+                  trigger("widthSheet");
                 }}
                 size="small"
                 margin="dense"
               />
             </FormControl>
-
-            {errors.widthSheet?.type === "required" &&
-              customFormat === true && (
-                <FormHelperText>Este campo es requerido</FormHelperText>
-              )}
+            {errors.widthSheet?.type === "required" && customFormat && (
+              <FormHelperText>Este campo es requerido</FormHelperText>
+            )}
           </Grid>
           <Grid item xs={12} md={3}>
             <FormControl>
               <TextField
                 type="number"
-                label={!customFormat ? "" : "Alto Pliego"}
-                disabled={customFormat ? false : true}
+                label={customFormat ? "Alto Pliego" : ""}
+                disabled={!customFormat}
                 variant="outlined"
                 name="heightSheet"
+                defaultValue={
+                  props.impositionSettings?.sheetOriginalSize?.height || ""
+                }
                 onChange={() => setCustomFormat(true)}
                 {...register("heightSheet", {
                   required: customFormat,
@@ -381,10 +430,9 @@ export const ImpositionForm = (props) => {
                 size="small"
                 margin="dense"
               />
-              {errors.heightSheet?.type === "required" &&
-                customFormat === true && (
-                  <FormHelperText>Este campo es requerido</FormHelperText>
-                )}
+              {errors.heightSheet?.type === "required" && customFormat && (
+                <FormHelperText>Este campo es requerido</FormHelperText>
+              )}
             </FormControl>
           </Grid>
           <Grid item xs={12} md={12}>

@@ -179,11 +179,15 @@ const JobDetail = (props) => {
     const saveProductionPlan = () => {
       partCosts.totalPliegos = stockCalculated.cantidadDePliegos;
       partCosts.totalHojas = stockCalculated.totalHojas;
-      partCosts.tirada = Math.ceil(job.Cantidad > 1 ? job.Cantidad / partCosts.Poses : job.Cantidad);
+      partCosts.tirada = Math.ceil(
+        job.Cantidad > 1 ? job.Cantidad / partCosts.Poses : job.Cantidad
+      );
       partCosts.id = part._id;
       partCosts.stock = part.partStock;
       partCosts.colores = Math.max(part.ColoresFrente, part.ColoresDorso);
-      partCosts.impresiones = Math.ceil(partCosts.totalPliegos * (part.ColoresDorso > 0 ? 2 : 1));
+      partCosts.impresiones = Math.ceil(
+        partCosts.totalPliegos * (part.ColoresDorso > 0 ? 2 : 1)
+      );
 
       setProductionPlan((prevState) => ({
         ...prevState,
@@ -538,10 +542,16 @@ const JobDetail = (props) => {
           {previousCotizations.length > 0 && (
             <>
               <ButtonGroup variant="text" size="small" orientation="vertical">
-                  <Typography variant="button">Pesupuestos: </Typography>
+                <Typography variant="button">Pesupuestos: </Typography>
                 {previousCotizations.reverse().map((cotizacion) => (
                   <Button
-                    color={cotizacion.status === "Aprobada" ? "success" : cotizacion.status === "Rechazada" ? "error" : "primary"}
+                    color={
+                      cotizacion.status === "Aprobada"
+                        ? "success"
+                        : cotizacion.status === "Rechazada"
+                        ? "error"
+                        : "primary"
+                    }
                     //variant={cotizacion.status === "Aprobada" ? "contained" : cotizacion.status === "Rechazada" ? "contained" : "outlined"}
                     key={cotizacion._id}
                     onClick={() =>

@@ -38,7 +38,10 @@ const Canvas = (props) => {
       const newContext = canvasRef.current.getContext("2d");
       const canvasWidth = useCanvasSize.x;
       const canvasHeight = useCanvasSize.y;
-      const sheet = { width: parseInt(data.widthSheet), height: parseInt(data.heightSheet) };
+      const sheet = {
+        width: parseInt(data.widthSheet),
+        height: parseInt(data.heightSheet),
+      };
 
       // Verifica si el tamaño de la hoja es mayor que el tamaño del canvas
       if (
@@ -97,7 +100,10 @@ const Canvas = (props) => {
 
   return (
     <>
-      <CardHeader title="Imposición" titleTypographyProps={{color: "primary", fontWeight: "600"}}/>
+      <CardHeader
+        title="Imposición"
+        titleTypographyProps={{ color: "primary", fontWeight: "600" }}
+      />
       <Divider />
       <CardContent>
         <Grid
@@ -113,18 +119,25 @@ const Canvas = (props) => {
           <Grid item xs={12} md={12} sm={12}>
             <ImpositionForm
               impositionSettings={props.sheet || null}
+              canvasSize={useCanvasSize}
               doImposition={handleImpoClick}
               part={props.part || null}
             ></ImpositionForm>
           </Grid>
-          
-      <Divider />
+
+          <Divider />
           <Grid item xs={12} sm={12}>
             <canvas
               ref={canvasRef}
               width={useCanvasSize.x}
               height={useCanvasSize.y}
-              style={{ padding: "20px", border: "#666 1px solid", borderRadius: "10px", marginTop: "20px", width: "93%"}}
+              style={{
+                padding: "20px",
+                border: "#666 1px solid",
+                borderRadius: "10px",
+                marginTop: "20px",
+                width: "93%",
+              }}
             ></canvas>
           </Grid>
         </Grid>
