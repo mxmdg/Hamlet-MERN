@@ -538,14 +538,12 @@ const JobDetail = (props) => {
           {previousCotizations.length > 0 && (
             <>
               <ButtonGroup variant="text" size="small" orientation="vertical">
-                <Button>
                   <Typography variant="button">Pesupuestos: </Typography>
-                </Button>
                 {previousCotizations.reverse().map((cotizacion) => (
                   <Button
                     color={cotizacion.status === "Aprobada" ? "success" : cotizacion.status === "Rechazada" ? "error" : "primary"}
                     //variant={cotizacion.status === "Aprobada" ? "contained" : cotizacion.status === "Rechazada" ? "contained" : "outlined"}
-                    key={cotizacion.id}
+                    key={cotizacion._id}
                     onClick={() =>
                       navigate(`/quotations/edit/${cotizacion._id}`)
                     }

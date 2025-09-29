@@ -112,6 +112,7 @@ const Canvas = (props) => {
         >
           <Grid item xs={12} md={12} sm={12}>
             <ImpositionForm
+              impositionSettings={props.sheet || null}
               doImposition={handleImpoClick}
               part={props.part || null}
             ></ImpositionForm>

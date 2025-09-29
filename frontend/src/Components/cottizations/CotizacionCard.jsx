@@ -348,9 +348,7 @@ Precio final: ${cotizacion.data.total} (IVA incluido)
               </>
             )}
           </CardContent>
-          <CardActionArea>
             <CardActions>
-              <ButtonGroup fullWidth variant="outlined" sx={{ mb: 2 }}>
                 <Button
                   key={"sendMail"}
                   onClick={() => sendQuotation(cotizacion)}
@@ -361,9 +359,7 @@ Precio final: ${cotizacion.data.total} (IVA incluido)
                     ? "Reenviar Presupuesto"
                     : "Enviar Presupuesto"}
                 </Button>
-              </ButtonGroup>
             </CardActions>
-          </CardActionArea>
         </Card>
       </Grid>
       <Grid item xs={12} md={8}>

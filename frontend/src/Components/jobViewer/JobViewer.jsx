@@ -54,7 +54,7 @@ export const JobViewer = (props) => {
 
   const output = () => {
     if (useLoading === false && useCurrentJob !== null) {
-      return <JobDetail job={useCurrentJob} cot={props.cot} />;
+      return <JobDetail job={useCurrentJob} cot={props.cot} key={`JobDetail_${id}`}/>;
     } else {
       return preloader;
     }
