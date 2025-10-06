@@ -274,7 +274,7 @@ const JobParts = (props) => {
                 required
                 {...register("Name", {
                   required: true,
-                  maxLength: 85,
+                  maxLength: 140,
                   minLength: 3,
                 })}
                 onBlur={() => {
@@ -287,7 +287,7 @@ const JobParts = (props) => {
                 </FormHelperText>
               )}
               {errors.Name?.type === "maxLength" && (
-                <FormHelperText>Maximo 85 caracteres</FormHelperText>
+                <FormHelperText>Maximo 140 caracteres</FormHelperText>
               )}
               {errors.Name?.type === "minLength" && (
                 <FormHelperText>Minimo 3 caracteres</FormHelperText>

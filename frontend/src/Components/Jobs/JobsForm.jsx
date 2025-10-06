@@ -42,6 +42,9 @@ const JobsForm = (props) => {
   const [selectedFinishings, setSelectedFinishings] = useState(
     props.data?.Finishing || []
   );
+  const [selectedFinishingsBKP, setSelectedFinishingsBKP] = useState(
+    props.data?.Finishing || []
+  );
   // This state intializes chebox value
   // const [useValue, setMyValue] = useState({ value: "" });
   const [useJobType, setJobType] = useState(props.jobType?.name || null);
@@ -105,10 +108,20 @@ const JobsForm = (props) => {
     }
   };
 
+  const resetFinishers = () => {
+    if (window.confirm("¿Seguro que desea cambiar el tipo de trabajo? Se borraran las terminaciones seleccionadas")) {
+      setSelectedFinishings([]);
+    } else {
+      setJobType(useJobType);
+      setValue("JobType", useJobType);
+    }
+  }
+
   useEffect(() => {
     setValue("Finishing", selectedFinishings); // Esto actualiza el campo Finishing con los objetos seleccionados
-  }, [selectedFinishings, setValue]);
+  }, [selectedFinishings, setValue, useFinishingList]);
 
+  
   const error = <ErrorMessage message={useError} />;
 
   const loading = <Spinner />;
@@ -182,6 +195,7 @@ const JobsForm = (props) => {
                     onBlur={(e) => {
                       e.preventDefault();
                       trigger("JobType");
+                      //resetFinishers();
                       JobTypes.map((jt) => {
                         if (jt.id === e.target.value) {
                           setJobType(jt.name);

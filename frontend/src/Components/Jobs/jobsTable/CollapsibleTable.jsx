@@ -60,7 +60,7 @@ function stableSort(array, comparator) {
       }
       return a[1] - b[1];
     });
-    return stabilizedThis.map((el) => el[0]);
+    return stabilizedThis.length > 0 ? stabilizedThis.map((el) => el[0]) : {message: "No hay datos que mostrar" };
   } catch (error) {
     return error;
   }
@@ -258,11 +258,24 @@ export default function CollapsibleTable(props) {
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   const visibleRows = React.useMemo(
-    () =>
-      stableSort(rows, getComparator(order, orderBy)).slice(
-        page * rowsPerPage,
-        page * rowsPerPage + rowsPerPage
-      ),
+    () => {
+      try {
+        if (rows.length === 0) {
+          setError({ message: "No hay datos que mostrar" });
+          setLoading(false);
+          return [];
+        } else {
+          return stableSort(rows, getComparator(order, orderBy)).slice(
+          page * rowsPerPage,
+          page * rowsPerPage + rowsPerPage
+        );
+        }
+        
+      } catch (error) {
+        setError(error);
+        return [];
+      }
+    },
     [order, orderBy, page, rowsPerPage, rows]
   );
 
