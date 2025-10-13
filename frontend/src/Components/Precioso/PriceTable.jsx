@@ -181,7 +181,7 @@ const PriceTable = (props) => {
           {isThereHistory && (
             <SimpleAreaChart
               data={fillMonthlyData(props.pd.Historial)}
-              dataKey={["", "Valor", "Entrada", "Minimo"]}
+              dataKey={["Fecha", "Valor", "Entrada", "Minimo"]}
             />
           )}
         </CardContent>

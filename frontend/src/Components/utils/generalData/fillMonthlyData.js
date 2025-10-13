@@ -1,54 +1,65 @@
+import { procesarFechaISO, getMyDate } from "./fechaDiccionario";
+
 // Rellena los meses faltantes con el último valor conocido
-export function fillMonthlyData(
-  data,
-  valueKey = ["Valor", "Minimo", "Entrada"]
-) {
+export function fillMonthlyData(data) {
+  console.log("Filling monthly data...");
+  console.log(data.length);
   if (!data || data.length === 0) return [];
 
-  // Ordenar por fecha ascendente
-  const sorted = data;
+  const firstDate = new Date(data[0].Fecha);
+  const lastDate = new Date(data[data.length - 1].Fecha);
 
-  const result = [];
-  let current = new Date(sorted[0].Fecha);
-  const end = new Date(sorted[sorted.length - 1].Fecha);
-  let dataIdx = 0;
-  let lastValue = sorted[0][valueKey[0]];
-  let lastMin = sorted[0][valueKey[1]];
-  let lastEntry = sorted[0][valueKey[2]];
+  const filledData = [];
 
-  while (
-    current.getFullYear() < end.getFullYear() ||
-    (current.getFullYear() === end.getFullYear() &&
-      current.getMonth() <= end.getMonth())
-  ) {
-    // Buscar si hay dato para este mes
-    const monthData = sorted.find(
-      (d) =>
-        new Date(d.Fecha).getFullYear() === current.getFullYear() &&
-        new Date(d.Fecha).getMonth() === current.getMonth()
-    );
-    dataIdx++;
-    if (monthData) {
-      lastValue = monthData[valueKey];
-      result.push({ ...monthData });
-    } else {
-      // Crear un punto con la fecha y el último valor conocido
-      result.push({
-        Fecha: new Date(current),
-        [valueKey[0]]: sorted[dataIdx - 1]
-          ? sorted[dataIdx - 1][valueKey[0]]
-          : lastValue,
-        [valueKey[1]]: sorted[dataIdx - 1]
-          ? sorted[dataIdx - 1][valueKey[1]]
-          : lastMin,
-        [valueKey[2]]: sorted[dataIdx - 1]
-          ? sorted[dataIdx - 1][valueKey[2]]
-          : lastEntry,
-        // Puedes copiar otros campos si lo necesitas
-      });
+  const formatData = (item) => {
+    return {
+      Fecha: procesarFechaISO(item.Fecha),
+      Valor: item.Valor * 100,
+      Entrada: item.Entrada,
+      Minimo: item.Minimo,
+    };
+  };
+
+  const fill = () => {
+    let prevMonth = getMyDate(firstDate).mm;
+    let prevYear = getMyDate(firstDate).yy;
+    let lastItem = data[0];
+
+    filledData.push(formatData(lastItem)); // Primera entrada
+
+    for (let i = 1; i < data.length; i++) {
+      const curr = data[i];
+      const { mm: currMonth, yy: currYear } = getMyDate(new Date(curr.Fecha));
+
+      // Calcular la diferencia de meses considerando el cambio de año
+      let diff = (currYear - prevYear) * 12 + (currMonth - prevMonth);
+
+      // Si hay meses faltantes, rellenar
+      while (diff > 1) {
+        prevMonth++;
+        if (prevMonth > 12) {
+          prevMonth = 1;
+          prevYear++;
+        }
+        // Crear nueva entrada con el último valor conocido
+        const newFecha = `${prevMonth}/${prevYear}`;
+        filledData.push({
+          Fecha: newFecha,
+          Valor: curr.Valor * 100,
+          Entrada: curr.Entrada,
+          Minimo: curr.Minimo,
+        });
+        diff--;
+      }
+
+      filledData.push(formatData(curr));
+      prevMonth = currMonth;
+      prevYear = currYear;
+      lastItem = curr;
     }
-    // Avanzar al siguiente mes
-    current.setMonth(current.getMonth() + 1);
-  }
-  return result;
+  };
+
+  fill();
+  console.log(filledData);
+  return filledData;
 }

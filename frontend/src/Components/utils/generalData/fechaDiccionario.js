@@ -62,7 +62,7 @@ export const getMyDate = (event) => {
   const mmyy = `${mm + 1}/${yy}`.toString();
   const yymmdd = `${yy}-${mm + 1}-${dd}`;
 
-  return { ddmmyy, mmyy, ww, yymmdd };
+  return { ddmmyy, mmyy, ww, yymmdd, mm: mm + 1, yy: yy };
 };
 
 // Formatea una fecha en formato "dd/mm/yyyy" según la configuración regional "es-ES".

@@ -191,7 +191,7 @@ export default function Historial(props) {
           />
           <SimpleAreaChart
             data={fillMonthlyData(props.data)}
-            dataKey={["", "Valor", "Entrada", "Minimo"]}
+            dataKey={["Fecha", "Valor", "Entrada", "Minimo"]}
           />
         </Paper>
       </Modal>
