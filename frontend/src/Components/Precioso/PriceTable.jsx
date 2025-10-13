@@ -32,6 +32,7 @@ import {
   currencyFormat,
   spanishFormat,
 } from "../utils/generalData/numbersAndCurrencies";
+import { fillMonthlyData } from "../utils/generalData/fillMonthlyData";
 
 const PriceTable = (props) => {
   const [isThereHistory, setIsThereHistory] = useState();
@@ -164,10 +165,12 @@ const PriceTable = (props) => {
                           modalTitle={`${props.pd.Proceso} ${key}`}
                           modalText={value}
                         />
+                      ) : key === "valor" ? (
+                        `${value} (u$d ${(value / props.cotization).toFixed(
+                          4
+                        )})`
                       ) : (
-                        key === "valor" 
-                        ? `${value} (u$d ${(value / props.cotization).toFixed(4)})`
-                        : value
+                        value
                       )}
                     </TableCell>
                   </TableRow>
@@ -177,7 +180,7 @@ const PriceTable = (props) => {
           </TableContainer>
           {isThereHistory && (
             <SimpleAreaChart
-              data={props.pd.Historial}
+              data={fillMonthlyData(props.pd.Historial)}
               dataKey={["", "Valor", "Entrada", "Minimo"]}
             />
           )}

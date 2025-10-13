@@ -16,9 +16,13 @@ import TablePagination from "@mui/material/TablePagination";
 import LastSeen from "./LastUpdate";
 import MyLineChart from "./LineChart";
 import SimpleAreaChart from "../utils/stats/SimpleAreaChart";
-import { currencyCotizationPerDate, roundCents } from "../utils/generalData/numbersAndCurrencies";
+import {
+  currencyCotizationPerDate,
+  roundCents,
+} from "../utils/generalData/numbersAndCurrencies";
 import DownloadCSV from "../utils/DownloadCSV/DownloadCSV";
 import DownloadJSON from "../utils/DownloadCSV/DownloadJSON";
+import { fillMonthlyData } from "../utils/generalData/fillMonthlyData";
 
 const style = {
   position: "absolute",
@@ -83,14 +87,13 @@ export default function Historial(props) {
   const convertToPastDollar = async (value, date) => {
     try {
       const cotization = await currencyCotizationPerDate("usd", date);
-    const cotizationValue = cotization.results[0].detalle[0].tipoCotizacion;
-    console.log(cotizationValue); 
-    return (value / cotizationValue).toFixed(4);
+      const cotizationValue = cotization.results[0].detalle[0].tipoCotizacion;
+      console.log(cotizationValue);
+      return (value / cotizationValue).toFixed(4);
     } catch (error) {
       return "Error";
     }
-    
-  }
+  };
 
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -147,7 +150,9 @@ export default function Historial(props) {
                   .map((row) => (
                     <TableRow key={row.Fecha}>
                       <TableCell component="th" scope="row" align="left">
-                        {`${row.Valor} (u$d ${convertedValues[row.Fecha] || "Loading..."})`}
+                        {`${row.Valor} (u$d ${
+                          convertedValues[row.Fecha] || "Loading..."
+                        })`}
                       </TableCell>
                       <TableCell component="th" scope="row" align="left">
                         {row.Entrada}
@@ -166,8 +171,15 @@ export default function Historial(props) {
               </TableBody>
             </Table>
           </TableContainer>
-          <DownloadCSV head={tableHead} data={props.data} fileName={`Historial ${props.process}`}/>
-          <DownloadJSON data={props.data} fileName={`Historial ${props.process}`}/>
+          <DownloadCSV
+            head={tableHead}
+            data={props.data}
+            fileName={`Historial ${props.process}`}
+          />
+          <DownloadJSON
+            data={props.data}
+            fileName={`Historial ${props.process}`}
+          />
           <TablePagination
             rowsPerPageOptions={[5, 10, 20]}
             component="div"
@@ -178,7 +190,7 @@ export default function Historial(props) {
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
           <SimpleAreaChart
-            data={props.data}
+            data={fillMonthlyData(props.data)}
             dataKey={["", "Valor", "Entrada", "Minimo"]}
           />
         </Paper>

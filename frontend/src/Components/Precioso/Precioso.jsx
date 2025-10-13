@@ -110,7 +110,7 @@ const Precioso = (props) => {
         //priceList &&
 
         <>
-          <Grid xs={6} sm={6} md={6} lg={6} xl={6} key="orderer">
+          {/* <Grid xs={6} sm={6} md={6} lg={6} xl={6} key="orderer">
             <ButtonGroup variant="outlined" size="small" color="secondary">
               <TextField
                 variant="outlined"
@@ -142,14 +142,9 @@ const Precioso = (props) => {
                 {orderer.asc ? <ArrowDropUp /> : <ArrowDropDown />}
               </Button>
             </ButtonGroup>
-          </Grid>
-          <Grid xs={6} sm={6} md={6} lg={6} xl={6} key="filter">
-            <ButtonGroup
-              variant="outlined"
-              size="small"
-              color="primary"
-              fullWidth
-            >
+          </Grid> */}
+          <Grid xs={12} sm={12} md={12} lg={12} xl={12} key="filter">
+            <ButtonGroup variant="outlined" size="small" color="primary">
               <TextField
                 variant="outlined"
                 fullWidth
