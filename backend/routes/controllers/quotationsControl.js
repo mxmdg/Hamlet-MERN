@@ -50,7 +50,7 @@ quotationsControl.getQuotations = async (req, res) => {
       query = { [property]: queryText };
     } else if (property === "data.resumen") {
       // Ejemplo para arrays
-      query = { [property]: { $size: parseInt(queryText) } };
+      query = { [property]: { $size: parseInt(queryText) + 1 } };
     } else {
       // Por defecto, buscar por igualdad
       query = { [property]: queryText };

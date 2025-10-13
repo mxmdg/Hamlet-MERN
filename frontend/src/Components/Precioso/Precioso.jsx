@@ -26,6 +26,8 @@ import { orderArrayByKey } from "../utils/generalData/arrayNormalizer";
 
 const Precioso = (props) => {
   const [priceList, setPriceList] = useState(null);
+  const [filteredPriceList, setFilteredPriceList] = useState([]);
+  const [fiter, setFilter] = useState({ property: "", value: "" });
   const [useEdit, setEdit] = useState(false);
   const [loading, setLoading] = useState(true);
   const [useErrorMessage, setErrorMessage] = useState();
@@ -108,7 +110,7 @@ const Precioso = (props) => {
         //priceList &&
 
         <>
-          <Grid xs={12} sm={12} md={12} lg={12} xl={12} key="orderer">
+          <Grid xs={6} sm={6} md={6} lg={6} xl={6} key="orderer">
             <ButtonGroup variant="outlined" size="small" color="secondary">
               <TextField
                 variant="outlined"
@@ -132,7 +134,7 @@ const Precioso = (props) => {
                   ))}
               </TextField>
               <Button
-                size="small"
+                size="large"
                 onClick={() => {
                   setOrderer((prev) => ({ ...prev, asc: !prev.asc }));
                 }}
@@ -141,7 +143,51 @@ const Precioso = (props) => {
               </Button>
             </ButtonGroup>
           </Grid>
-          {priceList.map((price) => (
+          <Grid xs={6} sm={6} md={6} lg={6} xl={6} key="filter">
+            <ButtonGroup
+              variant="outlined"
+              size="small"
+              color="primary"
+              fullWidth
+            >
+              <TextField
+                variant="outlined"
+                fullWidth
+                label="Filtrar por"
+                size="small"
+                onChange={(e) => {
+                  setFilter({ ...fiter, property: e.target.value });
+                }}
+                select
+              >
+                {priceList[0] &&
+                  Object.keys(priceList[0]).map((key) => (
+                    <MenuItem key={key} value={key}>
+                      {key}
+                    </MenuItem>
+                  ))}
+              </TextField>
+              <TextField
+                size="small"
+                onChange={(e) => {
+                  setFilter({ ...fiter, value: e.target.value });
+                  if (e.target.value === "") {
+                    setFilteredPriceList(priceList);
+                  } else {
+                    setFilteredPriceList(
+                      priceList.filter((item) =>
+                        item[fiter.property]
+                          ?.toString()
+                          .toLowerCase()
+                          .includes(e.target.value.toLowerCase())
+                      )
+                    );
+                  }
+                }}
+              ></TextField>
+            </ButtonGroup>
+          </Grid>
+          {filteredPriceList.map((price) => (
             <Grid xs={12} sm={6} md={4} lg={3} xl={2} key={price._id}>
               <PriceTable
                 pd={price}
