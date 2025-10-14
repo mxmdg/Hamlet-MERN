@@ -18,26 +18,34 @@ const JobsToCSV = ({ data, fileName }) => {
   };
 
   const convertToCSV = (objArray) => {
-    const array = typeof objArray !== "object" ? JSON.parse(objArray) : objArray;
+    const array =
+      typeof objArray !== "object" ? JSON.parse(objArray) : objArray;
+    try {
+      let str = "Indice,Trabajo,Cliente,Cantidad,Entrega,DeadLine\n";
 
-    // Encabezados para trabajos
-    let str = "Indice,Trabajo,Cliente,Cantidad,Entrega,DeadLine\n";
+      for (let i = 0; i < array.length; i++) {
+        // Datos del trabajo
+        str += `${i + 1},${array[i].Nombre} (${array[i].Tipo[0].name}),${
+          array[i].Company.Nombre
+        },${array[i].Cantidad},${getMyDate(array[i].Entrega).ddmmyy},${
+          array[i].DeadLine
+        }\n`;
 
-    for (let i = 0; i < array.length; i++) {
-      // Datos del trabajo
-      str += `${i + 1},${array[i].Nombre} (${array[i].Tipo[0].name}),${array[i].Company.Nombre},${array[i].Cantidad},${getMyDate(array[i].Entrega).ddmmyy},${array[i].DeadLine}\n`;
+        // Encabezados para partes
+        str += " ,Parte,Tipo,Pags,Colores,Fto.,Material\n";
 
-      // Encabezados para partes
-      str += " ,Parte,Tipo,Pags,Colores,Fto.,Material\n";
-
-      // Datos de las partes
-      for (let index in array[i].Partes) {
-        const parte = array[i].Partes[index];
-        str += ` ,${parte.Name},${parte.jobParts[0].Type},${parte.Pages},${parte.ColoresFrente}/${parte.ColoresDorso},${parte.Ancho}x${parte.Alto},${parte.partStock.Tipo} ${parte.partStock.Gramaje}\n`;
+        // Datos de las partes
+        for (let index in array[i].Partes) {
+          const parte = array[i].Partes[index];
+          str += ` ,${parte.Name},${parte.jobParts[0].Type},${parte.Pages},${parte.ColoresFrente}/${parte.ColoresDorso},${parte.Ancho}x${parte.Alto},${parte.partStock.Tipo} ${parte.partStock.Gramaje}\n`;
+        }
       }
-    }
 
-    return str;
+      return str;
+    } catch (error) {
+      return error;
+    }
+    // Encabezados para trabajos
   };
 
   const downloadCSV = () => {
