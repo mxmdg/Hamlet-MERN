@@ -36,7 +36,7 @@ const DownloadCSV = ({ data, fileName, head }) => {
       setLoading(false);
       return str;
     } catch (error) {
-      setaLoading(false);
+      setLoading(false);
       setError(error.message);
       return null;
     }
@@ -62,7 +62,7 @@ const DownloadCSV = ({ data, fileName, head }) => {
   };
 
   //{`Download ${fileName}.csv`}
-  const failure = <ErrorMessage message={error} />;
+  const failure = <ErrorMessage message={useError} />;
   const loading = <Spinner message={"Preparando descarga..."} />;
 
   return useLoading ? (
