@@ -36,7 +36,7 @@ export const jobsRoutes = () => (
         <StatsCollector route="jobs/complete">
           <JobsPerDate />
           <JobsPerType />
-          <JobsPerClient rank={6} />
+          <JobsPerClient rank={10} />
           <JobsPerSeller />
           <JobsPerType />
         </StatsCollector>

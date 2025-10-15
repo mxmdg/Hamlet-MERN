@@ -15,6 +15,23 @@ import {
   Typography,
   Box,
 } from "@mui/material";
+// Agregamos imports de recharts
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
+import { ToolTipNice } from "../utils/stats/ToolTipNice";
+import {
+  coloresIntermedios,
+  coloresSaturados,
+  coloresPasteles,
+  myWrapperStyle,
+} from "../utils/stats/NewRadialBar";
 
 const readPrinters = async () => {
   const res = await axios.get(`${serverURL}/hamlet/impresoras`);
@@ -33,6 +50,7 @@ const Printers = (props) => {
   });
   const [usePeriod, setPeriod] = useState(1);
   const [maxPeriods, setMaxPeriods] = useState(1);
+  const [chartData, setChartData] = useState([]);
 
   const getMonthForPeriod = (periodOffset) => {
     const currentDate = new Date();
@@ -40,7 +58,8 @@ const Printers = (props) => {
       currentDate.setMonth(currentDate.getMonth() - periodOffset)
     );
     const month = adjustedDate.toLocaleString("default", { month: "long" });
-    return month;
+    const year = adjustedDate.getFullYear();
+    return `${month} ${year}`;
   };
 
   useEffect(() => {
@@ -72,6 +91,48 @@ const Printers = (props) => {
           }
         });
         setTotals(totals);
+
+        // --- Generar datos para el gráfico ---
+        // Para cada periodo, sumar los totales de cada tipo
+        const periods = [];
+        for (let period = 1; period <= maxLength; period++) {
+          const periodTotals = { color: 0, large: 0, small: 0, blackHQ: 0 };
+          printers.forEach((p) => {
+            const periodIndex = p.Billing.length - period;
+            if (periodIndex >= 0) {
+              if (p.Colores > 1) {
+                periodTotals.color += parseInt(
+                  p.Billing[periodIndex].Color || 0,
+                  10
+                );
+                periodTotals.blackHQ += parseInt(
+                  p.Billing[periodIndex].Black || 0,
+                  10
+                );
+              } else if (p.Colores === 1) {
+                periodTotals.large += parseInt(
+                  p.Billing[periodIndex].Large || 0,
+                  10
+                );
+                periodTotals.small += parseInt(
+                  p.Billing[periodIndex].Small || 0,
+                  10
+                );
+              }
+            }
+          });
+          // Nombre del periodo (mes)
+          const date = new Date();
+          date.setMonth(date.getMonth() - period);
+          const month = date.toLocaleString("default", { month: "short" });
+          periods.push({
+            name: month,
+            ...periodTotals,
+          });
+        }
+        // Ordenar para que el periodo más reciente esté a la derecha
+        setChartData(periods.reverse());
+        // --- fin gráfico ---
       } catch (err) {
         console.log(err);
       }
@@ -104,7 +165,51 @@ const Printers = (props) => {
       spacing={2}
       maxWidth={"100%"}
     >
-      <Grid xs={12} md={12} lg={18} key={"totalPrints"}>
+      {/* Gráfico de barras de totales por periodo */}
+      <Grid xs={12} md={6} lg={6} key={"chart"}>
+        <Card elevation={10} sx={{ p: 2, mb: 2 }}>
+          <Typography variant="h6" sx={{ mb: 2 }}>
+            Totales de impresiones por periodo
+          </Typography>
+          <Box sx={{ width: "100%", height: 300 }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart
+                data={chartData}
+                barCategoryGap={2}
+                reverseStackOrder={true}
+                margin={{
+                  top: 10,
+                  right: 10,
+                  left: 10,
+                  bottom: 0,
+                }}
+              >
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip content={<ToolTipNice />} />
+                <Legend />
+                <Bar dataKey="color" fill={coloresSaturados[1]} name="Color" />
+                <Bar
+                  dataKey="blackHQ"
+                  fill={coloresSaturados[5]}
+                  name="Blanco y negro HQ"
+                />
+                <Bar
+                  dataKey="large"
+                  fill={coloresSaturados[3]}
+                  name="Blanco y negro Grandes"
+                />
+                <Bar
+                  dataKey="small"
+                  fill={coloresSaturados[8]}
+                  name="Blanco y negro Chicas"
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          </Box>
+        </Card>
+      </Grid>
+      <Grid xs={12} md={6} lg={6} key={"totalPrints"}>
         <Card elevation={10} sx={{ p: 2 }}>
           <Box
             display="flex"
