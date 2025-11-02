@@ -3,31 +3,40 @@ import NewStackedBarChart from "./NewStackedBarChart";
 import { NewSimpleLineChart } from "./NewSimpleLineChart";
 import JobTypes from "../../Jobs/JobTypes";
 import ErrorMessage from "../../ErrorMessage/ErrorMessage";
+import { getMyDate as formatDateFromDict } from "../generalData/fechaDiccionario";
 
 const JobsForNextDays = (props) => {
   const [useError, setError] = React.useState(null);
   const [from, setFrom] = React.useState(props.from || 1);
   const [to, setTo] = React.useState(props.to || 60); // next 60 days
+  const [graphTitle, setGraphTitle] = React.useState(
+    props.title || `Trabajos para los próximos ${to} días`
+  );
   const errorRef = React.useRef(false); // Bandera de control
 
   useEffect(() => {
-    // Aquí puedes agregar lógica adicional si es necesario cuando cambien las fechas
+    // Calcula fecha de inicio y fin a partir de los offsets `from` y `to`
+    const today = new Date();
+
+    const startDate = new Date(today);
+    startDate.setDate(today.getDate() - from);
+
+    const endDate = new Date(today);
+    endDate.setDate(today.getDate() + to);
+
     errorRef.current = false; // Resetea la bandera de error al cambiar las fechas
     setError(null); // Limpia cualquier error previo
+    setGraphTitle(
+      `Trabajos desde ${formatDateFromDict(startDate).ddmmyy} al ${formatDateFromDict(
+        endDate
+      ).ddmmyy}`
+    ); // Actualiza el título del gráfico
   }, [from, to]);
-
-  const getMyDate = (event) => {
-    const dd = new Date(event).getUTCDate();
-    const mm = new Date(event).getUTCMonth();
-    const yy = new Date(event).getFullYear();
-    const MiDate = `${dd}/${mm + 1}/${yy}`;
-    return MiDate;
-  };
 
   let outDate = {};
 
   for (let job of props.jobs) {
-    const Salida = getMyDate(job.Entrega);
+    const Salida = formatDateFromDict(job.Entrega).ddmmyy;
     const yesterday = new Date();
     const today = new Date();
     const endDate = new Date();
@@ -75,7 +84,7 @@ const JobsForNextDays = (props) => {
     <NewStackedBarChart
       data={jobsPerOutDate}
       dataKey={dataKeys}
-      title={"Trabajos para la proxima semana"}
+      title={graphTitle}
       selectFrom={setFrom}
       selectTo={setTo}
       route={props.route}
