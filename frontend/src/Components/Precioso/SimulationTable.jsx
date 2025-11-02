@@ -120,7 +120,7 @@ export default function SimulationTable(props) {
   };
 
   const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
+    setRowsPerPage(parseInt(event.target.value, 5));
     setPage(0);
   };
 
@@ -129,7 +129,7 @@ export default function SimulationTable(props) {
       <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
         <TableHead>
           <TableRow>
-            <TableCell align="right">Camtidad</TableCell>
+            <TableCell align="right">Cantidad</TableCell>
             <TableCell align="right">Pliego</TableCell>
             <TableCell align="right">Unitario</TableCell>
             <TableCell align="right">Total</TableCell>

@@ -118,7 +118,7 @@ const Simulator = (props) => {
     await fechtData("Formatos", setFormats);
   };
 
-  const cantidades = [100, 1000];
+  const cantidades = [1, 10, 100, 250, 500, 1000, 5000];
   const pliegos = [
     { Ancho: 215, Alto: 315 },
     { Ancho: 470, Alto: 320 },
@@ -180,10 +180,10 @@ const Simulator = (props) => {
                   </TextField>
                 </Grid>
 
-                <Grid item xs={12} sm={6} md={3} sx={{ alignSelf: "center" }}>
+                <Grid item xs={12} sm={6} md={3}>
                   <Button
                     variant="contained"
-                    color="warning"
+                    color="success"
                     endIcon={<SendIcon />}
                     size="large"
                     onClick={() => {
@@ -221,12 +221,21 @@ const Simulator = (props) => {
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <Container>
+      <Container
+        sx={{
+          marginTop: "30px",
+          marginBottom: "30px",
+          overflowY: "auto",
+          maxHeight: "90vh",
+        }}
+      >
         <Card sx={{ padding: "20px" }} elevation={4}>
           <CardHeader
             title={props.data.Proceso}
             action={
               <Button
+                color="error"
+                variant="contained"
                 onClick={() => {
                   props.stateSim(false);
                 }}
@@ -240,13 +249,25 @@ const Simulator = (props) => {
 
             <SimulationTable
               data={props.data}
+              rowsPerPage={5}
               pliegos={pliegos}
               cantidades={cantidades}
               simCLC={simCLC}
             />
           </CardContent>
 
-          <CardActions></CardActions>
+          <CardActions>
+            {" "}
+            <Button
+              color="error"
+              variant="contained"
+              onClick={() => {
+                props.stateSim(false);
+              }}
+            >
+              Cerrar
+            </Button>
+          </CardActions>
         </Card>
       </Container>
     </Modal>
