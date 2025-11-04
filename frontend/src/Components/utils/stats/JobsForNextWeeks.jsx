@@ -27,9 +27,9 @@ const JobsForNextDays = (props) => {
     errorRef.current = false; // Resetea la bandera de error al cambiar las fechas
     setError(null); // Limpia cualquier error previo
     setGraphTitle(
-      `Trabajos desde ${formatDateFromDict(startDate).ddmmyy} al ${formatDateFromDict(
-        endDate
-      ).ddmmyy}`
+      `Trabajos desde ${formatDateFromDict(startDate).ddmmyy} al ${
+        formatDateFromDict(endDate).ddmmyy
+      }`
     ); // Actualiza el título del gráfico
   }, [from, to]);
 

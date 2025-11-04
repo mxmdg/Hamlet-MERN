@@ -47,9 +47,30 @@ const NewStackedBarChart = (props) => {
   const [open, setOpen] = React.useState(false);
   const [filter, setFilter] = React.useState(null);
   const [statsData, setStatsData] = React.useState(props.data);
+  const [dataCount, setDataCount] = React.useState(null);
   const [useTitle, setTitle] = React.useState(props?.title || "Estadisticas");
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  const calculateAverage = (data) => {
+    if (data.length === 0) return 0;
+    const total = {};
+    data.forEach((item) => {
+      Object.keys(item).forEach((key) => {
+        if (key !== "name") {
+          total[key] = total[key] ? total[key] + item[key] : item[key];
+        }
+      });
+    });
+
+    const average = {};
+    Object.keys(total).forEach((key) => {
+      average[key] = Math.ceil(total[key] / data.length);
+    });
+    console.log("Total:", total);
+    console.log("Promedio:", average);
+    return { total, average };
+  };
 
   const handleBarClick = async (barData) => {
     // barData podría contener la fecha de la barra clickeada
@@ -90,6 +111,7 @@ const NewStackedBarChart = (props) => {
   };
 
   React.useEffect(() => {
+    setDataCount(calculateAverage(props.data));
     function filtrarTipoTrabajo(data, tipoTrabajo) {
       return data.map((item) => {
         const { name } = item;
@@ -182,6 +204,21 @@ const NewStackedBarChart = (props) => {
             wrapperStyle={myWrapperStyle}
             onClick={(e) => {
               setFilter(filter !== e.dataKey ? e.dataKey : null);
+            }}
+            formatter={(value, entry) => {
+              // entry.dataKey contiene la clave real del dataset
+              const key = entry && entry.dataKey ? entry.dataKey : value;
+              if (!dataCount || !dataCount.total || !dataCount.average)
+                return value;
+              const total =
+                dataCount.total[key] !== undefined ? dataCount.total[key] : 0;
+              const avg =
+                dataCount.average[key] !== undefined
+                  ? dataCount.average[key]
+                  : 0;
+              const fmt = (n) =>
+                typeof n === "number" ? n.toLocaleString("es-ES") : n;
+              return `${value} (T: ${fmt(total)} / P: ${fmt(avg)})`;
             }}
           />
           {props.dataKey.map((item, index) => {
