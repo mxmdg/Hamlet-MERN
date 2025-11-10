@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Input from "@mui/material/Input";
 import Container from "@mui/material/Container";
+import Avatar from "@mui/material/Avatar";
+import { red } from "@mui/material/colors";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
@@ -25,7 +27,7 @@ import { AuthContext } from "../context/AuthContext";
 import { useContext } from "react";
 import { Profile } from "./Profile";
 import Spinner from "../General/Spinner";
-
+import Logo from "../../../src/img/Logo/logo ok-02.svg";
 export const Login = () => {
   const {
     register,
@@ -126,13 +128,23 @@ export const Login = () => {
     />
   );
 
-  const loadingRender = <Spinner color="primary" title="Procesando solicitud..."/>;
+  const loadingRender = (
+    <Spinner color="primary" title="Procesando solicitud..." />
+  );
 
   const success = (
     <Box>
       <Card elevation={10}>
         {context.userLogged === null && (
           <CardHeader
+            avatar={
+              <Avatar
+                src={Logo}
+                alt="Hamlet logo"
+                sx={{ width: 50, height: 50 }}
+                variant="rounded"
+              />
+            }
             title="Login"
             titleTypographyProps={{ color: "secondary", fontWeight: "600" }}
           ></CardHeader>
@@ -140,6 +152,14 @@ export const Login = () => {
         {context.userLogged !== null && (
           <CardHeader
             title={`Bienvenido ${context.userLogged.Name}`}
+            avatar={
+              <Avatar
+                src={Logo}
+                alt="Hamlet logo"
+                sx={{ width: 150, height: 150 }}
+                variant="rounded"
+              />
+            }
           ></CardHeader>
         )}
         <CardContent>

@@ -25,6 +25,7 @@ import SessionTimer from "../Users/SessionTimer";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import LightModeIcon from "@mui/icons-material/LightMode";
+import { ReactComponent as Logo } from "../../img/Logo/logo ok-01.svg";
 
 export const pages = [
   { text: "Pedidos", path: "jobs" },
@@ -157,13 +158,37 @@ function ResponsiveAppBar(props) {
               ))}
             </Menu>
           </Box>
-          <Box sx={{ flexGrow: 2, display: { xs: "flex", md: "flex" } }}>
+          <Box
+            sx={{
+              flexGrow: 2,
+              display: { xs: "flex", md: "flex" },
+            }}
+          >
+            {/* SVG imported as ReactComponent must be used with an uppercase name */}
             <Button
+              onClick={() => Navigate("/")}
+              color="primary"
+              variant="standard"
+            >
+              <Logo
+                role="img"
+                aria-label="Hamlet logo"
+                style={{
+                  width: "25px",
+                  height: "25px",
+                  display: "block",
+                  margin: "10px",
+                }}
+              />
+              <Typography variant="button">HAMLET</Typography>
+            </Button>
+
+            {/* <Button
               startIcon={<LocalLibraryIcon />}
               variant="h5"
               color="primary"
               onClick={() => Navigate("/")}
-              /* sx={{
+               sx={{
                     mr: 2,
                     display: { xs: "flex", md: "none" },
                     flexGrow: 1,
@@ -171,10 +196,10 @@ function ResponsiveAppBar(props) {
                     fontWeight: 700,
                     letterSpacing: ".3rem",
                     textDecoration: "none",
-                  }} */
+                  }} 
             >
               HAMLET
-            </Button>
+            </Button> */}
           </Box>
 
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>

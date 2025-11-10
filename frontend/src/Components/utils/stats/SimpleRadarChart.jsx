@@ -13,6 +13,12 @@ import { ToolTipNice } from "./ToolTipNice";
 
 import { Title } from "./Title";
 
+import {
+  coloresIntermedios,
+  coloresPasteles,
+  coloresSaturados,
+} from "./NewRadialBar";
+
 export default class Example extends PureComponent {
   static demoUrl = "https://codesandbox.io/p/sandbox/simple-radar-chart-2p5sxm";
 
@@ -38,8 +44,8 @@ export default class Example extends PureComponent {
             <Radar
               name="Trabajos"
               dataKey={this.props.dataKey.qty}
-              stroke="rgb(157, 1, 177)"
-              fill="rgba(255, 15, 215, 0.27)"
+              stroke="#25fb9eff"
+              fill="#25fba992"
               fillOpacity={1}
             />
             <Tooltip content={<ToolTipNice />} />

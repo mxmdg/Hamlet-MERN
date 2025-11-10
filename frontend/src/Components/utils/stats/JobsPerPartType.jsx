@@ -6,7 +6,7 @@ const JobsPerPartType = (props) => {
   // Calcular la cantidad de trabajos por tipo de parte.
   // Recibe la lista de trabajos en props.jobs
   // Se accede a la propiedad _id y Type en props.jobs.Partes[n].jobParts[0]._id y props.jobs.Partes[n].jobParts[0].Type
-  // 
+  //
   const [useRank, setRank] = React.useState(props.rank);
 
   // Sumar partes por nombre (Type), no por _id
@@ -38,4 +38,3 @@ const JobsPerPartType = (props) => {
 };
 
 export default JobsPerPartType;
-

@@ -13,6 +13,7 @@ import CurrentJob from "../Components/Jobs/JobContextChildren/CurrentJob";
 import { JobViewer } from "../Components/jobViewer/JobViewer";
 import JobsEditAndCopy from "../Components/Pages/JobsEditAndCopy";
 import JobsContainer from "../Components/Jobs/JobsContainer";
+import JobsPerPartType from "../Components/utils/stats/JobsPerPartType";
 
 export const jobsRoutes = () => (
   <>
@@ -36,9 +37,10 @@ export const jobsRoutes = () => (
         <StatsCollector route="jobs/complete">
           <JobsPerDate />
           <JobsPerType />
-          <JobsPerClient rank={10} />
+          <JobsPerClient rank={5} />
           <JobsPerSeller />
           <JobsPerType />
+          <JobsPerPartType rank={7} />
         </StatsCollector>
       }
     />
