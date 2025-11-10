@@ -27,7 +27,7 @@ import { AuthContext } from "../context/AuthContext";
 import { useContext } from "react";
 import { Profile } from "./Profile";
 import Spinner from "../General/Spinner";
-import Logo from "../../../src/img/Logo/logo ok-02.svg";
+import Logo from "../../../src/img/Logo/logo ok-01.svg";
 export const Login = () => {
   const {
     register,
