@@ -14,6 +14,9 @@ import {
   Button,
   Typography,
   Box,
+  Divider,
+  CardActions,
+  ButtonGroup,
 } from "@mui/material";
 // Agregamos imports de recharts
 import {
@@ -60,6 +63,11 @@ const Printers = (props) => {
     const month = adjustedDate.toLocaleString("default", { month: "long" });
     const year = adjustedDate.getFullYear();
     return `${month} ${year}`;
+  };
+
+  const cardStyle = {
+    p: 5,
+    borderRadius: 1,
   };
 
   useEffect(() => {
@@ -162,12 +170,13 @@ const Printers = (props) => {
       md={12}
       lg={18}
       container
-      spacing={2}
-      maxWidth={"100%"}
+      spacing={5}
+      maxWidth={"95%"}
+      margin={"auto"}
     >
       {/* Gráfico de barras de totales por periodo */}
-      <Grid xs={12} md={6} lg={6} key={"chart"}>
-        <Card elevation={10} sx={{ p: 2, mb: 2 }}>
+      <Grid xs={12} md={9} lg={9} key={"chart"}>
+        <Card elevation={10} sx={cardStyle}>
           <Typography variant="h6" sx={{ mb: 2 }}>
             Totales de impresiones por periodo
           </Typography>
@@ -209,8 +218,8 @@ const Printers = (props) => {
           </Box>
         </Card>
       </Grid>
-      <Grid xs={12} md={6} lg={6} key={"totalPrints"}>
-        <Card elevation={10} sx={{ p: 2 }}>
+      <Grid xs={12} md={3} lg={3} key={"totalPrints"}>
+        <Card elevation={10} sx={cardStyle}>
           <Box
             display="flex"
             justifyContent="space-between"
@@ -219,23 +228,6 @@ const Printers = (props) => {
             <Typography variant="h6">
               {`Impresiones del periodo ${previousMonth}/${currentMonth}`}
             </Typography>
-            <Box>
-              <Button
-                variant="outlined"
-                onClick={handleIncrement}
-                disabled={usePeriod >= maxPeriods}
-                sx={{ mr: 1 }}
-              >
-                Anterior
-              </Button>
-              <Button
-                variant="outlined"
-                onClick={handleDecrement}
-                disabled={usePeriod === 1}
-              >
-                Siguiente
-              </Button>
-            </Box>
           </Box>
           <List>
             <ListItem divider={true}>
@@ -263,6 +255,24 @@ const Printers = (props) => {
               />
             </ListItem>
           </List>
+          <CardActions>
+            <Divider></Divider>
+            <ButtonGroup
+              variant="contained"
+              color="info"
+              sx={{ margin: "auto" }}
+            >
+              <Button
+                onClick={handleIncrement}
+                disabled={usePeriod >= maxPeriods}
+              >
+                Anterior
+              </Button>
+              <Button onClick={handleDecrement} disabled={usePeriod === 1}>
+                Siguiente
+              </Button>
+            </ButtonGroup>
+          </CardActions>
         </Card>
       </Grid>
 
@@ -271,7 +281,7 @@ const Printers = (props) => {
       ) : (
         printerList.map((printer) => (
           <Grid xs={12} sm={6} md={6} lg={3} key={printer._id}>
-            <Card elevation={10} sx={{ p: 2 }}>
+            <Card elevation={10} sx={cardStyle}>
               <PrinterDetails
                 pd={printer}
                 id={printer._id}

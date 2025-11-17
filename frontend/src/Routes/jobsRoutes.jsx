@@ -17,6 +17,7 @@ import JobsPerPartType from "../Components/utils/stats/JobsPerPartType";
 
 export const jobsRoutes = () => (
   <>
+    //Rutas en uso, para buscar, ver, editar, copiar, agregar trabajos.
     <Route
       path="/Jobs"
       element={
@@ -27,10 +28,15 @@ export const jobsRoutes = () => (
         />
       }
     />
+    <Route path="/Jobs/edit/:id" element={<JobViewer entity={"Jobs"} />} />
+    <Route path="/Jobs/copy/:id" element={<JobsEditAndCopy />} />
+    // Esta ruta solo trae las partes de trabajo, pero no se pueden editar ni
+    saber a que trabajo pertencen.
     <Route
       path="/Jobs/partes"
       element={<MainContainer entity={"jobs/partes"} />}
     />
+    // Una ruta poco util, solo trae las estadisticas de todos los trabajos.
     <Route
       path="/Jobs/stats"
       element={
@@ -45,6 +51,8 @@ export const jobsRoutes = () => (
       }
     />
     <Route path="/Jobs/add" element={<MyStepper />} />
+    // Falta desarrollar JobProvider para mejorar la carga de trabajos, estas
+    rutas no estan listas todavia.
     <Route
       path="Jobs/Context/:id"
       element={
@@ -61,8 +69,7 @@ export const jobsRoutes = () => (
         </JobProvider>
       }
     />
-    <Route path="/Jobs/edit/:id" element={<JobViewer entity={"Jobs"} />} />
-    <Route path="/Jobs/copy/:id" element={<JobsEditAndCopy />} />
+    // Ruta para ver la lista completa de trabajos sin partes, carga mas rapida.
     <Route path="/Jobs/fullList" element={<JobsContainer entity={"Jobs"} />} />
   </>
 );

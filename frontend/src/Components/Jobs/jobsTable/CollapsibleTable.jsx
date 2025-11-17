@@ -60,7 +60,9 @@ function stableSort(array, comparator) {
       }
       return a[1] - b[1];
     });
-    return stabilizedThis.length > 0 ? stabilizedThis.map((el) => el[0]) : {message: "No hay datos que mostrar" };
+    return stabilizedThis.length > 0
+      ? stabilizedThis.map((el) => el[0])
+      : { message: "No hay datos que mostrar" };
   } catch (error) {
     return error;
   }
@@ -202,6 +204,11 @@ export default function CollapsibleTable(props) {
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(true);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const fontVariant = "button text";
+  const tableCellSettings = {
+    style: { padding: dense ? 0 : 5 },
+    margin: 0,
+  };
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
@@ -257,27 +264,23 @@ export default function CollapsibleTable(props) {
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
-  const visibleRows = React.useMemo(
-    () => {
-      try {
-        if (rows.length === 0) {
-          setError({ message: "No hay datos que mostrar" });
-          setLoading(false);
-          return [];
-        } else {
-          return stableSort(rows, getComparator(order, orderBy)).slice(
+  const visibleRows = React.useMemo(() => {
+    try {
+      if (rows.length === 0) {
+        setError({ message: "No hay datos que mostrar" });
+        setLoading(false);
+        return [];
+      } else {
+        return stableSort(rows, getComparator(order, orderBy)).slice(
           page * rowsPerPage,
           page * rowsPerPage + rowsPerPage
         );
-        }
-        
-      } catch (error) {
-        setError(error);
-        return [];
       }
-    },
-    [order, orderBy, page, rowsPerPage, rows]
-  );
+    } catch (error) {
+      setError(error);
+      return [];
+    }
+  }, [order, orderBy, page, rowsPerPage, rows]);
 
   let i = 0;
 
@@ -301,9 +304,10 @@ export default function CollapsibleTable(props) {
             window.open(`/jobs/edit/${row._id}`, "_blank");
           }}
         >
-          <TableCell>
+          <TableCell padding="checkbox" margin="0" align="left">
             <Checkbox
               color="info"
+              size="small"
               checked={isItemSelected}
               inputProps={{
                 "aria-labelledby": labelId,
@@ -313,10 +317,11 @@ export default function CollapsibleTable(props) {
               }}
             />
           </TableCell>
-          <TableCell>
+          <TableCell padding="none" margin="0" align="left">
             <IconButton
               aria-label="expand row"
               size="small"
+              edge="true"
               onClick={() => setOpen(!open)}
             >
               {open ? (
@@ -326,29 +331,29 @@ export default function CollapsibleTable(props) {
               )}
             </IconButton>
           </TableCell>
-          <TableCell align="left">
-            <Typography>{row.name}</Typography>
+          <TableCell tableCellSettings>
+            <Typography variant={fontVariant}>{row.name}</Typography>
           </TableCell>
-          <TableCell align="left">
-            <Typography>{row.product}</Typography>
+          <TableCell tableCellSettings>
+            <Typography variant={fontVariant}>{row.product}</Typography>
           </TableCell>
-          <TableCell align="left">
-            <Typography>{row.quantity}</Typography>
+          <TableCell tableCellSettings>
+            <Typography variant={fontVariant}>{row.quantity}</Typography>
           </TableCell>
-          <TableCell align="left">
+          <TableCell tableCellSettings>
             <Typography color={"info"}>{row.customer}</Typography>
           </TableCell>
-          <TableCell align="left">
-            <Typography>{row.owner}</Typography>
+          <TableCell tableCellSettings>
+            <Typography variant={fontVariant}>{row.owner}</Typography>
           </TableCell>
-          <TableCell align="left">
-            <Typography>{row.from}</Typography>
+          <TableCell tableCellSettings>
+            <Typography variant={fontVariant}>{row.from}</Typography>
           </TableCell>
-          <TableCell align="left">
-            <Typography>{row.to}</Typography>
+          <TableCell tableCellSettings>
+            <Typography variant={fontVariant}>{row.to}</Typography>
           </TableCell>
-          <TableCell align="left">
-            <Typography>{row.Finishing}</Typography>
+          <TableCell tableCellSettings>
+            <Typography variant={fontVariant}>{row.Finishing}</Typography>
           </TableCell>
         </TableRow>
         <TableRow>
@@ -498,7 +503,7 @@ export default function CollapsibleTable(props) {
             onRequestSort={handleRequestSort}
             rowCount={rows.length}
             style={{
-              padding: dense ? 1 : 5,
+              padding: dense ? 0 : 5,
             }}
           />
           <TableBody>

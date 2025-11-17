@@ -85,7 +85,7 @@ const PrinterDetails = (props) => {
       return (
         <>
           <CardHeader
-            title={`${props.pd.Modelo} (${props.pd.SerialNumber})` }
+            title={`${props.pd.Modelo} (${props.pd.SerialNumber})`}
             subheader={props.pd.Fabricante}
           >{`Colores: ${props.pd.Colores}`}</CardHeader>
           <CardContent>
@@ -217,7 +217,12 @@ const PrinterDetails = (props) => {
             </Container>
           </CardContent>
           <CardActions>
-            <ButtonGroup>
+            <Divider></Divider>
+            <ButtonGroup
+              variant="contained"
+              color="info"
+              sx={{ margin: "auto" }}
+            >
               <Button
                 color="primary"
                 onClick={(e) => editClickHandler(props.pd._id)}

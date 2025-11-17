@@ -1,3 +1,4 @@
-export const w100h100CenterTop = {
-  border: "1px solid red",
+export const modeloTarjetasHolgadoSuave = {
+  borderRadius: "15px",
+  border: "1px solid #00ffd964",
 };

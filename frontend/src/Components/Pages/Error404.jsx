@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import {
   Box,
   Card,
@@ -9,6 +10,7 @@ import {
   Button,
 } from "@mui/material";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
+import { ReactComponent as Logo } from "../../../src/img/Logo/logo ok-01.svg";
 import { serverURL, databaseURL } from "../Config/config";
 import {
   putPrivateElement,
@@ -20,9 +22,10 @@ const Error404 = () => {
   const [error, setError] = useState("");
   const user = JSON.parse(localStorage.getItem("user"));
 
+  const navigate = useNavigate();
+
   const resetError = () => {
-    console.log("reset error");
-    setError("");
+    navigate("/");
   };
 
   return (
@@ -30,9 +33,16 @@ const Error404 = () => {
       <Card elevation={6}>
         <CardHeader title="Error 404" subheader="No se encuentra la página" />
         <CardContent>
-          <Typography variant="button" color="info">
-            Nada que ver aquí. Volvé por donde viniste!
-          </Typography>
+          <ErrorMessage
+            title="Página no encontrada"
+            severity="warning"
+            message={`Lo sentimos mucho ${
+              user ? user.Name : ""
+            }, la página que estás buscando no existe o ha sido movida.`}
+            action={resetError}
+            buttonTxt="Volver al inicio"
+          />
+          <Logo onClick={resetError} />
         </CardContent>
       </Card>
     </Box>
