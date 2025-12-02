@@ -10,11 +10,12 @@ import {
   Typography,
 } from "@mui/material";
 
-const NumberGenerator = () => {
+const NumberGenerator = (props) => {
   const [start, setStart] = useState("");
   const [end, setEnd] = useState("");
   const [digits, setDigits] = useState("");
   const [fileContent, setFileContent] = useState("");
+  const [useColor, setColor] = useState(props.color || "primary");
 
   const handleGenerate = () => {
     const startNum = parseInt(start);
@@ -46,10 +47,8 @@ const NumberGenerator = () => {
 
   return (
     <Card elevation={10}>
-      <CardHeader
-        title="Numerador"
-        titleTypographyProps={{ color: "primary", fontWeight: "600" }}
-      />
+     
+      <CardHeader title="Numerador" titleTypographyProps={{color: useColor, fontWeight: "600"}}></CardHeader>
       <Divider />
       <CardContent>
         <Grid container spacing={2}>
@@ -58,7 +57,7 @@ const NumberGenerator = () => {
               label="Número inicial"
               type="number"
               variant="outlined"
-              color="primary"
+              color={useColor}
               size="small"
               fullWidth
               value={start}
@@ -70,7 +69,7 @@ const NumberGenerator = () => {
               label="Número final"
               type="number"
               variant="outlined"
-              color="primary"
+              color={useColor}
               size="small"
               fullWidth
               value={end}
@@ -82,7 +81,7 @@ const NumberGenerator = () => {
               label="Cantidad de dígitos"
               type="number"
               variant="outlined"
-              color="primary"
+              color={useColor}
               size="small"
               fullWidth
               value={digits}
@@ -92,7 +91,7 @@ const NumberGenerator = () => {
           <Grid item xs={12}>
             <Button
               variant="outlined"
-              color="primary"
+              color={useColor}
               size="large"
               onClick={handleGenerate}
             >
@@ -101,7 +100,7 @@ const NumberGenerator = () => {
           </Grid>
           {fileContent && (
             <Grid item xs={12}>
-              <Typography variant="body2" color="textSecondary">
+              <Typography variant="body2" color={useColor}>
                 Archivo generado con éxito.
               </Typography>
             </Grid>

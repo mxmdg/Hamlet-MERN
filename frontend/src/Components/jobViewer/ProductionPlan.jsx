@@ -476,7 +476,7 @@ const ProductionPlan = (props) => {
           <CardActions sx={{ justifyContent: "flex-end" }}>
             <Button
               variant="contained"
-              color="primary"
+              color="success"
               size="small"
               disabled={parseFloat(useQuoteSettings?.gainPercentage) < 35}
               onClick={() => {

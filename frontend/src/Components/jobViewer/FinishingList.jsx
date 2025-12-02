@@ -229,7 +229,7 @@ const FinishingList = (props) => {
       <Box sx={{ display: "flex", justifyContent: "flex-end", padding: "8px" }}>
         <Button
           variant="contained"
-          color="warning"
+          color="success"
           onClick={() => handleSendData()}
           sx={{ fontSize: "0.8rem" }}
         >

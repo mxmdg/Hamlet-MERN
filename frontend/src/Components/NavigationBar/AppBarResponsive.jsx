@@ -25,7 +25,7 @@ import SessionTimer from "../Users/SessionTimer";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import LightModeIcon from "@mui/icons-material/LightMode";
-import { ReactComponent as Logo } from "../../img/Logo/logo ok-01.svg";
+import { ReactComponent as Logo } from "../../img/Logo/logo ok-06.svg";
 
 export const pages = [
   { text: "Pedidos", path: "jobs" },
@@ -59,6 +59,7 @@ function ResponsiveAppBar(props) {
     { text: "Cambiar Contraseña", path: "users/ChangePassword" },
     { text: "Trabajo Nuevo", path: "jobs/add" },
     { text: "Contadores", path: "billing" },
+    { text: "Editor de formulas", path: "precios/formula" },
     { text: "Mensajes", path: "messages" },
   ];
 
@@ -167,7 +168,7 @@ function ResponsiveAppBar(props) {
             {/* SVG imported as ReactComponent must be used with an uppercase name */}
             <Button
               onClick={() => Navigate("/")}
-              color="primary"
+              color="success"
               variant="standard"
             >
               <Logo
@@ -223,7 +224,7 @@ function ResponsiveAppBar(props) {
             <FormControlLabel
               control={
                 <Switch
-                  color="warning"
+                  color="success"
                   onChange={() => props.toogle()}
                   size="small"
                   defaultChecked={props.mode === "dark" ? true : false}

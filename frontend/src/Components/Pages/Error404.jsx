@@ -10,7 +10,7 @@ import {
   Button,
 } from "@mui/material";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
-import { ReactComponent as Logo } from "../../../src/img/Logo/logo ok-01.svg";
+import { ReactComponent as Logo } from "../../../src/img/Logo/logo ok-05.svg";
 import { serverURL, databaseURL } from "../Config/config";
 import {
   putPrivateElement,

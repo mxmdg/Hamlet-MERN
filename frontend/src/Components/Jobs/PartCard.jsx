@@ -149,7 +149,7 @@ const PartCard = (props) => {
             propiedad _id para que se modifique, porque nos da error la repeticion de ids*/
 
             <Button
-              color="secondary"
+              color="success"
               onClick={(e) => {
                 e.preventDefault();
                 const copiedPart = { ...props.part };
@@ -167,7 +167,7 @@ const PartCard = (props) => {
 
           <DialogModal
             title={`Eliminar ${props.part.Name}`}
-            color="warning"
+            color="error"
             message={DeletePartMessage}
             closeAction={props.removePart}
             index={props.index}

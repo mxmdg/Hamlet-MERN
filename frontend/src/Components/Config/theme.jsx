@@ -52,11 +52,17 @@ export const themeMxm = createTheme({
       contrastText: "#092a3b",
     },
     success: {
+      main: "#95d420e3",
+      light: "#d0f19aff",
+      dark: "#79910fff",
+      contrastText: "#fff",
+    },
+    /* success: {
       main: "#2e7d32", // Verde principal (oscuro y elegante)
       light: "#60ad5e", // Verde claro
       dark: "rgb(15, 64, 69)", // Verde más oscuro
       contrastText: "#ffffff", // Texto blanco para buen contraste
-    },
+    }, */
 
     background:
       initialMode === "light"
@@ -105,9 +111,9 @@ export const themeOptions = createTheme({
       contrastText: "#fff",
     },
     success: {
-      main: "#5d9948",
-      light: "#b2e068",
-      dark: "#204227",
+      main: "#b0ff1eff",
+      light: "#d0f19aff",
+      dark: "#a0c209ff",
       contrastText: "#fff",
     },
 

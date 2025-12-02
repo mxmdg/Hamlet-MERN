@@ -375,6 +375,7 @@ export default function MyStepper(props) {
                     <Button 
                       onClick={()=>navigate(`/jobs/edit/${newJobId}`)}
                       disabled={newJobId === null}
+                      color="success"
                       >
                       Continuar...
                     </Button>
@@ -397,7 +398,7 @@ export default function MyStepper(props) {
                   >
                     <ButtonGroup variant="contained">
                       <Button
-                        color="success"
+                        color="info"
                         disabled={activeStep === 0}
                         onClick={handleBack}
                       >
@@ -416,7 +417,7 @@ export default function MyStepper(props) {
                             ? handlePost
                             : handleNext
                         }
-                        color="info"
+                        color="success"
                         disabled={useJob === null}
                       >
                         {activeStep === steps.length - 1

@@ -395,7 +395,7 @@ const JobDetail = (props) => {
                           saveProductionPlan();
                         }}
                         variant="contained"
-                        color="primary"
+                        color="success"
                         startIcon={<SaveIcon />}
                       >
                         Guardar Imposición
@@ -630,7 +630,7 @@ const JobDetail = (props) => {
               showProductionPlan();
             }}
             variant="contained"
-            color="primary"
+            color="success"
           >
             Plan de producción
           </Button>

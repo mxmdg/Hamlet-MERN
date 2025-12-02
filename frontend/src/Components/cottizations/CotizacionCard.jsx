@@ -37,6 +37,7 @@ import { CotizationMail } from "./CotizationMail";
 const CotizacionCard = ({ cotizacion, job }) => {
   const [useError, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [waitingFor, setWaitingFor] = useState(null);
   // Mueve los hooks arriba
   const [localStatus, setLocalStatus] = useState(cotizacion?.data?.status);
 
@@ -80,6 +81,7 @@ const CotizacionCard = ({ cotizacion, job }) => {
 
   const sendQuotation = async () => {
     setLoading(true);
+    setWaitingFor("Enviando presupuesto...");
 
     const body = {
       quotationId: cotizacion.data._id,
@@ -100,6 +102,7 @@ const CotizacionCard = ({ cotizacion, job }) => {
         title: "Presupusto enviado!",
       });
       statusUpdater("Enviado");
+      setWaitingFor(null);
       return res.data;
     } catch (error) {
       setError(error);
@@ -117,7 +120,7 @@ const CotizacionCard = ({ cotizacion, job }) => {
     />
   );
 
-  const loadingData = <Spinner />;
+  const loadingData = <Spinner title={waitingFor === null ? "Cargando..." : waitingFor} />;
 
   const success = (
     <Grid container spacing={2}>

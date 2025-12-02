@@ -219,10 +219,10 @@ const PartDetail = ({
                         saveProductionPlan();
                       }}
                       variant="contained"
-                      color="primary"
+                      color="secondary"
                       startIcon={<SaveIcon />}
                     >
-                      Guardar Imposición
+                      Guardar Impo
                     </Button>
                   </>
                 )}

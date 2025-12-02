@@ -29,6 +29,7 @@ const QuickSpinCalc = (props) => {
   const [usePages, setPages] = useState([]);
   const [useStock, selectStock] = useState([]);
   const [useSpin, setSpin] = useState("0");
+  const [useColor, setColor] = useState(props.color || "primary");
 
   const calculateSpin = (pages, stock) => {
     if (pages && stock?.Espesor_Resma) {
@@ -74,7 +75,7 @@ const QuickSpinCalc = (props) => {
 
   return (
     <Card elevation={10}>
-      <CardHeader title="Calculadora de lomo" titleTypographyProps={{color: "primary", fontWeight: "600"}}></CardHeader>
+      <CardHeader title="Calculadora de lomo" titleTypographyProps={{color: useColor, fontWeight: "600"}}></CardHeader>
       <Divider />
       <CardContent>
         <form name="form2" action="">
@@ -90,7 +91,7 @@ const QuickSpinCalc = (props) => {
                 label="Paginas"
                 variant="outlined"
                 name="Pages"
-                color="primary"
+                color={useColor}
                 size="small"
                 onChange={handlePageChange}
               />
@@ -98,6 +99,7 @@ const QuickSpinCalc = (props) => {
 
             <Grid item xs={1} sm={2} md={4}>
               <Autocomplete
+                color={useColor}
                 options={stocks}
                 getOptionLabel={(option) =>
                   `${option.Nombre_Material} - ${option.Marca}`
@@ -108,14 +110,14 @@ const QuickSpinCalc = (props) => {
                     {...params}
                     label="Material"
                     variant="outlined"
-                    color="primary"
+                    color={useColor}
                     size="small"
                   />
                 )}
               />
             </Grid>
             <Grid item xs={1} sm={2} md={4}>
-              <Typography variant="h5" color="primary">Lomo: {useSpin} mm</Typography>
+              <Typography variant="h5" color={useColor}>Lomo: {useSpin} mm</Typography>
             </Grid>
           </Grid>
         </form>
