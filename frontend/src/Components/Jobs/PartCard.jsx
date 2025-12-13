@@ -54,14 +54,15 @@ const PartCard = (props) => {
   };
 
   const StyledCard = styled(Paper)(({ theme }) => ({
-    marginTop: "20px",
-    background: theme.palette.background.dark,
+    margin: "20px",
+    backgroundImage: theme.palette.background.dark,
     height: "100%",
     display: "flex",
     flexFlow: "column",
     alignContent: "space-between",
     border: "1px solid",
-    borderColor: theme.palette.primary.main,
+    borderRadius: "8px",
+    borderColor: theme.palette.success.main,
   }));
 
   React.useEffect(() => {
@@ -131,7 +132,7 @@ const PartCard = (props) => {
         )}
       </CardContent>
       <CardActions>
-        <ButtonGroup size="small" variant="contained">
+        <ButtonGroup size="small" variant="contained" fullWidth>
           <Button
             color="primary"
             onClick={(e) => {

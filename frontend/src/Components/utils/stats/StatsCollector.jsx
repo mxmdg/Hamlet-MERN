@@ -44,10 +44,10 @@ const StatsCollector = ({ children, route }) => {
       spacing={{ sm: 1, md: 2, xl: 3 }}
       sx={{ margin: 2 }}
     >
-      {React.Children.map(children, (child) => {
+      {React.Children.map(children, (child, index) => {
         if (React.isValidElement(child)) {
           return (
-            <Grid item xs={12} sm={12} xl={6}>
+            <Grid item xs={12} sm={12} xl={index === 0 ? 12 : 6} key={child.key}>
               <Paper
                 elevation={2}
                 sx={{
