@@ -152,7 +152,8 @@ const FinishingList = (props) => {
       <ErrorMessage
         message={useError.response?.data?.message || useError.message}
         severity={useError.severity || "error"}
-        variant="standard"
+        variant="outlined"
+        title={useError.severity}
         action={() => setError(null)}
       />
     );

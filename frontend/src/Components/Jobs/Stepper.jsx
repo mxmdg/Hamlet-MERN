@@ -56,7 +56,7 @@ export default function MyStepper(props) {
   const [useJob, setJob] = React.useState(props.job || null);
   const [useError, setError] = React.useState(null);
   const [stocks, setStocks] = React.useState([]);
-  const [newJobId, setNewJobId] = React.useState(null)
+  const [newJobId, setNewJobId] = React.useState(null);
   const [useModal, setModal] = React.useState(false);
   const context = useContext(AuthContext);
   const navigate = useNavigate();
@@ -149,8 +149,6 @@ export default function MyStepper(props) {
   };
 
   const addCopiedPart = (part) => {
-    console.log("Agregando parte copiada...");
-    console.log(part);
     const partes = addElementToArray(part, useParts);
     setParts(partes);
   };
@@ -204,18 +202,19 @@ export default function MyStepper(props) {
 
   const handlePost = async () => {
     const Job = useJob;
+    console.log(Job);
     Job.Partes = useParts;
     // Este forEach me parece que no hace falta...
     /* Job.Partes.forEach((part) => {
       part.Finishing = part.Finishing.map((f) => f._id);
     }); */
-    Job.Tipo = useJobType;
+    Job.JobType = props.job ? props.job.Tipo[0] : useJobType;
     console.log(Job);
     try {
       console.log("Guardando...");
       const res = await addPrivateElement("Jobs", Job);
-      console.log(res)
-      setNewJobId(res.data)
+      console.log(res);
+      setNewJobId(res.data);
       console.log(`Trabajo ${Job.Nombre} agregado`);
       handleNext();
     } catch (e) {
@@ -372,11 +371,11 @@ export default function MyStepper(props) {
                     <Button onClick={handleReset} variant="filled">
                       Reset
                     </Button>
-                    <Button 
-                      onClick={()=>navigate(`/jobs/edit/${newJobId}`)}
+                    <Button
+                      onClick={() => navigate(`/jobs/edit/${newJobId}`)}
                       disabled={newJobId === null}
                       color="success"
-                      >
+                    >
                       Continuar...
                     </Button>
                   </Box>

@@ -17,5 +17,6 @@ export const finishersRoutes = () => (
       path="/finishers/edit/:id"
       element={<FinishersDataForm collection="finishers" task="edit" />}
     />
+    <Route path="/finishers/queue/:id" element={<></>} />
   </>
 );

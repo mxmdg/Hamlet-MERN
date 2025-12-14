@@ -122,7 +122,7 @@ const FormulaEditor = () => {
       <ResponsiveContainer height={300} width="100%">
         <SimpleAreaChart
           data={data}
-          dataKey={["Cantidad", "Valor", "Unitario"]}
+          dataKey={["Cantidad", "Total", "Valor", "Unitario"]}
         />
       </ResponsiveContainer>
 

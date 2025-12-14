@@ -36,17 +36,21 @@ const jobTypeSchema = new Schema({
 });
 
 const partSchema = new Schema({
-  jobParts: [partTypeSchema],
+  jobParts: { type: [partTypeSchema], required: true },
   //'Type': {type: String, required: true},
   Name: { type: String, required: true },
   Pages: { type: Number, required: true },
   Ancho: { type: Number, required: true },
   Alto: { type: Number, required: true },
-  Formato: { type: String },
+  Formato: { type: String, required: true },
   Orientacion: { type: String },
   ColoresFrente: { type: Number, required: true },
   ColoresDorso: { type: Number, required: false, default: 0 },
-  partStock: { type: mongoose.Schema.ObjectId, ref: "Category" },
+  partStock: {
+    type: mongoose.Schema.ObjectId,
+    ref: "Category",
+    required: true,
+  },
   Finishing: [
     {
       type: mongoose.Schema.ObjectId,
@@ -59,7 +63,7 @@ const partSchema = new Schema({
 
 const jobSchema = new Schema({
   Nombre: { type: String, required: true },
-  Tipo: [jobTypeSchema],
+  Tipo: { type: [jobTypeSchema], required: true },
   Cantidad: { type: Number, required: true },
   Archivos: { type: String, required: false },
   Entrega: { type: Date, required: true },

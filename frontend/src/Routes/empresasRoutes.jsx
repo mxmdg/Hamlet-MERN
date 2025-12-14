@@ -15,7 +15,7 @@ export const empresasRoutes = () => (
           <Grid item columns={4}>
             <MainContainer entity={"empresas"} />
           </Grid>
-          <Grid item columns={8}>
+          <Grid item columns={4} width={"30%"}>
             <StatsCollector route="jobs/complete">
               <JobsPerClient rank={6} />
             </StatsCollector>
