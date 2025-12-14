@@ -23,9 +23,15 @@ import {
   ListItem,
   ListItemText,
   ListSubheader,
+  Modal,
   Container,
   ButtonGroup,
   Grid,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
 } from "@mui/material";
 //import { parts } from "./JobsParts";
 import { serverURL, databaseURL } from "../Config/config";
@@ -58,6 +64,9 @@ export default function MyStepper(props) {
   const [stocks, setStocks] = React.useState([]);
   const [newJobId, setNewJobId] = React.useState(null);
   const [useModal, setModal] = React.useState(false);
+  const [copyDialogOpen, setCopyDialogOpen] = React.useState(false);
+  const [copyDraftName, setCopyDraftName] = React.useState("");
+  const [copySourcePart, setCopySourcePart] = React.useState(null);
   const context = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -148,9 +157,35 @@ export default function MyStepper(props) {
     return res;
   };
 
-  const addCopiedPart = (part) => {
-    const partes = addElementToArray(part, useParts);
+  // Abre el diálogo con los datos de la parte a copiar
+  const openCopyDialog = (part) => {
+    setCopySourcePart(part);
+    setCopyDraftName(
+      part && part.Name ? `${part.Name} - copia` : "Nueva parte - copia"
+    );
+    setCopyDialogOpen(true);
+  };
+
+  const handleConfirmCopy = () => {
+    if (!copySourcePart) {
+      setCopyDialogOpen(false);
+      return;
+    }
+    // Crear una copia shallow para evitar mutar el original
+    const newPart = { ...copySourcePart, Name: copyDraftName };
+    const partes = addElementToArray(newPart, useParts);
     setParts(partes);
+
+    // Reset dialog state
+    setCopyDialogOpen(false);
+    setCopySourcePart(null);
+    setCopyDraftName("");
+  };
+
+  const handleCancelCopy = () => {
+    setCopyDialogOpen(false);
+    setCopySourcePart(null);
+    setCopyDraftName("");
   };
 
   // El siguiente array contiene los componentes
@@ -440,8 +475,8 @@ export default function MyStepper(props) {
               <Container>
                 <Grid
                   container
-                  columns={{ xs: 4, sm: 8, md: 12 }}
-                  spacing={3}
+                  columns={12}
+                  spacing={2}
                   overflow={"false"}
                   sx={{ height: "98%" }}
                 >
@@ -450,9 +485,9 @@ export default function MyStepper(props) {
                       <Grid
                         item
                         xs={12}
-                        sm={12}
-                        md={12}
-                        lg={6}
+                        sm={6}
+                        md={4}
+                        lg={3}
                         key={"Parte-" + index}
                       >
                         <PartCard
@@ -460,7 +495,7 @@ export default function MyStepper(props) {
                           index={index}
                           editPart={editPart}
                           addPart={addParts}
-                          copyPart={addCopiedPart}
+                          copyPart={openCopyDialog} // <- USAR openCopyDialog
                           setActiveStep={setActiveStep}
                           removePart={removePart}
                           step={activeStep}
@@ -477,5 +512,40 @@ export default function MyStepper(props) {
     </>
   );
 
-  return useError !== null ? statusError : success;
+  return useError !== null ? (
+    statusError
+  ) : (
+    <>
+      {success}
+      <Dialog
+        open={copyDialogOpen}
+        onClose={handleCancelCopy}
+        fullWidth
+        maxWidth="sm"
+      >
+        <DialogTitle>Copiar parte</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Nombre de la nueva parte"
+            type="text"
+            fullWidth
+            value={copyDraftName}
+            onChange={(e) => setCopyDraftName(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCancelCopy}>Cancelar</Button>
+          <Button
+            onClick={handleConfirmCopy}
+            variant="contained"
+            color="primary"
+          >
+            Confirmar copia
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
+  );
 }

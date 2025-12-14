@@ -54,7 +54,7 @@ const PartCard = (props) => {
   };
 
   const StyledCard = styled(Paper)(({ theme }) => ({
-    margin: "20px",
+    margin: "2px",
     backgroundImage: theme.palette.background.dark,
     height: "100%",
     display: "flex",

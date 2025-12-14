@@ -153,7 +153,6 @@ const FinishingList = (props) => {
         message={useError.response?.data?.message || useError.message}
         severity={useError.severity || "error"}
         variant="outlined"
-        title={useError.severity}
         action={() => setError(null)}
       />
     );
