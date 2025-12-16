@@ -19,6 +19,8 @@ import Spinner from "../General/Spinner";
 import {
   pliegoPorLongitud,
   productoPorUnidad,
+  cantidadDeOriginales,
+  cantidadDePliegos,
   costoFijo,
 } from "../Precioso/formulas";
 import { currencyFormat } from "../utils/generalData/numbersAndCurrencies";
@@ -41,6 +43,30 @@ const FinishingList = (props) => {
 
         case "CF":
           return costoFijo(f.Costo.Valor);
+        case "or":
+          return cantidadDeOriginales(
+            f.Costo.Valor,
+            f.Costo.Minimo,
+            f.Costo.Entrada,
+            props.paginas
+          );
+        case "pl":
+          try {
+            return cantidadDePliegos(
+              f.Costo.Valor,
+              f.Costo.Minimo,
+              f.Costo.Entrada,
+              props.imposition.totalPliegos
+            );
+          } catch (error) {
+            setError({
+              message:
+                "Error calculando el costo por pliegos: Debe realizarse la imposicion. " +
+                error.message,
+              severity: "warning",
+            });
+          }
+
         case "cm":
           try {
             return pliegoPorLongitud(
@@ -62,7 +88,6 @@ const FinishingList = (props) => {
               severity: "warning",
             });
           }
-
         default:
           return productoPorUnidad(
             f.Costo.Valor,

@@ -25,6 +25,39 @@ export const productoPorUnidad = (Valor, Minimo, Entrada, cantidad) => {
   };
 };
 
+export const cantidadDeOriginales = (valor, minimo, Entrada, cantidad) => {
+  console.log(valor, minimo, Entrada, cantidad);
+  let resultado =
+    parseFloat(Entrada) + parseFloat(cantidad) * parseFloat(valor);
+  resultado = resultado < parseFloat(minimo) ? parseFloat(minimo) : resultado;
+
+  let valorUnitario = roundCents(resultado / cantidad);
+  const papyrusExport = `(${Entrada} + (Cab_Cant_Paginas))`;
+  return {
+    Unitario: valorUnitario,
+    Cantidad: cantidad,
+    Total: roundCents(resultado),
+    Papyrus: papyrusExport,
+    Formula: "Originales",
+  };
+};
+
+export const cantidadDePliegos = (valor, minimo, Entrada, cantidad) => {
+  console.log(valor, minimo, Entrada, cantidad);
+  let resultado =
+    parseFloat(Entrada) + parseFloat(cantidad) * parseFloat(valor);
+  resultado = resultado < parseFloat(minimo) ? parseFloat(minimo) : resultado;
+  let valorUnitario = roundCents(resultado / cantidad);
+  const papyrusExport = `(${Entrada} + (Cab_Cant_Pliegos))`;
+  return {
+    Unitario: valorUnitario,
+    Cantidad: cantidad,
+    Total: roundCents(resultado),
+    Papyrus: papyrusExport,
+    Formula: "Pliegos",
+  };
+};
+
 export const pliegoPorLongitud = (
   valor,
   minimo,

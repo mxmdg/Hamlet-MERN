@@ -135,7 +135,10 @@ const ProductionPlan = (props) => {
         entrada,
         largoPliego
       ) => {
-        largoPliego = (Math.max(parseInt(totals[key].sheetOriginalSize.width), parseInt(totals[key].sheetOriginalSize.height)));
+        largoPliego = Math.max(
+          parseInt(totals[key].sheetOriginalSize.width),
+          parseInt(totals[key].sheetOriginalSize.height)
+        );
         try {
           if (printerSelector.Colores === 1 && data.colores === 1) {
             console.log("Formula seleccionada segun caso Nuvera");
@@ -278,8 +281,14 @@ const ProductionPlan = (props) => {
         action: () => setError(null),
       });
     } catch (error) {
+      console.log("Error en ProductionPlan guardando presupuesto");
       console.log(error);
-      setError(error);
+      setError({
+        title: "Error guardando presupuesto",
+        message: error.response.data.message || "Error inesperado",
+        severity: "warning",
+        action: () => setError(null),
+      });
     }
   };
 

@@ -408,6 +408,7 @@ const JobDetail = (props) => {
                       <FinishingList
                         finishing={part.Finishing}
                         cantidad={job.Cantidad}
+                        paginas={part.Pages}
                         imposition={
                           useImpoData !== null
                             ? partCosts

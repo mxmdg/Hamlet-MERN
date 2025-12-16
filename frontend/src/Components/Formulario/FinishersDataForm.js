@@ -31,7 +31,7 @@ const FinishersDataForm = (props) => {
 
         parts.map((pt) => partsList.push(pt.Type));
         try {
-            res.map((item) => {
+          res.map((item) => {
             if (item.Categoria === "finishing") {
               costsList.push({
                 text: `${item.Proceso} ($ ${item.Valor}.-)`,
@@ -41,10 +41,8 @@ const FinishersDataForm = (props) => {
             }
           });
         } catch (error) {
-          ;
-          setError({message: "Error cargando lista de precios"});
+          setError({ message: "Error cargando lista de precios" });
         }
-        
 
         setFinishersDataForm([
           {
@@ -113,6 +111,8 @@ const FinishersDataForm = (props) => {
             id: "id_010",
             options: [
               { text: "Unidades", value: "un" },
+              { text: "Originales", value: "or" },
+              { text: "Pliegos", value: "pl" },
               { text: "Longitud", value: "cm" },
               { text: "Peso", value: "kg" },
               { text: "Superficie", value: "m2" },
