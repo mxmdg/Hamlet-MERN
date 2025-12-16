@@ -487,9 +487,9 @@ export default function MyStepper(props) {
                       <Grid
                         item
                         xs={12}
-                        sm={6}
-                        md={4}
-                        lg={3}
+                        sm={useParts.length < 3 ? 12/useParts.length : 6}
+                        md={useParts.length < 3 ? 12/useParts.length : 6}
+                        lg={useParts.length < 3 ? 12/useParts.length : 4}
                         key={"Parte-" + index}
                       >
                         <PartCard

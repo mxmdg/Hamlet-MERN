@@ -42,7 +42,7 @@ const partSchema = new Schema({
   Pages: { type: Number, required: true },
   Ancho: { type: Number, required: true },
   Alto: { type: Number, required: true },
-  Formato: { type: String, required: true },
+  Formato: { type: String},
   Orientacion: { type: String },
   ColoresFrente: { type: Number, required: true },
   ColoresDorso: { type: Number, required: false, default: 0 },
@@ -84,6 +84,8 @@ const jobSchema = new Schema({
 partSchema.pre("save", function (next) {
   // Accedemos a Ancho y Alto de la instancia actual (this)
   const { orientacion, formato } = orientation(this.Ancho, this.Alto);
+  console.log("Orientacion calculada:", orientacion);
+  console.log("Formato calculado:", formato);
   // Definimos el formato a partir de Ancho y Alto
   this.Orientacion = orientacion; // Asignamos la orientación calculada a la propiedad Orientacion;
   this.Formato = formato;

@@ -8,6 +8,7 @@ const mailer = require("../../services/mail");
 const Port = process.env.PORT;
 const uiPort = process.env.UIPORT;
 const URL = process.env.URL;
+const expireTime = 8 * 60 * 60 * 1000; //horas en milisegundos
 
 const getAll = async (req, res, next) => {
   try {
@@ -79,9 +80,9 @@ const login = async (req, res, next) => {
             role: document.Role, // <-- importante: Role con mayúscula en el modelo, minúscula en el token
           },
           req.app.get("secretKey"),
-          { expiresIn: "1d" }
+          { expiresIn: expireTime / 1000 } // Timepo del token en segundos
         );
-        const expirationTime = Date.now() + 24 * 60 * 60000;
+        const expirationTime = Date.now() + expireTime; // 1 hora en milisegundos
         return res.json({ token, document, expirationTime });
       } catch (e) {
         next(e);
@@ -139,7 +140,7 @@ const forgotPassword = async (req, res, next) => {
 
     // Guardar el token en la base de datos junto con el usuario
     user.resetPasswordToken = token;
-    user.resetPasswordExpires = Date.now() + 60 * 60 * 24; // 1 dia de expiración
+    user.resetPasswordExpires = Date.now() + expireTime; // 1 dia de expiración
     await user.save();
 
     // Enviar correo electrónico con el enlace para restablecer la contraseña
