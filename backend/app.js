@@ -87,9 +87,9 @@ function requireRoleByMethod(rolesByMethod) {
         ? allowedRoles.map((r) => r.toLowerCase())
         : [allowedRoles.toLowerCase()];
       if (!userRole || !allowed.includes(userRole)) {
-        return res
-          .status(403)
-          .json({ message: "Acceso denegado, no tiene permiso para esta acción" });
+        return res.status(403).json({
+          message: "Acceso denegado, no tiene permiso para esta acción",
+        });
       }
       req.user = payload;
       next();
@@ -98,6 +98,24 @@ function requireRoleByMethod(rolesByMethod) {
 }
 
 // routes
+
+app.get("/health", async (req, res) => {
+  try {
+    // chequeos mínimos
+    // await mongoose.connection.db.admin().ping();
+    console.log("Health check OK");
+
+    res.status(200).json({
+      status: "ok",
+      timestamp: Date.now(),
+    });
+  } catch (err) {
+    res.status(503).json({
+      status: "error",
+    });
+  }
+});
+
 app.get("/", (rej, res) => {
   res.send("Welcome to node.js server");
 });

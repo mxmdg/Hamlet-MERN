@@ -39,20 +39,24 @@ const JobsPerDate = (props) => {
 
   let inDate = {};
 
-  for (let job of props.jobs) {
-    const Entrada = getMyDate(job.Fecha).mmyy;
-    const Salida = getMyDate(job.Entrega).mmyy;
-    if (inDate[Entrada]) {
-      inDate[Entrada].inJobs >= 1
-        ? (inDate[Entrada].inJobs += 1)
-        : (inDate[Entrada].inJobs = 1);
-    } else inDate[Entrada] = { inJobs: 1, name: `${Entrada}` };
+  try {
+    for (let job of props.jobs) {
+      const Entrada = getMyDate(job.Fecha).mmyy;
+      const Salida = getMyDate(job.Entrega).mmyy;
+      if (inDate[Entrada]) {
+        inDate[Entrada].inJobs >= 1
+          ? (inDate[Entrada].inJobs += 1)
+          : (inDate[Entrada].inJobs = 1);
+      } else inDate[Entrada] = { inJobs: 1, name: `${Entrada}` };
 
-    if (inDate[Salida]) {
-      inDate[Salida].outJobs >= 1
-        ? (inDate[Salida].outJobs += 1)
-        : (inDate[Salida].outJobs = 1);
-    } else inDate[Salida] = { outJobs: 1, name: `${Salida}` };
+      if (inDate[Salida]) {
+        inDate[Salida].outJobs >= 1
+          ? (inDate[Salida].outJobs += 1)
+          : (inDate[Salida].outJobs = 1);
+      } else inDate[Salida] = { outJobs: 1, name: `${Salida}` };
+    }
+  } catch (error) {
+    props.setError(error);
   }
 
   const jobsPerInDate = Object.values(inDate).sort((a, b) => {

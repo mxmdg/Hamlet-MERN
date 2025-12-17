@@ -35,15 +35,16 @@ const JobsForNextDays = (props) => {
 
   let outDate = {};
 
-  for (let job of props.jobs) {
-    const Salida = formatDateFromDict(job.Entrega).ddmmyy;
-    const yesterday = new Date();
-    const today = new Date();
-    const endDate = new Date();
-    endDate.setDate(today.getDate() + to); // next 30 days
-    yesterday.setDate(today.getDate() - from); //Ayer
+  try {
+    for (let job of props.jobs) {
+      const Salida = formatDateFromDict(job.Entrega).ddmmyy;
+      const yesterday = new Date();
+      const today = new Date();
+      const endDate = new Date();
+      endDate.setDate(today.getDate() + to); // next 30 days
+      yesterday.setDate(today.getDate() - from); //Ayer
 
-    try {
+      //try {
       if (
         new Date(job.Entrega) >= yesterday &&
         new Date(job.Entrega) <= endDate
@@ -58,14 +59,18 @@ const JobsForNextDays = (props) => {
             name: `${Salida}`,
           };
       }
-    } catch (error) {
-      if (!errorRef.current) {
-        errorRef.current = true; // Se marca que ya ocurrió un error
-        setError(error); // Actualiza el estado con el error solo una vez
-      }
-      console.log(error);
-      console.log(job);
+      //}
+      /* catch (error) {
+        if (!errorRef.current) {
+          errorRef.current = true; // Se marca que ya ocurrió un error
+          setError(error); // Actualiza el estado con el error solo una vez
+        }
+        console.log(error);
+        console.log(job);
+      } */
     }
+  } catch (error) {
+    setError(error);
   }
 
   const jobsPerOutDate = Object.values(outDate).sort((a, b) => {

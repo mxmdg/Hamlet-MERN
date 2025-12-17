@@ -32,12 +32,17 @@ const StatsCollector = ({ children, route }) => {
     fetchData();
   }, [route]);
 
-  if (loading)
-    return <Spinner title={`Cargando Estadisticas`} color={"primary"} />;
-  if (useError !== null)
-    return <ErrorMessage message={useError} action={clearError} />;
-
-  return (
+  const loadingSpinner = (
+    <Spinner title={`Cargando Estadisticas`} color={"primary"} />
+  );
+  const failure = (
+    <ErrorMessage
+      title={"Error cargando estadisticas"}
+      message={useError?.message || "Error desconocido"}
+      action={clearError}
+    />
+  );
+  const success = (
     <Grid
       columns={12}
       container
@@ -47,7 +52,13 @@ const StatsCollector = ({ children, route }) => {
       {React.Children.map(children, (child, index) => {
         if (React.isValidElement(child)) {
           return (
-            <Grid item xs={12} sm={12} xl={index === 0 ? 12 : 6} key={child.key}>
+            <Grid
+              item
+              xs={12}
+              sm={12}
+              xl={index === 0 ? 12 : 6}
+              key={child.key}
+            >
               <Paper
                 elevation={2}
                 sx={{
@@ -62,6 +73,7 @@ const StatsCollector = ({ children, route }) => {
                 {React.cloneElement(child, {
                   jobs: jobsList,
                   route: route,
+                  setError: setError,
                   //parts: partsList,
                 })}
               </Paper>
@@ -76,6 +88,8 @@ const StatsCollector = ({ children, route }) => {
       })}
     </Grid>
   );
+
+  return loading ? loadingSpinner : useError ? failure : success;
 };
 
 export default StatsCollector;

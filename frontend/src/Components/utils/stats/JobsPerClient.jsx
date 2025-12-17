@@ -10,16 +10,23 @@ const JobsPerClient = (props) => {
 
   let customers = {};
 
-  for (let job of props.jobs) {
-    if (job.Company !== null && customers[job.Company?._id]) {
-      customers[job.Company._id].qJobs >= 1
-        ? (customers[job.Company._id].qJobs += 1)
-        : (customers[job.Company._id].qJobs = 1);
-    } else if (job.Company !== null) {
-      customers[job.Company._id] = { qJobs: 1, name: job.Company.Nombre };
-    } else {
-      customers["Cliente Eliminado"] = { qJobs: 1, name: "Cliente Eliminado" };
+  try {
+    for (let job of props.jobs) {
+      if (job.Company !== null && customers[job.Company?._id]) {
+        customers[job.Company._id].qJobs >= 1
+          ? (customers[job.Company._id].qJobs += 1)
+          : (customers[job.Company._id].qJobs = 1);
+      } else if (job.Company !== null) {
+        customers[job.Company._id] = { qJobs: 1, name: job.Company.Nombre };
+      } else {
+        customers["Cliente Eliminado"] = {
+          qJobs: 1,
+          name: "Cliente Eliminado",
+        };
+      }
     }
+  } catch (error) {
+    props.setError(error);
   }
 
   const topCustomers = Object.values(customers)

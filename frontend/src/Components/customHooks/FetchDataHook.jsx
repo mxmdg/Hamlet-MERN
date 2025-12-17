@@ -1,5 +1,5 @@
 import axios from "axios";
-import { databaseURL } from "../Config/config";
+import { databaseURL, url, backendPort } from "../Config/config";
 
 export const fechtData = async (collection, setFunction) => {
   try {
@@ -7,6 +7,15 @@ export const fechtData = async (collection, setFunction) => {
     setFunction(res.data);
   } catch (e) {
     throw e;
+  }
+};
+
+export const checkHealth = async () => {
+  try {
+    const res = await axios.get(`${url}${backendPort}/health`);
+    return true;
+  } catch (e) {
+    return false;
   }
 };
 
@@ -20,7 +29,7 @@ export const getPrivateElements = async (collection) => {
     });
     return elements.data;
   } catch (e) {
-    return e;
+    return e.message;
   }
 };
 
@@ -32,10 +41,10 @@ export const getPrivateElementByID = async (collection, id) => {
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log(elements);
+    //console.log(elements);
     return elements;
   } catch (e) {
-    throw e;
+    return e.message;
   }
 };
 
@@ -82,11 +91,15 @@ export const putPrivateElement = async (itemURL, formData) => {
 export const patchPrivateElement = async (collection, id, formData) => {
   const token = localStorage.getItem("token");
   try {
-    const elements = await axios.patch(`${databaseURL + collection}/${id}`, formData, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const elements = await axios.patch(
+      `${databaseURL + collection}/${id}`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     return elements;
   } catch (e) {
     throw e;

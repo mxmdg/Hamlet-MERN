@@ -12,15 +12,19 @@ const JobsPerPartType = (props) => {
   // Sumar partes por nombre (Type), no por _id
   let parts = {};
 
-  for (let job of props.jobs) {
-    for (let part of job.Partes) {
-      const type = part.jobParts[0]?.Type || "Parte Eliminada";
-      if (parts[type]) {
-        parts[type].qJobs += 1;
-      } else {
-        parts[type] = { qJobs: 1, name: type };
+  try {
+    for (let job of props.jobs) {
+      for (let part of job.Partes) {
+        const type = part.jobParts[0]?.Type || "Parte Eliminada";
+        if (parts[type]) {
+          parts[type].qJobs += 1;
+        } else {
+          parts[type] = { qJobs: 1, name: type };
+        }
       }
     }
+  } catch (error) {
+    props.setError(error);
   }
 
   const topParts = Object.values(parts)

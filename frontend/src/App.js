@@ -15,11 +15,29 @@ import {
   themeBocaJuniors,
 } from "./Components/Config/TemasAFA";
 
+import Spinner from "./Components/General/Spinner";
+import ErrorMessage from "./Components/ErrorMessage/ErrorMessage";
+
+import { useBackendStatus } from "./Hooks/useBackendStatus";
+
 function App() {
   // Verificar si el tema está almacenado en localStorage
   const storedTheme = localStorage.getItem("appTheme");
   const initialMode = storedTheme ? storedTheme : "light"; // Valor por defecto si no hay nada en localStorage
   const [useMode, setMode] = useState(initialMode);
+
+  const backendStatus = useBackendStatus();
+
+  useEffect(() => {}, [backendStatus]);
+
+  const checking = <Spinner title="Verificando estado del servidor..." />;
+
+  const failure = (
+    <ErrorMessage
+      title="Servidor no disponible"
+      message="No se puede conectar con el backend. Intente más tarde."
+    />
+  );
 
   const toogleMode = () => {
     if (useMode === "light") {
@@ -34,7 +52,7 @@ function App() {
   const themeInUse = themeMxm;
   //const themeInUse = themeOptions;
 
-  return (
+  const success = (
     <ThemeProv theme={themeInUse} mode={useMode}>
       <Box
         sx={{
@@ -67,6 +85,12 @@ function App() {
       </Box>
     </ThemeProv>
   );
+
+  return backendStatus === "checking"
+    ? checking
+    : backendStatus === "down"
+    ? failure
+    : success;
 }
 
 export default App;

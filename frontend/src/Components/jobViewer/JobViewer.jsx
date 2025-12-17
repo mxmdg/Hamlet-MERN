@@ -54,7 +54,13 @@ export const JobViewer = (props) => {
 
   const output = () => {
     if (useLoading === false && useCurrentJob !== null) {
-      return <JobDetail job={useCurrentJob} cot={props.cot} key={`JobDetail_${id}`}/>;
+      return (
+        <JobDetail
+          job={useCurrentJob}
+          cot={props.cot}
+          key={`JobDetail_${id}`}
+        />
+      );
     } else {
       return preloader;
     }
@@ -68,7 +74,11 @@ export const JobViewer = (props) => {
         width: "100%",
       }}
     >
-      {useError ? <ErrorMessage message={useError.message} /> : output()}
+      {useError ? (
+        <ErrorMessage message={useError.message} title={`Error`} />
+      ) : (
+        output()
+      )}
     </Box>
   );
 };
