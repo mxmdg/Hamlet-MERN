@@ -52,12 +52,18 @@ const FinishingList = (props) => {
           );
         case "pl":
           try {
+            if (props.imposition.totalPliegos !== undefined) {
             return cantidadDePliegos(
               f.Costo.Valor,
               f.Costo.Minimo,
               f.Costo.Entrada,
               props.imposition.totalPliegos
             );
+            } else {
+              setError({message: "No hay imposicion", severity: "warning"});
+              
+            } 
+            
           } catch (error) {
             setError({
               message:

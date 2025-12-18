@@ -349,25 +349,28 @@ const JobStepper = (props) => {
                 </React.Fragment>
               )}
             </Grid>
-            <Grid item xs>
+            <Grid item xs={12} md={12} lg={12} sx={{ ml: 2 }}>
               <Container>
                 <Grid
                   container
-                  columns={{ xs: 4, sm: 8, md: 12 }}
+                  columns={12}
                   spacing={1}
                   overflow={"false"}
                   sx={{ height: "98%" }}
                 >
                   {useParts?.map((part, index) => (
-                    <Grid item xs={4} sm={4} md={6} key={"Parte-" + index}>
-                      <PartCard
+                    <Grid item xs={12} sm={12} md={12} key={"Parte-" + index}>
+                      <Typography variant="h6" gutterBottom>
+                        Parte {index + 1}
+                      </Typography>
+                      {/* <PartCard
                         part={part}
                         index={index}
                         editPart={editPart}
                         addPart={addParts}
                         setActiveStep={setActiveStep}
                         removePart={removePart}
-                      />
+                      /> */}
                     </Grid>
                   ))}
                 </Grid>
