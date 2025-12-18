@@ -29,7 +29,7 @@ export const getPrivateElements = async (collection) => {
     });
     return elements.data;
   } catch (e) {
-    return e.message;
+    return e;
   }
 };
 
@@ -44,7 +44,7 @@ export const getPrivateElementByID = async (collection, id) => {
     //console.log(elements);
     return elements;
   } catch (e) {
-    return e.message;
+    return e;
   }
 };
 

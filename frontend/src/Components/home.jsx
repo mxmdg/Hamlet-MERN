@@ -59,21 +59,16 @@ const Home = (props) => {
   }, []);
 
   const homePage = (
-    <Container
-      fullwidth
-      disableGutters
-      maxWidth={"false"}
-      sx={{ paddingTop: 3 }}
-    >
+    <Container disableGutters maxWidth={"false"} sx={{ paddingTop: 3 }}>
       <Grid container columns={{ xs: 1, sm: 12, md: 12, lg: 16 }} spacing={0}>
-        <Grid item xs={1} sm={12} md={12} lg={10}>
+        <Grid xs={1} sm={12} md={12} lg={10}>
           <Container>
             <Grid
               container
               spacing={{ xs: 0, sm: 1, md: 3 }}
               columns={{ xs: 1, sm: 12, md: 12 }}
             >
-              <Grid item xs={1} sm={12} md={12}>
+              <Grid xs={1} sm={12} md={12}>
                 <FullJobsRender
                   route={useRoute}
                   settings={{
@@ -83,7 +78,7 @@ const Home = (props) => {
                   }}
                 />
               </Grid>
-              <Grid item xs={1} sm={12} md={12} lg={12}>
+              <Grid xs={1} sm={12} md={12} lg={12}>
                 <StatsCollector route={useRoute}>
                   <JobsForNextDays />
                   <JobsPerType />
@@ -95,22 +90,22 @@ const Home = (props) => {
             </Grid>
           </Container>
         </Grid>
-        <Grid item xs={1} sm={12} md={12} lg={6}>
+        <Grid xs={1} sm={12} md={12} lg={6}>
           <Grid container columns={12} spacing={{ xs: 0, sm: 1, md: 3 }}>
-            <Grid item xs={12} sm={12} md={10} lg={10}>
+            <Grid xs={12} sm={12} md={10} lg={10}>
               <UploadFilesButton />
               <MyStepper />
             </Grid>
-            <Grid item xs={12} sm={12} md={11} lg={10}>
+            <Grid xs={12} sm={12} md={11} lg={10}>
               <QuickSpinCalc color="secondary" />
             </Grid>
-            <Grid item xs={12} sm={12} md={11} lg={10}>
-              <NumberGenerator color="primary"/>
+            <Grid xs={12} sm={12} md={11} lg={10}>
+              <NumberGenerator color="primary" />
             </Grid>
-            <Grid item xs={12} sm={12} md={11} lg={10}>
+            <Grid xs={12} sm={12} md={11} lg={10}>
               <ColorSheetRangeGenerator />
             </Grid>
-            <Grid item xs={12} sm={12} md={11} lg={10}>
+            <Grid xs={12} sm={12} md={11} lg={10}>
               <ImpoProvider>
                 <DarkWoodCard>
                   <Canvas />

@@ -2,19 +2,19 @@
 import "./App.css";
 import "./Styles/hamlet.css";
 import Header from "./Components/NavigationBar/Header";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Box } from "@mui/material";
 import ThemeProv from "./Components/Config/theme";
 import AuthProvider from "./Components/context/AuthContext";
 import { BrowserRouter } from "react-router-dom";
 import Router from "./router";
-import { themeOptions } from "./Components/Config/theme";
+//import { themeOptions } from "./Components/Config/theme";
 import { themeMxm } from "./Components/Config/theme";
-import {
+/*import {
   themeIndependiente,
   themeBocaJuniors,
 } from "./Components/Config/TemasAFA";
-
+*/
 import Spinner from "./Components/General/Spinner";
 import ErrorMessage from "./Components/ErrorMessage/ErrorMessage";
 

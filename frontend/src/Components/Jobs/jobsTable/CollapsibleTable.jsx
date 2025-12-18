@@ -321,7 +321,6 @@ export default function CollapsibleTable(props) {
             <IconButton
               aria-label="expand row"
               size="small"
-              edge="true"
               onClick={() => setOpen(!open)}
             >
               {open ? (
@@ -331,28 +330,28 @@ export default function CollapsibleTable(props) {
               )}
             </IconButton>
           </TableCell>
-          <TableCell tableCellSettings>
+          <TableCell>
             <Typography variant={fontVariant}>{row.name}</Typography>
           </TableCell>
-          <TableCell tableCellSettings>
+          <TableCell>
             <Typography variant={fontVariant}>{row.product}</Typography>
           </TableCell>
-          <TableCell tableCellSettings>
+          <TableCell>
             <Typography variant={fontVariant}>{row.quantity}</Typography>
           </TableCell>
-          <TableCell tableCellSettings>
+          <TableCell>
             <Typography color={"info"}>{row.customer}</Typography>
           </TableCell>
-          <TableCell tableCellSettings>
+          <TableCell>
             <Typography variant={fontVariant}>{row.owner}</Typography>
           </TableCell>
-          <TableCell tableCellSettings>
+          <TableCell>
             <Typography variant={fontVariant}>{row.from}</Typography>
           </TableCell>
-          <TableCell tableCellSettings>
+          <TableCell>
             <Typography variant={fontVariant}>{row.to}</Typography>
           </TableCell>
-          <TableCell tableCellSettings>
+          <TableCell>
             <Typography variant={fontVariant}>{row.Finishing}</Typography>
           </TableCell>
         </TableRow>
