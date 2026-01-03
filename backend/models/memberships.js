@@ -17,7 +17,7 @@ const MembershipSchema = new mongoose.Schema(
     role: {
       type: String,
       enum: ["admin", "manager", "operator", "customer"],
-      required: true,
+      required: false,
     },
     status: {
       type: String,
@@ -25,7 +25,7 @@ const MembershipSchema = new mongoose.Schema(
       default: "pendiente",
     },
   },
-  { timestamps: true }
+  { timestamps: false }
 );
 
 MembershipSchema.index({ userId: 1, tenantId: 1 }, { unique: true });

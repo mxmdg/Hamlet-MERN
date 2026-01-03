@@ -6,8 +6,9 @@ const finishersControl = {};
 finishersControl.getFinishers = async (req, res, next) => {
   {
     try {
+      const tenant = req.header("x-tenant");
       const finishersList = await finishers.esquema
-        .find({ status: { $ne: "inactivo" } })
+        .find({ tenant, status: { $ne: "inactivo" } })
         .populate({
           path: "Costo",
           model: prices.esquema,
@@ -27,8 +28,9 @@ finishersControl.getFinishers = async (req, res, next) => {
 finishersControl.getDeletedFinishers = async (req, res, next) => {
   {
     try {
+      const tenant = req.header("x-tenant");
       const finishersList = await finishers.esquema
-        .find({ status: { $eq: "inactivo" } })
+        .find({ tenant, status: { $eq: "inactivo" } })
         .populate({
           path: "Costo",
           model: prices.esquema,
@@ -74,6 +76,7 @@ finishersControl.addFinisher = async (req, res, next) => {
       Unidad,
       jobTypesAllowed,
       partTypesAllowed,
+      tenant: req.header("x-tenant"),
     });
     try {
       await newFinisher.save();
@@ -86,8 +89,9 @@ finishersControl.addFinisher = async (req, res, next) => {
 
 finishersControl.getFinisher = async (req, res, next) => {
   try {
+    const tenant = req.header("x-tenant");
     const finisher = await finishers.esquema
-      .findById(req.params.id)
+      .findOne({ _id: req.params.id, tenant })
       .populate({ path: "Costo", model: prices.esquema })
       .select("-Costo.Historial");
     if (finisher) {
@@ -120,8 +124,9 @@ finishersControl.updateFinisher = async (req, res, next) => {
       jobTypesAllowed,
       partTypesAllowed,
     } = req.body;
+    const tenant = req.header("x-tenant");
     const finisherToUpdate = await finishers.esquema.findOneAndUpdate(
-      { _id: req.params.id },
+      { _id: req.params.id, tenant },
       {
         Modelo,
         Fabricante,
@@ -135,18 +140,22 @@ finishersControl.updateFinisher = async (req, res, next) => {
         Unidad,
         jobTypesAllowed,
         partTypesAllowed,
-      }
+      },
+      { new: true }
     );
+    if (!finisherToUpdate) {
+      return res.status(404).json({ message: "Acabado no encontrado" });
+    }
     res.json({ message: "Impresora actualizada " + finisherToUpdate.Modelo });
   } catch (e) {
-    //res.json({ message: "Error: " + e });
     next(e);
   }
 };
 finishersControl.deleteFinisher = async (req, res, next) => {
   try {
-    const finisher = await finishers.esquema.findByIdAndUpdate(
-      req.params.id,
+    const tenant = req.header("x-tenant");
+    const finisher = await finishers.esquema.findOneAndUpdate(
+      { _id: req.params.id, tenant },
       { status: "inactivo" },
       { new: true, runValidators: true }
     );
@@ -166,7 +175,11 @@ finishersControl.deleteFinisher = async (req, res, next) => {
 
 finishersControl.updateStatus = async (req, res, next) => {
   try {
-    const finisher = await finishers.esquema.findById(req.params.id);
+    const tenant = req.header("x-tenant");
+    const finisher = await finishers.esquema.findOne({
+      _id: req.params.id,
+      tenant,
+    });
     if (!finisher) {
       return res.status(404).json({ message: "Acabado no encontrado" });
     }

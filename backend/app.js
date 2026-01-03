@@ -4,6 +4,7 @@ const cors = require("cors");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const uuid = require("uuid");
+const Membership = require("./models/memberships");
 
 //settings
 app.set("port", process.env.PORT || 5000);
@@ -12,6 +13,15 @@ app.set("secretKey", "hamlet");
 // middlewares
 app.use(cors({ origin: "*" }));
 app.use(express.json());
+
+/* Add: simple tenant resolver from x-tenant header so requireRoleByMethod and handlers have req.tenant */
+app.use((req, res, next) => {
+  const tenantHeader = req.header("x-tenant");
+  if (tenantHeader) {
+    req.tenant = { _id: tenantHeader };
+  }
+  next();
+});
 
 const verifyToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
@@ -65,35 +75,71 @@ function requireRole(role) {
 
 // Middleware para filtrar por rol según método HTTP
 function requireRoleByMethod(rolesByMethod) {
-  return function (req, res, next) {
-    const method = req.method.toLowerCase();
-    const allowedRoles = rolesByMethod[method];
-    if (!allowedRoles) return next(); // Si no se define, permitir acceso
+  return async function (req, res, next) {
+    try {
+      const method = req.method.toLowerCase();
+      const allowedRoles = rolesByMethod[method];
 
-    // Si GET es público
-    if (allowedRoles === "public") return next();
-
-    const authHeader = req.headers["authorization"];
-    if (!authHeader) {
-      return res.status(401).json({ message: "Token requerido" });
-    }
-    const token = authHeader.split(" ")[1];
-    jwt.verify(token, req.app.get("secretKey"), (error, payload) => {
-      if (error) {
-        return res.status(403).json({ message: "Token inválido" });
+      // Método no protegido
+      if (!allowedRoles || allowedRoles === "public") {
+        return next();
       }
-      const userRole = (payload.role || "").toLowerCase();
-      const allowed = Array.isArray(allowedRoles)
-        ? allowedRoles.map((r) => r.toLowerCase())
-        : [allowedRoles.toLowerCase()];
-      if (!userRole || !allowed.includes(userRole)) {
-        return res.status(403).json({
-          message: "Acceso denegado, no tiene permiso para esta acción",
+
+      const authHeader = req.headers["authorization"];
+      if (!authHeader) {
+        return res.status(401).json({ message: "Token requerido" });
+      }
+
+      const token = authHeader.split(" ")[1];
+      if (!token) {
+        return res.status(401).json({ message: "Token inválido" });
+      }
+
+      jwt.verify(token, req.app.get("secretKey"), async (error, payload) => {
+        if (error) {
+          return res.status(403).json({ message: "Token inválido" });
+        }
+
+        // ⛔ tenant DEBE venir de resolveTenant
+        if (!req.tenant) {
+          return res.status(400).json({
+            message: "Tenant no resuelto. Falta middleware resolveTenant",
+          });
+        }
+
+        const membership = await Membership.findOne({
+          userId: payload.userId,
+          tenantId: req.tenant._id,
+          status: "activo",
         });
-      }
-      req.user = payload;
-      next();
-    });
+
+        if (!membership) {
+          return res.status(403).json({
+            message: "No tiene membresía activa para este tenant",
+          });
+        }
+
+        const userRole = membership.role.toLowerCase();
+        const allowed = Array.isArray(allowedRoles)
+          ? allowedRoles.map((r) => r.toLowerCase())
+          : [allowedRoles.toLowerCase()];
+
+        if (!allowed.includes(userRole)) {
+          return res.status(403).json({
+            message: "Acceso denegado por rol de membresía",
+          });
+        }
+
+        // ✅ contexto consistente en toda la app
+        req.user = payload; // { userId, exp, iat, ... }
+        req.membership = membership; // rol + tenant
+        req.role = userRole; // shortcut útil
+
+        next();
+      });
+    } catch (e) {
+      next(e);
+    }
   };
 }
 
@@ -222,6 +268,28 @@ app.use(
     delete: ["admin", "manager"],
   }),
   require("./routes/quotations")
+);
+
+app.use(
+  "/Hamlet/tenants",
+  requireRoleByMethod({
+    get: "public", // todos pueden hacer GET
+    post: "public", // todos pueden hacer GET
+    put: "public", // todos pueden hacer GET
+    delete: "public", // todos pueden hacer GET
+  }),
+  require("./routes/tenants")
+);
+
+app.use(
+  "/Hamlet/memberships",
+  requireRoleByMethod({
+    get: "public", // todos pueden hacer GET
+    post: "public", // todos pueden hacer GET
+    put: "public", // todos pueden hacer GET
+    delete: "public", // todos pueden hacer GET
+  }),
+  require("./routes/memberships")
 );
 
 // error handler

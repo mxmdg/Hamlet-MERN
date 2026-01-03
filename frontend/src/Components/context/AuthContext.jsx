@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { serverURL } from "../Config/config";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
+import { getPrivateElements } from "../customHooks/FetchDataHook";
 
 export const AuthContext = React.createContext();
 
@@ -18,6 +19,16 @@ const AuthProvider = ({ children }) => {
       ? JSON.parse(localStorage.getItem("user"))
       : null
   );
+
+  const [memberships, setMemberships] = useState(() => {
+    try {
+      const stored = localStorage.getItem("memberships");
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  });
+
   const Navigate = useNavigate();
 
   const handleLogout = () => {
@@ -26,12 +37,14 @@ const AuthProvider = ({ children }) => {
     setToken(null);
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+    localStorage.removeItem("memberships");
+    setMemberships([]);
     setUserLogged(null);
     Navigate("/");
     console.log("Logout exitoso");
   };
 
-  const handleLogin = (token, expirationTime) => {
+  const handleLogin = (token, expirationTime, user, memberships) => {
     setTimeout(() => {
       handleLogout();
     }, expirationTime - Date.now());
@@ -39,28 +52,32 @@ const AuthProvider = ({ children }) => {
     if (Date.now() < expirationTime) {
       setLogin(true);
       localStorage.setItem("login", true);
+
       setToken(token);
       localStorage.setItem("token", token);
-      //Navigate("/users/profile");
+
+      setUserLogged(user);
+      localStorage.setItem("user", JSON.stringify(user));
+
+      setMemberships(memberships);
+      localStorage.setItem("memberships", memberships);
+
       console.log("Login exitoso");
-    } else {
-      handleLogout();
-      return { message: "El password ha expirado" };
     }
   };
 
-  const validateToken = ()=> {
-    const decodeToken = jwtDecode(useToken)
+  const validateToken = () => {
+    const decodeToken = jwtDecode(useToken);
     if (decodeToken.exp < Date.now() / 1000) {
-      handleLogout()
-    }  
-  }
-
-  useEffect(()=>{
-    if (useToken !== null) {
-      validateToken()
+      handleLogout();
     }
-  },[])
+  };
+
+  useEffect(() => {
+    if (useToken !== null) {
+      validateToken();
+    }
+  }, []);
 
   return (
     <AuthContext.Provider
@@ -71,6 +88,8 @@ const AuthProvider = ({ children }) => {
         useToken,
         userLogged,
         setUserLogged,
+        memberships,
+        setMemberships,
       }}
     >
       {children}

@@ -11,6 +11,7 @@ jobControl.getJobs = async (req, res, next) => {
     const queryText = req.query.Q || "";
     const jobList = await jobs.esquema
       .find({
+        tenant: req.header("x-tenant"),
         Nombre: { $regex: queryText, $options: "i" },
         status: { $ne: "inactivo" },
       })
@@ -27,6 +28,7 @@ jobControl.getDeletedJobs = async (req, res, next) => {
     const queryText = req.query.Q || "";
     const jobList = await jobs.esquema
       .find({
+        tenant: req.header("x-tenant"),
         Nombre: { $regex: queryText, $options: "i" },
         status: { $eq: "inactivo" },
       })
@@ -103,6 +105,8 @@ jobControl.getCompleteJobs = async (req, res) => {
         query = { [property]: queryText };
       }
 
+      query.tenant = req.header("x-tenant");
+
       const jobList = await jobs.esquema
         .find(query)
         .select(
@@ -162,7 +166,6 @@ jobControl.getAllParts = async (req, res) => {
 };
 
 jobControl.getUrgentJobs = async (req, res) => {
-  //console.log(req.query.startDate);
   const startDate = req.query.startDate
     ? new Date(req.query.startDate)
     : new Date();
@@ -179,7 +182,10 @@ jobControl.getUrgentJobs = async (req, res) => {
     {
       const queryText = req.query.Q || "";
       const jobList = await jobs.esquema
-        .find({ Entrega: { $gte: startDate, $lt: endDate } })
+        .find({
+          tenant: req.header("x-tenant"),
+          Entrega: { $gte: startDate, $lt: endDate },
+        })
         .populate({
           path: "Owner",
           model: users.esquema,
@@ -218,7 +224,10 @@ jobControl.getOwnerJobs = async (req, res) => {
         /* .find({ Owner: { $eq: currentUserId } })
         .select("Nombre Cantidad Fecha Entrega Emision Deadline");
       res.json(jobList); */
-        .find({ Owner: { $eq: currentUserId } })
+        .find({
+          tenant: req.header("x-tenant"),
+          Owner: { $eq: currentUserId },
+        })
         .select(
           "-Finishing.Costo.Historial  -Finishing.jobTypesAllowed -Finishing.partTypesAllowed"
         )
@@ -251,7 +260,10 @@ jobControl.getCompanyJobs = async (req, res) => {
       const queryText = req.query.Q || "";
       const currentUserId = req.params.id;
       const jobList = await jobs.esquema
-        .find({ Company: { $eq: currentUserId } })
+        .find({
+          tenant: req.header("x-tenant"),
+          Company: { $eq: currentUserId },
+        })
         .populate({
           path: "Owner",
           model: users.esquema,
@@ -281,6 +293,7 @@ jobControl.addJob = async (req, res) => {
       const Finishing = req.body.Finishing;
       //const Archivos = '/uploads/' + req.file.filename;
       const newJob = new jobs.esquema({
+        tenant: req.header("x-tenant"),
         Nombre,
         Tipo,
         Cantidad,
@@ -301,8 +314,11 @@ jobControl.addJob = async (req, res) => {
 
 jobControl.getJob = async (req, res) => {
   try {
-    const job = await jobs.esquema
-      .findById(req.params.id)
+    const job = await jobs.esquema;
+    findOne({
+      _id: req.params.id,
+      tenant: req.header("x-tenant"),
+    })
       .select(
         "-Finishing.Costo.Historial  -Finishing.jobTypesAllowed -Finishing.partTypesAllowed"
       )
@@ -355,7 +371,10 @@ jobControl.updateJob = async (req, res) => {
         Finishing,
       });
       await jobs.esquema.findOneAndUpdate(
-        { _id: req.params.id },
+        {
+          _id: req.params.id,
+          tenant: req.header("x-tenant"),
+        },
         { Nombre, Tipo, Cantidad, Partes, Entrega, Owner, Company, Finishing }
       );
       console.log(newJob.Nombre + " guardado OK");
@@ -369,8 +388,8 @@ jobControl.updateJob = async (req, res) => {
 };
 jobControl.deleteJob = async (req, res, next) => {
   try {
-    const producto = await jobs.esquema.findByIdAndUpdate(
-      req.params.id,
+    const producto = await jobs.esquema.findOneAndUpdate(
+      { _id: req.params.id, tenant: req.tenant._id },
       { status: "inactivo" },
       { new: true }
     );
@@ -384,11 +403,19 @@ jobControl.deleteJob = async (req, res, next) => {
 
 jobControl.updateStatus = async (req, res, next) => {
   try {
-    const j = await jobs.esquema.findById(req.params.id);
-    if (!j) return res.status(404).json({ message: "Trabajo no encontrado" });
-    j.status = j.status === "activo" ? "inactivo" : "activo";
-    await j.save();
-    res.json({ message: "Estado actualizado", job: j });
+    const job = await jobs.esquema.findOne({
+      _id: req.params.id,
+      tenant: req.header("x-tenant"),
+    });
+
+    if (!job) {
+      return res.status(404).json({ message: "Trabajo no encontrado" });
+    }
+
+    job.status = job.status === "activo" ? "inactivo" : "activo";
+    await job.save();
+
+    res.json({ message: "Estado actualizado", job });
   } catch (e) {
     next(e);
   }

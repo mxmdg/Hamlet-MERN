@@ -5,8 +5,9 @@ const formatControl = {};
 formatControl.getFormats = async (req, res, next) => {
   {
     try {
+      const tenant = req.header("x-tenant");
       const formato = await formatos.esquema
-        .find({ status: { $ne: "inactivo" } })
+        .find({ tenant, status: { $ne: "inactivo" } })
         .sort({ Nombre: 1 })
         .select("-__v");
       res.json(formato);
@@ -21,8 +22,9 @@ formatControl.getFormats = async (req, res, next) => {
 formatControl.getDeletedFormats = async (req, res, next) => {
   {
     try {
+      const tenant = req.header("x-tenant");
       const formato = await formatos.esquema
-        .find({ status: { $eq: "inactivo" } })
+        .find({ tenant, status: { $eq: "inactivo" } })
         .sort({ Nombre: 1 })
         .select("-__v");
       res.json(formato);
@@ -37,7 +39,10 @@ formatControl.getDeletedFormats = async (req, res, next) => {
 formatControl.leanFormats = async (req, res, next) => {
   {
     try {
-      const formato = await formatos.esquema.find().lean({ virtuals: true });
+      const tenant = req.header("x-tenant");
+      const formato = await formatos.esquema
+        .find({ tenant })
+        .lean({ virtuals: true });
       return formato;
     } catch (e) {
       console.error(e);
@@ -50,9 +55,18 @@ formatControl.addFormat = async (req, res, next) => {
   {
     try {
       const { Nombre, Alto, Ancho } = req.body;
-      const newFormat = new formatos.esquema({ Nombre, Alto, Ancho });
+      const tenant = req.header("x-tenant");
+      const newFormat = new formatos.esquema({
+        Nombre,
+        Alto,
+        Ancho,
+        tenant,
+      });
       await newFormat.save();
-      res.json({ message: newFormat.Nombre + " ha sido agregado" });
+      console.log(newFormat.Nombre + " ha sido agregado" + newFormat.tenant);
+      res.json({
+        message: newFormat.Nombre + " ha sido agregado" + newFormat.tenant,
+      });
     } catch (e) {
       console.error(e);
       next(e);
@@ -62,7 +76,11 @@ formatControl.addFormat = async (req, res, next) => {
 
 formatControl.getFormat = async (req, res, next) => {
   try {
-    const format = await formatos.esquema.findById(req.params.id);
+    const tenant = req.header("x-tenant");
+    const format = await formatos.esquema.findOne({
+      _id: req.params.id,
+      tenant,
+    });
     if (format) {
       res.json(format);
     } else {
@@ -81,10 +99,11 @@ formatControl.getFormat = async (req, res, next) => {
 formatControl.updateFormat = async (req, res, next) => {
   try {
     const { Nombre, Alto, Ancho } = req.body;
-    const format = await formatos.esquema.findByIdAndUpdate(
-      req.params.id,
+    const tenant = req.header("x-tenant");
+    const format = await formatos.esquema.findOneAndUpdate(
+      { _id: req.params.id, tenant },
       { Nombre, Alto, Ancho },
-      { new: false }
+      { new: true }
     );
     if (!format) {
       return res.status(404).json({ message: "Formato no encontrado" });
@@ -95,10 +114,12 @@ formatControl.updateFormat = async (req, res, next) => {
     next(e);
   }
 };
+
 formatControl.deleteFormat = async (req, res, next) => {
   try {
-    const format = await formatos.esquema.findByIdAndUpdate(
-      req.params.id,
+    const tenant = req.header("x-tenant");
+    const format = await formatos.esquema.findOneAndUpdate(
+      { _id: req.params.id, tenant },
       { status: "inactivo" },
       { new: true }
     );
@@ -119,7 +140,11 @@ formatControl.deleteFormat = async (req, res, next) => {
 
 formatControl.updateStatus = async (req, res, next) => {
   try {
-    const format = await formatos.esquema.findById(req.params.id);
+    const tenant = req.header("x-tenant");
+    const format = await formatos.esquema.findOne({
+      _id: req.params.id,
+      tenant,
+    });
 
     if (!format) {
       return res.status(404).json({ message: "Formato no encontrado" });

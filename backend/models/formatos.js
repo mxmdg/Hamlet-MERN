@@ -13,10 +13,10 @@ const formatoSchema = new Schema({
     enum: ["activo", "inactivo"],
     default: "activo",
   },
-  tenantId: {
-    type: mongoose.Schema.Types.ObjectId,
+  tenant: {
+    type: mongoose.Schema.ObjectId,
     ref: "Tenant",
-    required: false,
+    required: true,
     index: true,
   },
 });

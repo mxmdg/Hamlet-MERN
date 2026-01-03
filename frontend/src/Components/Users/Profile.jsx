@@ -31,11 +31,30 @@ export const Profile = () => {
           <CardHeader title={`Hola ${context.userLogged.Name}`} />
           <CardContent>
             <Typography>
-              Correo electronico: {context.userLogged.email}
+              Correo electrónico: {context.userLogged.email}
             </Typography>
-            <br></br>
-            <Typography>Rol: {context.userLogged.Role}</Typography>
-            <br></br>
+
+            <br />
+
+            <Typography variant="h6">Membresías</Typography>
+
+            {context.memberships?.length > 0 ? (
+              context.memberships.map((m, index) => (
+                <Box key={index} sx={{ mt: 1, p: 1, border: "1px solid #ddd" }}>
+                  <Typography>
+                    Imprenta: <strong>{m.tenant.name}</strong>
+                  </Typography>
+                  <Typography>
+                    Rol: <strong>{m.role}</strong>
+                  </Typography>
+                </Box>
+              ))
+            ) : (
+              <Typography>No tiene membresías activas</Typography>
+            )}
+
+            <br />
+
             <SessionTimer />
           </CardContent>
 

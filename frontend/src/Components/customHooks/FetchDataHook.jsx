@@ -28,43 +28,59 @@ export const checkHealth = async () => {
 
 export const getPrivateElements = async (collection) => {
   const token = localStorage.getItem("token");
-  try {
-    const elements = await axios.get(`${databaseURL + collection}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return elements.data;
-  } catch (e) {
-    return e;
+  const memberships = JSON.parse(localStorage.getItem("memberships") || "[]");
+  const tenantId = memberships[0]?.tenant?.id;
+
+  if (!tenantId) {
+    throw new Error("Tenant activo no encontrado");
   }
+
+  const elements = await axios.get(`${databaseURL}${collection}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "X-Tenant": tenantId,
+    },
+  });
+
+  return elements.data;
 };
 
 export const getPrivateElementByID = async (collection, id) => {
   const token = localStorage.getItem("token");
-  try {
-    const elements = await axios.get(`${databaseURL + collection}/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    //console.log(elements);
-    return elements;
-  } catch (e) {
-    return e;
+  const memberships = JSON.parse(localStorage.getItem("memberships") || "[]");
+  const tenantId = memberships[0]?.tenant?.id;
+
+  console.log(tenantId, memberships[0]?.tenant?.key);
+
+  if (!tenantId) {
+    throw new Error("Tenant activo no encontrado");
   }
+
+  const elements = await axios.get(`${databaseURL}${collection}/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "X-Tenant": tenantId,
+    },
+  });
+
+  return elements.data;
 };
 
 export const addPrivateElement = async (collection, formData) => {
   const token = localStorage.getItem("token");
+  const memberships = JSON.parse(localStorage.getItem("memberships") || "[]");
+  const tenantId = memberships[0]?.tenant?.id;
   try {
     const elements = await axios.post(`${databaseURL + collection}`, formData, {
       headers: {
         Authorization: `Bearer ${token}`,
+        "X-Tenant": tenantId,
       },
     });
+    console.log(elements);
     return elements;
   } catch (e) {
+    console.log(e);
     throw e;
   }
 };
@@ -82,11 +98,15 @@ export const uploadFile = async (endpoint, data) => {
 
 export const putPrivateElement = async (itemURL, formData) => {
   const token = localStorage.getItem("token");
+  const memberships = JSON.parse(localStorage.getItem("memberships") || "[]");
+  const tenantId = memberships[0]?.tenant?.id;
+
   try {
     console.log("URL from FetchDataHook: " + itemURL);
     const elements = await axios.put(itemURL, formData, {
       headers: {
         Authorization: `Bearer ${token}`,
+        "X-Tenant": tenantId,
       },
     });
     return elements;
@@ -97,6 +117,8 @@ export const putPrivateElement = async (itemURL, formData) => {
 
 export const patchPrivateElement = async (collection, id, formData) => {
   const token = localStorage.getItem("token");
+  const memberships = JSON.parse(localStorage.getItem("memberships") || "[]");
+  const tenantId = memberships[0]?.tenant?.id;
   try {
     const elements = await axios.patch(
       `${databaseURL + collection}/${id}`,
@@ -104,6 +126,7 @@ export const patchPrivateElement = async (collection, id, formData) => {
       {
         headers: {
           Authorization: `Bearer ${token}`,
+          "X-Tenant": tenantId,
         },
       }
     );
@@ -115,10 +138,13 @@ export const patchPrivateElement = async (collection, id, formData) => {
 
 export const deletePrivateElement = async (collection, id) => {
   const token = localStorage.getItem("token");
+  const memberships = JSON.parse(localStorage.getItem("memberships") || "[]");
+  const tenantId = memberships[0]?.tenant?.id;
   try {
     const elements = await axios.delete(`${databaseURL + collection}/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
+        "X-Tenant": tenantId,
       },
     });
     return { message: `Elemento eliminado` };

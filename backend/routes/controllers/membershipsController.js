@@ -35,4 +35,22 @@ membershipsController.getByTenant = async (req, res, next) => {
   }
 };
 
+membershipsController.createMembership = async (req, res, next) => {
+  try {
+    const { userId, tenantId, role, status } = req.body;
+    const newMembership = new Membership({
+      userId,
+      tenantId,
+      role,
+      status,
+    });
+    const membership = await newMembership.save();
+    res.status(201).json(membership);
+
+    return await newMembership.save();
+  } catch (e) {
+    next(e);
+  }
+};
+
 module.exports = membershipsController;

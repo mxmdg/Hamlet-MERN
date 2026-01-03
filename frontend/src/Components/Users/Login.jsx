@@ -75,6 +75,11 @@ export const Login = () => {
         context.handleLogin(token.data.token, token.data.expirationTime);
         context.setUserLogged(token.data.document);
         localStorage.setItem("user", JSON.stringify(token.data.document));
+        localStorage.setItem(
+          "memberships",
+          JSON.stringify(token.data.memberships)
+        );
+        context.setMemberships(token.data.memberships);
         setError({
           message: "Login exitoso",
           severity: "success",
