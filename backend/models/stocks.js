@@ -15,6 +15,17 @@ const stockSchema = new Schema({
   unidad: { type: String, required: true }, // kg, m², unidades, etc.
   costo_promedio: { type: Number, required: true }, // Se recalcula con cada ingreso
   fecha_actualizacion: { type: Date, default: Date.now },
+  status: {
+    type: String,
+    enum: ["activo", "inactivo"],
+    default: "activo",
+  },
+  tenantId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Tenant",
+    required: false,
+    index: true,
+  },
 });
 
 module.exports.esquema = model("Stocks", stockSchema);

@@ -1,5 +1,6 @@
 import axios from "axios";
 import { databaseURL, url, backendPort } from "../Config/config";
+import { getMyDate } from "../utils/generalData/fechaDiccionario";
 
 export const fechtData = async (collection, setFunction) => {
   try {
@@ -13,8 +14,14 @@ export const fechtData = async (collection, setFunction) => {
 export const checkHealth = async () => {
   try {
     const res = await axios.get(`${url}${backendPort}/health`);
+    console.log(
+      `Health check response: ${res.data.status} ${
+        getMyDate(res.data.timestamp).ddmmyy
+      }`
+    );
     return true;
   } catch (e) {
+    console.log(`Health check response: ${e}`);
     return false;
   }
 };
@@ -128,30 +135,10 @@ export const deleteClickHandler = async (id, collection) => {
   }
 };
 
-export const deleteMultiple = (id, collection) => {
-  if (id.length > 1) {
-    if (
-      window.confirm(
-        "ATENCION! Esta accion borrará los elementos seleccionados"
-      )
-    ) {
-      id.map((item) => {
-        try {
-          deleteClickHandler(item, collection);
-        } catch (e) {
-          throw e;
-        }
-      });
-    }
-  } else if (id.length === 1) {
-    if (
-      window.confirm("ATENCION! Esta accion borrará el elemento seleccionado")
-    ) {
-      try {
-        deleteClickHandler(id, collection);
-      } catch (e) {
-        throw e;
-      }
-    }
-  }
+export const deleteMultiple = (ids, collection) => {
+  const items = Array.isArray(ids) ? ids : [ids];
+
+  items.forEach((item) => {
+    deleteClickHandler(item, collection);
+  });
 };

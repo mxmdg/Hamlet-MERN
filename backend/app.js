@@ -103,7 +103,7 @@ app.get("/health", async (req, res) => {
   try {
     // chequeos mínimos
     // await mongoose.connection.db.admin().ping();
-    console.log("Health check OK");
+    console.log("Health check OK " + new Date().toISOString());
 
     res.status(200).json({
       status: "ok",

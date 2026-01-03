@@ -12,9 +12,13 @@ const {
   updatePrinter,
   deletePrinter,
   QueryPrinter,
+  getDeletedPrinters,
+  updateStatus,
 } = require("./controllers/printerControl");
 
 routerPrinter.route("/").get(getPrinters).post(addPrinter);
+
+routerPrinter.route("/trash").get(getDeletedPrinters);
 
 routerPrinter.route("/simple/").get(getPrintersSimple);
 routerPrinter.route("/simple/:id").get(getPrinterSimple);
@@ -23,6 +27,8 @@ routerPrinter
   .route("/:id")
   .put(updatePrinter)
   .get(getPrinter)
-  .delete(deletePrinter);
+  .delete(updateStatus);
+
+routerPrinter.route("/trash/:id").delete(updateStatus);
 
 module.exports = routerPrinter;

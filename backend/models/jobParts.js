@@ -1,4 +1,4 @@
-const { Schema, model } = require("mongoose");
+const { Schema, model, default: mongoose } = require("mongoose");
 
 const jobPartSchema = new Schema({
   Type: { type: String, required: true },
@@ -18,6 +18,17 @@ const jobPartSchema = new Schema({
   minStockWeight: { type: Number, required: true },
   maxStockWeight: { type: Number, required: true },
   jobTypesAllowed: { type: Object, required: true },
+  status: {
+    type: String,
+    enum: ["activo", "inactivo"],
+    default: "activo",
+  },
+  tenantId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Tenant",
+    required: false,
+    index: true,
+  },
   Fecha: { type: Date, default: Date.now },
 });
 

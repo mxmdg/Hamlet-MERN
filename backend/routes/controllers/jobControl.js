@@ -6,20 +6,35 @@ const finishers = require("../../models/finishers");
 
 const jobControl = {};
 
-jobControl.getJobs = async (req, res) => {
-  {
-    try {
-      const queryText = req.query.Q || "";
-      const jobList = await jobs.esquema
-        .find({
-          Nombre: { $regex: queryText, $options: "i" },
-        })
-        .select("Nombre Cantidad Fecha Entrega Emision Deadline Owner")
-        .sort({ Fecha: -1 });
-      res.json(jobList);
-    } catch (e) {
-      throw e;
-    }
+jobControl.getJobs = async (req, res, next) => {
+  try {
+    const queryText = req.query.Q || "";
+    const jobList = await jobs.esquema
+      .find({
+        Nombre: { $regex: queryText, $options: "i" },
+        status: { $ne: "inactivo" },
+      })
+      .select("Nombre Cantidad Fecha Entrega Emision Deadline Owner")
+      .sort({ Fecha: -1 });
+    res.json(jobList);
+  } catch (e) {
+    next(e);
+  }
+};
+
+jobControl.getDeletedJobs = async (req, res, next) => {
+  try {
+    const queryText = req.query.Q || "";
+    const jobList = await jobs.esquema
+      .find({
+        Nombre: { $regex: queryText, $options: "i" },
+        status: { $eq: "inactivo" },
+      })
+      .select("Nombre Cantidad Fecha Entrega Emision Deadline Owner")
+      .sort({ Fecha: -1 });
+    res.json(jobList);
+  } catch (e) {
+    next(e);
   }
 };
 
@@ -41,20 +56,25 @@ jobControl.getCompleteJobs = async (req, res) => {
         };
       } else if (property === "Fecha" || property === "Entrega") {
         // Buscar fechas parcialmente usando $expr y $dateToString
-  query = {
-    $expr: {
-      $regexMatch: {
-        input: { $dateToString: { format: "%Y-%m-%dT%H:%M:%S.%LZ", date: `$${property}` } },
-        regex: queryText,
-        options: "i"
-      }
-    }
-  };
+        query = {
+          $expr: {
+            $regexMatch: {
+              input: {
+                $dateToString: {
+                  format: "%Y-%m-%dT%H:%M:%S.%LZ",
+                  date: `$${property}`,
+                },
+              },
+              regex: queryText,
+              options: "i",
+            },
+          },
+        };
       } else if (property === "Partes.Name") {
         // buscar por igualdad
         // query = { [property]:  queryText};
         // Si es un array, buscar por nombre de parte
-        query = { [property]: { $regex: queryText} };
+        query = { [property]: { $regex: queryText } };
       } else if (schemaType === "String") {
         // Para texto, usar regex
         query = { [property]: { $regex: queryText, $options: "i" } };
@@ -80,7 +100,7 @@ jobControl.getCompleteJobs = async (req, res) => {
         query = { [property]: { $size: parseInt(queryText) } };
       } else {
         // Por defecto, buscar por igualdad
-        query = { [property]:  queryText};
+        query = { [property]: queryText };
       }
 
       const jobList = await jobs.esquema
@@ -347,9 +367,31 @@ jobControl.updateJob = async (req, res) => {
     }
   }
 };
-jobControl.deleteJob = async (req, res) => {
-  const producto = await jobs.esquema.findByIdAndDelete(req.params.id);
-  res.json({ Message: "Trabajo borrado" });
+jobControl.deleteJob = async (req, res, next) => {
+  try {
+    const producto = await jobs.esquema.findByIdAndUpdate(
+      req.params.id,
+      { status: "inactivo" },
+      { new: true }
+    );
+    if (!producto)
+      return res.status(404).json({ message: "Trabajo no encontrado" });
+    res.json({ Message: "Trabajo desactivado", job: producto });
+  } catch (e) {
+    next(e);
+  }
+};
+
+jobControl.updateStatus = async (req, res, next) => {
+  try {
+    const j = await jobs.esquema.findById(req.params.id);
+    if (!j) return res.status(404).json({ message: "Trabajo no encontrado" });
+    j.status = j.status === "activo" ? "inactivo" : "activo";
+    await j.save();
+    res.json({ message: "Estado actualizado", job: j });
+  } catch (e) {
+    next(e);
+  }
 };
 
 module.exports = jobControl;

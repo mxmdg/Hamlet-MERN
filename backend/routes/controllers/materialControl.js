@@ -3,12 +3,26 @@ const prices = require("../../models/prices");
 
 const materialControl = {};
 
-materialControl.getMaterials = async (req, res) => {
-  {
-    const material = await materials.esquema.find().select("-__v");;
-    //.populate({ path: "Precio_x_Kilo", model: prices.esquema });
+materialControl.getMaterials = async (req, res, next) => {
+  try {
+    const material = await materials.esquema
+      .find({ status: { $ne: "inactivo" } })
+      .select("-__v");
+    res.json(material);
+  } catch (error) {
+    next(error);
+  }
+};
+
+materialControl.getDeletedMaterials = async (req, res, next) => {
+  try {
+    const material = await materials.esquema
+      .find({ status: { $eq: "inactivo" } })
+      .select("-__v");
 
     res.json(material);
+  } catch (error) {
+    next(error);
   }
 };
 
@@ -98,9 +112,31 @@ materialControl.updateMaterial = async (req, res) => {
     res.status(404).json({ error });
   }
 };
-materialControl.deleteMaterial = async (req, res) => {
-  const material = await materials.esquema.findByIdAndDelete(req.params.id);
-  res.json({ Message: "Material eliminado" });
+materialControl.deleteMaterial = async (req, res, next) => {
+  try {
+    const material = await materials.esquema.findByIdAndUpdate(
+      req.params.id,
+      { status: "inactivo" },
+      { new: true }
+    );
+    if (!material)
+      return res.status(404).json({ message: "Material no encontrado" });
+    res.json({ Message: "Material desactivado", material });
+  } catch (error) {
+    next(error);
+  }
+};
+
+materialControl.updateStatus = async (req, res, next) => {
+  try {
+    const m = await materials.esquema.findById(req.params.id);
+    if (!m) return res.status(404).json({ message: "Material no encontrado" });
+    m.status = m.status === "activo" ? "inactivo" : "activo";
+    await m.save();
+    res.json({ message: "Estado actualizado", material: m });
+  } catch (error) {
+    next(error);
+  }
 };
 
 module.exports = materialControl;

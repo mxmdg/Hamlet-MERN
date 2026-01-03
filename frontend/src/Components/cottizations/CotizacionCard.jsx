@@ -169,7 +169,7 @@ const CotizacionCard = ({ cotizacion, job }) => {
                 </Typography>
                 <Divider />
                 <ButtonGroup fullWidth variant="outlined" sx={{ mb: 2 }}>
-                  {["Pendiente", "Aprobada", "Rechazada"].map(
+                  {["Pendiente", "Aprobado", "Rechazado"].map(
                     (statusOption) => (
                       <Button
                         key={statusOption}
@@ -180,9 +180,9 @@ const CotizacionCard = ({ cotizacion, job }) => {
                             : "outlined"
                         }
                         color={
-                          localStatus === "Aprobada"
+                          localStatus === "Aprobado"
                             ? "success"
-                            : localStatus === "Rechazada"
+                            : localStatus === "Rechazado"
                             ? "error"
                             : localStatus === "Enviado"
                             ? "success"

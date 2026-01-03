@@ -10,6 +10,10 @@ export const materialesRoutes = () => (
       element={<MainContainer entity={"materiales"} />}
     />
     <Route
+      path="/materiales/trash"
+      element={<MainContainer entity={"materiales/trash"} />}
+    />
+    <Route
       path="/materiales/add"
       element={
         <FormMaterial form={StockDataForm} collection="materiales" task="new" />

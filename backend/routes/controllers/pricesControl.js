@@ -7,10 +7,25 @@ const materiales = require("../../models/materiales");
 
 const pricesControl = {};
 
-pricesControl.getPrices = async (req, res) => {
-  {
-    const gettedPrices = await prices.esquema.find();
+pricesControl.getPrices = async (req, res, next) => {
+  try {
+    const gettedPrices = await prices.esquema.find({
+      status: { $ne: "inactivo" },
+    });
     res.json(gettedPrices);
+  } catch (error) {
+    next(error);
+  }
+};
+
+pricesControl.getDeletedPrices = async (req, res, next) => {
+  try {
+    const gettedPrices = await prices.esquema.find({
+      status: { $eq: "inactivo" },
+    });
+    res.json(gettedPrices);
+  } catch (error) {
+    next(error);
   }
 };
 
@@ -97,7 +112,7 @@ pricesControl.updatePrice = async (req, res) => {
   }
 };
 
-pricesControl.deletePrice = async (req, res) => {
+pricesControl.deletePrice = async (req, res, next) => {
   try {
     const priceId = req.params.id;
 
@@ -115,27 +130,38 @@ pricesControl.deletePrice = async (req, res) => {
     const procesosConEsteCosto =
       finishersConEsteCosto + printersConEsteCosto + materialesConEsteCosto;
 
-    console.log(
-      `No se puede eliminar este costo porque está siendo utilizado en otros ${procesosConEsteCosto} procesos.`
-    );
-
     if (procesosConEsteCosto > 0) {
       return res.status(400).json({
-        message: `No se puede eliminar este costo porque está siendo utilizado en otros ${procesosConEsteCosto} procesos.`,
+        message: `No se puede desactivar este costo porque está siendo utilizado en otros ${procesosConEsteCosto} procesos.`,
       });
     }
 
-    // Si no está en uso, eliminar el precio
-    const price = await prices.esquema.findByIdAndDelete(priceId);
+    // Si no está en uso, marcar como inactivo
+    const price = await prices.esquema.findByIdAndUpdate(
+      priceId,
+      { status: "inactivo" },
+      { new: true }
+    );
 
     if (!price) {
       return res.status(404).json({ message: "Costo no encontrado" });
     }
 
-    res.json({ message: "Costo eliminado correctamente" });
+    res.json({ message: "Costo desactivado correctamente", price });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error });
+    next(error);
+  }
+};
+
+pricesControl.updateStatus = async (req, res, next) => {
+  try {
+    const p = await prices.esquema.findById(req.params.id);
+    if (!p) return res.status(404).json({ message: "Costo no encontrado" });
+    p.status = p.status === "activo" ? "inactivo" : "activo";
+    await p.save();
+    res.json({ message: "Estado actualizado", price: p });
+  } catch (error) {
+    next(error);
   }
 };
 

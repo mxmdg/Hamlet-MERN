@@ -17,6 +17,7 @@ import { themeMxm } from "./Components/Config/theme";
 */
 import Spinner from "./Components/General/Spinner";
 import ErrorMessage from "./Components/ErrorMessage/ErrorMessage";
+import ErrorBoundary from "./Components/ErrorMessage/ErrorBoundary";
 
 import { useBackendStatus } from "./Hooks/useBackendStatus";
 
@@ -62,26 +63,35 @@ function App() {
           background: themeInUse.palette.background.default,
         }}
       >
-        <BrowserRouter>
-          <AuthProvider>
-            <Box sx={{ "@media print": { display: "none" } }}>
-              <Header toogleMode={toogleMode} mode={useMode} />
-            </Box>
-            <Box
-              sx={{
-                marginTop: "7vh",
-                display: "flex",
-                width: "100vw",
-                minHeight: "90vh",
-                alignItems: "center",
-                justifyContent: "center",
-                background: themeInUse.palette.background.default,
-              }}
-            >
-              <Router />
-            </Box>
-          </AuthProvider>
-        </BrowserRouter>
+        <ErrorBoundary
+          fallback={
+            <ErrorMessage
+              title="Error inesperado"
+              message="Ha ocurrido un error inesperado. Por favor, intente recargar la página."
+            />
+          }
+        >
+          <BrowserRouter>
+            <AuthProvider>
+              <Box sx={{ "@media print": { display: "none" } }}>
+                <Header toogleMode={toogleMode} mode={useMode} />
+              </Box>
+              <Box
+                sx={{
+                  marginTop: "7vh",
+                  display: "flex",
+                  width: "100vw",
+                  minHeight: "90vh",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  background: themeInUse.palette.background.default,
+                }}
+              >
+                <Router />
+              </Box>
+            </AuthProvider>
+          </BrowserRouter>
+        </ErrorBoundary>
       </Box>
     </ThemeProv>
   );

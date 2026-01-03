@@ -15,6 +15,17 @@ const finisherSchema = new Schema({
   Fecha: { type: Date, default: Date.now, required: false },
   jobTypesAllowed: { type: Object, required: false },
   partTypesAllowed: { type: Object, required: false },
+  status: {
+    type: String,
+    enum: ["activo", "inactivo"],
+    default: "activo",
+  },
+  tenantId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Tenant",
+    required: false,
+    index: true,
+  },
 });
 
 finisherSchema.virtual("formula").get(function () {

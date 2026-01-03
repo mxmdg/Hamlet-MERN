@@ -36,6 +36,17 @@ const printerSchema = new Schema({
   SmallPrints: { type: Number, required: false },
   Billing: [billingSchema],
   Fecha: { type: Date, default: Date.now, required: false },
+  status: {
+    type: String,
+    enum: ["activo", "inactivo"],
+    default: "activo",
+  },
+  tenantId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Tenant",
+    required: false,
+    index: true,
+  },
 });
 
 printerSchema.pre("save", function (next) {

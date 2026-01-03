@@ -13,6 +13,7 @@ import SessionTimer from "./SessionTimer";
 import ColorPalette from "../Config/Theme/ColorPallete";
 import FormMaterial from "../Formulario/FormMaterial";
 import preferencesForm from "../Formulario/NewMessageForm";
+import tenantsDataForm from "../Formulario/tenantsDataForm";
 
 export const Profile = () => {
   //User Profile
@@ -53,6 +54,7 @@ export const Profile = () => {
           </CardActions> */}
         </Card>
       </Grid>
+
       <Grid item xs={1} sm={12} md={8}>
         <Container>
           <FullJobsRender

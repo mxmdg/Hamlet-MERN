@@ -5,6 +5,8 @@ const nodemailer = require("nodemailer");
 const uuid = require("uuid");
 const mailAccount = { user: process.env.MAILUSER, pass: process.env.MAILPASS };
 const mailer = require("../../services/mail");
+const Membership = require("../../models/memberships");
+
 const Port = process.env.PORT;
 const uiPort = process.env.UIPORT;
 const URL = process.env.URL;
@@ -12,7 +14,21 @@ const expireTime = 8 * 60 * 60 * 1000; //horas en milisegundos
 
 const getAll = async (req, res, next) => {
   try {
-    const users = await usersModel.esquema.find().select("-__v");
+    const users = await usersModel.esquema
+      .find({ status: { $ne: "inactivo" } })
+      .select("-__v");
+    res.json(users);
+  } catch (e) {
+    next(e);
+    return [];
+  }
+};
+
+const getDeletedUsers = async (req, res, next) => {
+  try {
+    const users = await usersModel.esquema
+      .find({ status: { $eq: "inactivo" } })
+      .select("-__v");
     res.json(users);
   } catch (e) {
     next(e);
@@ -56,11 +72,30 @@ const updateUser = async (req, res, next) => {
 
 const deleteUser = async (req, res, next) => {
   try {
-    const user = await usersModel.esquema.findByIdAndDelete(req.params.id);
-    ({ message: `Usuario ${user.Name} eliminado` });
+    const user = await usersModel.esquema.findByIdAndUpdate(
+      req.params.id,
+      { status: "inactivo" },
+      { new: true }
+    );
+    if (!user)
+      return res.status(404).json({ message: "Usuario no encontrado" });
+    res.json({ message: `Usuario ${user.Name} desactivado`, user });
   } catch (error) {
     console.error("Error:" + error);
-    next(e);
+    next(error);
+  }
+};
+
+const updateStatus = async (req, res, next) => {
+  try {
+    const user = await usersModel.esquema.findById(req.params.id);
+    if (!user)
+      return res.status(404).json({ message: "Usuario no encontrado" });
+    user.status = user.status === "activo" ? "inactivo" : "activo";
+    await user.save();
+    res.json({ message: `Usuario ${user.Name} actualizado`, user });
+  } catch (error) {
+    next(error);
   }
 };
 
@@ -74,16 +109,42 @@ const login = async (req, res, next) => {
     }
     if (bcrypt.compareSync(req.body.password, document.password)) {
       try {
+        // 1. JWT igual que hoy
         const token = jwt.sign(
           {
             userId: document._id,
-            role: document.Role, // <-- importante: Role con mayúscula en el modelo, minúscula en el token
+            role: document.Role, // se mantiene
           },
           req.app.get("secretKey"),
-          { expiresIn: expireTime / 1000 } // Timepo del token en segundos
+          { expiresIn: expireTime / 1000 }
         );
-        const expirationTime = Date.now() + expireTime; // 1 hora en milisegundos
-        return res.json({ token, document, expirationTime });
+
+        const expirationTime = Date.now() + expireTime;
+
+        // 2. NUEVO: buscar memberships activas
+        const memberships = await Membership.find({
+          userId: document._id,
+          status: "activo",
+        }).populate("tenantId", "key name status");
+
+        // 3. Normalizar respuesta (no mandamos todo el modelo crudo)
+        const formattedMemberships = memberships.map((m) => ({
+          tenant: {
+            id: m.tenantId._id,
+            key: m.tenantId.key,
+            name: m.tenantId.name,
+            status: m.tenantId.status,
+          },
+          role: m.role,
+        }));
+
+        // 4. Respuesta extendida (compatible)
+        return res.json({
+          token,
+          document, // lo dejamos por compatibilidad
+          expirationTime,
+          memberships: formattedMemberships,
+        });
       } catch (e) {
         next(e);
       }
@@ -225,6 +286,8 @@ module.exports = {
   getUser,
   updateUser,
   deleteUser,
+  getDeletedUsers,
+  updateStatus,
   login,
   changePassword,
   forgotPassword,

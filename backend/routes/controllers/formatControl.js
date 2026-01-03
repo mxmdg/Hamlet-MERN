@@ -5,9 +5,26 @@ const formatControl = {};
 formatControl.getFormats = async (req, res, next) => {
   {
     try {
-      const formato = await formatos.esquema.find()
-      .sort({ Nombre: 1 })
-      .select("-__v");
+      const formato = await formatos.esquema
+        .find({ status: { $ne: "inactivo" } })
+        .sort({ Nombre: 1 })
+        .select("-__v");
+      res.json(formato);
+      //return formato
+    } catch (e) {
+      console.error(e);
+      next(e);
+    }
+  }
+};
+
+formatControl.getDeletedFormats = async (req, res, next) => {
+  {
+    try {
+      const formato = await formatos.esquema
+        .find({ status: { $eq: "inactivo" } })
+        .sort({ Nombre: 1 })
+        .select("-__v");
       res.json(formato);
       //return formato
     } catch (e) {
@@ -80,10 +97,44 @@ formatControl.updateFormat = async (req, res, next) => {
 };
 formatControl.deleteFormat = async (req, res, next) => {
   try {
-    const format = await formatos.esquema.findByIdAndDelete(req.params.id);
-    res.json({ Message: "Formato eliminado" });
+    const format = await formatos.esquema.findByIdAndUpdate(
+      req.params.id,
+      { status: "inactivo" },
+      { new: true }
+    );
+
+    if (!format) {
+      return res.status(404).json({ message: "Formato no encontrado" });
+    }
+
+    res.json({
+      message: `Formato ${format.Nombre || ""} desactivado`,
+      format,
+    });
   } catch (e) {
     console.error(e);
+    next(e);
+  }
+};
+
+formatControl.updateStatus = async (req, res, next) => {
+  try {
+    const format = await formatos.esquema.findById(req.params.id);
+
+    if (!format) {
+      return res.status(404).json({ message: "Formato no encontrado" });
+    }
+
+    const newStatus = format.status === "activo" ? "inactivo" : "activo";
+
+    format.status = newStatus;
+    await format.save();
+
+    res.json({
+      message: "Estado actualizado",
+      format,
+    });
+  } catch (e) {
     next(e);
   }
 };

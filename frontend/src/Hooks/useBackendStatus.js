@@ -7,19 +7,12 @@ export function useBackendStatus() {
   const [status, setStatus] = useState("checking");
 
   useEffect(() => {
-    let mounted = true;
-
     async function check() {
       const ok = await checkHealth();
-      console.log(ok);
-      if (mounted) {
-        setStatus(ok ? "ok" : "down");
-      }
+      setStatus(ok ? "ok" : "down");
     }
 
     check();
-
-    return () => (mounted = false);
   }, []);
 
   return status;

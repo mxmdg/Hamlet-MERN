@@ -5,18 +5,24 @@ const path = require("path");
 
 const {
   getFinishers,
+  getDeletedFinishers,
   addFinisher,
   getFinisher,
   updateFinisher,
-  deleteFinisher,
+  updateStatus,
 } = require("./controllers/finishersControl");
 
 routerFinisher.route("/").get(getFinishers).post(addFinisher);
+
+routerFinisher.route("/trash").get(getDeletedFinishers);
+
+//Restore format from trash
+routerFinisher.route("/trash/:id").delete(updateStatus);
 
 routerFinisher
   .route("/:id")
   .get(getFinisher)
   .put(updateFinisher)
-  .delete(deleteFinisher);
+  .delete(updateStatus);
 
 module.exports = routerFinisher;

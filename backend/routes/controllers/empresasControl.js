@@ -5,13 +5,29 @@ const empresasControl = {};
 empresasControl.getCompanies = async (req, res, next) => {
   {
     try {
-      const empresa = await empresas.esquema.find().sort({ Nombre: 1 }).select("-__v");;
+      const empresa = await empresas.esquema
+        .find({ status: { $ne: "inactivo" } })
+        .sort({ Nombre: 1 })
+        .select("-__v");
       res.json(empresa);
       //return formato
     } catch (e) {
       console.error(e);
       next(e);
     }
+  }
+};
+
+empresasControl.getDeletedCompanies = async (req, res, next) => {
+  try {
+    const empresa = await empresas.esquema
+      .find({ status: { $eq: "inactivo" } })
+      .sort({ Nombre: 1 })
+      .select("-__v");
+    res.json(empresa);
+  } catch (e) {
+    console.error(e);
+    next(e);
   }
 };
 
@@ -98,6 +114,7 @@ empresasControl.updateCompany = async (req, res, next) => {
       Provincia,
       Pais,
       Telefono,
+      status,
     } = req.body;
     const empresa = await empresas.esquema.findByIdAndUpdate(
       req.params.id,
@@ -110,6 +127,7 @@ empresasControl.updateCompany = async (req, res, next) => {
         Provincia,
         Pais,
         Telefono,
+        status,
       },
       { new: false }
     );
@@ -125,10 +143,41 @@ empresasControl.updateCompany = async (req, res, next) => {
 };
 empresasControl.deleteCompany = async (req, res, next) => {
   try {
-    const empresa = await empresas.esquema.findByIdAndDelete(req.params.id);
-    res.json({ Message: "empresa eliminada" });
+    const empresa = await empresas.esquema.findByIdAndUpdate(
+      req.params.id,
+      { status: "inactivo" },
+      { new: true, runValidators: true }
+    );
+
+    if (!empresa) {
+      return res.status(404).json({ message: "Empresa no encontrada" });
+    }
+
+    res.json({
+      message: "Empresa desactivada",
+      empresa,
+    });
   } catch (e) {
-    console.log(e);
+    next(e);
+  }
+};
+
+empresasControl.updateStatus = async (req, res, next) => {
+  try {
+    const empresa = await empresas.esquema.findById(req.params.id);
+
+    if (!empresa) {
+      return res.status(404).json({ message: "Empresa no encontrada" });
+    }
+
+    empresa.status = empresa.status === "activo" ? "inactivo" : "activo";
+    await empresa.save();
+
+    res.json({
+      message: `Empresa ${empresa.Nombre} actualizado`,
+      empresa,
+    });
+  } catch (e) {
     next(e);
   }
 };

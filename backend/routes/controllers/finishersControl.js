@@ -6,16 +6,41 @@ const finishersControl = {};
 finishersControl.getFinishers = async (req, res, next) => {
   {
     try {
-      const finishersList = await finishers.esquema.find().populate({
-        path: "Costo",
-        model: prices.esquema,
-      });
+      const finishersList = await finishers.esquema
+        .find({ status: { $ne: "inactivo" } })
+        .populate({
+          path: "Costo",
+          model: prices.esquema,
+        });
       res.json(finishersList);
       return finishersList;
     } catch (error) {
       console.log(error);
       next(error);
-      res.status(500).json({ message: error.message || "Error al obtener los acabados" });
+      res
+        .status(500)
+        .json({ message: error.message || "Error al obtener los acabados" });
+    }
+  }
+};
+
+finishersControl.getDeletedFinishers = async (req, res, next) => {
+  {
+    try {
+      const finishersList = await finishers.esquema
+        .find({ status: { $eq: "inactivo" } })
+        .populate({
+          path: "Costo",
+          model: prices.esquema,
+        });
+      res.json(finishersList);
+      return finishersList;
+    } catch (error) {
+      console.log(error);
+      next(error);
+      res
+        .status(500)
+        .json({ message: error.message || "Error al obtener los acabados" });
     }
   }
 };
@@ -61,9 +86,10 @@ finishersControl.addFinisher = async (req, res, next) => {
 
 finishersControl.getFinisher = async (req, res, next) => {
   try {
-    const finisher = await finishers.esquema.findById(req.params.id)
-    .populate({ path: "Costo", model: prices.esquema })
-    .select("-Costo.Historial");
+    const finisher = await finishers.esquema
+      .findById(req.params.id)
+      .populate({ path: "Costo", model: prices.esquema })
+      .select("-Costo.Historial");
     if (finisher) {
       res.json(finisher);
     } else {
@@ -72,7 +98,9 @@ finishersControl.getFinisher = async (req, res, next) => {
   } catch (error) {
     console.log(error);
     next(error);
-    res.status(500).json({ message: error.message || "Error al obtener la Maquinaria" });
+    res
+      .status(500)
+      .json({ message: error.message || "Error al obtener la Maquinaria" });
   }
 };
 
@@ -115,11 +143,42 @@ finishersControl.updateFinisher = async (req, res, next) => {
     next(e);
   }
 };
-finishersControl.deleteFinisher = async (req, res) => {
-  const mahcine = await finishers.esquema.findByIdAndDelete(req.params.id);
-  res.json({
-    message: `${mahcine.Fabricante} ${mahcine.Modelo} eliminada`,
-  });
+finishersControl.deleteFinisher = async (req, res, next) => {
+  try {
+    const finisher = await finishers.esquema.findByIdAndUpdate(
+      req.params.id,
+      { status: "inactivo" },
+      { new: true, runValidators: true }
+    );
+
+    if (!finisher) {
+      return res.status(404).json({ message: "Acabado no encontrado" });
+    }
+
+    res.json({
+      message: `${finisher.Fabricante} ${finisher.Modelo} desactivado`,
+      finisher,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+finishersControl.updateStatus = async (req, res, next) => {
+  try {
+    const finisher = await finishers.esquema.findById(req.params.id);
+    if (!finisher) {
+      return res.status(404).json({ message: "Acabado no encontrado" });
+    }
+    finisher.status = finisher.status === "activo" ? "inactivo" : "activo";
+    await finisher.save();
+    res.json({
+      message: `Acabado ${finisher.Fabricante} ${finisher.Modelo} actualizado`,
+      finisher,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
 module.exports = finishersControl;

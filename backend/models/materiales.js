@@ -15,6 +15,18 @@ const materialSchema = new Schema({
     required: true,
   },
   Color: { type: String, required: false },
+  Stock: { type: Number, required: false, default: 0 },
+  status: {
+    type: String,
+    enum: ["activo", "inactivo"],
+    default: "activo",
+  },
+  tenantId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Tenant",
+    required: false,
+    index: true,
+  },
 });
 
 module.exports.esquema = model("Material", materialSchema);

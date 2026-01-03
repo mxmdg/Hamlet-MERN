@@ -4,10 +4,12 @@ const {
   getAll,
   addUser,
   getUser,
+  getDeletedUsers,
   updateUser,
   deleteUser,
   login,
   changePassword,
+  updateStatus,
   forgotPassword,
   resetPassword,
 } = require("./controllers/usersController");
@@ -17,10 +19,12 @@ router.post("/login", login);
 router.post("/register", addUser);
 router.post("/forgot-password", forgotPassword);
 router.get("/", getAll);
+router.get("/trash", getDeletedUsers);
 router.get("/:id", getUser);
 router.put("/:id/change-password", changePassword);
 router.put("/resetPassword/:token", resetPassword);
 router.put("/:id", updateUser);
-router.delete("/:id", deleteUser);
+router.delete("/:id", updateStatus);
+router.delete("/trash/:id", updateStatus);
 
 module.exports = router;

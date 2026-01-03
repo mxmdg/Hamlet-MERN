@@ -8,11 +8,14 @@ const {
   updateQuotation,
   sendQuotationEmail,
   deleteQuotation,
+  getDeletedQuotations,
+  updateStatus,
   //getQuotationsResumen
 } = require("./controllers/quotationsControl");
 
 // Rutas principales
 routerQuotation.route("/").get(getQuotations).post(addQuotation);
+routerQuotation.route("/trash").get(getDeletedQuotations);
 
 /* routerQuotation.route('/resumen')
 .get(getQuotationsResumen); */
@@ -23,6 +26,8 @@ routerQuotation
   .get(getQuotation)
   .put(updateQuotation)
   .patch(updateQuotation)
-  .delete(deleteQuotation);
+  .delete(updateStatus);
+
+routerQuotation.route("/trash/:id").delete(updateStatus);
 
 module.exports = routerQuotation;

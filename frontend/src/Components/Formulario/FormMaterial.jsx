@@ -158,10 +158,10 @@ const FormMaterial = (props) => {
 
           setLoading(false);
 
-          console.log(dataForm);
+          //console.log(dataForm);
         } catch (e) {
           setErrorMessage(e.message);
-            setLoading(false);
+          setLoading(false);
         }
       };
       fetchItem();
@@ -182,13 +182,13 @@ const FormMaterial = (props) => {
     const names = Object.keys(e);
     const values = Object.values(e);
 
-    console.log(names, values);
+    //console.log(names, values);
 
     // Collect data from inputs
     for (let i = 0; i < names.length; i++) {
       let nombre = names[i];
       let value = values[i];
-      console.log(nombre, value);
+      //console.log(nombre, value);
       datos.push({ nombre, value });
     }
     // console.log(datos);
@@ -199,8 +199,8 @@ const FormMaterial = (props) => {
         datos.push(res);
       }
     }
-    console.log("Datos from Chekbox");
-    console.log(datos);
+    //console.log("Datos from Chekbox");
+    //console.log(datos);
 
     const formData = convertirArrayAObjeto(datos);
     //formData.checkboxItems = selectedCheckboxItems;
@@ -225,7 +225,7 @@ const FormMaterial = (props) => {
         navigate(-1);
         //props.editor(true);
       } catch (e) {
-        console.log(e);
+        //console.log(e);
         setErrorMessage(
           "No se pudo actualizar. " + e.response.data.error.message
         );
@@ -255,7 +255,7 @@ const FormMaterial = (props) => {
   };
 
   const resetError = () => {
-    console.log("resetError");
+    //console.log("resetError");
     setErrorMessage(null);
     //navigate(-1);
   };
@@ -278,9 +278,10 @@ const FormMaterial = (props) => {
               color="success"
               size="small"
               defaultValue={
-                useItem !== "new" 
-                ? useItem.data[inp.inputName]._id || useItem.data[inp.inputName] 
-                : ""
+                useItem !== "new"
+                  ? useItem.data[inp.inputName]._id ||
+                    useItem.data[inp.inputName]
+                  : ""
               }
               name={inp.inputName}
               {...register(inp.inputName)}

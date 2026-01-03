@@ -57,7 +57,7 @@ quotationsControl.getQuotations = async (req, res) => {
     }
 
     const allQuotations = await quotations.esquema
-      .find(query)
+      .find({ ...query, status: { $ne: "Rechazado" } })
       .populate({
         path: "jobId",
         model: Jobs.esquema,
@@ -185,17 +185,45 @@ quotationsControl.sendQuotationEmail = async (req, res) => {
 // Eliminar una cotización
 quotationsControl.deleteQuotation = async (req, res) => {
   try {
-    const deletedQuotation = await quotations.esquema.findByIdAndDelete(
-      req.params.id
+    const deletedQuotation = await quotations.esquema.findByIdAndUpdate(
+      req.params.id,
+      { status: "inactivo" },
+      { new: true }
     );
     if (deletedQuotation) {
-      res.json({ message: "Cotización eliminada" });
+      res.json({
+        message: "Cotización desactivada",
+        quotation: deletedQuotation,
+      });
     } else {
       res.status(404).json({ message: "Cotización no encontrada" });
     }
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error al eliminar la cotización" });
+    next(error);
+  }
+};
+
+quotationsControl.getDeletedQuotations = async (req, res, next) => {
+  try {
+    const deleted = await quotations.esquema.find({
+      status: { $eq: "Rechazado" },
+    });
+    res.json(deleted);
+  } catch (error) {
+    next(error);
+  }
+};
+
+quotationsControl.updateStatus = async (req, res, next) => {
+  try {
+    const q = await quotations.esquema.findById(req.params.id);
+    if (!q)
+      return res.status(404).json({ message: "Cotización no encontrada" });
+    q.status = q.status !== "Rechazado" ? "Rechazado" : "Pendiente";
+    await q.save();
+    res.json({ message: "Estado actualizado", quotation: q });
+  } catch (error) {
+    next(error);
   }
 };
 

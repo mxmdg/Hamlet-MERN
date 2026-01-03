@@ -24,6 +24,16 @@ export const empresasRoutes = () => (
       }
     />
     <Route
+      path="/empresas/trash"
+      element={
+        <Grid container columns={12}>
+          <Grid item columns={4}>
+            <MainContainer entity={"empresas/trash"} />
+          </Grid>
+        </Grid>
+      }
+    />
+    <Route
       path="/empresas/add"
       element={
         <FormMaterial

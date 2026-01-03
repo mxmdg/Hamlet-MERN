@@ -12,7 +12,7 @@ const usersSchema = new Schema({
   },
   Role: {
     type: String,
-    required: true,
+    default: "Customer",
     enum: ["Admin", "Manager", "Operator", "Customer"],
   },
   email: {
@@ -24,6 +24,11 @@ const usersSchema = new Schema({
   password: { type: String, required: true },
   resetPasswordToken: { type: String, required: false },
   resetPasswordExpires: { type: Date, required: false },
+  status: {
+    type: String,
+    enum: ["activo", "pendiente", "revocado"],
+    default: "pendiente",
+  },
 });
 
 usersSchema.pre("save", function (next) {

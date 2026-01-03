@@ -11,8 +11,8 @@ export const productoPorUnidad = (Valor, Minimo, Entrada, cantidad) => {
     unidadEntrada >= 1
       ? (parseFloat(Entrada) + parseFloat(cantidad)) * parseFloat(Valor)
       : parseFloat(Entrada) + parseFloat(cantidad) * parseFloat(Valor);
-  console.log("Resultado x un: " + resultado);
-  console.log(Valor, Minimo, Entrada, cantidad);
+  //console.log("Resultado x un: " + resultado);
+  //console.log(Valor, Minimo, Entrada, cantidad);
   resultado = resultado < parseFloat(Minimo) ? parseFloat(Minimo) : resultado;
   let valorUnitario = roundCents(resultado / cantidad);
   const papyrusExport = `(${Entrada} + (Cab_Cant_Millar * 1000))`;

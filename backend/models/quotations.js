@@ -21,13 +21,24 @@ const quotationsSchema = new Schema({
   fecha: { type: Date, default: Date.now, required: false },
   owner: { type: mongoose.Schema.ObjectId, ref: "usersSchema" },
   jobId: { type: mongoose.Schema.ObjectId, ref: "Jobs", required: false },
-  status: { type: String, required: false, default: "Pendiente", enum: ["Pendiente", "Enviado", "Aprobado", "Rechazado"] },
+  status: {
+    type: String,
+    required: true,
+    default: "Pendiente",
+    enum: ["Pendiente", "Enviado", "Aprobado", "Rechazado"],
+  },
   customerId: {
     type: mongoose.Schema.ObjectId,
     ref: "customers",
     required: false,
   },
   jobType: { type: String, required: false },
+  tenantId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Tenant",
+    required: false,
+    index: true,
+  },
 });
 
 // Middleware para autoincrementar el campo index antes de guardar
@@ -39,7 +50,7 @@ quotationsSchema.pre("save", async function (next) {
         { $inc: { seq: 1 } },
         { new: true, upsert: true }
       );
-      this.index = counter.seq
+      this.index = counter.seq;
       next();
     } catch (err) {
       next(err);

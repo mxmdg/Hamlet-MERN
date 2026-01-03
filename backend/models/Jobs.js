@@ -42,7 +42,7 @@ const partSchema = new Schema({
   Pages: { type: Number, required: true },
   Ancho: { type: Number, required: true },
   Alto: { type: Number, required: true },
-  Formato: { type: String},
+  Formato: { type: String },
   Orientacion: { type: String },
   ColoresFrente: { type: Number, required: true },
   ColoresDorso: { type: Number, required: false, default: 0 },
@@ -59,6 +59,12 @@ const partSchema = new Schema({
       default: [],
     },
   ],
+  tenantId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Tenant",
+    required: false,
+    index: true,
+  },
 });
 
 const jobSchema = new Schema({
@@ -77,6 +83,11 @@ const jobSchema = new Schema({
     type: [mongoose.Schema.Types.Mixed],
     required: true,
     default: [],
+  },
+  status: {
+    type: String,
+    enum: ["activo", "inactivo"],
+    default: "activo",
   },
 });
 

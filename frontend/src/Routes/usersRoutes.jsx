@@ -9,6 +9,10 @@ import UsersDataForm from "../Components/Formulario/UsersDataForm";
 export const usersRoutes = () => (
   <>
     <Route path="/users" element={<MainContainer entity={"users"} />} />
+    <Route
+      path="/users/trash"
+      element={<MainContainer entity={"users/trash"} />}
+    />
     <Route path="/users/add" element={<Register />} />
     <Route path="/users/profile" element={<Profile />} />
     <Route path="/users/ChangePassword" element={<ChangePassword />} />

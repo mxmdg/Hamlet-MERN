@@ -15,6 +15,8 @@ import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
+import RecyclingIcon from "@mui/icons-material/Recycling";
+import RestoreFromTrashIcon from "@mui/icons-material/RestoreFromTrash";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -26,7 +28,7 @@ import { visuallyHidden } from "@mui/utils";
 import { deleteMultiple } from "../customHooks/FetchDataHook";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import CustomizedTooltip from "../utils/CustomizedTooltip";
-import { styled } from "@mui/material/styles";
+import { styled, alpha } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import { pages } from "../NavigationBar/AppBarResponsive";
@@ -177,8 +179,43 @@ export const DangerTooltip = styled(({ className, ...props }) => (
   },
 }));
 
+/**
+ * Genera un gradiente a partir de un color base de MUI
+ */
+const makeGradient = (color) =>
+  `linear-gradient(
+    0deg,
+    ${alpha(color, 0.85)} 0%,
+    ${alpha(color, 0.55)} 100%
+  )`;
+
+export const GradientTooltip = styled(
+  ({ className, color = "primary", ...props }) => (
+    <Tooltip {...props} arrow classes={{ popper: className }} />
+  )
+)(({ theme, color }) => {
+  const paletteColor = theme.palette[color] || theme.palette.primary;
+
+  return {
+    [`& .${tooltipClasses.tooltip}`]: {
+      background: makeGradient(paletteColor.main),
+      color: paletteColor.contrastText,
+      border: `2px solid ${paletteColor.main}`,
+      borderRadius: 8,
+      boxShadow: "8px 10px 10px rgba(0,0,0,0.35)",
+      padding: "10px",
+      fontSize: 13,
+      textTransform: "uppercase",
+    },
+    [`& .${tooltipClasses.arrow}`]: {
+      color: paletteColor.main,
+    },
+  };
+});
+
 export function EnhancedTableToolbar(props) {
   const { numSelected } = props;
+  const trashMode = props.collection.includes("/trash");
   const navigate = useNavigate();
 
   return (
@@ -202,21 +239,24 @@ export function EnhancedTableToolbar(props) {
           {props.title}
         </Typography>
       )}
-      <StyledTooltip title="Agregar" arrow>
-        <IconButton
-          onClick={() => {
-            navigate(`/${props.collection.replace("/urg", "")}/add`);
-          }}
-          sx={{ alignSelf: "right" }}
-        >
-          <AddBoxIcon color="primary" />
-        </IconButton>
-      </StyledTooltip>
+      {!trashMode && (
+        <GradientTooltip title="Agregar" color="primary" arrow>
+          <IconButton
+            onClick={() => {
+              navigate(`/${props.collection.replace("/urg", "")}/add`);
+            }}
+            sx={{ alignSelf: "right" }}
+          >
+            <AddBoxIcon color="primary" />
+          </IconButton>
+        </GradientTooltip>
+      )}
+
       {numSelected > 0 ? (
         <>
-          {numSelected === 1 && (
+          {numSelected === 1 && !trashMode && (
             <>
-              <StyledTooltip title="Copiar" arrow>
+              <GradientTooltip title="Copiar" arrow color="secondary">
                 <IconButton
                   onClick={() => {
                     navigate(
@@ -229,8 +269,8 @@ export function EnhancedTableToolbar(props) {
                 >
                   <ContentCopyIcon color="secondary" />
                 </IconButton>
-              </StyledTooltip>
-              <StyledTooltip title="Editar" arrow>
+              </GradientTooltip>
+              <GradientTooltip title="Editar" arrow color="info">
                 <IconButton
                   onClick={() => {
                     navigate(
@@ -243,11 +283,15 @@ export function EnhancedTableToolbar(props) {
                 >
                   <EditIcon color="info" />
                 </IconButton>
-              </StyledTooltip>
+              </GradientTooltip>
             </>
           )}
 
-          <DangerTooltip title="¡BORRAR!" arrow>
+          <GradientTooltip
+            title={trashMode ? "Restaurar" : "¡BORRAR!"}
+            color={trashMode ? "success" : "error"}
+            arrow
+          >
             <IconButton
               sx={{ alignSelf: "right" }}
               onClick={() => {
@@ -266,18 +310,41 @@ export function EnhancedTableToolbar(props) {
 
                 pasarBorrado();
               }}
-              color="error"
+              color={!trashMode ? "error" : "success"}
             >
-              <DeleteIcon />
+              {!trashMode && <DeleteIcon />}
+              {trashMode && <RecyclingIcon />}
             </IconButton>
-          </DangerTooltip>
+          </GradientTooltip>
+          {!trashMode && (
+            <GradientTooltip
+              title="Papelera de reciclaje"
+              color="success"
+              arrow
+            >
+              <IconButton
+                onClick={() => {
+                  navigate(`/${props.collection.replace("/urg", "")}/trash`);
+                }}
+                sx={{ alignSelf: "right" }}
+              >
+                <RestoreFromTrashIcon color="success" />
+              </IconButton>
+            </GradientTooltip>
+          )}
         </>
       ) : (
-        <StyledTooltip title="Filter list" arrow>
-          <IconButton>
-            <FilterListIcon />
+        <GradientTooltip title="Papelera de reciclaje" color="success" arrow>
+          <IconButton
+            disabled={trashMode}
+            onClick={() => {
+              navigate(`/${props.collection.replace("/urg", "")}/trash`);
+            }}
+            sx={{ alignSelf: "right" }}
+          >
+            <RestoreFromTrashIcon color={!trashMode ? "success" : "default"} />
           </IconButton>
-        </StyledTooltip>
+        </GradientTooltip>
       )}
     </Toolbar>
   );

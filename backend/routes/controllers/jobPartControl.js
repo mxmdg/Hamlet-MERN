@@ -2,10 +2,25 @@ const jobParts = require("../../models/jobParts");
 
 const jobPartsControl = {};
 
-jobPartsControl.getJobParts = async (req, res) => {
-  {
-    const jobPart = await jobParts.esquema.find().select("-__v");;
+jobPartsControl.getJobParts = async (req, res, next) => {
+  try {
+    const jobPart = await jobParts.esquema
+      .find({ status: { $ne: "inactivo" } })
+      .select("-__v");
     res.json(jobPart);
+  } catch (error) {
+    next(error);
+  }
+};
+
+jobPartsControl.getDeletedJobParts = async (req, res, next) => {
+  try {
+    const jobPart = await jobParts.esquema
+      .find({ status: { $eq: "inactivo" } })
+      .select("-__v");
+    res.json(jobPart);
+  } catch (error) {
+    next(error);
   }
 };
 
@@ -98,14 +113,30 @@ jobPartsControl.updateJobPart = async (req, res) => {
     throw error;
   }
 };
-jobPartsControl.deleteJobPart = async (req, res) => {
+jobPartsControl.deleteJobPart = async (req, res, next) => {
   try {
-    const jobPart = await jobParts.esquema.findByIdAndDelete(req.params.id);
-    res.json({ Message: "jobPart eliminado" });
+    const jobPart = await jobParts.esquema.findByIdAndUpdate(
+      req.params.id,
+      { status: "inactivo" },
+      { new: true }
+    );
+    if (!jobPart)
+      return res.status(404).json({ message: "jobPart no encontrado" });
+    res.json({ Message: "jobPart desactivado", jobPart });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: "Error al borrar el jobPart" });
-    throw error;
+    next(error);
+  }
+};
+
+jobPartsControl.updateStatus = async (req, res, next) => {
+  try {
+    const jp = await jobParts.esquema.findById(req.params.id);
+    if (!jp) return res.status(404).json({ message: "jobPart no encontrado" });
+    jp.status = jp.status === "activo" ? "inactivo" : "activo";
+    await jp.save();
+    res.json({ message: "Estado actualizado", jobPart: jp });
+  } catch (error) {
+    next(error);
   }
 };
 

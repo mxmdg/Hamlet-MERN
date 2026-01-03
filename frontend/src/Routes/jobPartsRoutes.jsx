@@ -24,6 +24,10 @@ export const jobPartsRoutes = () => (
       }
     />
     <Route
+      path="/JobParts/trash"
+      element={<MainContainer entity={"JobParts/trash"} />}
+    />
+    <Route
       path="/JobParts/add"
       element={
         <FormMaterial form={jobPartDataForm} collection="JobParts" task="new" />

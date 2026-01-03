@@ -8,6 +8,10 @@ export const preciosRoutes = () => (
   <>
     <Route path="/precios" element={<MainContainer entity={"precios"} />} />
     <Route
+      path="/precios/trash"
+      element={<MainContainer entity={"precios/trash"} />}
+    />
+    <Route
       path="/precios/edit/:id"
       element={
         <FormMaterial form={PricesDataForm} collection="precios" task="edit" />

@@ -1,4 +1,4 @@
-const { Schema, model } = require("mongoose");
+const { Schema, model, default: mongoose } = require("mongoose");
 
 const empresaSchema = new Schema({
   Nombre: {
@@ -20,6 +20,17 @@ const empresaSchema = new Schema({
   Provincia: { type: String, required: false },
   Pais: { type: String, default: "Argentina", required: false },
   Telefono: { type: String, required: false },
+  status: {
+    type: String,
+    enum: ["activo", "inactivo"],
+    default: "activo",
+  },
+  tenantId: {
+    type: mongoose.Schema.ObjectId,
+    ref: "Tenant",
+    required: false,
+    index: true,
+  },
 });
 
 empresaSchema.set("toJSON");

@@ -122,6 +122,7 @@ export const Login = () => {
 
   const errorRender = (
     <ErrorMessage
+      title="Error"
       message={error.message}
       severity={error.severity}
       action={resetError}
@@ -137,14 +138,14 @@ export const Login = () => {
       <Card elevation={10}>
         {context.userLogged === null && (
           <CardHeader
-            avatar={
+            /* avatar={
               <Avatar
                 src={Logo}
                 alt="Hamlet logo"
                 sx={{ width: 50, height: 50 }}
                 variant="rounded"
               />
-            }
+            } */
             title="Login"
             titleTypographyProps={{ color: "secondary", fontWeight: "600" }}
           ></CardHeader>
@@ -224,6 +225,7 @@ export const Login = () => {
                 {error !== "" && (
                   <Grid item xs={6} sm={2} md={9} sx={{ alignSelf: "right" }}>
                     <ErrorMessage
+                      title="Credenciales inválidas"
                       message={error.message}
                       severity={error.severity}
                       action={resetError}

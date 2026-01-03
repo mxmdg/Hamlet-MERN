@@ -200,7 +200,7 @@ export default function CollapsibleTable(props) {
   const [order, setOrder] = React.useState(props.settings.order || "asc");
   const [selected, setSelected] = React.useState([]);
   const [orderBy, setOrderBy] = React.useState(props.settings.column || "name");
-  const [rows, setRows] = React.useState(props.rows);
+  const [rows, setRows] = React.useState(props.rows || []);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(true);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);

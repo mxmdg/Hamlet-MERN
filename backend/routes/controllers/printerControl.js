@@ -4,12 +4,26 @@ const prices = require("../../models/prices");
 const printerControl = {};
 
 printerControl.getPrinters = async (req, res, next) => {
-  {
+  try {
     const printer = await printers.esquema
-      .find()
+      .find({ status: { $ne: "inactivo" } })
       .select("-__v")
       .populate({ path: "Costo", model: prices.esquema });
     res.json(printer);
+  } catch (error) {
+    next(error);
+  }
+};
+
+printerControl.getDeletedPrinters = async (req, res, next) => {
+  try {
+    const printer = await printers.esquema
+      .find({ status: { $eq: "inactivo" } })
+      .select("-__v")
+      .populate({ path: "Costo", model: prices.esquema });
+    res.json(printer);
+  } catch (error) {
+    next(error);
   }
 };
 
@@ -98,7 +112,7 @@ printerControl.getPrinterSimple = async (req, res, next) => {
 printerControl.getPrintersSimple = async (req, res, next) => {
   try {
     const printer = await printers.esquema
-      .find()
+      .find({ status: { $ne: "inactivo" } })
       .select(
         "-Billing -TotalPrints -ColorPrints -BlackPrints -LargePrints -SmallPrints"
       )
@@ -189,15 +203,33 @@ printerControl.updatePrinter = async (req, res) => {
   }
 };
 
-printerControl.deletePrinter = async (req, res) => {
+printerControl.deletePrinter = async (req, res, next) => {
   try {
-    const impresora = await printers.esquema.findByIdAndDelete(req.params.id);
+    const impresora = await printers.esquema.findByIdAndUpdate(
+      req.params.id,
+      { status: "inactivo" },
+      { new: true }
+    );
+    if (!impresora)
+      return res.status(404).json({ message: "Impresora no encontrada" });
     res.json({
-      message: `${impresora.Fabricante} ${impresora.Modelo} eliminada`,
+      message: `${impresora.Fabricante} ${impresora.Modelo} desactivada`,
+      impresora,
     });
   } catch (error) {
-    console.log(e);
-    res.json({ message: "Error: " + e });
+    next(error);
+  }
+};
+
+printerControl.updateStatus = async (req, res, next) => {
+  try {
+    const p = await printers.esquema.findById(req.params.id);
+    if (!p) return res.status(404).json({ message: "Impresora no encontrada" });
+    p.status = p.status === "activo" ? "inactivo" : "activo";
+    await p.save();
+    res.json({ message: "Estado actualizado", printer: p });
+  } catch (error) {
+    next(error);
   }
 };
 

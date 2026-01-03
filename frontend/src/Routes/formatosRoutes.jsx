@@ -7,6 +7,10 @@ export const formatosRoutes = () => (
   <>
     <Route path="/formatos" element={<MainContainer entity={"formatos"} />} />
     <Route
+      path="/formatos/trash"
+      element={<MainContainer entity={"formatos/trash"} />}
+    />
+    <Route
       path="/formatos/add"
       element={
         <FormMaterial form={FormatDataForm} collection="formatos" task="new" />

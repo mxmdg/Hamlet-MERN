@@ -12,6 +12,10 @@ export const printersRoutes = () => {
         element={<MainContainer entity={"impresoras"} />}
       />
       <Route
+        path="/impresoras/trash"
+        element={<MainContainer entity={"impresoras/trash"} />}
+      />
+      <Route
         path="/billing"
         element={<PrintersMainContainer entity={"impresoras"} />}
       />

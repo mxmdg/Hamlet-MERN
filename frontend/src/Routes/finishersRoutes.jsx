@@ -6,6 +6,10 @@ export const finishersRoutes = () => (
   <>
     <Route path="/finishers" element={<MainContainer entity={"finishers"} />} />
     <Route
+      path="/finishers/trash"
+      element={<MainContainer entity={"finishers/trash"} />}
+    />
+    <Route
       path="/finishers/add"
       element={<FinishersDataForm collection="finishers" task="new" />}
     />
