@@ -10,7 +10,7 @@ const Membership = require("../../models/memberships");
 const Port = process.env.PORT;
 const uiPort = process.env.UIPORT;
 const URL = process.env.URL;
-const expireTime = 8 * 60 * 60 * 1000; //horas en milisegundos
+const expireTime = 24 * 60 * 60 * 1000; //horas en milisegundos
 
 const getAll = async (req, res, next) => {
   try {
@@ -37,7 +37,7 @@ const getDeletedUsers = async (req, res, next) => {
 };
 
 const addUser = async (req, res, next) => {
-  const newUser = new usersModel.esquema(req.body);
+  const newUser = new usersModel.esquema({ ...req.body });
   try {
     await newUser.save();
     res.json({ message: newUser.Name + " " + newUser.LastName + " Saved" });
@@ -73,7 +73,6 @@ const updateUser = async (req, res, next) => {
 const deleteUser = async (req, res, next) => {
   try {
     const user = await usersModel.esquema.findByIdAndUpdate(
-      req.params.id,
       { status: "inactivo" },
       { new: true }
     );
@@ -125,15 +124,15 @@ const login = async (req, res, next) => {
         const memberships = await Membership.find({
           userId: document._id,
           status: "activo",
-        }).populate("tenantId", "key name status");
+        }).populate("tenant", "key name status");
 
         // 3. Normalizar respuesta (no mandamos todo el modelo crudo)
         const formattedMemberships = memberships.map((m) => ({
           tenant: {
-            id: m.tenantId._id,
-            key: m.tenantId.key,
-            name: m.tenantId.name,
-            status: m.tenantId.status,
+            id: m.tenant._id,
+            key: m.tenant.key,
+            name: m.tenant.name,
+            status: m.tenant.status,
           },
           role: m.role,
         }));
@@ -159,28 +158,41 @@ const login = async (req, res, next) => {
 const changePassword = async (req, res, next) => {
   try {
     const userId = req.params.id;
-    const { oldPassword, newPassword } = req.body;
+    const { oldPassword, newPassword, confirmNewPassword } = req.body;
 
-    // Buscar el usuario por su ID
-    const user = await usersModel.esquema.findById(userId);
+    if (newPassword !== confirmNewPassword) {
+      return res.status(400).json({
+        message: "La nueva contraseña y la confirmación no coinciden",
+      });
+    }
+
+    if (!oldPassword || !newPassword) {
+      return res.status(400).json({
+        message: "Debe ingresar la contraseña actual y la nueva",
+      });
+    }
+
+    const user = await usersModel.esquema
+      .findOne({ _id: userId })
+      .select("+password");
+
     if (!user) {
       return res.status(404).json({ message: "Usuario no encontrado" });
     }
 
-    // Verificar la contraseña actual
-    if (!bcrypt.compareSync(oldPassword, user.password)) {
+    const passwordOk = bcrypt.compareSync(oldPassword, user.password);
+    if (!passwordOk) {
       return res
         .status(400)
         .json({ message: "La contraseña actual es incorrecta" });
     }
 
-    // Actualizar la contraseña
-    user.password = newPassword; //bcrypt.hashSync(newPassword, 10);
+    user.password = newPassword;
     await user.save();
 
     res.json({ message: "Contraseña actualizada exitosamente" });
   } catch (error) {
-    console.error("Error al cambiar la contraseña:", error);
+    console.error("Error al cambiar la contraseña:", error.message);
     next(error);
   }
 };
@@ -242,7 +254,7 @@ const forgotPassword = async (req, res, next) => {
         });
       } else {
         return res.status(200).json({
-          message: "Revisá tu correo",
+          message: "Revisá tu correo " + resetPasswordLink,
         });
       }
     });
@@ -260,17 +272,24 @@ const resetPassword = async (req, res, next) => {
     // Buscar el usuario por el token de restablecimiento de contraseña
     const user = await usersModel.esquema.findOne({
       resetPasswordToken: token,
-      resetPasswordExpires: { $gt: Date.now() }, // Verificar que el token aún no haya expirado
+      resetPasswordExpires: { $gt: Date.now() },
     });
 
+    console.log(user);
+    console.log(token);
+
     if (!user) {
-      return res.status(400).json({ message: "Token inválido o expirado" });
+      return res
+        .status(400)
+        .json({ message: "Token inválido o expirado " + JSON.stringify(user) });
     }
 
     // Actualizar la contraseña
     user.password = newPassword;
     user.resetPasswordToken = undefined;
     user.resetPasswordExpires = undefined;
+
+    console.log(user);
     await user.save();
 
     res.json({ message: "Contraseña restablecida exitosamente" });

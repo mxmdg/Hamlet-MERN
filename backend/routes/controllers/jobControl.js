@@ -314,11 +314,12 @@ jobControl.addJob = async (req, res) => {
 
 jobControl.getJob = async (req, res) => {
   try {
-    const job = await jobs.esquema;
-    findOne({
-      _id: req.params.id,
-      tenant: req.header("x-tenant"),
-    })
+    const tenant = req.header("x-tenant");
+    const job = await jobs.esquema
+      .findOne({
+        tenant,
+        _id: req.params.id,
+      })
       .select(
         "-Finishing.Costo.Historial  -Finishing.jobTypesAllowed -Finishing.partTypesAllowed"
       )
@@ -333,18 +334,20 @@ jobControl.getJob = async (req, res) => {
         select: "Nombre email",
       })
       .populate({ path: "Partes.partStock", model: stocks.esquema });
-    /* .populate({
-        path: "Partes.Finishing",
-        model: finishers.esquema,
-        select: "-Costo.Historial -jobTypesAllowed -partTypesAllowed",
-      }); */
 
-    // Comprobar si hay partes vacías
-    job.Partes.Finishing && job.Partes.Finishing[0] === null
-      ? (job.Partes.Finishing = [])
-      : job.Partes.Finishing;
+    // Si no se encontró el trabajo
+    if (!job) {
+      return res.status(404).json({ message: "Trabajo no encontrado" });
+    }
+
+    // Comprobar si hay partes vacías (mantener compatibilidad con lógica previa)
+    if (job.Partes?.Finishing && job.Partes?.Finishing[0] === null) {
+      job.Partes.Finishing = [];
+    }
+
     res.json(job);
   } catch (e) {
+    console.log(e);
     res.status(404).json({ message: "Trabajo no encontrado: " + e.message });
   }
 };
@@ -388,8 +391,9 @@ jobControl.updateJob = async (req, res) => {
 };
 jobControl.deleteJob = async (req, res, next) => {
   try {
+    const tenant = req.header("x-tenant");
     const producto = await jobs.esquema.findOneAndUpdate(
-      { _id: req.params.id, tenant: req.tenant._id },
+      { _id: req.params.id, tenant },
       { status: "inactivo" },
       { new: true }
     );

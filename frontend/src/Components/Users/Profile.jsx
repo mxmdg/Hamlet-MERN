@@ -1,5 +1,12 @@
-import React from "react";
-import { Box, Typography, Container, Grid, CardHeader } from "@mui/material/";
+import React, { useEffect } from "react";
+import {
+  Box,
+  Button,
+  Typography,
+  Container,
+  Grid,
+  CardHeader,
+} from "@mui/material/";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -14,10 +21,18 @@ import ColorPalette from "../Config/Theme/ColorPallete";
 import FormMaterial from "../Formulario/FormMaterial";
 import preferencesForm from "../Formulario/NewMessageForm";
 import tenantsDataForm from "../Formulario/tenantsDataForm";
+import { set } from "react-hook-form";
 
 export const Profile = () => {
   //User Profile
   const context = useContext(AuthContext);
+  const [useMemberships, setUseMemberships] = React.useState(
+    context.memberships || []
+  );
+
+  useEffect(() => {
+    console.log("User Profile Mounted");
+  }, [setUseMemberships]);
 
   return (
     <Grid
@@ -40,14 +55,35 @@ export const Profile = () => {
 
             {context.memberships?.length > 0 ? (
               context.memberships.map((m, index) => (
-                <Box key={index} sx={{ mt: 1, p: 1, border: "1px solid #ddd" }}>
-                  <Typography>
-                    Imprenta: <strong>{m.tenant.name}</strong>
+                <Card
+                  key={index}
+                  elevation={6}
+                  sx={{
+                    padding: "10px",
+                    marginBottom: "10px",
+                    borderRadius: "8px",
+                    border: "2px solid transparent",
+                    cursor: "pointer",
+                    ":hover": { border: "2px solid cyan" },
+                  }}
+                  onClick={() => {
+                    const newMemberships = [
+                      m,
+                      ...context.memberships.filter((_, i) => i !== index),
+                    ];
+                    setUseMemberships(newMemberships);
+                    localStorage.setItem(
+                      "memberships",
+                      JSON.stringify(newMemberships)
+                    );
+                    window.location.reload();
+                  }}
+                >
+                  <Typography color={index === 0 ? "success" : "primary"}>
+                    Imprenta: <strong>{m.tenant.name}</strong> / Rol: {m.role} /
+                    estado: {m.tenant.status}
                   </Typography>
-                  <Typography>
-                    Rol: <strong>{m.role}</strong>
-                  </Typography>
-                </Box>
+                </Card>
               ))
             ) : (
               <Typography>No tiene membresías activas</Typography>
@@ -57,17 +93,17 @@ export const Profile = () => {
 
             <SessionTimer />
           </CardContent>
+          {useMemberships[0].role === "admin" && (
+            <CardActions>
+              <Button
+                variant="contained"
+                href={"/tenant/settings/" + useMemberships[0]?.tenant.id}
+              >
+                Ajustes del sistema
+              </Button>
+            </CardActions>
+          )}
 
-          <FormMaterial
-            form={preferencesForm}
-            task="new"
-            title={"Preferencias de usuario"}
-            action={(e) => {
-              console.log(e);
-              localStorage.setItem("appTheme", e.colorTheme);
-              window.location.reload();
-            }}
-          />
           {/* <CardActions>
             <ColorPalette />
           </CardActions> */}

@@ -44,7 +44,7 @@ const PricesMainContainer = () => {
   const validateAdminUser = () => {
     if (
       context.useLogin === true &&
-      context.userLogged.Role.toLowerCase() === "admin"
+      context.memberships[0].role.toLowerCase() === "admin"
     ) {
       return true;
     } else {

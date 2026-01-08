@@ -19,6 +19,8 @@ import {
   FormHelperText,
   TextField,
 } from "@mui/material";
+import { AuthContext } from "../context/AuthContext";
+import { useContext } from "react";
 
 // My Components
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
@@ -35,6 +37,7 @@ import {
 } from "../utils/generalData/numbersAndCurrencies";
 
 const ProductionQuote = (props) => {
+  const context = useContext(AuthContext);
   const {
     register,
     handleSubmit,
@@ -63,17 +66,27 @@ const ProductionQuote = (props) => {
 
   const [useError, setUseError] = useState(null);
   const [useLoading, setUseLoading] = useState(false);
-
+  const [useSettings, setSettings] = useState(null);
   const gainPercentage = watch("gainPercentage", 45); // Default value
   const salesCommission = watch("salesCommission", 0); // Default value
   const ivaPercentage = isIvaEnabled ? 21 : 0; // IVA is 0 if disabled
+
+  // Create safe derived pricing settings object
+  const pricingSettings = useSettings
+    ? {
+        gainMin: useSettings["pricing.gain.min"],
+        gainMax: useSettings["pricing.gain.max"],
+        commissionMin: useSettings["pricing.commission.min"],
+        commissionMax: useSettings["pricing.commission.max"],
+      }
+    : null;
 
   useEffect(() => {
     const fetchProductType = async () => {
       try {
         const product = await getPrivateElementByID("jobs", props.job);
-        console.log(product.data);
-        if (product.data.Tipo[0].name === "Libro") {
+        console.log(product);
+        if (product.Tipo[0].name === "Libro") {
           setIsIvaEnabled(false); // Disable IVA for books
         }
       } catch (error) {
@@ -140,9 +153,40 @@ const ProductionQuote = (props) => {
     // eslint-disable-next-line
   }, [gainPercentage, salesCommission, ivaPercentage, isIvaEnabled]);
 
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        setUseLoading(true);
+        const settings = await getPrivateElementByID(
+          "tenants/settings",
+          context.memberships[0].tenant.id
+        );
+        console.log("Settings: ", settings);
+        setSettings(settings);
+        props.pricingSettings(settings);
+        setUseError(null);
+      } catch (error) {
+        setUseError(error);
+      } finally {
+        setUseLoading(false);
+      }
+    };
+
+    fetchSettings();
+  }, []);
+
   const quote = calculateQuote();
 
-  const failure = <ErrorMessage message={useError} />;
+  const failure = (
+    <ErrorMessage
+      message={useError}
+      title="Error"
+      action={() => {
+        console.log(useError);
+        setUseError(null);
+      }}
+    />
+  );
 
   const loading = (
     <Box
@@ -156,6 +200,20 @@ const ProductionQuote = (props) => {
       <Spinner />
     </Box>
   );
+
+  // Block rendering until settings are loaded
+  if (useLoading) {
+    return loading;
+  }
+
+  if (useError !== null) {
+    return failure;
+  }
+
+  // Don't render main content until pricingSettings is available
+  if (!pricingSettings) {
+    return loading;
+  }
 
   const success = (
     <Container maxWidth="lg" sx={{ padding: "2rem" }}>
@@ -172,8 +230,14 @@ const ProductionQuote = (props) => {
                       variant="outlined"
                       {...register("gainPercentage", {
                         required: "Este campo es requerido",
-                        min: { value: 20, message: "El mínimo es 20%" },
-                        max: { value: 60, message: "El máximo es 60%" },
+                        min: {
+                          value: pricingSettings.gainMin,
+                          message: `El minimo es ${pricingSettings.gainMin}`,
+                        },
+                        max: {
+                          value: pricingSettings.gainMax,
+                          message: `El máximo es ${pricingSettings.gainMax}`,
+                        },
                       })}
                       type="number"
                       inputProps={{
@@ -195,9 +259,6 @@ const ProductionQuote = (props) => {
                       primary={currencyFormat(roundInteger(quote.gain))}
                       secondary={`Utilidad (${quote.utilityPercentage} %)`}
                     />
-                    {/* <Typography variant="h6" align="right">
-                      Ganancia: $ {roundInteger(quote.gain)}
-                    </Typography> */}
                   </Grid>
 
                   <Grid item xs={12} md={12}>
@@ -207,8 +268,14 @@ const ProductionQuote = (props) => {
                       variant="outlined"
                       {...register("salesCommission", {
                         required: "Este campo es requerido",
-                        min: { value: 0, message: "El mínimo es 0%" },
-                        max: { value: 8, message: "El máximo es 8%" },
+                        min: {
+                          value: pricingSettings.commissionMin,
+                          message: `El mínimo es ${pricingSettings.commissionMin}%`,
+                        },
+                        max: {
+                          value: pricingSettings.commissionMax,
+                          message: `El máximo es ${pricingSettings.commissionMax}%`,
+                        },
                       })}
                       type="number"
                       inputProps={{
@@ -270,9 +337,6 @@ const ProductionQuote = (props) => {
                       primary={currencyFormat(roundInteger(quote.total))}
                       secondary={"Precio Final"}
                     />
-                    {/* <Typography variant="h5" color="info">
-                      Precio Final: $ {quote.total}.-
-                    </Typography> */}
                   </Grid>
                 </Grid>
               </FormGroup>
@@ -283,7 +347,7 @@ const ProductionQuote = (props) => {
     </Container>
   );
 
-  return useLoading ? loading : useError !== null ? failure : success;
+  return success;
 };
 
 export default ProductionQuote;

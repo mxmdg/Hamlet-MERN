@@ -56,7 +56,7 @@ const JobsForm = (props) => {
     props.setJob(e);
   };
 
-  const getUsers = async () => await fechtData("Users", setUsersList);
+  const getUsers = async () => await fechtData("memberships", setUsersList);
   const getCompanies = async () =>
     await fechtData("Empresas", setCompaniesList);
   const getCompany = async (id) => await getPrivateElementByID("empresas", id);
@@ -109,19 +109,22 @@ const JobsForm = (props) => {
   };
 
   const resetFinishers = () => {
-    if (window.confirm("¿Seguro que desea cambiar el tipo de trabajo? Se borraran las terminaciones seleccionadas")) {
+    if (
+      window.confirm(
+        "¿Seguro que desea cambiar el tipo de trabajo? Se borraran las terminaciones seleccionadas"
+      )
+    ) {
       setSelectedFinishings([]);
     } else {
       setJobType(useJobType);
       setValue("JobType", useJobType);
     }
-  }
+  };
 
   useEffect(() => {
     setValue("Finishing", selectedFinishings); // Esto actualiza el campo Finishing con los objetos seleccionados
   }, [selectedFinishings, setValue, useFinishingList]);
 
-  
   const error = <ErrorMessage message={useError} />;
 
   const loading = <Spinner />;
@@ -243,7 +246,9 @@ const JobsForm = (props) => {
                     <FormHelperText>La cantidad minima es 1</FormHelperText>
                   )}
                   {errors.Cantidad?.type === "max" && (
-                    <FormHelperText>La cantidad máxima es 100000</FormHelperText>
+                    <FormHelperText>
+                      La cantidad máxima es 100000
+                    </FormHelperText>
                   )}
                 </Grid>
                 <Grid item xs={1} sm={2} md={4}>
@@ -306,8 +311,8 @@ const JobsForm = (props) => {
                     >
                       {useUsersList.map((u) => {
                         return (
-                          <MenuItem value={u._id} key={u._id}>
-                            {u.Name} {u.LastName}
+                          <MenuItem value={u.userId._id} key={u.userId._id}>
+                            {u.userId.Name} {u.userId.LastName}
                           </MenuItem>
                         );
                       })}

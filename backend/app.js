@@ -109,13 +109,13 @@ function requireRoleByMethod(rolesByMethod) {
 
         const membership = await Membership.findOne({
           userId: payload.userId,
-          tenantId: req.tenant._id,
+          tenant: req.tenant._id,
           status: "activo",
         });
 
         if (!membership) {
           return res.status(403).json({
-            message: "No tiene membresía activa para este tenant",
+            message: "Tu membresía no esta activa para esta imprenta",
           });
         }
 
@@ -126,7 +126,7 @@ function requireRoleByMethod(rolesByMethod) {
 
         if (!allowed.includes(userRole)) {
           return res.status(403).json({
-            message: "Acceso denegado por rol de membresía",
+            message: "Tu rol no te permite realizar esta acción",
           });
         }
 
@@ -138,6 +138,7 @@ function requireRoleByMethod(rolesByMethod) {
         next();
       });
     } catch (e) {
+      console.log(e);
       next(e);
     }
   };
@@ -238,9 +239,9 @@ app.use(
 );
 app.use(
   "/Hamlet/precios",
-  (req, res, next) => req.app.verifyToken(req, res, next),
+  //(req, res, next) => req.app.verifyToken(req, res, next),
   requireRoleByMethod({
-    get: ["admin", "manager"], // todos pueden hacer GET
+    get: ["admin", "manager", "vendedor", "customer"], // todos pueden hacer GET
     post: ["admin", "manager"],
     put: ["admin", "manager"],
     delete: ["admin", "manager"],
@@ -258,13 +259,22 @@ app.use(
   }),
   require("./routes/materiales")
 );
-app.use("/Hamlet/users", require("./routes/users"));
+app.use(
+  "/Hamlet/users",
+  requireRoleByMethod({
+    get: ["admin", "manager"], // todos pueden hacer GET
+    post: "public", // todos pueden hacer GET
+    put: "public",
+    delete: ["admin", "manager"],
+  }),
+  require("./routes/users")
+);
 app.use(
   "/Hamlet/quotations",
   requireRoleByMethod({
-    get: ["admin", "manager", "vendedor"],
-    post: ["admin", "manager", "vendedor"],
-    put: ["admin", "manager", "vendedor"],
+    get: ["admin", "manager", "operador"],
+    post: ["admin", "manager"],
+    put: ["admin", "manager"],
     delete: ["admin", "manager"],
   }),
   require("./routes/quotations")
@@ -275,8 +285,17 @@ app.use(
   requireRoleByMethod({
     get: "public", // todos pueden hacer GET
     post: "public", // todos pueden hacer GET
-    put: "public", // todos pueden hacer GET
-    delete: "public", // todos pueden hacer GET
+    put: "admin", // todos pueden hacer GET
+    delete: "admin", // todos pueden hacer GET
+  }),
+  require("./routes/tenants")
+);
+
+app.use(
+  "/Hamlet/tenants/settings",
+  requireRoleByMethod({
+    get: "public", // todos pueden hacer GET
+    put: "admin", // solo admin puede hacer PUT
   }),
   require("./routes/tenants")
 );
@@ -285,9 +304,9 @@ app.use(
   "/Hamlet/memberships",
   requireRoleByMethod({
     get: "public", // todos pueden hacer GET
-    post: "public", // todos pueden hacer GET
-    put: "public", // todos pueden hacer GET
-    delete: "public", // todos pueden hacer GET
+    post: ["admin", "manager"], // todos pueden hacer GET
+    put: ["admin", "manager"], // todos pueden hacer GET
+    delete: ["admin", "manager"], // todos pueden hacer GET
   }),
   require("./routes/memberships")
 );

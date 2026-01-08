@@ -43,7 +43,7 @@ const PartCard = (props) => {
       setLoading(true);
       ids.map(async (id) => {
         const res = await getPrivateElementByID("finishers", id);
-        arr.push(res.data);
+        arr.push(res);
       });
       setLoading(false);
       return arr;
@@ -93,7 +93,7 @@ const PartCard = (props) => {
           <br />
           Impresion: {props.part.ColoresFrente}/{props.part.ColoresDorso}
           <br />
-          Material: {props.part.partStock.Nombre_Material}
+          Material: {props?.part?.partStock?.Nombre_Material}
           {props.part.Pages > 10 ? (
             <>
               {` (Lomo: ${calcularLomo(

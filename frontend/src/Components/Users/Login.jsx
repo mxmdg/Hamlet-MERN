@@ -28,7 +28,7 @@ import { useContext } from "react";
 import { Profile } from "./Profile";
 import Spinner from "../General/Spinner";
 import Logo from "../../../src/img/Logo/logo ok-05.svg";
-export const Login = () => {
+export const Login = (props) => {
   const {
     register,
     handleSubmit,
@@ -37,7 +37,8 @@ export const Login = () => {
   } = useForm({
     mode: "onBlur", // "onChange"
   });
-
+  const [useColor, setColor] = React.useState(props.color || "primary");
+  const [useVariant, setVariant] = React.useState(props.variant || "filled");
   const [error, setError] = React.useState("");
   const [showForgotPasswordForm, setShowForgotPasswordForm] =
     React.useState(false);
@@ -152,7 +153,7 @@ export const Login = () => {
               />
             } */
             title="Login"
-            titleTypographyProps={{ color: "secondary", fontWeight: "600" }}
+            titleTypographyProps={{ color: useColor, fontWeight: "600" }}
           ></CardHeader>
         )}
         {context.userLogged !== null && (
@@ -182,7 +183,6 @@ export const Login = () => {
                     <TextField
                       id="email"
                       label="email"
-                      variant="filled"
                       defaultValue={""}
                       name="email"
                       {...register("email", {
@@ -193,16 +193,19 @@ export const Login = () => {
                       onBlur={() => {
                         trigger("email");
                       }}
+                      color={useColor}
+                      variant={useVariant}
                     />
                   </Grid>
                   <Grid item xs={6} sm={6} md={6}>
                     <TextField
                       id="password"
                       label="password"
-                      variant="filled"
                       defaultValue={""}
                       type="password"
                       name="password"
+                      color={useColor}
+                      variant={useVariant}
                       {...register("password", {
                         required: true,
                         minLength: 3,
@@ -214,13 +217,14 @@ export const Login = () => {
                     />
                   </Grid>
                   <Grid item xs={6} sm={6} md={6} sx={{ alignSelf: "left" }}>
-                    <Button type="submit" variant="contained" color="secondary">
+                    <Button type="submit" color={useColor} variant="contained">
                       Ingresar
                     </Button>
                   </Grid>
                   <Grid item xs={6} sm={6} md={6} sx={{ alignSelf: "left" }}>
                     <Button
-                      color="secondary"
+                      color={useColor}
+                      variant="text"
                       onClick={() => setShowForgotPasswordForm(true)}
                     >
                       ¿Olvidaste tu contraseña?
@@ -246,58 +250,69 @@ export const Login = () => {
   );
 
   const ForgotPassword = (
-    <Card elevation={10}>
-      <FormControl sx={{ width: "90%" }}>
-        <form onSubmit={handleSubmit(forgottenPassword)}>
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                id="email"
-                label="Correo Electrónico"
-                variant="outlined"
-                type="email"
-                {...register("email", {
-                  required: "Este campo es requerido",
-                  pattern: {
-                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                    message: "Correo electrónico inválido",
-                  },
-                })}
+    <Box>
+      <Card elevation={10}>
+        <CardHeader
+          title="Recuperar Contraseña"
+          titleTypographyProps={{ color: useColor, fontWeight: "600" }}
+        />
+        <FormControl sx={{ width: "90%", m: 5 }}>
+          <form onSubmit={handleSubmit(forgottenPassword)}>
+            <Grid
+              container
+              spacing={{ xs: 2, sm: 3, md: 5 }}
+              columns={{ xs: 1, sm: 4, md: 12 }}
+            >
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  id="email"
+                  label="Correo Electrónico"
+                  color={useColor}
+                  variant={useVariant}
+                  type="email"
+                  {...register("email", {
+                    required: "Este campo es requerido",
+                    pattern: {
+                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                      message: "Correo electrónico inválido",
+                    },
+                  })}
+                />
+                {errors.email && (
+                  <FormHelperText>{errors.email.message}</FormHelperText>
+                )}
+              </Grid>
+              <Grid item xs={12}>
+                <Button type="submit" color={useColor} variant="contained">
+                  Enviar Correo de Recuperación
+                </Button>
+                <Button
+                  onClick={() => setShowForgotPasswordForm(false)}
+                  color={useColor}
+                  variant="outlined"
+                >
+                  Volver al Login
+                </Button>
+              </Grid>
+            </Grid>
+            {error && (
+              <ErrorMessage
+                message={error.message}
+                severity="warning"
+                action={resetError}
               />
-              {errors.email && (
-                <FormHelperText>{errors.email.message}</FormHelperText>
-              )}
-            </Grid>
-            <Grid item xs={12}>
-              <Button type="submit" variant="contained" color="primary">
-                Enviar Correo de Recuperación
-              </Button>
-              <Button
-                onClick={() => setShowForgotPasswordForm(false)}
-                variant="text"
-                color="secondary"
-              >
-                Volver al Login
-              </Button>
-            </Grid>
-          </Grid>
-          {error && (
-            <ErrorMessage
-              message={error.message}
-              severity="warning"
-              action={resetError}
-            />
-          )}
-          {successMessage && (
-            <ErrorMessage
-              message={successMessage.message}
-              severity="success"
-              action={resetSuccess}
-            />
-          )}
-        </form>
-      </FormControl>
-    </Card>
+            )}
+            {successMessage && (
+              <ErrorMessage
+                message={successMessage.message}
+                severity="success"
+                action={resetSuccess}
+              />
+            )}
+          </form>
+        </FormControl>
+      </Card>
+    </Box>
   );
 
   return loading

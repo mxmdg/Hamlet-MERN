@@ -53,17 +53,15 @@ const FinishingList = (props) => {
         case "pl":
           try {
             if (props.imposition.totalPliegos !== undefined) {
-            return cantidadDePliegos(
-              f.Costo.Valor,
-              f.Costo.Minimo,
-              f.Costo.Entrada,
-              props.imposition.totalPliegos
-            );
+              return cantidadDePliegos(
+                f.Costo.Valor,
+                f.Costo.Minimo,
+                f.Costo.Entrada,
+                props.imposition.totalPliegos
+              );
             } else {
-              setError({message: "No hay imposicion", severity: "warning"});
-              
-            } 
-            
+              setError({ message: "No hay imposicion", severity: "warning" });
+            }
           } catch (error) {
             setError({
               message:
@@ -135,9 +133,9 @@ const FinishingList = (props) => {
                   finisher
                 );
                 finisherList.push({
-                  Finisher: finishing.data,
+                  Finisher: finishing,
                   Cost: costFunction(
-                    finishing.data,
+                    finishing,
                     props.cantidad,
                     props.impositionData
                   ),
@@ -151,6 +149,7 @@ const FinishingList = (props) => {
           }
         }
       } catch (error) {
+        setFinishingCosts([0]);
         setError({
           message:
             "Error accediendo a los procesos de terminacion: " + error.message,

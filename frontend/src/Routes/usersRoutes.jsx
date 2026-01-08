@@ -15,7 +15,10 @@ export const usersRoutes = () => (
     />
     <Route path="/users/add" element={<Register />} />
     <Route path="/users/profile" element={<Profile />} />
-    <Route path="/users/ChangePassword" element={<ChangePassword />} />
+    <Route
+      path="/users/ChangePassword"
+      element={<ChangePassword variant="outlined" color="primary" />}
+    />
     <Route
       path="/users/edit/:id"
       element={

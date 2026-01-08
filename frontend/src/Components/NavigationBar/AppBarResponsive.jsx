@@ -36,7 +36,8 @@ export const pages = [
   { text: "Partes de trabajo", path: "JobParts" },
   { text: "Materiales", path: "materiales" },
   { text: "Clientes", path: "empresas" },
-  { text: "Usuarios", path: "users" },
+  //{ text: "Usuarios", path: "users" },
+  { text: "Membresias", path: "memberships" },
   { text: "Terminacion", path: "finishers" },
 ];
 
@@ -168,8 +169,9 @@ function ResponsiveAppBar(props) {
             {/* SVG imported as ReactComponent must be used with an uppercase name */}
             <Button
               onClick={() => Navigate("/")}
-              color="success"
-              variant="standard"
+              color="primary"
+              variant="contained"
+              sx={{ p: "px" }}
             >
               <Logo
                 role="img"
@@ -178,10 +180,14 @@ function ResponsiveAppBar(props) {
                   width: "25px",
                   height: "25px",
                   display: "block",
-                  margin: "10px",
+                  margin: "5px",
                 }}
               />
-              <Typography variant="button">HAMLET</Typography>
+              <Typography variant="button">
+                {context.useLogin
+                  ? `HAMLET | ${context.memberships[0].tenant.name}`
+                  : "HAMLET"}
+              </Typography>
             </Button>
 
             {/* <Button

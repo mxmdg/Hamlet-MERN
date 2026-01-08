@@ -23,7 +23,7 @@ const jobPartSchema = new Schema({
     enum: ["activo", "inactivo"],
     default: "activo",
   },
-  tenantId: {
+  tenant: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Tenant",
     required: false,

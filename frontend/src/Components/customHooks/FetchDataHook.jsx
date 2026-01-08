@@ -3,8 +3,16 @@ import { databaseURL, url, backendPort } from "../Config/config";
 import { getMyDate } from "../utils/generalData/fechaDiccionario";
 
 export const fechtData = async (collection, setFunction) => {
+  const token = localStorage.getItem("token");
+  const memberships = JSON.parse(localStorage.getItem("memberships") || "[]");
+  const tenantId = memberships[0]?.tenant?.id;
   try {
-    const res = await axios.get(`${databaseURL + collection}/`);
+    const res = await axios.get(`${databaseURL}${collection}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "X-Tenant": tenantId,
+      },
+    });
     setFunction(res.data);
   } catch (e) {
     throw e;
@@ -49,8 +57,6 @@ export const getPrivateElementByID = async (collection, id) => {
   const token = localStorage.getItem("token");
   const memberships = JSON.parse(localStorage.getItem("memberships") || "[]");
   const tenantId = memberships[0]?.tenant?.id;
-
-  console.log(tenantId, memberships[0]?.tenant?.key);
 
   if (!tenantId) {
     throw new Error("Tenant activo no encontrado");

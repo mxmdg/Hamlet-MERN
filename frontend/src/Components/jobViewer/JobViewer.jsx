@@ -33,8 +33,9 @@ export const JobViewer = (props) => {
       try {
         const fetchJob = async () => {
           const currentJob = await getPrivateElementByID(props.entity, id);
-          currentJob.data
-            ? setCurrentJob(currentJob.data)
+          console.log("Trabajo obtenido:", currentJob);
+          currentJob
+            ? setCurrentJob(currentJob)
             : setError({ message: "Trabajo inexistente" });
           setLoading(false);
         };

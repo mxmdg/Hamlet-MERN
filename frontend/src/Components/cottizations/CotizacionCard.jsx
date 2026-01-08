@@ -39,34 +39,34 @@ const CotizacionCard = ({ cotizacion, job }) => {
   const [loading, setLoading] = useState(false);
   const [waitingFor, setWaitingFor] = useState(null);
   // Mueve los hooks arriba
-  const [localStatus, setLocalStatus] = useState(cotizacion?.data?.status);
+  const [localStatus, setLocalStatus] = useState(cotizacion?.status);
 
   useEffect(() => {
-    setLocalStatus(cotizacion?.data?.status);
-  }, [cotizacion?.data?.status, cotizacion?.data]);
+    setLocalStatus(cotizacion?.status);
+  }, [cotizacion?.status, cotizacion]);
 
   if (!cotizacion) return null;
-  const index = cotizacion.data.index;
-  const cantidad = cotizacion.data.cantidad || cotizacion.data.quantity;
-  const cliente = cotizacion.data.cliente || cotizacion.data.customer;
+  const index = cotizacion.index;
+  const cantidad = cotizacion.cantidad || cotizacion.quantity;
+  const cliente = cotizacion.cliente || cotizacion.customer;
   const items = job?.Partes || [];
   const jobName = job?.Nombre || "Trabajo sin nombre";
   const deadLine = job?.DeadLine;
-  const resumen = cotizacion.data.data.resumen;
+  const resumen = cotizacion.data.resumen;
+  const emailTo = "maxiomaro@gmail.com "; //`${job?.Company.email}, ${job?.Owner.email}`;
   const total =
     resumen[resumen.length - 1].finishing +
     resumen[resumen.length - 1].print +
     resumen[resumen.length - 1].stock;
-  const { fecha, status, observaciones } = cotizacion.data;
+  const { fecha, status, observaciones } = cotizacion;
 
-  const quote =
-    cotizacion.data?.data?.quoteSettings?.quote || cotizacion.data?.data?.quote;
+  const quote = cotizacion.data?.quoteSettings?.quote || cotizacion.data?.quote;
 
   const statusUpdater = (newStatus) => {
     try {
-      cotizacion.data.status = newStatus;
+      cotizacion.status = newStatus;
       setLocalStatus(newStatus); // Actualiza el estado local
-      patchPrivateElement("quotations", cotizacion.data._id, {
+      patchPrivateElement("quotations", cotizacion._id, {
         status: newStatus,
       });
     } catch (error) {
@@ -74,26 +74,26 @@ const CotizacionCard = ({ cotizacion, job }) => {
     }
   };
 
-  
-
-  const {quoteMessageHTML, quoteMessagePlain, itemsList} = CotizationMail({ cotizacion, cliente, items, jobName });
-
+  const { quoteMessageHTML, quoteMessagePlain, itemsList } = CotizationMail({
+    cotizacion,
+    cliente,
+    items,
+    jobName,
+  });
 
   const sendQuotation = async () => {
     setLoading(true);
     setWaitingFor("Enviando presupuesto...");
 
     const body = {
-      quotationId: cotizacion.data._id,
-      toEmail: "maxiomaro@gmail.com", // cliente.email,
-      subject: `Presupuesto Número ${cotizacion.data.index} - ${jobName}`,
+      quotationId: cotizacion._id,
+      toEmail: emailTo, // cliente.email,
+      subject: `Presupuesto Número ${cotizacion.index} - ${jobName}`,
       message: quoteMessagePlain, // versión texto
       html: quoteMessageHTML, // versión HTML
     };
 
-    console.log(body);
     try {
-      console.log(`quotations/sendEmail`);
       const res = await addPrivateElement(`quotations/sendEmail`, body);
       setLoading(false);
       setError({
@@ -103,9 +103,22 @@ const CotizacionCard = ({ cotizacion, job }) => {
       });
       statusUpdater("Enviado");
       setWaitingFor(null);
-      return res.data;
+      return res;
     } catch (error) {
-      setError(error);
+      setError(
+        {
+          title: error.message,
+          message: error.response.data,
+          severity: "error",
+        } || {
+          message: "Error enviando el presupuesto.",
+          severity: "error",
+          title: "Error",
+        }
+      );
+      setLoading(false);
+      setWaitingFor(null);
+      return null;
     }
   };
 
@@ -120,7 +133,9 @@ const CotizacionCard = ({ cotizacion, job }) => {
     />
   );
 
-  const loadingData = <Spinner title={waitingFor === null ? "Cargando..." : waitingFor} />;
+  const loadingData = (
+    <Spinner title={waitingFor === null ? "Cargando..." : waitingFor} />
+  );
 
   const success = (
     <Grid container spacing={2}>
@@ -280,18 +295,18 @@ const CotizacionCard = ({ cotizacion, job }) => {
               </>
             )}
           </CardContent>
-            <CardActions>
-                <Button
-                  key={"sendMail"}
-                  onClick={() => sendQuotation(cotizacion)}
-                  variant="contained"
-                  color={localStatus === "Enviado" ? "success" : "primary"}
-                >
-                  {localStatus === "Enviado"
-                    ? "Reenviar Presupuesto"
-                    : "Enviar Presupuesto"}
-                </Button>
-            </CardActions>
+          <CardActions>
+            <Button
+              key={"sendMail"}
+              onClick={() => sendQuotation(cotizacion)}
+              variant="contained"
+              color={localStatus === "Enviado" ? "success" : "primary"}
+            >
+              {localStatus === "Enviado"
+                ? "Reenviar Presupuesto"
+                : "Enviar Presupuesto"}
+            </Button>
+          </CardActions>
         </Card>
       </Grid>
       <Grid item xs={12} md={8}>

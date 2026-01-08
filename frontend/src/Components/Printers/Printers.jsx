@@ -35,10 +35,11 @@ import {
   coloresPasteles,
   myWrapperStyle,
 } from "../utils/stats/NewRadialBar";
+import { getPrivateElements } from "../customHooks/FetchDataHook";
 
 const readPrinters = async () => {
-  const res = await axios.get(`${serverURL}/hamlet/impresoras`);
-  return res.data;
+  const res = await getPrivateElements(`impresoras`);
+  return res;
 };
 
 const Printers = (props) => {

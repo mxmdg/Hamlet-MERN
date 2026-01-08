@@ -40,9 +40,14 @@ const Fetch = (props) => {
   };
 
   const getElements = async () => {
-    const elements = await getPrivateElements(
+    let elements = await getPrivateElements(
       props.collection + (props.subdir ? `/${props.subdir}` : "")
     );
+
+    if (props.collection === "memberships") {
+      elements = await flattenArrayOfObjects(elements);
+    }
+
     Array.isArray(elements)
       ? setHeaders(() => {
           const arr = [];
@@ -71,6 +76,7 @@ const Fetch = (props) => {
             elements.message ||
             "Error desconocido"
         );
+
     return elements;
   };
 
@@ -150,7 +156,7 @@ const Fetch = (props) => {
       action={() => {
         setErrMessage(null);
       }}
-      title="Error"
+      title="No es posible acceder a la base de datos"
     />
   );
 

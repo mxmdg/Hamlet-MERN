@@ -4,13 +4,27 @@ const Users = require("../../models/usersSchema");
 const nodemailer = require("nodemailer");
 const uuid = require("uuid");
 const mailAccount = { user: process.env.MAILUSER, pass: process.env.MAILPASS };
-const mailer = require("../../services/mail");
+//const mailer = require("../../services/mail");
+const { sendMail } = require("../../services/mail");
+const { getTenantSettings } = require("../../services/getTenantSettings");
+
+function extractMailSettings(flatSettings) {
+  return {
+    from: flatSettings["mail.from"],
+    host: flatSettings["mail.host"],
+    port: flatSettings["mail.port"],
+    secure: flatSettings["mail.secure"],
+    user: flatSettings["mail.user"],
+    pass: flatSettings["mail.pass"],
+  };
+}
 
 const quotationsControl = {};
 
 // Obtener todas las cotizaciones - Filtros avanzados
 quotationsControl.getQuotations = async (req, res) => {
   try {
+    const tenant = req.header("x-tenant");
     const queryText = req.query.Q || "";
     const property = req.query.P || "name";
     let operator = req.query.OP || "eq"; // Default to 'eq' if not provided
@@ -56,8 +70,9 @@ quotationsControl.getQuotations = async (req, res) => {
       query = { [property]: queryText };
     }
 
+    // incluir tenant y excluir estados rechazados
     const allQuotations = await quotations.esquema
-      .find({ ...query, status: { $ne: "Rechazado" } })
+      .find({ ...query, tenant })
       .populate({
         path: "jobId",
         model: Jobs.esquema,
@@ -76,7 +91,11 @@ quotationsControl.getQuotations = async (req, res) => {
 // Obtener una cotización por ID
 quotationsControl.getQuotation = async (req, res) => {
   try {
-    const quotation = await quotations.esquema.findById(req.params.id);
+    const tenant = req.header("x-tenant");
+    const quotation = await quotations.esquema.findOne({
+      _id: req.params.id,
+      tenant,
+    });
     if (quotation) {
       res.json(quotation);
     } else {
@@ -91,7 +110,8 @@ quotationsControl.getQuotation = async (req, res) => {
 // Crear una nueva cotización
 quotationsControl.addQuotation = async (req, res) => {
   try {
-    const newQuotation = new quotations.esquema(req.body);
+    const tenant = req.header("x-tenant");
+    const newQuotation = new quotations.esquema({ ...req.body, tenant });
     await newQuotation.save();
     res.json({ message: "Cotización guardada OK", quotation: newQuotation });
   } catch (error) {
@@ -106,8 +126,9 @@ quotationsControl.addQuotation = async (req, res) => {
 // Actualizar una cotización existente
 quotationsControl.updateQuotation = async (req, res) => {
   try {
+    const tenant = req.header("x-tenant");
     const updatedQuotation = await quotations.esquema.findOneAndUpdate(
-      { _id: req.params.id },
+      { _id: req.params.id, tenant },
       req.body,
       { new: true }
     );
@@ -126,7 +147,7 @@ quotationsControl.updateQuotation = async (req, res) => {
 };
 
 //Enviar una cotizacion por email
-quotationsControl.sendQuotationEmail = async (req, res) => {
+/* quotationsControl.sendQuotationEmail = async (req, res) => {
   try {
     const { quotationId, toEmail, subject, message } = req.body;
 
@@ -180,13 +201,58 @@ quotationsControl.sendQuotationEmail = async (req, res) => {
     console.error(error);
     res.status(500).json({ message: "Error al enviar la cotización" });
   }
+}; */
+
+quotationsControl.sendQuotationEmail = async (req, res, next) => {
+  try {
+    const { quotationId, toEmail, subject, message, html } = req.body;
+
+    if (!toEmail) {
+      return res.status(400).json({
+        message: "La dirección de correo no es válida",
+      });
+    }
+
+    const tenant = req.header("x-tenant");
+
+    console.log(tenant); //6959117c2456ff4ead71ac49
+
+    // ✅ ACÁ está la clave
+    const settings = await getTenantSettings(tenant);
+
+    const mailSettings = extractMailSettings(settings);
+
+    if (!mailSettings.user || !mailSettings.pass) {
+      return res.status(400).json({
+        message: "El correo de la empresa no está configurado",
+      });
+    }
+
+    await sendMail({
+      mailSettings,
+      mailDetails: {
+        to: toEmail,
+        subject,
+        text: message,
+        html: html || message.replace(/\n/g, "<br/>"),
+      },
+    });
+
+    return res.status(200).json({
+      message: "Correo enviado exitosamente",
+    });
+  } catch (error) {
+    console.error("Error al enviar cotización:", error);
+    next(error);
+  }
 };
 
 // Eliminar una cotización
-quotationsControl.deleteQuotation = async (req, res) => {
+quotationsControl.deleteQuotation = async (req, res, next) => {
   try {
-    const deletedQuotation = await quotations.esquema.findByIdAndUpdate(
-      req.params.id,
+    const tenant = req.header("x-tenant");
+    const deletedQuotation = await quotations.esquema.findOneAndUpdate(
+      { _id: req.params.id, tenant },
       { status: "inactivo" },
       { new: true }
     );
@@ -205,7 +271,9 @@ quotationsControl.deleteQuotation = async (req, res) => {
 
 quotationsControl.getDeletedQuotations = async (req, res, next) => {
   try {
+    const tenant = req.header("x-tenant");
     const deleted = await quotations.esquema.find({
+      tenant,
       status: { $eq: "Rechazado" },
     });
     res.json(deleted);
@@ -216,7 +284,8 @@ quotationsControl.getDeletedQuotations = async (req, res, next) => {
 
 quotationsControl.updateStatus = async (req, res, next) => {
   try {
-    const q = await quotations.esquema.findById(req.params.id);
+    const tenant = req.header("x-tenant");
+    const q = await quotations.esquema.findOne({ _id: req.params.id, tenant });
     if (!q)
       return res.status(404).json({ message: "Cotización no encontrada" });
     q.status = q.status !== "Rechazado" ? "Rechazado" : "Pendiente";

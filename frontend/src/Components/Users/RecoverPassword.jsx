@@ -88,6 +88,7 @@ const ResetPassword = () => {
               />
               {error && (
                 <ErrorMessage
+                  title="Revisa los datos"
                   message={error.msg}
                   severity={error.sev}
                   action={error.act}
@@ -96,6 +97,7 @@ const ResetPassword = () => {
               )}
               {successMessage && (
                 <ErrorMessage
+                  title="Felicidades, has cambiado tu contraseña"
                   message={successMessage}
                   severity={"success"}
                   action={() => navigate("/login")} // Usar navigate aquí

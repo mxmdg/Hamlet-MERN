@@ -73,17 +73,17 @@ const JobDetail = (props) => {
   const navigate = useNavigate();
   // El siguiente estado es para almacenar la informacion de la imposicion en todas las partes.
   const [stockRequired, setStockRequired] = useState(
-    props.cot ? props.cot.data.impositionData : []
+    props.cot ? props.cot.impositionData : []
   );
   const [productionPlan, setProductionPlan] = useState(
-    props.cot ? props.cot.data.impositionData : {}
+    props.cot ? props.cot.impositionData : {}
   );
   const [productionPlanAvaible, setProductionPlanAvaible] = useState(false);
   const [useJobFinishingData, setJobFinishingData] = useState(
-    props.cot ? props.cot.data.finishing : null
+    props.cot ? props.cot.finishing : null
   );
   const [usePartFinishingData, setPartFinishingData] = useState(
-    props.cot ? props.cot.data.partsFinishing : []
+    props.cot ? props.cot.partsFinishing : []
   );
   const [previousCotizations, setPreviousCotizations] = useState([]);
 
@@ -143,12 +143,10 @@ const JobDetail = (props) => {
 
   const PartDetail = (part) => {
     const [usePoses, setPoses] = useState(
-      props.cot ? props.cot?.data?.impositionData[part._id]?.Poses : null
+      props.cot ? props.cot?.impositionData[part._id]?.Poses : null
     );
     const [useImpoData, setImpoData] = useState(
-      props.cot
-        ? props.cot?.data?.impositionData[part._id]?.impositionData
-        : null
+      props.cot ? props.cot?.impositionData[part._id]?.impositionData : null
     );
     const [imposed, setImposed] = useState(props.cot ? true : false);
     const [useData, setData] = useState(null);
@@ -606,7 +604,7 @@ const JobDetail = (props) => {
                   useJobFinishingData + sumTotalPartsFinishingCosts()
                 }
                 {...(props.cot
-                  ? { quoteOptions: props.cot.data.quoteSettings }
+                  ? { quoteOptions: props.cot.quoteSettings }
                   : null)}
               />
             </Accordion>

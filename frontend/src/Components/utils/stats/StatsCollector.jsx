@@ -38,7 +38,7 @@ const StatsCollector = ({ children, route }) => {
   const failure = (
     <ErrorMessage
       title={"Error cargando estadisticas"}
-      message={useError?.message || "Error desconocido"}
+      message={useError?.response?.data?.message || "Error desconocido"}
       action={clearError}
     />
   );

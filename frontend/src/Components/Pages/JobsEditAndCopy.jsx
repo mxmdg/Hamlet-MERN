@@ -68,30 +68,27 @@ const JobsEditAndCopy = () => {
                 newArr.push(item);
               }
             });
-          } 
+          }
           console.log(newArr);
           return newArr;
         };
 
-        console.log(res.data.Finishing);
-        const result = Array.isArray(res.data.Finishing)
-          ? getId(res.data.Finishing)
-          : [];
+        console.log(res);
+        const result = Array.isArray(res.Finishing) ? getId(res.Finishing) : [];
         console.log("Resultado del array de finishers: " + result);
 
-        res.data.Finishing = result;
+        res.Finishing = result;
 
-        res.data.Partes.forEach((element) => {
+        res.Partes.forEach((element) => {
           if (element.Finishing) {
             const res = getId(element.Finishing);
             element.Finishing = res;
           } else {
-            element.Finishing = []
+            element.Finishing = [];
           }
-          
         });
 
-        setJob(res.data);
+        setJob(res);
         setError(null);
         setLoading(false);
       } catch (e) {

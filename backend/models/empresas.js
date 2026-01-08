@@ -4,7 +4,6 @@ const empresaSchema = new Schema({
   Nombre: {
     type: String,
     required: [true, "Ingrese el nombre de la empresa"],
-    unique: [true, "Esta empresa ya existe (model.unique)"],
   },
   email: {
     type: String,
@@ -25,13 +24,15 @@ const empresaSchema = new Schema({
     enum: ["activo", "inactivo"],
     default: "activo",
   },
-  tenantId: {
+  tenant: {
     type: mongoose.Schema.ObjectId,
     ref: "Tenant",
     required: false,
     index: true,
   },
 });
+
+empresaSchema.index({ Nombre: 1, tenant: 1 }, { unique: true });
 
 empresaSchema.set("toJSON");
 module.exports.esquema = model("empresas", empresaSchema);

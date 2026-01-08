@@ -71,9 +71,9 @@ const JobParts = (props) => {
   });
 
   const filterStocks = () => {
-    //console.log("Ejecutando funcion filterStocks");
-    //console.log(currentPart);
-    //console.table(stocks);
+    console.log("Ejecutando funcion filterStocks");
+    console.log(currentPart);
+    console.table(stocks);
     const res = stocks.filter((stock) => {
       try {
         if (
@@ -419,7 +419,7 @@ const JobParts = (props) => {
                 options={filteredStocks}
                 defaultValue={() => {
                   if (props.editPart !== null) {
-                    setValue("partStock", props.editPart.part.partStock._id);
+                    setValue("partStock", props.editPart.part?.partStock?._id);
                     return props.editPart.part.partStock;
                   } else {
                     return null;

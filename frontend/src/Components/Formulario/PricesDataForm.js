@@ -5,7 +5,7 @@ let MoldePrecios = [
     required: true,
     id: "id_400",
     options: [
-      { value: "prepress", text: "Per-Impresion" },
+      { value: "prepress", text: "Pre-Impresion" },
       { value: "print", text: "Impresion" },
       { value: "finishing", text: "Terminación" },
       { value: "stock", text: "Material" },

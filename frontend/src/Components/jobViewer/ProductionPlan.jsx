@@ -47,6 +47,7 @@ const ProductionPlan = (props) => {
   const [useLoading, setLoading] = useState(false);
   const [useError, setError] = useState(null);
   const [useQuoteSettings, setQuoteSettings] = useState(null);
+  const [usePricingSettings, setPricingSettings] = useState(null);
   const AllData = objectToArray(props.impositionData);
 
   /* Modelo del datos:
@@ -215,7 +216,8 @@ const ProductionPlan = (props) => {
         Math.max(totals[key].format.Alto, totals[key].format.Ancho)
       );
       totals[key].stockCost = stockCost(totals[key].totalHojas);
-      totals[key].FinishingCost = props.partFinishingData[index].finishingData;
+      totals[key].FinishingCost =
+        props.partFinishingData[index].finishingData || 0;
     });
 
     // Costo total:
@@ -290,6 +292,39 @@ const ProductionPlan = (props) => {
         action: () => setError(null),
       });
     }
+  };
+
+  // Función para verificar si los valores están dentro de los parámetros permitidos
+  const isButtonEnabled = () => {
+    if (!useQuoteSettings || !usePricingSettings) {
+      console.log("useQuoteSetting y usePriceSettings no dan true ");
+      return false;
+    }
+
+    const gainPercentage = parseFloat(useQuoteSettings?.gainPercentage);
+    const salesCommission = parseFloat(useQuoteSettings?.salesCommission);
+
+    console.log("Valores: ", gainPercentage, salesCommission);
+
+    // Verificar que el porcentaje de ganancia esté dentro de los límites
+    const isGainValid =
+      gainPercentage >= parseFloat(usePricingSettings["pricing.gain.min"]) &&
+      gainPercentage <= parseFloat(usePricingSettings["pricing.gain.max"]);
+
+    console.log("isGainValid: " + isGainValid);
+
+    // Verificar que la comisión esté dentro de los límites
+    const isCommissionValid =
+      salesCommission >=
+        parseFloat(usePricingSettings["pricing.commission.min"]) &&
+      salesCommission <=
+        parseFloat(usePricingSettings["pricing.commission.max"]);
+
+    console.log("isCommissionValid " + isCommissionValid);
+
+    console.table(usePricingSettings);
+
+    return isGainValid && isCommissionValid;
   };
 
   useEffect(() => {
@@ -384,7 +419,7 @@ const ProductionPlan = (props) => {
                   <ListItem alignItems="flex-start">
                     <ListItemNumbers
                       primary={`${currencyFormat(
-                        roundInteger(data.FinishingCost)
+                        roundInteger(data.FinishingCost || 0)
                       )}`}
                       secondary={`Costo Terminacion`}
                     />
@@ -396,7 +431,7 @@ const ProductionPlan = (props) => {
                         roundInteger(
                           data.printPrice.Total +
                             data.stockCost.cost +
-                            data.FinishingCost
+                            (data.FinishingCost || 0)
                         )
                       )}`}
                       secondary={`Total`}
@@ -441,11 +476,11 @@ const ProductionPlan = (props) => {
                 secondary={`Material total`}
               />
               <ListItemNumbers
-                primary={`${currencyFormat(props.finishingData)}`}
+                primary={`${currencyFormat(props.finishingData || 0)}`}
                 secondary={`Terminacion trabajo final`}
               />
               <ListItemNumbers
-                primary={`${currencyFormat(props.totalFinishingCosts)}`}
+                primary={`${currencyFormat(props.totalFinishingCosts || 0)}`}
                 secondary={`Terminacion total`}
               />
               <Divider />
@@ -453,7 +488,7 @@ const ProductionPlan = (props) => {
                 primary={`${currencyFormat(
                   resumen[resumen.length - 1].print +
                     resumen[resumen.length - 1].stock +
-                    props.totalFinishingCosts
+                    (props.totalFinishingCosts || 0)
                 )}`}
                 secondary={` Costo total`}
               />
@@ -475,11 +510,12 @@ const ProductionPlan = (props) => {
               costResume={{
                 Print: roundInteger(resumen[resumen.length - 1].print),
                 Stock: roundInteger(resumen[resumen.length - 1].stock),
-                Finishing: roundInteger(props.totalFinishingCosts),
+                Finishing: roundInteger(props.totalFinishingCosts || 0),
               }}
               quoteOptions={props.quoteOptions}
               job={props.job._id}
               quoteSettings={setQuoteSettings}
+              pricingSettings={setPricingSettings}
             />
           </CardContent>
           <CardActions sx={{ justifyContent: "flex-end" }}>
@@ -487,7 +523,7 @@ const ProductionPlan = (props) => {
               variant="contained"
               color="success"
               size="small"
-              disabled={parseFloat(useQuoteSettings?.gainPercentage) < 35}
+              disabled={!isButtonEnabled()}
               onClick={() => {
                 handleSaveProductionPlan(resumen);
               }}
@@ -504,8 +540,14 @@ const ProductionPlan = (props) => {
     <ErrorMessage
       title={useError?.title || null}
       message={useError?.message || "Error al cargar los datos"}
-      severity={useError?.severity || "error"}
-      action={useError?.action || (() => setError(null))}
+      severity={useError?.severity || "warning"}
+      action={
+        useError?.action ||
+        (() => {
+          console.log(useError);
+          setError(null);
+        })
+      }
     />
   );
 

@@ -14,19 +14,40 @@ export const preciosRoutes = () => (
     <Route
       path="/precios/edit/:id"
       element={
-        <FormMaterial form={PricesDataForm} collection="precios" task="edit" />
+        <FormMaterial
+          form={PricesDataForm}
+          collection="precios"
+          task="edit"
+          title="Editar Precio"
+          variant="outlined"
+          color="primary"
+        />
       }
     />
     <Route
       path="/precios/add"
       element={
-        <FormMaterial form={PricesDataForm} collection="precios" task="new" />
+        <FormMaterial
+          form={PricesDataForm}
+          collection="precios"
+          task="new"
+          title="Agregar Precio"
+          variant="outlined"
+          color="primary"
+        />
       }
     />
     <Route
       path="/precios/copy/:id"
       element={
-        <FormMaterial form={PricesDataForm} collection="precios" task="copy" />
+        <FormMaterial
+          form={PricesDataForm}
+          collection="precios"
+          task="copy"
+          title="Copiar Precio"
+          variant="outlined"
+          color="primary"
+        />
       }
     />
     <Route path="/precios/formula" element={<FormulaEditor />} />

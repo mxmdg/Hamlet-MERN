@@ -4,8 +4,9 @@ const jobPartsControl = {};
 
 jobPartsControl.getJobParts = async (req, res, next) => {
   try {
+    const tenant = req.header("x-tenant");
     const jobPart = await jobParts.esquema
-      .find({ status: { $ne: "inactivo" } })
+      .find({ tenant, status: { $ne: "inactivo" } })
       .select("-__v");
     res.json(jobPart);
   } catch (error) {
@@ -15,8 +16,9 @@ jobPartsControl.getJobParts = async (req, res, next) => {
 
 jobPartsControl.getDeletedJobParts = async (req, res, next) => {
   try {
+    const tenant = req.header("x-tenant");
     const jobPart = await jobParts.esquema
-      .find({ status: { $eq: "inactivo" } })
+      .find({ tenant, status: { $eq: "inactivo" } })
       .select("-__v");
     res.json(jobPart);
   } catch (error) {
@@ -39,6 +41,7 @@ jobPartsControl.addJobPart = async (req, res) => {
       maxStockWeight,
       jobTypesAllowed,
     } = req.body;
+    const tenant = req.header("x-tenant");
     const newJobPart = new jobParts.esquema({
       Type,
       minWidth,
@@ -51,6 +54,7 @@ jobPartsControl.addJobPart = async (req, res) => {
       minStockWeight,
       maxStockWeight,
       jobTypesAllowed,
+      tenant,
     });
     await newJobPart.save();
     res.json({ message: newJobPart.Type + " guardado OK" });
@@ -63,7 +67,11 @@ jobPartsControl.addJobPart = async (req, res) => {
 
 jobPartsControl.getJobPart = async (req, res) => {
   try {
-    const jobPart = await jobParts.esquema.findById(req.params.id);
+    const tenant = req.header("x-tenant");
+    const jobPart = await jobParts.esquema.findOne({
+      _id: req.params.id,
+      tenant,
+    });
     if (jobPart) {
       res.json(jobPart);
     } else {
@@ -90,8 +98,9 @@ jobPartsControl.updateJobPart = async (req, res) => {
       maxStockWeight,
       jobTypesAllowed,
     } = req.body;
+    const tenant = req.header("x-tenant");
     const JobPart = await jobParts.esquema.findOneAndUpdate(
-      { _id: req.params.id },
+      { _id: req.params.id, tenant },
       {
         Type,
         minWidth,
@@ -104,8 +113,11 @@ jobPartsControl.updateJobPart = async (req, res) => {
         minStockWeight,
         maxStockWeight,
         jobTypesAllowed,
-      }
+      },
+      { new: true }
     );
+    if (!JobPart)
+      return res.status(404).json({ message: "jobPart no encontrado" });
     res.json({ Message: "JobPart actualizado " + JobPart.Type });
   } catch (error) {
     console.log(error);
@@ -113,10 +125,12 @@ jobPartsControl.updateJobPart = async (req, res) => {
     throw error;
   }
 };
+
 jobPartsControl.deleteJobPart = async (req, res, next) => {
   try {
-    const jobPart = await jobParts.esquema.findByIdAndUpdate(
-      req.params.id,
+    const tenant = req.header("x-tenant");
+    const jobPart = await jobParts.esquema.findOneAndUpdate(
+      { _id: req.params.id, tenant },
       { status: "inactivo" },
       { new: true }
     );
@@ -130,7 +144,8 @@ jobPartsControl.deleteJobPart = async (req, res, next) => {
 
 jobPartsControl.updateStatus = async (req, res, next) => {
   try {
-    const jp = await jobParts.esquema.findById(req.params.id);
+    const tenant = req.header("x-tenant");
+    const jp = await jobParts.esquema.findOne({ _id: req.params.id, tenant });
     if (!jp) return res.status(404).json({ message: "jobPart no encontrado" });
     jp.status = jp.status === "activo" ? "inactivo" : "activo";
     await jp.save();

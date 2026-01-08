@@ -84,7 +84,7 @@ export default function MyStepper(props) {
     try {
       const getStock = async (id) => {
         const stock = await getPrivateElementByID("materiales", id);
-        newPart.partStock = stock.data;
+        newPart.partStock = stock;
       };
       getStock(newPart.partStock);
       /*  const part = parts.find((parte)=>{
@@ -123,7 +123,7 @@ export default function MyStepper(props) {
     try {
       const getStock = async (id) => {
         const stock = await getPrivateElementByID("materiales", id);
-        newPart.partStock = stock.data;
+        newPart.partStock = stock;
       };
       getStock(newPart.partStock);
       /*  const part = parts.find((parte)=>{
@@ -319,7 +319,7 @@ export default function MyStepper(props) {
                 <ListItemText
                   sx={{ display: "list-item" }}
                   primary={part.Name}
-                  secondary={`${part.partStock.Tipo} ${part.partStock.Gramaje} ${part.partStock.Marca}`}
+                  secondary={`${part?.partStock?.Tipo} ${part?.partStock?.Gramaje} ${part?.partStock?.Marca}`}
                 />
               </ListItem>
             );
@@ -487,9 +487,9 @@ export default function MyStepper(props) {
                       <Grid
                         item
                         xs={12}
-                        sm={useParts.length < 3 ? 12/useParts.length : 6}
-                        md={useParts.length < 3 ? 12/useParts.length : 6}
-                        lg={useParts.length < 3 ? 12/useParts.length : 4}
+                        sm={useParts.length < 3 ? 12 / useParts.length : 6}
+                        md={useParts.length < 3 ? 12 / useParts.length : 6}
+                        lg={useParts.length < 3 ? 12 / useParts.length : 4}
                         key={"Parte-" + index}
                       >
                         <PartCard

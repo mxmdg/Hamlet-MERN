@@ -416,12 +416,22 @@ export default function EnhancedTable(props) {
     setDense(event.target.checked);
   };
 
+  // helper: detecta campos tipo id (_id, userId, tenantId, etc.)
+  const isIdField = (key) => typeof key === "string" && /id$/i.test(key);
+
+  // head cells visibles (sin columnas id)
+  const visibleHeadCells = (props.headCells || []).filter(
+    (h) => !isIdField(h.id)
+  );
+
   // This function sums all numeric values in columns that are numbers and counts the number of items if they are strings.
   // then add this row to the end of the table.
   const sumColumns = (rows) => {
     const sums = {};
     rows.forEach((row) => {
       Object.entries(row).forEach(([key, value]) => {
+        // ignorar keys que son ids
+        if (isIdField(key) || key === "_id") return;
         if (typeof value === "number") {
           sums[key] = (sums[key] || 0) + value;
         } else if (typeof value === "string") {
@@ -430,9 +440,7 @@ export default function EnhancedTable(props) {
       });
     });
     // add sums to the end of the table
-    console.log("Sums:", sums);
     sums._id = "Total"; // Add an identifier for the sum row
-    const sumRow = { _id: "Total" };
     rows.push(sums);
   };
 
@@ -484,7 +492,7 @@ export default function EnhancedTable(props) {
             onSelectAllClick={handleSelectAllClick}
             onRequestSort={handleRequestSort}
             rowCount={rows.length}
-            headCells={props.headCells}
+            headCells={visibleHeadCells}
           />
           <TableBody>
             {visibleRows.map((row, index) => {
@@ -519,39 +527,36 @@ export default function EnhancedTable(props) {
                       }}
                     />
                   </TableCell>
-                  {/* <TableCell
-                      component="th"
-                      id={labelId}
-                      scope="row"
-                      padding="none"
-                    >
-                      {row._id}
-                    </TableCell> */}
 
-                  {Object.values(row)
-                    //.slice(1, -1)
-                    .map((element) => {
-                      i++;
-                      if (typeof element === "object") {
-                        return (
-                          <TableCell key={`${element}_${i}`}>
-                            <Typography variant="body1" noWrap>
-                              N/A
-                            </Typography>
-                          </TableCell>
-                        );
-                      } else {
-                        return (
-                          <TableCell align="left" key={`${element}_${i}`}>
-                            {typeof element === "number"
-                              ? spanishFormat(element)
-                              : isoDateRegex.test(element)
-                              ? handleDate(element)
-                              : element}
-                          </TableCell>
-                        );
-                      }
-                    })}
+                  {visibleHeadCells.map((headCell) => {
+                    const element = row[headCell.id];
+                    const key = `${row._id}-${headCell.id}-${index}`;
+                    if (typeof element === "object") {
+                      return (
+                        <TableCell
+                          key={key}
+                          align={headCell.numeric ? "right" : "left"}
+                        >
+                          <Typography variant="body1" noWrap>
+                            N/A
+                          </Typography>
+                        </TableCell>
+                      );
+                    } else {
+                      return (
+                        <TableCell
+                          align={headCell.numeric ? "right" : "left"}
+                          key={key}
+                        >
+                          {typeof element === "number"
+                            ? spanishFormat(element)
+                            : isoDateRegex.test(element)
+                            ? handleDate(element)
+                            : element}
+                        </TableCell>
+                      );
+                    }
+                  })}
                 </TableRow>
               );
             })}

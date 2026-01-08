@@ -13,19 +13,40 @@ export const formatosRoutes = () => (
     <Route
       path="/formatos/add"
       element={
-        <FormMaterial form={FormatDataForm} collection="formatos" task="new" />
+        <FormMaterial
+          form={FormatDataForm}
+          collection="formatos"
+          task="new"
+          title="Agregar nuevo Formato"
+          color="primary"
+          variant="outlined"
+        />
       }
     />
     <Route
       path="/formatos/copy/:id"
       element={
-        <FormMaterial form={FormatDataForm} collection="formatos" task="copy" />
+        <FormMaterial
+          form={FormatDataForm}
+          collection="formatos"
+          task="copy"
+          title="Copiar Formato"
+          color="primary"
+          variant="outlined"
+        />
       }
     />
     <Route
       path="/formatos/edit/:id"
       element={
-        <FormMaterial form={FormatDataForm} collection="formatos" task="edit" />
+        <FormMaterial
+          form={FormatDataForm}
+          collection="formatos"
+          task="edit"
+          title="Editar Formato"
+          color="primary"
+          variant="outlined"
+        />
       }
     />
   </>

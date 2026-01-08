@@ -16,7 +16,14 @@ export const materialesRoutes = () => (
     <Route
       path="/materiales/add"
       element={
-        <FormMaterial form={StockDataForm} collection="materiales" task="new" />
+        <FormMaterial
+          form={StockDataForm}
+          collection="materiales"
+          task="new"
+          title="Agregar Material"
+          variant="outlined"
+          color="primary"
+        />
       }
     />
     <Route
@@ -26,6 +33,9 @@ export const materialesRoutes = () => (
           form={StockDataForm}
           collection="materiales"
           task="copy"
+          title="Copiar Material"
+          variant="outlined"
+          color="primary"
         />
       }
     />
@@ -36,6 +46,9 @@ export const materialesRoutes = () => (
           form={StockDataForm}
           collection="materiales"
           task="edit"
+          title="Editar Material"
+          variant="outlined"
+          color="primary"
         />
       }
     />

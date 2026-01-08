@@ -5,8 +5,9 @@ const printerControl = {};
 
 printerControl.getPrinters = async (req, res, next) => {
   try {
+    const tenant = req.header("x-tenant");
     const printer = await printers.esquema
-      .find({ status: { $ne: "inactivo" } })
+      .find({ tenant, status: { $ne: "inactivo" } })
       .select("-__v")
       .populate({ path: "Costo", model: prices.esquema });
     res.json(printer);
@@ -17,8 +18,9 @@ printerControl.getPrinters = async (req, res, next) => {
 
 printerControl.getDeletedPrinters = async (req, res, next) => {
   try {
+    const tenant = req.header("x-tenant");
     const printer = await printers.esquema
-      .find({ status: { $eq: "inactivo" } })
+      .find({ tenant, status: { $eq: "inactivo" } })
       .select("-__v")
       .populate({ path: "Costo", model: prices.esquema });
     res.json(printer);
@@ -48,6 +50,7 @@ printerControl.addPrinter = async (req, res, next) => {
     } = req.body;
 
     const Billing = [];
+    const tenant = req.header("x-tenant");
 
     const newPrinter = new printers.esquema({
       Modelo,
@@ -66,6 +69,7 @@ printerControl.addPrinter = async (req, res, next) => {
       LargePrints,
       SmallPrints,
       Billing,
+      tenant,
     });
     try {
       await newPrinter.save();
@@ -79,7 +83,11 @@ printerControl.addPrinter = async (req, res, next) => {
 
 printerControl.getPrinter = async (req, res, next) => {
   try {
-    const printer = await printers.esquema.findById(req.params.id);
+    const tenant = req.header("x-tenant");
+    const printer = await printers.esquema.findOne({
+      _id: req.params.id,
+      tenant,
+    });
     if (printer) {
       res.json(printer);
     } else {
@@ -93,8 +101,9 @@ printerControl.getPrinter = async (req, res, next) => {
 
 printerControl.getPrinterSimple = async (req, res, next) => {
   try {
+    const tenant = req.header("x-tenant");
     const printer = await printers.esquema
-      .findById(req.params.id)
+      .findOne({ _id: req.params.id, tenant })
       .select(
         "-Billing -Costo.Historial -Costo.Formula -TotalPrints -ColorPrints -BlackPrints -LargePrints -SmallPrints"
       );
@@ -111,8 +120,9 @@ printerControl.getPrinterSimple = async (req, res, next) => {
 
 printerControl.getPrintersSimple = async (req, res, next) => {
   try {
+    const tenant = req.header("x-tenant");
     const printer = await printers.esquema
-      .find({ status: { $ne: "inactivo" } })
+      .find({ tenant, status: { $ne: "inactivo" } })
       .select(
         "-Billing -TotalPrints -ColorPrints -BlackPrints -LargePrints -SmallPrints"
       )
@@ -152,7 +162,11 @@ printerControl.updatePrinter = async (req, res) => {
       SmallPrints,
       Billing,
     } = req.body;
-    const printer = await printers.esquema.findById(req.params.id);
+    const tenant = req.header("x-tenant");
+    const printer = await printers.esquema.findOne({
+      _id: req.params.id,
+      tenant,
+    });
 
     if (!printer) {
       return res.status(404).json({ message: "Impresora no encontrada" });
@@ -174,12 +188,14 @@ printerControl.updatePrinter = async (req, res) => {
       SmallPrints,
     };
 
+    printer.Billing = printer.Billing || [];
     printer.Billing.splice(
-      printer.Billing.length - 1,
+      Math.max(0, printer.Billing.length - 1),
       1,
       currentBilling,
       newBilling
     );
+
     printer.Modelo = Modelo;
     printer.SerialNumber = SerialNumber;
     printer.Fabricante = Fabricante;
@@ -190,12 +206,13 @@ printerControl.updatePrinter = async (req, res) => {
     printer.Y_Maximo = Y_Maximo;
     printer.Paginas_por_minuto = Paginas_por_minuto;
     printer.Costo = Costo;
-    (printer.TotalPrints = TotalPrints),
-      (printer.ColorPrints = ColorPrints),
-      (printer.BlackPrints = BlackPrints),
-      (printer.LargePrints = LargePrints),
-      (printer.SmallPrints = SmallPrints),
-      await printer.save();
+    printer.TotalPrints = TotalPrints;
+    printer.ColorPrints = ColorPrints;
+    printer.BlackPrints = BlackPrints;
+    printer.LargePrints = LargePrints;
+    printer.SmallPrints = SmallPrints;
+
+    await printer.save();
     res.json({ message: "Impresora actualizada " + printer.Modelo });
   } catch (e) {
     console.log(e);
@@ -205,8 +222,9 @@ printerControl.updatePrinter = async (req, res) => {
 
 printerControl.deletePrinter = async (req, res, next) => {
   try {
-    const impresora = await printers.esquema.findByIdAndUpdate(
-      req.params.id,
+    const tenant = req.header("x-tenant");
+    const impresora = await printers.esquema.findOneAndUpdate(
+      { _id: req.params.id, tenant },
       { status: "inactivo" },
       { new: true }
     );
@@ -223,7 +241,8 @@ printerControl.deletePrinter = async (req, res, next) => {
 
 printerControl.updateStatus = async (req, res, next) => {
   try {
-    const p = await printers.esquema.findById(req.params.id);
+    const tenant = req.header("x-tenant");
+    const p = await printers.esquema.findOne({ _id: req.params.id, tenant });
     if (!p) return res.status(404).json({ message: "Impresora no encontrada" });
     p.status = p.status === "activo" ? "inactivo" : "activo";
     await p.save();

@@ -8,7 +8,7 @@ const MembershipSchema = new mongoose.Schema(
       required: true,
       index: true,
     },
-    tenantId: {
+    tenant: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Tenant",
       required: true,
@@ -17,7 +17,7 @@ const MembershipSchema = new mongoose.Schema(
     role: {
       type: String,
       enum: ["admin", "manager", "operator", "customer"],
-      required: false,
+      required: true,
     },
     status: {
       type: String,
@@ -28,6 +28,6 @@ const MembershipSchema = new mongoose.Schema(
   { timestamps: false }
 );
 
-MembershipSchema.index({ userId: 1, tenantId: 1 }, { unique: true });
+MembershipSchema.index({ userId: 1, tenant: 1 }, { unique: true });
 
 module.exports = mongoose.model("Membership", MembershipSchema);

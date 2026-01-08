@@ -1,6 +1,21 @@
 const tenant = require("../../models/tenants");
 const Membership = require("../../models/memberships");
 
+const flattenNestedItems = (elements) => {
+  const flattened = {};
+
+  for (const key in elements) {
+    if (typeof elements[key] === "object" && elements[key] !== null) {
+      for (const subKey in elements[key]) {
+        flattened[`${key}.${subKey}`] = elements[key][subKey];
+      }
+    } else {
+      flattened[key] = elements[key];
+    }
+  }
+  return flattened;
+};
+
 const tenantsControl = {};
 
 tenantsControl.addTenant = async (req, res, next) => {
@@ -68,6 +83,19 @@ tenantsControl.getTenant = async (req, res, next) => {
   }
 };
 
+tenantsControl.getSettings = async (req, res, next) => {
+  try {
+    const tenantData = await tenant.esquema.findById(req.params.id);
+    const settingsFlattened = flattenNestedItems(tenantData.settings);
+    const flattenLevel2 = flattenNestedItems(settingsFlattened);
+
+    res.json(flattenLevel2);
+  } catch (e) {
+    console.error(e);
+    next(e);
+  }
+};
+
 tenantsControl.updateTenant = async (req, res, next) => {
   try {
     const { status, plan, name } = req.body;
@@ -97,4 +125,31 @@ tenantsControl.updateTenant = async (req, res, next) => {
   }
 };
 
-module.exports = tenantsControl;
+tenantsControl.updateSettings = async (req, res, next) => {
+  try {
+    const tenantId = req.header("x-tenant");
+    const settingsUpdate = req.body;
+
+    const updatedTenant = await tenant.esquema.findByIdAndUpdate(
+      tenantId,
+      { $set: { settings: settingsUpdate } },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedTenant) {
+      return res.status(404).json({ message: "Tenant no encontrado" });
+    }
+
+    res.json({
+      message: `Configuración del tenant ${updatedTenant.name} actualizada`,
+      settings: updatedTenant.settings,
+    });
+  } catch (e) {
+    next(e);
+  }
+};
+
+module.exports = {
+  ...tenantsControl,
+  flattenNestedItems,
+};

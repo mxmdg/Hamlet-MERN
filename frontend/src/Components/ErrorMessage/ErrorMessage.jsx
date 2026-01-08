@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Alert from "@mui/material/Alert";
-import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
-import { styled } from "@mui/material/styles";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
@@ -15,26 +13,65 @@ import { ReactComponent as Logo2 } from "../../../src/img/Logo/logo ok-01.svg";
 
 // ErrorMessage component displays an error alert or dialog based on props
 const ErrorMessage = (props) => {
-  // State to control dialog open/close
-  const [open, setOpen] = React.useState(true);
+  // moved hook here so it's always called on every render
+  const [open, setOpen] = useState(true);
 
-  const handleClickOpen = () => {
-    setOpen(true);
+  // normalizeError: returns a string or null (if no error)
+  const normalizeError = (err) => {
+    try {
+      if (err === null || err === undefined || err === false) return null;
+      // Accept explicit error prop or message prop or children
+      // Strings
+      if (typeof err === "string") return err;
+      // Error instances
+      if (err instanceof Error) return err.message || String(err);
+      // AxiosError-like objects
+      if (typeof err === "object") {
+        // axios: err.response?.data?.message or err.message
+        if (err.response && err.response.data) {
+          const respData = err.response.data;
+          if (typeof respData === "string") return respData;
+          if (respData && typeof respData.message === "string")
+            return respData.message;
+        }
+        if (err.isAxiosError && typeof err.message === "string")
+          return err.message;
+        // Generic object with message prop
+        if (typeof err.message === "string") return err.message;
+        // If object has toString that isn't [object Object], use it
+        if (typeof err.toString === "function") {
+          const s = err.toString();
+          if (typeof s === "string" && s !== "[object Object]") return s;
+        }
+      }
+      // Fallback
+      return "Ocurrió un error inesperado";
+    } catch (e) {
+      // Nunca lanzar desde aquí
+      return "Ocurrió un error inesperado";
+    }
   };
+
+  // Determine raw input (support props.error, props.message, props.children)
+  const raw = props.error ?? props.message ?? props.children;
+  const message = normalizeError(raw);
+
+  // Si no hay mensaje válido, no renderizar nada
+  if (!message) return null;
+
   const handleClose = () => {
     setOpen(false);
   };
 
   // Closes the dialog and triggers a delete/close action from parent
-
   const handleCloseAndDelete = () => {
-    if (props.action) {
-      props.action();
+    try {
+      if (props.action) props.action();
+    } catch (e) {
+      // ignorar errores en callbacks del parent
     }
     setOpen(false);
   };
-
-  //const navigate = useNavigate();
 
   // Optional action button for the alert, triggers props.action if provided
   const actionButton = (
@@ -54,9 +91,11 @@ const ErrorMessage = (props) => {
     <Alert
       variant={props.variant || "filled"}
       severity={props.severity || "error"}
-      action={props.action ? actionButton : ""}
+      action={props.action ? actionButton : null}
     >
-      {props.message}
+      <Typography component="span" variant="body2">
+        {message}
+      </Typography>
     </Alert>
   );
 
@@ -84,7 +123,6 @@ const ErrorMessage = (props) => {
               aria-label="close"
               onClick={handleClose}
               color={props.severity || "primary"}
-              variant="contained"
             >
               <CloseIcon />
             </IconButton>
@@ -93,7 +131,7 @@ const ErrorMessage = (props) => {
       </DialogTitle>
 
       <DialogContent dividers>
-        <Typography gutterBottom>{props.message}</Typography>
+        <Typography gutterBottom>{message}</Typography>
       </DialogContent>
       <DialogActions>
         <Button
@@ -107,6 +145,7 @@ const ErrorMessage = (props) => {
     </Dialog>
   );
 
+  // Si se proporciona title, usar dialog; si no, usar alert
   return props.title ? dialogError : alert;
 };
 

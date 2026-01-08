@@ -1,13 +1,66 @@
 const Membership = require("../../models/memberships");
+const usersModel = require("../../models/usersSchema");
 
 const membershipsController = {};
 
 membershipsController.getMemberships = async (req, res, next) => {
   try {
-    const memberships = await Membership.find()
-      .populate("userId", "name email")
-      .populate("tenantId", "key name");
+    const tenant = req.header("x-tenant");
+    const memberships = await Membership.find({
+      tenant,
+      status: { $ne: "inactivo" },
+    })
+      .populate("userId", "Name LastName email")
+      .populate("tenant", "key name")
+      .select("role status");
     res.json(memberships);
+  } catch (e) {
+    next(e);
+  }
+};
+
+membershipsController.getDeletedMemberships = async (req, res, next) => {
+  try {
+    const tenant = req.header("x-tenant");
+    const memberships = await Membership.find({
+      tenant,
+      status: { $eq: "inactivo" },
+    })
+      .populate("userId", "name email")
+      .populate("tenant", "key name");
+    res.json(memberships);
+  } catch (e) {
+    next(e);
+  }
+};
+
+membershipsController.updateMembership = async (req, res, next) => {
+  try {
+    const tenant = req.header("x-tenant");
+    const membership = await Membership.findOneAndUpdate(
+      { _id: req.params.id, tenant },
+      req.body,
+      { new: true }
+    )
+      .populate("userId", "name email")
+      .populate("tenant", "key name status");
+    if (!membership)
+      return res.status(404).json({ message: "Membership no encontrada" });
+    res.json(membership);
+  } catch (e) {
+    next(e);
+  }
+};
+
+membershipsController.getMembershipById = async (req, res, next) => {
+  try {
+    const tenant = req.header("x-tenant");
+    const membership = await Membership.findOne({ _id: req.params.id, tenant })
+      .populate("userId", "name email")
+      .populate("tenant", "key name status");
+    if (!membership)
+      return res.status(404).json({ message: "Membership no encontrada" });
+    res.json(membership);
   } catch (e) {
     next(e);
   }
@@ -15,9 +68,11 @@ membershipsController.getMemberships = async (req, res, next) => {
 
 membershipsController.getByUser = async (req, res, next) => {
   try {
+    const tenant = req.header("x-tenant");
     const memberships = await Membership.find({
       userId: req.params.userId,
-    }).populate("tenantId", "key name status");
+      tenant,
+    }).populate("tenant", "key name status");
     res.json(memberships);
   } catch (e) {
     next(e);
@@ -26,9 +81,12 @@ membershipsController.getByUser = async (req, res, next) => {
 
 membershipsController.getByTenant = async (req, res, next) => {
   try {
+    const tenant = req.header("x-tenant");
     const memberships = await Membership.find({
-      tenantId: req.params.tenantId,
-    }).populate("userId", "name email");
+      tenant,
+    })
+      .populate("userId", "name email")
+      .populate("tenant", "key name status");
     res.json(memberships);
   } catch (e) {
     next(e);
@@ -37,17 +95,73 @@ membershipsController.getByTenant = async (req, res, next) => {
 
 membershipsController.createMembership = async (req, res, next) => {
   try {
-    const { userId, tenantId, role, status } = req.body;
+    const tenant = req.header("x-tenant");
+    const { role, status } = req.body;
+    const userEmail = req.body.userEmail;
+
+    if (!userEmail) {
+      return res.status(400).json({ message: "Email de usuario no provisto" });
+    }
+
+    const user = await usersModel.esquema.findOne({ email: userEmail });
+    if (!user) {
+      return res.status(404).json({ message: "El usuario no existe" });
+    }
+
     const newMembership = new Membership({
-      userId,
-      tenantId,
+      userId: user._id,
+      tenant,
       role,
       status,
     });
+    console.log(newMembership);
     const membership = await newMembership.save();
     res.status(201).json(membership);
+  } catch (e) {
+    next(e);
+  }
+};
 
-    return await newMembership.save();
+membershipsController.deleteMembershipSoft = async (req, res, next) => {
+  try {
+    const tenant = req.header("x-tenant");
+    const membership = await Membership.findOneAndUpdate(
+      { _id: req.params.id, tenant },
+      { status: "inactivo" },
+      { new: true }
+    );
+    if (!membership)
+      return res.status(404).json({ message: "Membership no encontrada" });
+    res.json({ message: "Membership desactivada correctamente", membership });
+  } catch (e) {
+    next(e);
+  }
+};
+
+membershipsController.updateStatus = async (req, res, next) => {
+  try {
+    const tenant = req.header("x-tenant");
+    const m = await Membership.findOne({ _id: req.params.id, tenant });
+    if (!m)
+      return res.status(404).json({ message: "Membership no encontrada" });
+    m.status = m.status === "activo" ? "inactivo" : "activo";
+    await m.save();
+    res.json({ message: "Estado actualizado", membership: m });
+  } catch (error) {
+    next(error);
+  }
+};
+
+membershipsController.deleteMembership = async (req, res, next) => {
+  try {
+    const tenant = req.header("x-tenant");
+    const membership = await Membership.findOneAndDelete({
+      _id: req.params.id,
+      tenant,
+    });
+    if (!membership)
+      return res.status(404).json({ message: "Membership no encontrada" });
+    res.json({ message: "Membership eliminada correctamente" });
   } catch (e) {
     next(e);
   }

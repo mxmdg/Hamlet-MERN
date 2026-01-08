@@ -4,12 +4,17 @@ const path = require("path");
 
 const {
   getTenants,
-  addTenant,
   getTenant,
+  getSettings,
+  addTenant,
   updateTenant,
+  updateSettings,
 } = require("./controllers/tenantControl");
 
-routerTenants.route("/").get(getTenants).post(addTenant);
+const { register } = require("./controllers/onboardingControl");
+
+routerTenants.route("/").get(getTenants).post(register);
+routerTenants.route("/settings/:id").get(getSettings).put(updateSettings);
 routerTenants.route("/:id").put(updateTenant).get(getTenant);
 
 module.exports = routerTenants;

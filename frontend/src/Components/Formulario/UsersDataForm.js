@@ -10,14 +10,14 @@ let UsersDataForm = [
     id: "id_002",
   },
   {
-    inputName: "Role",
+    inputName: "role",
     type: "Select",
     id: "id_003",
     options: [
-      //{ text: "Administrador", value: "Admin" },
-      { text: "Vendedor", value: "Manager" },
-      { text: "Operador", value: "Operator" },
-      { text: "Cliente", value: "Customer" },
+      { text: "Administrador", value: "admin" },
+      { text: "Vendedor", value: "manager" },
+      { text: "Operador", value: "operator" },
+      { text: "Cliente", value: "customer" },
     ],
   },
   {

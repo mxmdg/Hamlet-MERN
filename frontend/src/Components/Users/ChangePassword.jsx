@@ -16,7 +16,7 @@ import {
   getPrivateElements,
 } from "../customHooks/FetchDataHook";
 
-const ChangePassword = () => {
+const ChangePassword = (props) => {
   const {
     register,
     handleSubmit,
@@ -40,18 +40,20 @@ const ChangePassword = () => {
           `${serverURL}/hamlet/users/${user._id}/change-password`,
           data
         );
-        console.log(response.data);
+        console.log("Respuesta al cambiar contraseña: " + response.data);
       }
 
       // Manejar la respuesta
       setError({
-        msg: "La contrraseña fue cambiada exitosamente",
+        title: "Contraseña Cambiada",
+        msg: "La contraseña fue cambiada exitosamente",
         sev: "success",
         act: resetError,
       });
       // Por ejemplo, mostrar un mensaje de éxito o redireccionar a otra página
     } catch (error) {
       setError({
+        title: "No se pudo cambiar la contraseña",
         msg:
           "Hubo un error al cambiar la contraseña, " +
           error.response.data.message,
@@ -63,8 +65,11 @@ const ChangePassword = () => {
 
   return (
     <Box>
-      <Card elevation={6}>
-        <CardHeader title="Cambiar Contraseña" />
+      <Card elevation={1}>
+        <CardHeader
+          title="Cambiar Contraseña"
+          titleTypographyProps={{ color: props.color }}
+        />
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)}>
             <TextField
@@ -77,6 +82,8 @@ const ChangePassword = () => {
               }
               fullWidth
               margin="normal"
+              variant={props.variant}
+              color={props.color}
             />
             <TextField
               label="Nueva Contraseña"
@@ -88,6 +95,8 @@ const ChangePassword = () => {
               }
               fullWidth
               margin="normal"
+              variant={props.variant}
+              color={props.color}
             />
             <TextField
               label="Confirmar Nueva Contraseña"
@@ -101,15 +110,18 @@ const ChangePassword = () => {
               }
               fullWidth
               margin="normal"
+              variant={props.variant}
+              color={props.color}
             />
             {error && (
               <ErrorMessage
+                title={error.title}
                 message={error.msg}
                 severity={error.sev}
                 action={error.act}
               />
             )}
-            <Button type="submit" variant="contained" color="primary">
+            <Button type="submit" variant={props.variant} color={props.color}>
               Cambiar Contraseña
             </Button>
           </form>

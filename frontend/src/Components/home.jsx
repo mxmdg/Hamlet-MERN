@@ -97,13 +97,13 @@ const Home = (props) => {
               <MyStepper />
             </Grid>
             <Grid xs={12} sm={12} md={11} lg={10}>
-              <QuickSpinCalc color="secondary" />
+              <QuickSpinCalc color="primary" />
             </Grid>
             <Grid xs={12} sm={12} md={11} lg={10}>
               <NumberGenerator color="primary" />
             </Grid>
             <Grid xs={12} sm={12} md={11} lg={10}>
-              <ColorSheetRangeGenerator />
+              <ColorSheetRangeGenerator color="primary" />
             </Grid>
             <Grid xs={12} sm={12} md={11} lg={10}>
               <ImpoProvider>

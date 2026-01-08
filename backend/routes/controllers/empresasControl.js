@@ -5,12 +5,12 @@ const empresasControl = {};
 empresasControl.getCompanies = async (req, res, next) => {
   {
     try {
+      const tenant = req.header("x-tenant");
       const empresa = await empresas.esquema
-        .find({ status: { $ne: "inactivo" } })
+        .find({ tenant, status: { $ne: "inactivo" } })
         .sort({ Nombre: 1 })
         .select("-__v");
       res.json(empresa);
-      //return formato
     } catch (e) {
       console.error(e);
       next(e);
@@ -20,8 +20,9 @@ empresasControl.getCompanies = async (req, res, next) => {
 
 empresasControl.getDeletedCompanies = async (req, res, next) => {
   try {
+    const tenant = req.header("x-tenant");
     const empresa = await empresas.esquema
-      .find({ status: { $eq: "inactivo" } })
+      .find({ tenant, status: { $eq: "inactivo" } })
       .sort({ Nombre: 1 })
       .select("-__v");
     res.json(empresa);
@@ -34,7 +35,10 @@ empresasControl.getDeletedCompanies = async (req, res, next) => {
 empresasControl.leanCompanies = async (req, res, next) => {
   {
     try {
-      const empresa = await empresas.esquema.find().lean({ virtuals: true });
+      const tenant = req.header("x-tenant");
+      const empresa = await empresas.esquema
+        .find({ tenant })
+        .lean({ virtuals: true });
       return empresa;
     } catch (e) {
       console.log(e);
@@ -56,6 +60,20 @@ empresasControl.addCompany = async (req, res, next) => {
         Pais,
         Telefono,
       } = req.body;
+      const tenant = req.header("x-tenant");
+
+      // Verificar existencia dentro del tenant
+      const companyExists = await empresas.esquema.findOne({
+        Nombre: Nombre,
+        tenant,
+      });
+
+      if (companyExists) {
+        return res.status(400).json({
+          message: `La empresa ${Nombre} ya se encuentra en nuestra base de datos para este tenant.`,
+        });
+      }
+
       const newCompany = new empresas.esquema({
         Nombre,
         email,
@@ -65,16 +83,8 @@ empresasControl.addCompany = async (req, res, next) => {
         Provincia,
         Pais,
         Telefono,
+        tenant,
       });
-      const companyExists = await empresas.esquema.findOne({
-        Nombre: Nombre,
-      });
-
-      if (companyExists) {
-        throw Error(
-          `La empresa ${Nombre} ya se encuentra en nuestra base de datos.`
-        );
-      }
 
       await newCompany.save();
       res.json({ message: newCompany.Nombre + " ha sido agregado" });
@@ -87,22 +97,22 @@ empresasControl.addCompany = async (req, res, next) => {
 
 empresasControl.getCompany = async (req, res, next) => {
   try {
-    const empresa = await empresas.esquema.findById(req.params.id);
+    const tenant = req.header("x-tenant");
+    const empresa = await empresas.esquema.findOne({
+      _id: req.params.id,
+      tenant,
+    });
     if (empresa) {
       res.json(empresa);
     } else {
-      res.status(404).json({ message: "Empresa no encontrado" });
+      res.status(404).json({ message: "Empresa no encontrada" });
     }
   } catch (e) {
     console.log(e);
     next(e);
   }
 };
-/* empresasControl.updateFormat = async (req, res)=> {
-    const {Nombre, Alto, Ancho} = req.body;
-    const format = await empresas.esquema.findOneAndUpdate({_id: req.params.id}, {Nombre, Alto, Ancho})
-    res.json({"Message": "Formato actualizado " + req.params.id})
-  } */
+
 empresasControl.updateCompany = async (req, res, next) => {
   try {
     const {
@@ -116,8 +126,10 @@ empresasControl.updateCompany = async (req, res, next) => {
       Telefono,
       status,
     } = req.body;
-    const empresa = await empresas.esquema.findByIdAndUpdate(
-      req.params.id,
+    const tenant = req.header("x-tenant");
+
+    const empresa = await empresas.esquema.findOneAndUpdate(
+      { _id: req.params.id, tenant },
       {
         Nombre,
         email,
@@ -129,22 +141,24 @@ empresasControl.updateCompany = async (req, res, next) => {
         Telefono,
         status,
       },
-      { new: false }
+      { new: true, runValidators: true }
     );
 
     if (!empresa) {
-      throw Error("Empresa no encontrada");
+      return res.status(404).json({ message: "Empresa no encontrada" });
     }
-    res.json({ message: "Empresa actualizado", empresa });
+    res.json({ message: "Empresa actualizada", empresa });
   } catch (e) {
     console.log(e);
     next(e);
   }
 };
+
 empresasControl.deleteCompany = async (req, res, next) => {
   try {
-    const empresa = await empresas.esquema.findByIdAndUpdate(
-      req.params.id,
+    const tenant = req.header("x-tenant");
+    const empresa = await empresas.esquema.findOneAndUpdate(
+      { _id: req.params.id, tenant },
       { status: "inactivo" },
       { new: true, runValidators: true }
     );
@@ -164,7 +178,11 @@ empresasControl.deleteCompany = async (req, res, next) => {
 
 empresasControl.updateStatus = async (req, res, next) => {
   try {
-    const empresa = await empresas.esquema.findById(req.params.id);
+    const tenant = req.header("x-tenant");
+    const empresa = await empresas.esquema.findOne({
+      _id: req.params.id,
+      tenant,
+    });
 
     if (!empresa) {
       return res.status(404).json({ message: "Empresa no encontrada" });

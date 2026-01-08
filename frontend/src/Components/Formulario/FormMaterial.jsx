@@ -107,6 +107,8 @@ const FormMaterial = (props) => {
 
   //New props.variant to define the form variant
   const variant = props.variant || "outlined";
+  // new color prop (default primary)
+  const color = props.color || "primary";
 
   // React Hook Form
   const {
@@ -135,7 +137,11 @@ const FormMaterial = (props) => {
             id
           );
           setItem(itemToEdit);
-          setLoading(false);
+
+          console.log("Item to edit fetched:");
+          console.log(itemToEdit);
+
+          itemToEdit === undefined && setErrorMessage("Item no encontrado");
 
           // Recorremos el dataForm y si hay un checkbox, cargamos el array en el estado, a ver si anda... Anduvo!
           try {
@@ -143,8 +149,7 @@ const FormMaterial = (props) => {
             for (let inp of dataForm) {
               if (inp.type === "checkbox") {
                 itemToEdit !== "new" && itemToEdit !== undefined
-                  ? (checkOptions[inp.inputName] =
-                      itemToEdit.data[inp.inputName])
+                  ? (checkOptions[inp.inputName] = itemToEdit[inp.inputName])
                   : (checkOptions[inp.inputName] = []);
               }
               if (inp.type === "checkbox" && props.task !== "new") {
@@ -152,7 +157,7 @@ const FormMaterial = (props) => {
               }
             }
           } catch (e) {
-            setErrorMessage(e.message);
+            setErrorMessage(e.response?.data || e.message);
             setLoading(false);
           }
 
@@ -160,7 +165,7 @@ const FormMaterial = (props) => {
 
           //console.log(dataForm);
         } catch (e) {
-          setErrorMessage(e.message);
+          setErrorMessage(e.response?.data || e.message);
           setLoading(false);
         }
       };
@@ -216,7 +221,7 @@ const FormMaterial = (props) => {
           ? props.setState(true)
           : console.log("No es nuevo");
       } catch (e) {
-        setErrorMessage("No se pudo guardar. " + e);
+        setErrorMessage(e.response?.data || e.message);
       }
     } else {
       try {
@@ -226,9 +231,7 @@ const FormMaterial = (props) => {
         //props.editor(true);
       } catch (e) {
         //console.log(e);
-        setErrorMessage(
-          "No se pudo actualizar. " + e.response.data.error.message
-        );
+        setErrorMessage(e.response?.data || e.message);
       }
     }
     /* try {
@@ -250,7 +253,7 @@ const FormMaterial = (props) => {
         ? props.view("viewer")
         : props.view("editor");
     } catch (e) {
-      setErrorMessage(e.message);
+      setErrorMessage(e.response?.data || e.message);
     }
   };
 
@@ -261,6 +264,7 @@ const FormMaterial = (props) => {
   };
 
   const typeOfInput = (inp) => {
+    console.log();
     if (inp.type === "Select") {
       let value;
       const changeHandler = (e) => {
@@ -275,12 +279,11 @@ const FormMaterial = (props) => {
               select
               label={inp.label || inp.inputName}
               variant={variant}
-              color="success"
+              color={color}
               size="small"
               defaultValue={
                 useItem !== "new"
-                  ? useItem.data[inp.inputName]._id ||
-                    useItem.data[inp.inputName]
+                  ? useItem[inp.inputName]?._id || useItem[inp.inputName]
                   : ""
               }
               name={inp.inputName}
@@ -315,7 +318,7 @@ const FormMaterial = (props) => {
           <Button
             variant={variant}
             inputName={inp.inputName}
-            color="primary"
+            color={color}
             key={inp.id}
             type={inp.type}
             selectForm={props.selectForm}
@@ -398,7 +401,8 @@ const FormMaterial = (props) => {
                     key={inp.inputName + "_all"}
                     control={
                       <Checkbox
-                        color="info"
+                        variant={variant}
+                        color={color}
                         indeterminate={
                           selectedCheckboxItems[inp.inputName]?.length > 0 &&
                           selectedCheckboxItems[inp.inputName]?.length <
@@ -431,7 +435,7 @@ const FormMaterial = (props) => {
                             key={inp.inputName + index}
                             control={
                               <Checkbox
-                                color="secondary"
+                                color={color}
                                 key={inp.inputName + "_" + index}
                                 id={"id_" + inp.inputName + index}
                                 value={opt}
@@ -472,9 +476,10 @@ const FormMaterial = (props) => {
             type={inp.type}
             label={inp.label || inp.inputName}
             variant={variant}
+            color={color}
             defaultValue={
               useItem !== "new"
-                ? useItem.data[inp.inputName]
+                ? useItem[inp.inputName]
                 : inp.default
                 ? inp.default
                 : ""
@@ -510,7 +515,7 @@ const FormMaterial = (props) => {
         <Card raised>
           <CardHeader
             component="div"
-            title={props.collection}
+            title={props.title || props.collection}
             subheader={props.task}
           />
           <Divider />
@@ -525,7 +530,7 @@ const FormMaterial = (props) => {
                       submitHandler(
                         values,
                         props.collection,
-                        useItem !== "new" ? useItem.data._id : ""
+                        useItem !== "new" ? useItem._id : ""
                       );
                     }
                   })}
@@ -547,7 +552,7 @@ const FormMaterial = (props) => {
                     <Button
                       variant="contained"
                       id="submitBTN"
-                      color="primary"
+                      color={color}
                       type="submit"
                     >
                       Enviar
@@ -572,6 +577,7 @@ const FormMaterial = (props) => {
 
   const alertError = (
     <ErrorMessage
+      title={"Error"}
       message={useErrorMessage}
       severity={"error"}
       action={resetError}

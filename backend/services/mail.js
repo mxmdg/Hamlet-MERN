@@ -1,5 +1,34 @@
 const nodemailer = require("nodemailer");
 
+function createTransporter(mailSettings) {
+  return nodemailer.createTransport({
+    host: mailSettings.host,
+    port: mailSettings.port,
+    secure: mailSettings.secure,
+    auth: {
+      user: mailSettings.user,
+      pass: mailSettings.pass,
+    },
+  });
+}
+
+async function sendMail({ mailSettings, mailDetails }) {
+  const transporter = createTransporter(mailSettings);
+
+  const info = await transporter.sendMail({
+    from: mailSettings.from,
+    ...mailDetails,
+  });
+
+  return info;
+}
+
+module.exports = {
+  sendMail,
+};
+
+/* const nodemailer = require("nodemailer");
+
 const mailAccount = { user: process.env.MAILUSER, pass: process.env.MAILPASS };
 
 const mailer = {};
@@ -16,10 +45,10 @@ mailer.transporter = nodemailer.createTransport({
   },
 });
 
-/** create reusable sendmail function 
+// create reusable sendmail function 
  {object} options - mail options (to, subject, text, html)
  {function} callback - callback function to handle response
-*/
+
 mailer.SENDMAIL = async (mailDetails, callback) => {
   try {
     const info = await mailer.transporter.sendMail(mailDetails);
@@ -30,4 +59,4 @@ mailer.SENDMAIL = async (mailDetails, callback) => {
   }
 };
 
-module.exports = mailer;
+module.exports = mailer; */

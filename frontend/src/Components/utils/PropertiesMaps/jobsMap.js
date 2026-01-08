@@ -93,7 +93,7 @@ export const JobProperties = [
     value: "Owner",
     label: "Representante",
     queryType: "id",
-    queryLabel: "users.Name users.LastName",
+    queryLabel: "userId.Name userId.LastName",
   },
   {
     value: "Company",
@@ -121,7 +121,7 @@ export const QuotationProperties = [
     label: "Estado",
     queryType: "select",
     queryLabel: "status",
-    options: ["Pendiente", "Aprobada", "Rechazada", "Enviado"],
+    options: ["Pendiente", "Aprobada", "Rechazado", "Enviado"],
   },
   {
     value: "Entrega",

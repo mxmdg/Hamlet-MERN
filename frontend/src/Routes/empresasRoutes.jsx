@@ -40,6 +40,9 @@ export const empresasRoutes = () => (
           form={empresasDataForm}
           collection="empresas"
           task="new"
+          title="Agregar nueva Empresa"
+          color="primary"
+          variant="outlined"
         />
       }
     />
@@ -50,6 +53,9 @@ export const empresasRoutes = () => (
           form={empresasDataForm}
           collection="empresas"
           task="copy"
+          title="Copiar Empresa"
+          color="primary"
+          variant="outlined"
         />
       }
     />
@@ -60,6 +66,9 @@ export const empresasRoutes = () => (
           form={empresasDataForm}
           collection="empresas"
           task="edit"
+          title="Editar Empresa"
+          color="primary"
+          variant="outlined"
         />
       }
     />

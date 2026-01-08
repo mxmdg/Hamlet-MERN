@@ -59,7 +59,7 @@ const partSchema = new Schema({
       default: [],
     },
   ],
-  tenantId: {
+  tenant: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Tenant",
     required: false,
@@ -88,6 +88,12 @@ const jobSchema = new Schema({
     type: String,
     enum: ["activo", "inactivo"],
     default: "activo",
+  },
+  tenant: {
+    type: mongoose.Schema.ObjectId,
+    ref: "Tenant",
+    required: true,
+    index: true,
   },
 });
 

@@ -19,7 +19,7 @@ import { Grid } from "@mui/material";
 import { serverURL, databaseURL } from "../Config/config";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 
-export const Register = () => {
+export const Register = (props) => {
   const {
     register,
     handleSubmit,
@@ -28,7 +28,8 @@ export const Register = () => {
   } = useForm({
     mode: "onBlur", // "onChange"
   });
-
+  const [useColor, setColor] = React.useState(props.color || "primary");
+  const [useVariant, setVariant] = React.useState(props.variant || "filled");
   const [useErrorMessage, setErrorMessage] = React.useState(null);
   const navigate = useNavigate();
   //const params = useParams();
@@ -39,7 +40,7 @@ export const Register = () => {
       console.log(data);
       navigate(-1);
     } catch (e) {
-      setErrorMessage(e.response.data);
+      setErrorMessage(e.response?.data?.message || "Error desconocido");
     }
     console.log("JSON.stringify(data)", JSON.stringify(data));
   };
@@ -62,7 +63,10 @@ export const Register = () => {
   const success = (
     <Box>
       <Card elevation={10}>
-        <CardHeader title="Registrate!" titleTypographyProps={{color: "primary", fontWeight: "600"}}></CardHeader>
+        <CardHeader
+          title="Registrate!"
+          titleTypographyProps={{ color: useColor, fontWeight: "600" }}
+        ></CardHeader>
         <CardContent>
           <FormControl sx={{ width: "90%" }}>
             <form name="Register" onSubmit={handleSubmit(onSubmit)}>
@@ -75,7 +79,8 @@ export const Register = () => {
                   <TextField
                     id="Name"
                     label="Nombre"
-                    variant="filled"
+                    color={useColor}
+                    variant={useVariant}
                     defaultValue={""}
                     name="Name"
                     {...register("Name", {
@@ -92,7 +97,8 @@ export const Register = () => {
                   <TextField
                     id="LastName"
                     label="Apellido"
-                    variant="filled"
+                    color={useColor}
+                    variant={useVariant}
                     defaultValue={""}
                     name="LastName"
                     {...register("LastName", {
@@ -114,8 +120,8 @@ export const Register = () => {
                       name: "Role",
                       id: "Role",
                     }}
-                    variant="filled"
-                    color="primary"
+                    color={useColor}
+                    variant={useVariant}
                     label="Rol"
                     name="Role"
                     onChange={(e) => console.log(e.target.value)}
@@ -148,7 +154,8 @@ export const Register = () => {
                   <TextField
                     id="email"
                     label="email"
-                    variant="filled"
+                    color={useColor}
+                    variant={useVariant}
                     defaultValue={""}
                     name="email"
                     {...register("email", {
@@ -166,7 +173,8 @@ export const Register = () => {
                     id="password"
                     label="password"
                     type="password"
-                    variant="filled"
+                    color={useColor}
+                    variant={useVariant}
                     defaultValue={""}
                     name="password"
                     {...register("password", {
@@ -180,7 +188,7 @@ export const Register = () => {
                   />
                 </Grid>
                 <Grid item xs={6} sm={6} md={3} sx={{ alignSelf: "center" }}>
-                  <Button type="submit" variant="contained" color="primary">
+                  <Button type="submit" variant="contained" color={useColor}>
                     Registrarse
                   </Button>
                 </Grid>

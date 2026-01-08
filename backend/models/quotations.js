@@ -1,14 +1,27 @@
 const { Schema, model, default: mongoose } = require("mongoose");
 
-// Nuevo esquema para el contador de presupuestos
-const counterSchema = new Schema({
-  _id: { type: String, required: true },
-  seq: { type: Number, default: 0 },
-});
+// Counter schema: one counter per entity+tenant
+const counterSchema = new Schema(
+  {
+    entity: { type: String, required: true },
+    tenant: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Tenant",
+      required: true,
+      index: true,
+    },
+    seq: { type: Number, default: 0 },
+  },
+  { timestamps: false }
+);
+
+// Unique composite index: one counter per (entity, tenant)
+counterSchema.index({ entity: 1, tenant: 1 }, { unique: true });
+
 const Counter = model("Counter", counterSchema);
 
 const quotationsSchema = new Schema({
-  index: { type: Number, unique: true }, // Número de presupuesto consecutivo
+  index: { type: Number }, // removed unique: true, now unique per tenant via compound index
   quantity: { type: Number, require: true },
   name: { type: String, required: false },
   customer: { type: String, required: false },
@@ -33,30 +46,55 @@ const quotationsSchema = new Schema({
     required: false,
   },
   jobType: { type: String, required: false },
-  tenantId: {
+  tenant: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Tenant",
-    required: false,
+    required: false, // kept optional at schema level; middleware will enforce presence for index generation
     index: true,
   },
 });
 
-// Middleware para autoincrementar el campo index antes de guardar
+// Compound unique index to ensure index is unique per tenant
+quotationsSchema.index({ tenant: 1, index: 1 }, { unique: true, sparse: true });
+
+/**
+ * pre-save middleware:
+ * - Ensures a tenant is present for new documents
+ * - Atomically increments the counter for (entity='quotations', tenant)
+ * - Assigns the resulting seq to this.index
+ */
 quotationsSchema.pre("save", async function (next) {
-  if (this.isNew) {
-    try {
-      const counter = await Counter.findByIdAndUpdate(
-        { _id: "quotations" },
-        { $inc: { seq: 1 } },
-        { new: true, upsert: true }
-      );
-      this.index = counter.seq;
-      next();
-    } catch (err) {
-      next(err);
+  if (!this.isNew) return next();
+
+  try {
+    // Require tenant to generate tenant-scoped consecutive index
+    if (!this.tenant) {
+      const err = new Error("Tenant is required to generate quotation index");
+      err.status = 400;
+      return next(err);
     }
-  } else {
-    next();
+
+    console.log("Generating tenant-scoped index for tenant:", this.tenant);
+
+    // Atomically increment (or create) the counter for this tenant+entity
+    const counter = await Counter.findOneAndUpdate(
+      { entity: "quotations", tenant: this.tenant },
+      { $inc: { seq: 1 } },
+      { new: true, upsert: true, setDefaultsOnInsert: true }
+    ).exec();
+
+    console.log("Counter after increment:", counter);
+
+    if (!counter || typeof counter.seq !== "number") {
+      return next(new Error("Failed to generate quotation index"));
+    }
+
+    // Assign the tenant-scoped consecutive number
+    this.index = counter.seq;
+
+    return next();
+  } catch (err) {
+    return next(err);
   }
 });
 

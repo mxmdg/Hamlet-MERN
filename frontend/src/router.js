@@ -18,6 +18,7 @@ import { jobsRoutes } from "./Routes/jobsRoutes";
 import { preciosRoutes } from "./Routes/preciosRoutes";
 import { quotationsRoutes } from "./Routes/quotationsRoutes";
 import { configuracionRoutes } from "./Routes/configuracionRoutes";
+import { membershipsRoutes } from "./Routes/memberships";
 
 const Router = () => {
   const context = useContext(AuthContext);
@@ -40,6 +41,7 @@ const Router = () => {
           {preciosRoutes()}
           {quotationsRoutes()}
           {configuracionRoutes()}
+          {membershipsRoutes()}
         </>
       )}
 

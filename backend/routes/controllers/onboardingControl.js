@@ -9,7 +9,7 @@ onboardingController.register = async (req, res, next) => {
     const {
       key,
       name,
-      status = "pendiente",
+      status = "activo",
       plan = "trial",
       userName,
       userLastname,
@@ -51,6 +51,8 @@ onboardingController.register = async (req, res, next) => {
       LastName: userLastname,
       email,
       password,
+      role: "admin",
+      status: "activo",
     });
 
     const newTenant = await tenant.esquema.create({
@@ -62,12 +64,12 @@ onboardingController.register = async (req, res, next) => {
 
     await Membership.create({
       userId: newUser._id,
-      tenantId: newTenant._id,
+      tenant: newTenant._id,
       role: "admin",
       status: "activo",
     });
 
-    res.status(201).json({
+    return res.status(201).json({
       message: "Onboarding completado",
     });
   } catch (e) {

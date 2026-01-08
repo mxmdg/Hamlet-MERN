@@ -5,8 +5,9 @@ const materialControl = {};
 
 materialControl.getMaterials = async (req, res, next) => {
   try {
+    const tenant = req.header("x-tenant");
     const material = await materials.esquema
-      .find({ status: { $ne: "inactivo" } })
+      .find({ tenant, status: { $ne: "inactivo" } })
       .select("-__v");
     res.json(material);
   } catch (error) {
@@ -16,8 +17,9 @@ materialControl.getMaterials = async (req, res, next) => {
 
 materialControl.getDeletedMaterials = async (req, res, next) => {
   try {
+    const tenant = req.header("x-tenant");
     const material = await materials.esquema
-      .find({ status: { $eq: "inactivo" } })
+      .find({ tenant, status: { $eq: "inactivo" } })
       .select("-__v");
 
     res.json(material);
@@ -42,6 +44,7 @@ materialControl.addMaterial = async (req, res) => {
         Color,
       } = req.body;
       const newMaterial = new materials.esquema({
+        tenant: req.header("x-tenant"),
         Nombre_Material,
         Marca,
         Gramaje,
@@ -54,7 +57,7 @@ materialControl.addMaterial = async (req, res) => {
         Color,
       });
       await newMaterial.save();
-      res.json({ message: newMaterial.Nombre + " guardado OK" });
+      res.json({ message: newMaterial.Nombre_Material + " guardado OK" });
     } catch (e) {
       console.log(e);
       res.status(404).json({ message: e });
@@ -64,7 +67,11 @@ materialControl.addMaterial = async (req, res) => {
 
 materialControl.getMaterial = async (req, res) => {
   try {
-    const material = await materials.esquema.findById(req.params.id);
+    const tenant = req.header("x-tenant");
+    const material = await materials.esquema.findOne({
+      _id: req.params.id,
+      tenant,
+    });
     //.populate({ path: "Precio_x_Kilo", model: prices.esquema });
     if (material) {
       res.json(material);
@@ -91,8 +98,9 @@ materialControl.updateMaterial = async (req, res) => {
       Precio_x_Kilo,
       Color,
     } = req.body;
+    const tenant = req.header("x-tenant");
     const material = await materials.esquema.findOneAndUpdate(
-      { _id: req.params.id },
+      { _id: req.params.id, tenant },
       {
         Nombre_Material,
         Marca,
@@ -104,18 +112,23 @@ materialControl.updateMaterial = async (req, res) => {
         Fibra,
         Precio_x_Kilo,
         Color,
-      }
+      },
+      { new: true }
     );
-    res.json({ Message: "Material actualizado " + material.Nombre });
+    if (!material)
+      return res.status(404).json({ message: "Material no encontrado" });
+    res.json({ Message: "Material actualizado " + material.Nombre_Material });
   } catch (error) {
     console.log("Error: " + error);
     res.status(404).json({ error });
   }
 };
+
 materialControl.deleteMaterial = async (req, res, next) => {
   try {
-    const material = await materials.esquema.findByIdAndUpdate(
-      req.params.id,
+    const tenant = req.header("x-tenant");
+    const material = await materials.esquema.findOneAndUpdate(
+      { _id: req.params.id, tenant },
       { status: "inactivo" },
       { new: true }
     );
@@ -129,7 +142,8 @@ materialControl.deleteMaterial = async (req, res, next) => {
 
 materialControl.updateStatus = async (req, res, next) => {
   try {
-    const m = await materials.esquema.findById(req.params.id);
+    const tenant = req.header("x-tenant");
+    const m = await materials.esquema.findOne({ _id: req.params.id, tenant });
     if (!m) return res.status(404).json({ message: "Material no encontrado" });
     m.status = m.status === "activo" ? "inactivo" : "activo";
     await m.save();

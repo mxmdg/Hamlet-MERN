@@ -11,15 +11,39 @@ export const finishersRoutes = () => (
     />
     <Route
       path="/finishers/add"
-      element={<FinishersDataForm collection="finishers" task="new" />}
+      element={
+        <FinishersDataForm
+          collection="finishers"
+          task="new"
+          title="Agregar nuevo Proceso de Terminación"
+          color="primary"
+          variant="outlined"
+        />
+      }
     />
     <Route
       path="/finishers/copy/:id"
-      element={<FinishersDataForm collection="finishers" task="copy" />}
+      element={
+        <FinishersDataForm
+          collection="finishers"
+          task="copy"
+          title="Copiar Proceso de Terminación"
+          color="primary"
+          variant="outlined"
+        />
+      }
     />
     <Route
       path="/finishers/edit/:id"
-      element={<FinishersDataForm collection="finishers" task="edit" />}
+      element={
+        <FinishersDataForm
+          collection="finishers"
+          task="edit"
+          title="Editar Proceso de Terminación"
+          color="primary"
+          variant="outlined"
+        />
+      }
     />
     <Route path="/finishers/queue/:id" element={<></>} />
   </>

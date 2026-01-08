@@ -82,6 +82,7 @@ formatControl.getFormat = async (req, res, next) => {
       tenant,
     });
     if (format) {
+      console.log(format);
       res.json(format);
     } else {
       res.status(404).json({ message: "Formato no encontrado" });

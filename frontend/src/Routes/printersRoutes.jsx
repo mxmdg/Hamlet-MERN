@@ -26,6 +26,9 @@ export const printersRoutes = () => {
             form={PrintersDataForm}
             collection="impresoras"
             task="new"
+            title="Agregar Impresora"
+            variant="outlined"
+            color="primary"
           />
         }
       />
@@ -36,6 +39,9 @@ export const printersRoutes = () => {
             form={PrintersDataForm}
             collection="impresoras"
             task="copy"
+            title="Copiar Impresora"
+            variant="outlined"
+            color="primary"
           />
         }
       />
@@ -46,6 +52,9 @@ export const printersRoutes = () => {
             form={PrintersDataForm}
             collection="impresoras"
             task="edit"
+            title="Editar Impresora"
+            variant="outlined"
+            color="primary"
           />
         }
       />

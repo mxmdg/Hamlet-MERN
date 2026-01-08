@@ -24,6 +24,32 @@ const TenantSchema = new mongoose.Schema(
       enum: ["trial", "basic", "pro"],
       default: "trial",
     },
+    settings: {
+      pricing: {
+        gain: {
+          min: { type: Number, default: 20 },
+          max: { type: Number, default: 60 },
+        },
+        commission: {
+          min: { type: Number, default: 0 },
+          max: { type: Number, default: 20 },
+        },
+      },
+
+      mail: {
+        from: { type: String },
+        host: { type: String },
+        port: { type: Number },
+        secure: { type: Boolean, default: true },
+        user: { type: String },
+        pass: { type: String },
+      },
+
+      locale: {
+        currency: { type: String, default: "ARS" },
+        language: { type: String, default: "es" },
+      },
+    },
   },
   { timestamps: true }
 );

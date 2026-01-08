@@ -83,7 +83,7 @@ const JobFinder = (props) => {
   const fetch = async () => {
     try {
       const stock = await getPrivateElements("materiales");
-      const users = await getPrivateElements("users");
+      const users = await getPrivateElements("memberships");
       const jobParts = await getPrivateElements("jobParts");
       const finishings = await getPrivateElements("finishers");
       const companies = await getPrivateElements("empresas");
@@ -98,7 +98,7 @@ const JobFinder = (props) => {
       setLoading(false);
     } catch (error) {
       console.log(error);
-      setError(error);
+      setError(error.response?.data?.message || error.message);
       return error;
     }
     return;
@@ -374,8 +374,11 @@ const JobFinder = (props) => {
                             }}
                           >
                             {useResponse.users.map((cust) => (
-                              <MenuItem value={cust._id} key={cust._id}>
-                                {`${cust.Name} ${cust.LastName}`}
+                              <MenuItem
+                                value={cust.userId._id}
+                                key={cust.userId._id}
+                              >
+                                {`${cust.userId.Name} ${cust.userId.LastName}`}
                               </MenuItem>
                             ))}
                           </TextField>

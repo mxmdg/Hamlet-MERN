@@ -30,7 +30,14 @@ export const jobPartsRoutes = () => (
     <Route
       path="/JobParts/add"
       element={
-        <FormMaterial form={jobPartDataForm} collection="JobParts" task="new" />
+        <FormMaterial
+          form={jobPartDataForm}
+          collection="JobParts"
+          task="new"
+          title="Agregar Parte de Trabajo"
+          color="primary"
+          variant="outlined"
+        />
       }
     />
     <Route
@@ -40,6 +47,9 @@ export const jobPartsRoutes = () => (
           form={jobPartDataForm}
           collection="JobParts"
           task="copy"
+          title="Copiar Parte de Trabajo"
+          color="primary"
+          variant="outlined"
         />
       }
     />
@@ -50,6 +60,9 @@ export const jobPartsRoutes = () => (
           form={jobPartDataForm}
           collection="JobParts"
           task="edit"
+          title="Editar Parte de Trabajo"
+          color="primary"
+          variant="outlined"
         />
       }
     />
