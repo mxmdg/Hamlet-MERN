@@ -67,8 +67,6 @@ const NewStackedBarChart = (props) => {
     Object.keys(total).forEach((key) => {
       average[key] = Math.ceil(total[key] / data.length);
     });
-    console.log("Total:", total);
-    console.log("Promedio:", average);
     return { total, average };
   };
 
@@ -100,14 +98,6 @@ const NewStackedBarChart = (props) => {
       }-${endDate.getFullYear()}`
     );
     handleOpen();
-
-    // Usando el custom hook para hacer la consulta
-    /* const jobs = await getPrivateElements(
-      `jobs/urg?startDate=${formattedStartDate}&endDate=${formattedEndDate}`
-    );
-    // Ahora puedes usar 'jobs' para mostrarlos en tu componente
-
-    console.table(jobs); */
   };
 
   React.useEffect(() => {
@@ -133,7 +123,7 @@ const NewStackedBarChart = (props) => {
       {props.title && <Title title={props.title} />}
       <FormGroup>
         <Grid container spacing={4}>
-          <Grid item xs={12} sm={6} md={4} lg={3} textAlign={"right"}>
+          <Grid item xs={12} sm={6} textAlign={"right"}>
             <TextField
               type="date"
               label="Desde"
@@ -150,7 +140,7 @@ const NewStackedBarChart = (props) => {
               }}
             />
           </Grid>
-          <Grid item xs={12} sm={6} md={4} lg={3}>
+          <Grid item xs={12} sm={6}>
             <TextField
               type="date"
               label="Hasta"
@@ -169,71 +159,66 @@ const NewStackedBarChart = (props) => {
           </Grid>
         </Grid>
       </FormGroup>
-      <ResponsiveContainer
-        maxHeight="900px"
-        minHeight="300px"
-        minWidth={200}
-        width={"90%"}
-        height={"100%"}
-      >
-        <BarChart
-          width={500}
-          height={400}
-          data={statsData}
-          barCategoryGap={2}
-          reverseStackOrder={true}
-          margin={{
-            top: 10,
-            right: 10,
-            left: 10,
-            bottom: 0,
-          }}
-        >
-          <CartesianGrid strokeDasharray="1 3" />
-          <XAxis dataKey="name" />
-          <YAxis />
-          <Tooltip content={<ToolTipNice />} />
+      <Box sx={{ width: "100%", minWidth: 0 }}>
+        <ResponsiveContainer height={300}>
+          <BarChart
+            data={statsData}
+            barCategoryGap={2}
+            reverseStackOrder={true}
+            margin={{
+              top: 10,
+              right: 10,
+              left: 10,
+              bottom: 0,
+            }}
+          >
+            <CartesianGrid strokeDasharray="1 3" />
+            <XAxis dataKey="name" />
+            <YAxis />
+            <Tooltip content={<ToolTipNice />} />
 
-          <Legend
-            iconSize={10}
-            iconType={(e) => {
-              return filter === e.dataKey ? "circle" : "square";
-            }}
-            verticalAlign="bottom"
-            layout="vertical"
-            wrapperStyle={myWrapperStyle}
-            onClick={(e) => {
-              setFilter(filter !== e.dataKey ? e.dataKey : null);
-            }}
-            formatter={(value, entry) => {
-              // entry.dataKey contiene la clave real del dataset
-              const key = entry && entry.dataKey ? entry.dataKey : value;
-              if (!dataCount || !dataCount.total || !dataCount.average)
-                return value;
-              const total =
-                dataCount.total[key] !== undefined ? dataCount.total[key] : 0;
-              const avg =
-                dataCount.average[key] !== undefined
-                  ? dataCount.average[key]
-                  : 0;
-              const fmt = (n) =>
-                typeof n === "number" ? n.toLocaleString("es-ES") : n;
-              return `${value} (T: ${fmt(total)} / P: ${fmt(avg)})`;
-            }}
-          />
-          {props.dataKey.map((item, index) => {
-            return (
-              <Bar
-                dataKey={item}
-                key={index}
-                stackId="b"
-                fill={coloresIntermedios[index + 1]}
-                onClick={(e) => handleBarClick(e.payload.name)}
-              />
-            );
-          })}
-        </BarChart>
-      </ResponsiveContainer>
+            <Legend
+              iconSize={10}
+              iconType={(e) => {
+                return filter === e.dataKey ? "circle" : "square";
+              }}
+              verticalAlign="bottom"
+              layout="vertical"
+              wrapperStyle={myWrapperStyle}
+              onClick={(e) => {
+                setFilter(filter !== e.dataKey ? e.dataKey : null);
+              }}
+              formatter={(value, entry) => {
+                // entry.dataKey contiene la clave real del dataset
+                const key = entry && entry.dataKey ? entry.dataKey : value;
+                if (!dataCount || !dataCount.total || !dataCount.average)
+                  return value;
+                const total =
+                  dataCount.total[key] !== undefined ? dataCount.total[key] : 0;
+                const avg =
+                  dataCount.average[key] !== undefined
+                    ? dataCount.average[key]
+                    : 0;
+                const fmt = (n) =>
+                  typeof n === "number" ? n.toLocaleString("es-ES") : n;
+                return `${value} (T: ${fmt(total)} / P: ${fmt(avg)})`;
+              }}
+            />
+            {props.dataKey.map((item, index) => {
+              return (
+                <Bar
+                  dataKey={item}
+                  key={index}
+                  stackId="b"
+                  fill={coloresIntermedios[index + 1]}
+                  onClick={(e) => handleBarClick(e.payload.name)}
+                />
+              );
+            })}
+          </BarChart>
+        </ResponsiveContainer>
+      </Box>
+
       {jobsForDay !== null && (
         <Modal open={open} onClose={handleClose}>
           <Box>

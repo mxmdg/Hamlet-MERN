@@ -61,8 +61,6 @@ const AuthProvider = ({ children }) => {
 
       setMemberships(memberships);
       localStorage.setItem("memberships", memberships);
-
-      console.log("Login exitoso");
     }
   };
 

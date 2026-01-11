@@ -20,13 +20,10 @@ const CotFetcher = () => {
       try {
         const data = await getPrivateElementByID("quotations", id.id);
         setCotizacion(data);
-        console.log("Cotización obtenida:", data);
         const jobData = await getPrivateElementByID("jobs", data.jobId);
-        console.log("Job data obtenida:", jobData);
         setJob(jobData);
         setLoading(false);
       } catch (err) {
-        console.error("Error al obtener la cotización:", err);
         setError(err);
       }
     };

@@ -40,7 +40,6 @@ export const currencyCotization = async (code = "usd") => {
       return new Error(`API responded with status ${response.status}`);
     }
     const data = await response.json();
-    console.log(data);
     return data;
   } catch (error) {
     console.error("Error fetching currency data:", error);
@@ -54,10 +53,8 @@ export const currencyCotizationPerDate = async (code = "usd", date) => {
       `https://api.bcra.gob.ar/estadisticascambiarias/v1.0/Cotizaciones/${code}?fechaDesde=${date}&fechaHasta=${date}`
     );
     const data = await response.json();
-    console.log(data);
     return data;
   } catch (error) {
-    console.error("Error fetching currency data:", error);
     return error;
   }
 };

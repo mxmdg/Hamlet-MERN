@@ -43,12 +43,7 @@ const StatsCollector = ({ children, route }) => {
     />
   );
   const success = (
-    <Grid
-      columns={12}
-      container
-      spacing={{ sm: 1, md: 2, xl: 3 }}
-      sx={{ margin: 2 }}
-    >
+    <Grid columns={12} container spacing={{ sm: 1, md: 2, xl: 3 }}>
       {React.Children.map(children, (child, index) => {
         if (React.isValidElement(child)) {
           return (
@@ -64,8 +59,6 @@ const StatsCollector = ({ children, route }) => {
                 sx={{
                   borderRadius: 1,
                   height: "auto",
-                  minHeight: "fit-content",
-                  minWidth: "fit-content",
                   boxShadow: 10,
                   p: 2,
                 }}

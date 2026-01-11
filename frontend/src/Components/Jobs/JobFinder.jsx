@@ -97,7 +97,6 @@ const JobFinder = (props) => {
       });
       setLoading(false);
     } catch (error) {
-      console.log(error);
       setError(error.response?.data?.message || error.message);
       return error;
     }
@@ -171,7 +170,6 @@ const JobFinder = (props) => {
                             properties.find((item) => {
                               if (item.value === e.target.value) {
                                 setQueryType(item.queryType);
-                                console.log(item.queryType);
                                 return item;
                               }
                             })
@@ -204,6 +202,7 @@ const JobFinder = (props) => {
                             variant={inputsVariant}
                             color={inputsColor}
                             fullWidth
+                            value={""}
                             onChange={(e) => {
                               setURL(null);
                               setQuery(e.target.value);
@@ -230,6 +229,7 @@ const JobFinder = (props) => {
                             variant={inputsVariant}
                             color={inputsColor}
                             fullWidth
+                            value={""}
                             onChange={(e) => {
                               setURL(null);
                               setQuery(e.target.value);
@@ -257,6 +257,7 @@ const JobFinder = (props) => {
                             getOptionLabel={(option) =>
                               `${option.Tipo} ${option.Gramaje} ${option.Marca} (${option.Ancho_Resma} x ${option.Alto_Resma})`
                             }
+                            getOptionKey={(option) => `${option._id}`}
                             onChange={(event, newValue) => {
                               if (newValue) {
                                 setURL(null);
@@ -288,6 +289,7 @@ const JobFinder = (props) => {
                             variant={inputsVariant}
                             color={inputsColor}
                             fullWidth
+                            value={useQuery ?? ""}
                             onChange={(e) => {
                               setURL(null);
                               setQuery(e.target.value);
@@ -312,8 +314,8 @@ const JobFinder = (props) => {
                           label={useProperty.label}
                           variant={inputsVariant}
                           color={inputsColor}
-                          defaultValue={""}
                           fullWidth
+                          value={useQuery ?? ""}
                           onChange={(e) => {
                             setURL(null);
                             setQuery(e.target.value);
@@ -368,6 +370,7 @@ const JobFinder = (props) => {
                             variant={inputsVariant}
                             color={inputsColor}
                             fullWidth
+                            value={useQuery ?? ""}
                             onChange={(e) => {
                               setURL(null);
                               setQuery(e.target.value);
@@ -463,6 +466,7 @@ const JobFinder = (props) => {
                                 color={inputsColor}
                                 label="Maximo"
                                 fullWidth
+                                value={useQuery ?? ""}
                                 onBlur={(e) => {
                                   setURL(null);
                                   setMax(e.target.value);

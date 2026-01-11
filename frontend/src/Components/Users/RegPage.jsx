@@ -1,11 +1,12 @@
 import React from "react";
 import { Container, Grid, Box, Divider } from "@mui/material/";
 import { Login } from "./Login";
+import { Register } from "./Register";
 import FormMaterial from "../Formulario/FormMaterial";
-import tenantsDataForm from "../Formulario/tenantsDataForm";
+import membershipsDataForm from "../Formulario/membershipsDataForm";
 import { ReactComponent as Logo } from "../../img/Logo/logo ok-05.svg";
 
-export const LogPage = () => {
+export const RegPage = () => {
   const variant4All = "standard";
   const color4All = "primary";
 
@@ -34,15 +35,21 @@ export const LogPage = () => {
         <Grid item xs={12} md={8}>
           <Grid container spacing={5} direction="column">
             <Grid item>
-              <Login color={color4All} variant={variant4All} />
+              <Register
+                title={"Agregar usuario"}
+                subtitle="Ingresar usuario al sistema, si no existe, antes de crear la membresía."
+                color={color4All}
+                variant={variant4All}
+              />
             </Grid>
 
             <Grid item>
               <FormMaterial
-                form={tenantsDataForm}
-                collection="tenants"
+                form={membershipsDataForm}
+                collection="memberships"
                 task="new"
-                title="Agregar nueva Imprenta"
+                title="Agregar Membresía"
+                subtitle="Atencion! El usuario debe ester registrado previamente"
                 variant={variant4All}
                 color={color4All}
               />

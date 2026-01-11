@@ -83,8 +83,6 @@ export const ImpositionForm = (props) => {
 
       const filteredPrinters = filterPrinters(await getPrinters);
 
-      console.table(filteredPrinters);
-
       setFormats(gettedFormats);
       setPrinters(filteredPrinters);
       setLoading(false);
@@ -106,17 +104,44 @@ export const ImpositionForm = (props) => {
 
   useEffect(() => {
     fetchingData();
-    if (props.impositionSettings?.printerSelector) {
-      setSelectedPrinter(props.impositionSettings?.printerSelector);
+    if (props.impositionSettings?.printerSelector && usePrinters.length) {
+      const validPrinter = usePrinters.find(
+        (p) => p._id === props.impositionSettings.printerSelector._id
+      );
+
+      if (validPrinter) {
+        setSelectedPrinter(validPrinter);
+        setValue("printerSelector", validPrinter._id);
+      } else {
+        // impresora inválida → reset limpio
+        setSelectedPrinter({});
+        setValue("printerSelector", "");
+      }
     }
+
     // Inicializar formato y tamaño personalizado si corresponde
     if (props.impositionSettings?.formatSelector === "Personalizado") {
       setCustomFormat(true);
       setSelectedFormat("Personalizado");
-    } else if (props.impositionSettings?.formatSelector) {
-      setSelectedFormat(props.impositionSettings?.formatSelector);
-      setCustomFormat(false);
     }
+    if (
+      props.impositionSettings?.formatSelector &&
+      props.impositionSettings.formatSelector !== "Personalizado"
+    ) {
+      const validFormat = useFormatsFiltered.find(
+        (f) => f._id === props.impositionSettings.formatSelector._id
+      );
+
+      if (validFormat) {
+        setSelectedFormat(validFormat);
+        setCustomFormat(false);
+        setValue("formatSelector", validFormat._id);
+      } else {
+        setSelectedFormat("");
+        setValue("formatSelector", "");
+      }
+    }
+
     if (props.impositionSettings) {
       setValue(
         "printerSelector",

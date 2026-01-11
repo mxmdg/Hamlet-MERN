@@ -37,8 +37,8 @@ export const cutOptimizer = (x1, y1, x2, y2, margen = 0, calle = 0) => {
 
   let totalPoses = parseInt(poses) + parseInt(masPoses);
 
-  console.log(`Poses = ${poses} + ${masPoses}`);
-  console.log(`Total = ${totalPoses}`);
+  // console.log(`Poses = ${poses} + ${masPoses}`);
+  // console.log(`Total = ${totalPoses}`);
 
   return { xPoses, yPoses, masPoses, totalPoses, xResto, yResto, x2, y2 };
 };
@@ -134,8 +134,8 @@ export const drawSimpleCutting = (
   let n2 = xPoses2 * yPoses2;
 
   let n = Math.max(n1, n2);
-  console.log(x1, y1, x2, y2);
-  console.log(`Entran ${n}`);
+  // console.log(x1, y1, x2, y2);
+  // console.log(`Entran ${n}`);
 
   let izq = x3;
   let top = y3;
@@ -196,8 +196,8 @@ export const drawOptimusCutting = (
   let resultado1 = cutOptimizer(printAreaX, printAreaY, x2, y2, margen, calle);
   let resultado2 = cutOptimizer(printAreaX, printAreaY, y2, x2, margen, calle);
 
-  console.log(resultado1);
-  console.log(resultado2);
+  // console.log(resultado1);
+  // console.log(resultado2);
 
   let resultado = () => {
     if (resultado1.totalPoses > resultado2.totalPoses) {
@@ -217,8 +217,6 @@ export const drawOptimusCutting = (
     }
   };
 
-  console.table(resultado());
-
   let xPoses = resultado()?.xPoses;
   let yPoses = resultado()?.yPoses;
   let masPoses = resultado()?.masPoses;
@@ -233,8 +231,8 @@ export const drawOptimusCutting = (
   let izq = (xCtx - x1) / 2;
   let top = (yCtx - y1) / 2;
 
-  console.log("izq: " + izq);
-  console.log("top: " + top);
+  // console.log("izq: " + izq);
+  // console.log("top: " + top);
 
   ctx.strokeStyle = "rgba(1, 140, 117, 1)";
   ctx.strokeWidth = "1";
@@ -302,6 +300,7 @@ export const calculateStock = (
   job,
   poses
 ) => {
+  /* 
   console.log(
     "Parametros recibidos ",
     signnatureWidth,
@@ -311,7 +310,7 @@ export const calculateStock = (
     part,
     job,
     poses
-  );
+  ); */
 
   const straightCut = cutOptimizer(
     sheetWidth, //part.partStock.Ancho_Resma,
@@ -338,22 +337,22 @@ export const calculateStock = (
       : Math.ceil(part.Pages / (part.ColoresDorso > 0 ? 2 : 1)) *
         Math.ceil(job.Cantidad / poses);
 
-  console.log(
+  /* console.log(
     "Cantidad de pliegos calculada: ",
     cantidadDePliegos,
     "Pliegos por hoja: ",
     pliegosPorHoja
-  );
+  ); */
   const totalHojas = Math.ceil(cantidadDePliegos / pliegosPorHoja);
 
-  console.log(
+  /* console.log(
     "Pliegos por hoja: ",
     pliegosPorHoja,
     "Cantidad de pliegos: ",
     cantidadDePliegos,
     "Total de hojas: ",
     totalHojas
-  );
+  ); */
 
   return { pliegosPorHoja, cantidadDePliegos, totalHojas };
 };

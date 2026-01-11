@@ -28,8 +28,6 @@ import SaveIcon from "@mui/icons-material/Save";
 
 import { styled } from "@mui/material/styles";
 import ReactTimeAgo from "react-time-ago";
-import ErrorMessage from "../ErrorMessage/ErrorMessage";
-
 // Acordion Imports:
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -50,13 +48,11 @@ import {
 import DarkWoodCard from "../utils/DarkWoodCard";
 
 // Mis componentes
-import JobRow from "../Jobs/jobsTable/JobRow";
 import ProductionPlan from "./ProductionPlan";
-import arrayNormalizer from "../utils/generalData/arrayNormalizer";
-import ListItemNumbers from "./ListItemNumbers";
 import FinishingList from "./FinishingList";
 import CopyToClipboardWrapper from "../General/CopyToClipboardWrapper";
-import objectToArray from "../utils/generalData/arrayNormalizer";
+import Spinner from "../General/Spinner";
+import ErrorMessage from "../ErrorMessage/ErrorMessage";
 
 // Mis hooks
 import { getPrivateElements } from "../customHooks/FetchDataHook";
@@ -69,12 +65,16 @@ export const calcularLomo = (pags, resma) => {
 
 const JobDetail = (props) => {
   const [expanded, setExpanded] = useState(false);
-  const job = props.job;
+  const [job, setJob] = useState(props.job);
   const navigate = useNavigate();
   // El siguiente estado es para almacenar la informacion de la imposicion en todas las partes.
   const [stockRequired, setStockRequired] = useState(
     props.cot ? props.cot.impositionData : []
   );
+
+  const [useLoading, setLoading] = useState(false);
+  const [useError, setError] = useState(null);
+
   const [productionPlan, setProductionPlan] = useState(
     props.cot ? props.cot.impositionData : {}
   );
@@ -122,7 +122,6 @@ const JobDetail = (props) => {
   };
 
   const showProductionPlan = () => {
-    console.log(Object.keys(productionPlan), job.Partes.length);
     if (
       Object.keys(productionPlan).length === job.Partes.length &&
       usePartFinishingData.length === job.Partes.length
@@ -229,7 +228,13 @@ const JobDetail = (props) => {
       props.cot,
     ]);
 
-    return (
+    const loading = <Spinner title="Cargando informacion del trabajo" />;
+
+    const failure = (
+      <ErrorMessage message={useError} action={() => setError(null)} />
+    );
+
+    const success = (
       <Box key={part._id} mb={1}>
         <Accordion
           key={myKey}
@@ -442,6 +447,8 @@ const JobDetail = (props) => {
         </Accordion>
       </Box>
     );
+
+    return useLoading ? loading : useError ? failure : success;
   };
 
   useEffect(() => {
@@ -450,10 +457,11 @@ const JobDetail = (props) => {
         const previousCotizations = await getPrivateElements(
           `quotations/?P=jobId&Q=${job._id}`
         );
-        console.log(previousCotizations);
         setPreviousCotizations(previousCotizations);
       } catch (error) {
-        console.error("Error al cargar los datos de la cotización:", error);
+        setError({
+          message: "Error al cargar los datos de la cotización: " + error,
+        });
       }
     };
 

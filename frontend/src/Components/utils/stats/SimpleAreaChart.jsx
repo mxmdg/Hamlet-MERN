@@ -12,6 +12,7 @@ import {
 import { coloresIntermedios, myWrapperStyle } from "./NewRadialBar";
 import { Title } from "./Title";
 import { ToolTipNice } from "./ToolTipNice";
+import { Box } from "@mui/material";
 
 const data = [
   {
@@ -61,7 +62,13 @@ const data = [
 export default class Example extends PureComponent {
   render() {
     return (
-      <>
+      <Box
+        sx={{
+          width: "100%",
+          maxWidth: "100%",
+          overflowX: "hidden",
+        }}
+      >
         {this.props.title && <Title title={this.props.title} />}
         <ResponsiveContainer
           width="100%"
@@ -70,8 +77,6 @@ export default class Example extends PureComponent {
           minHeight="300px"
         >
           <AreaChart
-            width={500}
-            height={400}
             data={this.props.data}
             margin={{
               top: 10,
@@ -103,7 +108,7 @@ export default class Example extends PureComponent {
             })}
           </AreaChart>
         </ResponsiveContainer>
-      </>
+      </Box>
     );
   }
 }

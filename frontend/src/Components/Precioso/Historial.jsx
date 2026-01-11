@@ -70,7 +70,6 @@ export default function Historial(props) {
     try {
       return Object.getOwnPropertyNames(data[data.length - 1]);
     } catch (e) {
-      console.log(e);
       return ["Error", "No hay datos en el historial", e];
     }
   })(props.data);
@@ -88,7 +87,6 @@ export default function Historial(props) {
     try {
       const cotization = await currencyCotizationPerDate("usd", date);
       const cotizationValue = cotization.results[0].detalle[0].tipoCotizacion;
-      console.log(cotizationValue);
       return (value / cotizationValue).toFixed(4);
     } catch (error) {
       return "Error";

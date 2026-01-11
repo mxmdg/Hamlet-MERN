@@ -26,7 +26,7 @@ export const productoPorUnidad = (Valor, Minimo, Entrada, cantidad) => {
 };
 
 export const cantidadDeOriginales = (valor, minimo, Entrada, cantidad) => {
-  console.log(valor, minimo, Entrada, cantidad);
+  //console.log(valor, minimo, Entrada, cantidad);
   let resultado =
     parseFloat(Entrada) + parseFloat(cantidad) * parseFloat(valor);
   resultado = resultado < parseFloat(minimo) ? parseFloat(minimo) : resultado;
@@ -43,7 +43,7 @@ export const cantidadDeOriginales = (valor, minimo, Entrada, cantidad) => {
 };
 
 export const cantidadDePliegos = (valor, minimo, Entrada, cantidad) => {
-  console.log(valor, minimo, Entrada, cantidad);
+  //console.log(valor, minimo, Entrada, cantidad);
   let resultado =
     parseFloat(Entrada) + parseFloat(cantidad) * parseFloat(valor);
   resultado = resultado < parseFloat(minimo) ? parseFloat(minimo) : resultado;
@@ -66,7 +66,7 @@ export const pliegoPorLongitud = (
   largoPliego,
   breakPoint
 ) => {
-  console.log(valor, minimo, Entrada, cantidad, largoPliego);
+  //console.log(valor, minimo, Entrada, cantidad, largoPliego);
   largoPliego = largoPliego / 10; // Convertir a centimetros
 
   const currentValue =
@@ -86,13 +86,13 @@ export const pliegoPorLongitud = (
     Entrada / valor
   )} + Pliegos * if ( Pliego_Largo >  Pliego_Ancho , if( Pliego_Largo > 520/10, Pliego_Largo * 115/100 , Pliego_Largo) , if( Pliego_Ancho > 520/10, Pliego_Ancho * 115/100 , Pliego_Ancho))`;
 
-  console.log({
+  /* console.log({
     Unitario: valorUnitario,
     Cantidad: cantidad,
     Total: roundCents(resultado),
     Papyrus: papyrusExport,
     Formula: "Centimetros",
-  });
+  }); */
   return {
     Unitario: valorUnitario,
     Cantidad: cantidad,

@@ -37,19 +37,19 @@ const PartCard = (props) => {
   const [useLoading, setLoading] = React.useState(false);
   const [useError, setError] = React.useState(false);
 
-  const getFinishers = (ids) => {
-    const arr = [];
+  const getFinishers = async (ids = []) => {
     try {
       setLoading(true);
-      ids.map(async (id) => {
-        const res = await getPrivateElementByID("finishers", id);
-        arr.push(res);
-      });
+
+      const results = await Promise.all(
+        ids.map((id) => getPrivateElementByID("finishers", id))
+      );
+
+      setFinishers(results);
+    } catch (err) {
+      setError(err);
+    } finally {
       setLoading(false);
-      return arr;
-    } catch (error) {
-      setError(error);
-      return error;
     }
   };
 
@@ -66,10 +66,12 @@ const PartCard = (props) => {
   }));
 
   React.useEffect(() => {
-    const Finishing = arrayNormalizer(props.part.Finishing, getFinishers);
-    setFinishers(Finishing);
-    setLoading(false);
-  }, [props.part, props.part.Finishing]);
+    if (Array.isArray(props.part?.Finishing)) {
+      getFinishers(props.part.Finishing);
+    } else {
+      setFinishers([]);
+    }
+  }, [props.part?.Finishing]);
 
   const alert = (
     <ErrorMessage message={useError.message} action={() => setError(false)} />
@@ -104,15 +106,13 @@ const PartCard = (props) => {
           ) : (
             ""
           )}
-          <br />
-          <UploadFilesButton
-            uploadUrl={process.env.VALIDATE_PDF}
-            onUploadSuccess={handleUploadSuccess}
-            expectedPageCount={props.part.Pages}
-            expectedSize={`${props.part.Ancho}x${props.part.Alto}`}
-          />
-          <br />
         </Typography>
+        <UploadFilesButton
+          uploadUrl={process.env.VALIDATE_PDF}
+          onUploadSuccess={handleUploadSuccess}
+          expectedPageCount={props.part.Pages}
+          expectedSize={`${props.part.Ancho}x${props.part.Alto}`}
+        />
         {Array.isArray(useFinishers) && useFinishers.length > 0 && (
           <Fragment>
             <Divider />
@@ -156,7 +156,7 @@ const PartCard = (props) => {
                 const copiedPart = { ...props.part };
                 delete copiedPart._id;
                 copiedPart.jobParts = copiedPart.jobParts.slice(0, 1);
-                console.log("ID Job Part: " + copiedPart.jobParts[0]._id);
+                //console.log("ID Job Part: " + copiedPart.jobParts[0]._id);
                 //copiedPart.jobParts.push(props.part.jobParts[0]._id);
                 props.copyPart(copiedPart);
                 props.setActiveStep(2);

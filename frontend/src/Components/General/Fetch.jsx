@@ -33,7 +33,6 @@ const Fetch = (props) => {
     headers.forEach((h) => {
       if (obj.hasOwnProperty(h.id)) {
         ordered[h.id] = obj[h.id];
-        //console.log(h.id + ": " + obj[h.id]);
       }
     });
     return ordered;
@@ -62,12 +61,13 @@ const Fetch = (props) => {
               label: e,
             };
             // arr.push(obj)
-            e !== "id" && e !== "__v" ? arr.push(obj) : console.log(e);
+            if (e !== "id" && e !== "__v") {
+              arr.push(obj);
+            }
           });
           const orderedElements = elements.map((e) =>
             orderObjectProperties(e, arr)
           );
-          console.log(orderedElements);
           setList(orderedElements);
           return arr;
         })
@@ -93,7 +93,6 @@ const Fetch = (props) => {
         try {
           const cellToString = item[col].toString().toLowerCase();
           if (cellToString.includes(query.toString())) {
-            console.log(item[col], query);
             results.push(item);
           }
         } catch (error) {
@@ -105,11 +104,9 @@ const Fetch = (props) => {
     const findAll = () => {
       for (let item of useList) {
         for (let key of keys) {
-          //console.log(key + " -> Problema en impresoras");
           try {
             const cellToString = item[key].toString().toLowerCase();
             if (cellToString.includes(query.toString())) {
-              console.log(item[key], query);
               results.push(item);
               break; // Evitar duplicados al encontrar coincidencia en cualquier columna
             }
@@ -119,8 +116,6 @@ const Fetch = (props) => {
         }
       }
     };
-
-    console.log(results);
 
     column === "Todo" ? findAll() : findByColumn(column);
     setFilteredList(results);
@@ -137,14 +132,12 @@ const Fetch = (props) => {
         setFilteredList([]);
         setLoading(false);
       } catch (err) {
-        console.log(err);
         setErrMessage(err.response?.data?.message || err.message);
         setLoading(false);
         return err;
       }
     };
     fetchData();
-    console.log(useList);
   }, [useDeleted, props.collection]);
 
   const Loading = <Spinner />;
@@ -156,7 +149,7 @@ const Fetch = (props) => {
       action={() => {
         setErrMessage(null);
       }}
-      title="No es posible acceder a la base de datos"
+      title="Error consultando la base datos"
     />
   );
 

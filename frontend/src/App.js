@@ -59,8 +59,10 @@ function App() {
         sx={{
           width: "100%",
           minHeight: "100vh",
-          maxHeight: "100%",
+          display: "flex",
+          flexDirection: "column",
           background: themeInUse.palette.background.default,
+          overflow: "hidden",
         }}
       >
         <ErrorBoundary
@@ -73,18 +75,21 @@ function App() {
         >
           <BrowserRouter>
             <AuthProvider>
-              <Box sx={{ "@media print": { display: "none" } }}>
+              <Box
+                sx={{
+                  width: "100%",
+                  "@media print": { display: "none" },
+                }}
+              >
                 <Header toogleMode={toogleMode} mode={useMode} />
               </Box>
               <Box
                 sx={{
-                  marginTop: "7vh",
+                  flex: 1,
                   display: "flex",
-                  width: "100vw",
-                  minHeight: "90vh",
-                  alignItems: "center",
                   justifyContent: "center",
-                  background: themeInUse.palette.background.default,
+                  alignItems: "stretch",
+                  width: "100%",
                 }}
               >
                 <Router />

@@ -15,7 +15,7 @@ routerPrice.route("/").get(getPrices).post(addPrice);
 
 routerPrice.route("/trash").get(getDeletedPrices);
 
-routerPrice.route("/:id").put(updatePrice).get(getPrice).delete(updateStatus);
+routerPrice.route("/:id").put(updatePrice).get(getPrice).delete(deletePrice);
 
 routerPrice.route("/trash/:id").delete(updateStatus);
 

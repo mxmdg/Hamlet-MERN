@@ -61,7 +61,7 @@ const ImpositionDraw = (props) => {
         data.Calle = Math.floor(parseInt(data.Calle) * scale);
       }
       data.sheetOriginalSize = sheet;
-      console.log(data);
+      //console.log(data);
 
       drawOptimusCutting(
         parseInt(data.widthSheet),

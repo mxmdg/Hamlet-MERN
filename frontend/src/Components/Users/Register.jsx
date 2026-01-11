@@ -7,6 +7,7 @@ import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
+import { Container } from "@mui/material";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
@@ -30,6 +31,8 @@ export const Register = (props) => {
   });
   const [useColor, setColor] = React.useState(props.color || "primary");
   const [useVariant, setVariant] = React.useState(props.variant || "filled");
+  const [useTitle, setTitle] = React.useState(props.title || "Registrate!");
+  const [useSubTitle, setSubTitle] = React.useState(props.subtitle || "");
   const [useErrorMessage, setErrorMessage] = React.useState(null);
   const navigate = useNavigate();
   //const params = useParams();
@@ -61,11 +64,12 @@ export const Register = (props) => {
   );
 
   const success = (
-    <Box>
-      <Card elevation={10}>
+    <Container>
+      <Card>
         <CardHeader
-          title="Registrate!"
+          title={useTitle}
           titleTypographyProps={{ color: useColor, fontWeight: "600" }}
+          subheader={useSubTitle}
         ></CardHeader>
         <CardContent>
           <FormControl sx={{ width: "90%" }}>
@@ -189,7 +193,7 @@ export const Register = (props) => {
                 </Grid>
                 <Grid item xs={6} sm={6} md={3} sx={{ alignSelf: "center" }}>
                   <Button type="submit" variant="contained" color={useColor}>
-                    Registrarse
+                    Agregar Usuario
                   </Button>
                 </Grid>
               </Grid>
@@ -197,7 +201,7 @@ export const Register = (props) => {
           </FormControl>
         </CardContent>
       </Card>
-    </Box>
+    </Container>
   );
 
   return useErrorMessage !== null ? alertError : success;

@@ -62,7 +62,7 @@ const Canvas = (props) => {
         data.Calle = Math.floor(parseInt(data.Calle) * scale);
       }
       data.sheetOriginalSize = sheet;
-      console.log(data);
+      //console.log(data);
 
       const totalPoses = drawOptimusCutting(
         parseInt(data.widthSheet),
@@ -76,7 +76,7 @@ const Canvas = (props) => {
         useCanvasSize.y
       );
 
-      console.log("Total Poses: " + totalPoses.tPoses);
+      //console.log("Total Poses: " + totalPoses.tPoses);
 
       if (props.getPoses) {
         props.getPoses(totalPoses.tPoses);

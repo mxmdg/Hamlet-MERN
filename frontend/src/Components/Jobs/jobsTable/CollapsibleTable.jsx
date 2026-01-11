@@ -236,7 +236,6 @@ export default function CollapsibleTable(props) {
   const handleClick = (event, name) => {
     const selectedIndex = selected.indexOf(name);
     let newSelected = [];
-    console.log(name, selectedIndex);
 
     if (selectedIndex === -1) {
       newSelected = newSelected.concat(selected, name);
@@ -251,7 +250,6 @@ export default function CollapsibleTable(props) {
       );
     }
     setSelected(newSelected);
-    console.log(newSelected);
     //props.editor(newSelected);
   };
 
@@ -372,7 +370,6 @@ export default function CollapsibleTable(props) {
   }
 
   React.useEffect(() => {
-    console.log("Render: CollapsibleTable.jsx");
     const loadData = async () => {
       try {
         const res = await getPrivateElements(props.route);
@@ -395,7 +392,6 @@ export default function CollapsibleTable(props) {
         rows.push(...Rows); // Use spread operator to push elements individually
         setRows([...Rows]); // Update state with the fetched data
       } catch (error) {
-        console.log(error);
         setError(error);
       }
     };
@@ -531,6 +527,7 @@ export default function CollapsibleTable(props) {
       message={useError?.message}
       severity="warning"
       action={() => setError(null)}
+      title={"Error en la Tabla de Pedidos"}
     />
   );
 

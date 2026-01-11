@@ -23,7 +23,6 @@ const JobsPerDate = (props) => {
   }
 
   var result = getWeekNumber(new Date());
-  console.log("Year: " + result[0] + ", Week: " + result[1]);
 
   const getMyDate = (event) => {
     const dd = new Date(event).getUTCDate();

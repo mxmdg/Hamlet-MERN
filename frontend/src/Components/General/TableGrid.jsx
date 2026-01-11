@@ -217,8 +217,11 @@ export function EnhancedTableToolbar(props) {
   const { numSelected } = props;
   const trashMode = props.collection.includes("/trash");
   const navigate = useNavigate();
+  const [useError, setError] = React.useState(null);
 
-  return (
+  return useError ? (
+    <ErrorMessage message={useError} title={"Error en tabla de datos"} />
+  ) : (
     <Toolbar>
       {numSelected > 0 ? (
         <Typography
@@ -304,7 +307,7 @@ export function EnhancedTableToolbar(props) {
                     );
                     props.resetSelected([]);
                   } catch (e) {
-                    console.log(e);
+                    setError(e);
                   }
                 };
 
@@ -334,17 +337,15 @@ export function EnhancedTableToolbar(props) {
           )}
         </>
       ) : (
-        <GradientTooltip title="Papelera de reciclaje" color="success" arrow>
-          <IconButton
-            disabled={trashMode}
-            onClick={() => {
-              navigate(`/${props.collection.replace("/urg", "")}/trash`);
-            }}
-            sx={{ alignSelf: "right" }}
-          >
-            <RestoreFromTrashIcon color={!trashMode ? "success" : "default"} />
-          </IconButton>
-        </GradientTooltip>
+        <IconButton
+          disabled={trashMode}
+          onClick={() => {
+            navigate(`/${props.collection.replace("/urg", "")}/trash`);
+          }}
+          sx={{ alignSelf: "right" }}
+        >
+          <RestoreFromTrashIcon color={!trashMode ? "success" : "default"} />
+        </IconButton>
       )}
     </Toolbar>
   );
@@ -385,8 +386,6 @@ export default function EnhancedTable(props) {
   const handleClick = (event, name) => {
     const selectedIndex = selected.indexOf(name);
     let newSelected = [];
-    console.log(name, selectedIndex);
-
     if (selectedIndex === -1) {
       newSelected = newSelected.concat(selected, name);
     } else if (selectedIndex === 0) {
@@ -444,9 +443,9 @@ export default function EnhancedTable(props) {
     rows.push(sums);
   };
 
-  rows[rows.length - 1]?._id !== "Total"
-    ? sumColumns(rows)
-    : console.log("No se suman columnas, no hay datos");
+  if (rows[rows.length - 1]?._id !== "Total") {
+    sumColumns(rows);
+  }
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
 

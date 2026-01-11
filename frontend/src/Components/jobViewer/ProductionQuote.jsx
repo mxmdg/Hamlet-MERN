@@ -85,7 +85,6 @@ const ProductionQuote = (props) => {
     const fetchProductType = async () => {
       try {
         const product = await getPrivateElementByID("jobs", props.job);
-        console.log(product);
         if (product.Tipo[0].name === "Libro") {
           setIsIvaEnabled(false); // Disable IVA for books
         }
@@ -161,7 +160,6 @@ const ProductionQuote = (props) => {
           "tenants/settings",
           context.memberships[0].tenant.id
         );
-        console.log("Settings: ", settings);
         setSettings(settings);
         props.pricingSettings(settings);
         setUseError(null);
@@ -182,7 +180,6 @@ const ProductionQuote = (props) => {
       message={useError}
       title="Error"
       action={() => {
-        console.log(useError);
         setUseError(null);
       }}
     />

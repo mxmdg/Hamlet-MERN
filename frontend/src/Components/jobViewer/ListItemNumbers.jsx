@@ -1,9 +1,12 @@
 import React from "react";
-import { ListItem, ListItemText } from "@mui/material";
+import { Box, ListItemText } from "@mui/material";
 
 const ListItemNumbers = (props) => {
   return (
-    <ListItem alignItems="flex-start">
+    <Box
+      alignItems="flex-start"
+      sx={{ width: "100%", padding: "5px 0 10px 0px" }}
+    >
       <ListItemText
         primary={props.primary}
         secondary={props.secondary}
@@ -18,7 +21,7 @@ const ListItemNumbers = (props) => {
           align: "right",
         }}
       />
-    </ListItem>
+    </Box>
   );
 };
 

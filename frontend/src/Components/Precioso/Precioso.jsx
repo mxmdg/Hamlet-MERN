@@ -85,7 +85,6 @@ const Precioso = (props) => {
         setLoading(false);
       } catch (e) {
         setErrorMessage(e);
-        console.log(useErrorMessage.message);
         return;
       }
     };
@@ -149,6 +148,7 @@ const Precioso = (props) => {
                 variant="outlined"
                 fullWidth
                 label="Filtrar por"
+                value={fiter?.property || ""}
                 size="small"
                 onChange={(e) => {
                   setFilter({ ...fiter, property: e.target.value });

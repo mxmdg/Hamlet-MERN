@@ -3,7 +3,6 @@ const costsList = [];
 const costos = async () => {
   try {
     const res = await getPrivateElements("Precios");
-    console.log(res);
     res.map((item) => {
       if (item.Categoria === "stock") {
         costsList.push({

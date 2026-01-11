@@ -49,12 +49,10 @@ export const Login = (props) => {
   //const params = useParams();
 
   const resetError = () => {
-    console.log("reset error");
     setError("");
   };
 
   const resetSuccess = () => {
-    console.log("reset Success");
     setSuccessMessage("");
   };
 
@@ -63,7 +61,6 @@ export const Login = (props) => {
       setLoading(true);
       setError("");
       const token = await axios.post(databaseURL + "users/login", data);
-      console.log(token);
       if (token.data.message) {
         setError({
           message: token.data.message,
@@ -114,7 +111,6 @@ export const Login = (props) => {
       });
       setLoading(false);
     } catch (e) {
-      console.log(e);
       setError({
         message: "Error al enviar el correo: " + e.response.data.message,
         severity: "warning",
@@ -140,8 +136,8 @@ export const Login = (props) => {
   );
 
   const success = (
-    <Box>
-      <Card elevation={10}>
+    <Container>
+      <Card variant={props.variant}>
         {context.userLogged === null && (
           <CardHeader
             /* avatar={
@@ -184,6 +180,7 @@ export const Login = (props) => {
                       id="email"
                       label="email"
                       defaultValue={""}
+                      autoComplete="email"
                       name="email"
                       {...register("email", {
                         required: true,
@@ -202,6 +199,7 @@ export const Login = (props) => {
                       id="password"
                       label="password"
                       defaultValue={""}
+                      autoComplete="password"
                       type="password"
                       name="password"
                       color={useColor}
@@ -246,11 +244,11 @@ export const Login = (props) => {
           )}
         </CardContent>
       </Card>
-    </Box>
+    </Container>
   );
 
   const ForgotPassword = (
-    <Box>
+    <Container>
       <Card elevation={10}>
         <CardHeader
           title="Recuperar Contraseña"
@@ -312,7 +310,7 @@ export const Login = (props) => {
           </form>
         </FormControl>
       </Card>
-    </Box>
+    </Container>
   );
 
   return loading

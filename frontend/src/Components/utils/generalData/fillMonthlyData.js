@@ -2,8 +2,6 @@ import { procesarFechaISO, getMyDate } from "./fechaDiccionario";
 
 // Rellena los meses faltantes con el último valor conocido
 export function fillMonthlyData(data) {
-  console.log("Filling monthly data...");
-  console.log(data.length);
   if (!data || data.length === 0) return [];
 
   const firstDate = new Date(data[0].Fecha);
@@ -60,6 +58,5 @@ export function fillMonthlyData(data) {
   };
 
   fill();
-  console.log(filledData);
   return filledData;
 }

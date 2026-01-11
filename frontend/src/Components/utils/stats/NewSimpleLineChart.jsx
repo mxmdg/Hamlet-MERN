@@ -35,7 +35,13 @@ export const NewSimpleLineChart = (props) => {
   }
 
   return (
-    <>
+    <Box
+      sx={{
+        width: "100%",
+        maxWidth: "100%",
+        overflowX: "hidden",
+      }}
+    >
       {props.title && <Title title={props.title} />}
       <ResponsiveContainer
         width="100%"
@@ -84,6 +90,6 @@ export const NewSimpleLineChart = (props) => {
           })}
         </LineChart>
       </ResponsiveContainer>
-    </>
+    </Box>
   );
 };

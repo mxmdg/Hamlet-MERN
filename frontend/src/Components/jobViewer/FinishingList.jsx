@@ -3,13 +3,16 @@ import { useEffect, useState } from "react";
 
 import { Button, Typography, Alert, Box } from "@mui/material";
 
+import { themeMxm } from "../Config/theme";
+
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
+import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import { styled } from "@mui/material/styles";
 
 import { ListItemTypographyProps } from "../MaterialCustomStyles/MaterialCustomStyles";
 
@@ -24,11 +27,51 @@ import {
   costoFijo,
 } from "../Precioso/formulas";
 import { currencyFormat } from "../utils/generalData/numbersAndCurrencies";
+import { cleanObsoleteFinishings } from "./CleanObsoletFinishings";
+import { UNSAFE_NavigationContext } from "react-router-dom";
 
 const FinishingList = (props) => {
   const [useFinishingCosts, setFinishingCosts] = useState(null);
   const [useLoading, setLoading] = useState(true);
   const [useError, setError] = useState(null);
+  const [clearError, setClearError] = useState(() => setError(null));
+
+  const StyledTableCell = styled(TableCell)(({ theme }) => ({
+    [`&.${tableCellClasses.head}`]: {
+      backgroundColor: theme.palette.primary.main,
+      color: theme.palette.common.white,
+      fontSize: 14,
+    },
+    [`&.${tableCellClasses.body}`]: {
+      fontSize: 12,
+    },
+  }));
+
+  const StyledTableRow = styled(TableRow)(({ theme }) => ({
+    "&:nth-of-type(odd)": {
+      backgroundColor: theme.palette.action.hover,
+      transition: "background-color 0.6s ease-out",
+      "&:hover": {
+        background:
+          theme.palette.mode === "dark"
+            ? theme.palette.success.main
+            : theme.palette.success.main,
+      },
+    },
+    "&:nth-of-type(even)": {
+      "&:hover": {
+        background:
+          theme.palette.mode === "dark"
+            ? theme.palette.success.dark
+            : theme.palette.success.light,
+      },
+      transition: "background-color 0.3s ease-in",
+    },
+    // hide last border
+    "&:last-child td, &:last-child th": {
+      border: 0,
+    },
+  }));
 
   const costFunction = (finishing, cantidad) => {
     const calculate = (f) => {
@@ -63,6 +106,7 @@ const FinishingList = (props) => {
               setError({ message: "No hay imposicion", severity: "warning" });
             }
           } catch (error) {
+            setClearError(props.clearError404);
             setError({
               message:
                 "Error calculando el costo por pliegos: Debe realizarse la imposicion. " +
@@ -109,7 +153,7 @@ const FinishingList = (props) => {
       try {
         if (Array.isArray(props.finishing) && props.finishing.length > 0) {
           if (typeof props.finishing[0] === "object") {
-            console.log("Es un array de objetos");
+            //console.log("Es un array de objetos");
             const finisherList = [];
             props.finishing[0] !== null
               ? finisherList((prev) => [
@@ -141,8 +185,14 @@ const FinishingList = (props) => {
                   ),
                 });
               } catch (error) {
-                console.log(error);
-                setError(error);
+                if (error.response?.status === 404) {
+                  setError({
+                    message:
+                      error.response.data?.message || "Finisher inexistente",
+                  });
+                } else {
+                  setError(error);
+                }
               }
             }
             setFinishingCosts(finisherList);
@@ -167,7 +217,7 @@ const FinishingList = (props) => {
 
   const totalCost = () => {
     if (useFinishingCosts !== null) {
-      console.log("useFinishingCosts:", useFinishingCosts);
+      //console.log("useFinishingCosts:", useFinishingCosts);
       return useFinishingCosts.reduce((acc, item) => acc + item.Cost.Total, 0);
     }
   };
@@ -177,91 +227,84 @@ const FinishingList = (props) => {
   };
 
   if (useLoading) return <Spinner color="primary" />;
+
   if (useError)
     return (
       <ErrorMessage
         message={useError.response?.data?.message || useError.message}
-        severity={useError.severity || "error"}
-        variant="outlined"
+        severity={useError.severity || "success"}
         action={() => setError(null)}
+        buttonTxt={"Continuar..."}
       />
     );
 
   return (
-    <TableContainer sx={{ margin: 0, padding: 0 }}>
-      <Table sx={{ minWidth: 300 }} size="small" aria-label="finishing table">
+    <TableContainer>
+      <Table sx={{ minWidth: 300 }} size="large" aria-label="finishing table">
         <TableHead>
-          <TableRow>
-            <TableCell sx={{ fontWeight: "bold", padding: "4px" }}>
+          <StyledTableRow>
+            <StyledTableCell sx={{ fontWeight: "bold" }}>
               Proceso
-            </TableCell>
-            <TableCell
-              align="right"
-              sx={{ fontWeight: "bold", padding: "4px" }}
-            >
+            </StyledTableCell>
+            <StyledTableCell align="right" sx={{ fontWeight: "bold" }}>
               Valor Unitario
-            </TableCell>
-            <TableCell
-              align="right"
-              sx={{ fontWeight: "bold", padding: "4px" }}
-            >
+            </StyledTableCell>
+            <StyledTableCell align="right" sx={{ fontWeight: "bold" }}>
               Total
-            </TableCell>
-          </TableRow>
+            </StyledTableCell>
+          </StyledTableRow>
         </TableHead>
         <TableBody>
           {Array.isArray(useFinishingCosts) && useFinishingCosts.length > 0 ? (
             useFinishingCosts.map((item, index) => (
-              <TableRow key={index}>
-                <TableCell component="th" scope="row" sx={{ padding: "4px" }}>
+              <StyledTableRow key={index}>
+                <StyledTableCell component="th" scope="row">
                   {item.Finisher.Proceso}
-                </TableCell>
-                <TableCell align="right" sx={{ padding: "4px" }}>
+                </StyledTableCell>
+                <StyledTableCell align="right">
                   {currencyFormat(item.Cost.Unitario)}
-                </TableCell>
-                <TableCell align="right" sx={{ padding: "4px" }}>
+                </StyledTableCell>
+                <StyledTableCell align="right">
                   {currencyFormat(item.Cost.Total)}
-                </TableCell>
-              </TableRow>
+                </StyledTableCell>
+              </StyledTableRow>
             ))
           ) : (
-            <TableRow>
-              <TableCell colSpan={3} align="center" sx={{ padding: "4px" }}>
+            <StyledTableRow>
+              <StyledTableCell colSpan={3} align="center">
                 No hay procesos de terminación seleccionados.
-              </TableCell>
-            </TableRow>
+              </StyledTableCell>
+            </StyledTableRow>
           )}
           {Array.isArray(useFinishingCosts) && useFinishingCosts.length > 0 && (
-            <TableRow>
-              <TableCell
+            <StyledTableRow>
+              <StyledTableCell
                 component="th"
                 scope="row"
-                sx={{ fontWeight: "bold", padding: "4px" }}
+                sx={{ fontWeight: "bold" }}
               >
                 Total
-              </TableCell>
-              <TableCell />
-              <TableCell
-                align="right"
-                sx={{ fontWeight: "bold", padding: "4px" }}
-              >
+              </StyledTableCell>
+              <StyledTableCell />
+              <StyledTableCell align="right" sx={{ fontWeight: "bold" }}>
                 {currencyFormat(
                   useFinishingCosts.reduce(
                     (acc, item) => acc + item.Cost.Total,
                     0
                   )
                 )}
-              </TableCell>
-            </TableRow>
+              </StyledTableCell>
+            </StyledTableRow>
           )}
         </TableBody>
       </Table>
       <Box sx={{ display: "flex", justifyContent: "flex-end", padding: "8px" }}>
         <Button
           variant="contained"
+          size="large"
           color="success"
           onClick={() => handleSendData()}
-          sx={{ fontSize: "0.8rem" }}
+          sx={{ fontSize: "1rem", fontWeight: "bold" }}
         >
           Enviar Datos
         </Button>

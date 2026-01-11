@@ -9,6 +9,8 @@ import {
   Tooltip,
 } from "recharts";
 
+import { Box } from "@mui/material";
+
 import { ToolTipNice } from "./ToolTipNice";
 
 import { Title } from "./Title";
@@ -24,7 +26,12 @@ export default class Example extends PureComponent {
 
   render() {
     return (
-      <>
+      <Box
+        sx={{
+          width: "100%",
+          maxWidth: "100%",
+        }}
+      >
         <Title title={this.props.title} />
         <ResponsiveContainer
           width="100%"
@@ -51,7 +58,7 @@ export default class Example extends PureComponent {
             <Tooltip content={<ToolTipNice />} />
           </RadarChart>
         </ResponsiveContainer>
-      </>
+      </Box>
     );
   }
 }

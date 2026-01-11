@@ -140,22 +140,21 @@ export default function UploadFilesButton({
 
   return (
     <div>
-      <Divider />
-      <Paper rounded={"false"} sx={{ padding: 2, marginTop: 2 }}>
+      <Paper rounded={"false"} sx={{ padding: 3 }}>
         <StyledTooltip title="Subir y validar un archivo PDF" arrow>
           <Button
             component="label"
-            variant="text"
-            color="info"
+            variant="contained"
+            color="success"
             startIcon={<CloudUploadIcon />}
-        >
-          Validar PDF
-          <VisuallyHiddenInput
-            type="file"
-            accept="application/pdf"
-            onChange={(event) => handleFileUpload(event.target.files)}
-          />
-        </Button>
+          >
+            Validar PDF
+            <VisuallyHiddenInput
+              type="file"
+              accept="application/pdf"
+              onChange={(event) => handleFileUpload(event.target.files)}
+            />
+          </Button>
         </StyledTooltip>
 
         {fileInfo && (
@@ -169,9 +168,9 @@ export default function UploadFilesButton({
               />
             </ListItem>
             <ListItem>
-              <ListItemText 
+              <ListItemText
                 primary={`ubicacion del archivo: ${fileInfo.file_path}`}
-                />
+              />
             </ListItem>
             <Typography variant="body2" color="text.secondary">
               Informacion del documento
@@ -180,9 +179,11 @@ export default function UploadFilesButton({
               <br />
               Creador: {fileInfo.metadata["/Creator"]}
               <br />
-              Creado: {getDateAndTime(fileInfo.metadata["/CreationDate"]).dateAndTime}
+              Creado:{" "}
+              {getDateAndTime(fileInfo.metadata["/CreationDate"]).dateAndTime}
               <br />
-              Modificado: {getDateAndTime(fileInfo.metadata["/ModDate"]).dateAndTime}
+              Modificado:{" "}
+              {getDateAndTime(fileInfo.metadata["/ModDate"]).dateAndTime}
             </Typography>
             {fileInfo.pages
               .filter(

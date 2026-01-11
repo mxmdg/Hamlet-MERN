@@ -25,7 +25,6 @@ export const JobViewer = (props) => {
 
   useEffect(() => {
     if (props.job !== undefined) {
-      console.log("Usando trabajo cargado");
       setCurrentJob(props.job);
       setLoading(false);
       setError(null);
@@ -33,7 +32,6 @@ export const JobViewer = (props) => {
       try {
         const fetchJob = async () => {
           const currentJob = await getPrivateElementByID(props.entity, id);
-          console.log("Trabajo obtenido:", currentJob);
           currentJob
             ? setCurrentJob(currentJob)
             : setError({ message: "Trabajo inexistente" });

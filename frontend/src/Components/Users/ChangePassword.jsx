@@ -10,11 +10,7 @@ import {
 } from "@mui/material";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import { serverURL, databaseURL } from "../Config/config";
-import {
-  putPrivateElement,
-  getPrivateElementByID,
-  getPrivateElements,
-} from "../customHooks/FetchDataHook";
+import { putPrivateElement } from "../customHooks/FetchDataHook";
 
 const ChangePassword = (props) => {
   const {
@@ -25,10 +21,7 @@ const ChangePassword = (props) => {
   const [error, setError] = useState("");
   const user = JSON.parse(localStorage.getItem("user"));
 
-  console.log(user);
-
   const resetError = () => {
-    console.log("reset error");
     setError("");
   };
 
@@ -40,7 +33,6 @@ const ChangePassword = (props) => {
           `${serverURL}/hamlet/users/${user._id}/change-password`,
           data
         );
-        console.log("Respuesta al cambiar contraseña: " + response.data);
       }
 
       // Manejar la respuesta
@@ -54,9 +46,7 @@ const ChangePassword = (props) => {
     } catch (error) {
       setError({
         title: "No se pudo cambiar la contraseña",
-        msg:
-          "Hubo un error al cambiar la contraseña, " +
-          error.response.data.message,
+        msg: error.response.data.message,
         sev: "error",
         act: resetError,
       });
@@ -81,6 +71,7 @@ const ChangePassword = (props) => {
                 errors.oldPassword ? "La contraseña actual es requerida" : ""
               }
               fullWidth
+              autoComplete={"Password"}
               margin="normal"
               variant={props.variant}
               color={props.color}
@@ -94,6 +85,7 @@ const ChangePassword = (props) => {
                 errors.newPassword ? "La nueva contraseña es requerida" : ""
               }
               fullWidth
+              autoComplete={"Password"}
               margin="normal"
               variant={props.variant}
               color={props.color}
@@ -109,6 +101,7 @@ const ChangePassword = (props) => {
                   : ""
               }
               fullWidth
+              autoComplete={"Password"}
               margin="normal"
               variant={props.variant}
               color={props.color}

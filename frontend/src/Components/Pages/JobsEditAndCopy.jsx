@@ -24,7 +24,6 @@ const JobsEditAndCopy = () => {
   const navigate = useNavigate();
 
   const resetError = () => {
-    console.log("reset error");
     setError(null);
   };
 
@@ -36,17 +35,6 @@ const JobsEditAndCopy = () => {
     />
   );
 
-  /* const JobListRender = () => {
-    return (
-      <>
-        {jobList.length > 1 &&
-          jobList.map((item) => {
-            return <JobRow job={item} key={item._id} />;
-          })}
-      </>
-    );
-  }; */
-
   React.useEffect(() => {
     const { id } = params;
 
@@ -56,9 +44,7 @@ const JobsEditAndCopy = () => {
 
         const getId = (res) => {
           res = res.filter((word) => word !== null);
-          console.log("res 1 Filtra null: " + res);
           res = res.filter((word) => word !== "");
-          console.log("res 2 filtra vacios: " + res);
           const newArr = [];
           if (res.length > 0) {
             res.map((item) => {
@@ -69,13 +55,10 @@ const JobsEditAndCopy = () => {
               }
             });
           }
-          console.log(newArr);
           return newArr;
         };
 
-        console.log(res);
         const result = Array.isArray(res.Finishing) ? getId(res.Finishing) : [];
-        console.log("Resultado del array de finishers: " + result);
 
         res.Finishing = result;
 
@@ -94,7 +77,6 @@ const JobsEditAndCopy = () => {
       } catch (e) {
         setError(e);
         setLoading(false);
-        console.log(e);
         return;
       }
     };

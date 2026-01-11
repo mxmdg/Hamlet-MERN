@@ -156,9 +156,31 @@ const login = async (req, res, next) => {
 };
 
 const changePassword = async (req, res, next) => {
+  console.log("Cambiemos el pass");
+
   try {
     const userId = req.params.id;
+    console.log("ID del user: " + userId);
+
+    const user = await usersModel.esquema
+      .findOne({ _id: userId })
+      .select("+password");
+
+    console.log(user);
+
     const { oldPassword, newPassword, confirmNewPassword } = req.body;
+
+    console.log(oldPassword, newPassword, confirmNewPassword);
+
+    const passwordOk = bcrypt.compareSync(oldPassword, user.password);
+
+    console.log(passwordOk);
+
+    if (!passwordOk) {
+      return res
+        .status(400)
+        .json({ message: "La contraseña actual es incorrecta" });
+    }
 
     if (newPassword !== confirmNewPassword) {
       return res.status(400).json({
@@ -172,19 +194,8 @@ const changePassword = async (req, res, next) => {
       });
     }
 
-    const user = await usersModel.esquema
-      .findOne({ _id: userId })
-      .select("+password");
-
     if (!user) {
       return res.status(404).json({ message: "Usuario no encontrado" });
-    }
-
-    const passwordOk = bcrypt.compareSync(oldPassword, user.password);
-    if (!passwordOk) {
-      return res
-        .status(400)
-        .json({ message: "La contraseña actual es incorrecta" });
     }
 
     user.password = newPassword;

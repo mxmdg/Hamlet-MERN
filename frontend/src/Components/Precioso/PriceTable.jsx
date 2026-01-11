@@ -50,7 +50,6 @@ const PriceTable = (props) => {
     } catch (error) {
       setError(true);
       setLoading(false);
-      console.log(error);
       return error;
     }
   };
@@ -72,7 +71,6 @@ const PriceTable = (props) => {
         props.editor(true);
         setLoading(false);
       } catch (e) {
-        console.log(e);
         alert(e.response.data.message);
       }
     }
@@ -88,7 +86,6 @@ const PriceTable = (props) => {
 
   const handleHistory = () => {
     try {
-      console.log(props.pd.Historial);
       if (props.pd.Historial.length === 0) {
         setShowHistory(false);
         alert("No hay datos en el historial");
@@ -96,7 +93,6 @@ const PriceTable = (props) => {
         setShowHistory(true);
       }
     } catch (e) {
-      console.log(e.response.data.message);
       alert(e.response.data.message);
     }
   };

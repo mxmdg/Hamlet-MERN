@@ -110,7 +110,6 @@ const ProductionPlan = (props) => {
     const totals = {};
 
     arr.forEach((data, index) => {
-      console.log("Data: ", data);
       const { printerSelector, stock, formatSelector } = data.impositionData;
       const key = `${printerSelector.Fabricante} ${printerSelector.Modelo} - ${data.stock._id} - ${formatSelector._id} - ${data.stock._id}`;
       const cost = data.impositionData.printerSelector.Costo;
@@ -142,24 +141,16 @@ const ProductionPlan = (props) => {
         );
         try {
           if (printerSelector.Colores === 1 && data.colores === 1) {
-            console.log("Formula seleccionada segun caso Nuvera");
-            console.log(printerSelector.Colores, data.colores);
             return Nuvera(valor, minimo, cantidad, entrada, largoPliego);
           } else if (printerSelector.Colores >= 4 && data.colores === 1) {
-            console.log("Formula seleccionada segun caso iGenBN");
-            console.log(printerSelector.Colores, data.colores);
             return iGenBN(valor, minimo, cantidad, entrada, largoPliego);
           } else if (
             printerSelector.Colores >= 4 &&
             data.colores > 1 &&
             data.colores <= 4
           ) {
-            console.log("Formula seleccionada segun caso Color");
-            console.log(printerSelector.Colores, data.colores);
             return iGenColor(valor, minimo, cantidad, entrada, largoPliego);
           } else if (printerSelector.Colores > 4 && data.colores > 4) {
-            console.log("Formula seleccionada segun caso 6 colores");
-            console.log(printerSelector.Colores, data.colores);
             return iGenColor(
               valor * 1.3,
               minimo,
@@ -168,7 +159,6 @@ const ProductionPlan = (props) => {
               largoPliego
             );
           } else {
-            console.log("Caso no contemplado");
             return () => {
               return {
                 Unitario: 1,
@@ -235,7 +225,6 @@ const ProductionPlan = (props) => {
       }
       totals.totalCost = totalCost;
     } catch (error) {
-      console.log(error);
       setError(error);
     }
 
@@ -243,8 +232,6 @@ const ProductionPlan = (props) => {
   };
 
   const resumen = totalResume(AllData);
-
-  console.log("Resumen: ", resumen);
 
   const handleSaveProductionPlan = async (resumen) => {
     const data = {
@@ -283,8 +270,6 @@ const ProductionPlan = (props) => {
         action: () => setError(null),
       });
     } catch (error) {
-      console.log("Error en ProductionPlan guardando presupuesto");
-      console.log(error);
       setError({
         title: "Error guardando presupuesto",
         message: error.response.data.message || "Error inesperado",
@@ -297,21 +282,16 @@ const ProductionPlan = (props) => {
   // Función para verificar si los valores están dentro de los parámetros permitidos
   const isButtonEnabled = () => {
     if (!useQuoteSettings || !usePricingSettings) {
-      console.log("useQuoteSetting y usePriceSettings no dan true ");
       return false;
     }
 
     const gainPercentage = parseFloat(useQuoteSettings?.gainPercentage);
     const salesCommission = parseFloat(useQuoteSettings?.salesCommission);
 
-    console.log("Valores: ", gainPercentage, salesCommission);
-
     // Verificar que el porcentaje de ganancia esté dentro de los límites
     const isGainValid =
       gainPercentage >= parseFloat(usePricingSettings["pricing.gain.min"]) &&
       gainPercentage <= parseFloat(usePricingSettings["pricing.gain.max"]);
-
-    console.log("isGainValid: " + isGainValid);
 
     // Verificar que la comisión esté dentro de los límites
     const isCommissionValid =
@@ -319,10 +299,6 @@ const ProductionPlan = (props) => {
         parseFloat(usePricingSettings["pricing.commission.min"]) &&
       salesCommission <=
         parseFloat(usePricingSettings["pricing.commission.max"]);
-
-    console.log("isCommissionValid " + isCommissionValid);
-
-    console.table(usePricingSettings);
 
     return isGainValid && isCommissionValid;
   };
@@ -365,7 +341,7 @@ const ProductionPlan = (props) => {
               ></CardHeader>
               <Divider />
               <CardContent>
-                <List dense>
+                <List>
                   <ListItem alignItems="flex-start">
                     <ListItemNumbers
                       primary={`${spanishFormat(data.impresiones)}`}
@@ -544,7 +520,6 @@ const ProductionPlan = (props) => {
       action={
         useError?.action ||
         (() => {
-          console.log(useError);
           setError(null);
         })
       }

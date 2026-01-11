@@ -39,11 +39,9 @@ const ResetPassword = () => {
         `${databaseURL}users/resetPassword/${token}`,
         data
       );
-      console.log(response.data);
       setSuccessMessage(response.data.message);
       setLoading(false);
     } catch (error) {
-      console.log(error);
       setError({
         msg:
           "Hubo un error al restablecer la contraseña: " +

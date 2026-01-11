@@ -11,21 +11,14 @@ import { serverURL, databaseURL } from "../Config/config";
 //import "./form.css";
 import {
   addPrivateElement,
-  getPrivateElments,
   getPrivateElementByID,
   putPrivateElement,
-  deletePrivateElement,
 } from "../customHooks/FetchDataHook";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 
 // Hamlet Components Imports
 
 import Spinner from "../General/Spinner";
-
-//Input Components Imports
-
-import Select from "./Select";
-import Input from "./Input";
 
 //MUI Material Imports
 
@@ -45,14 +38,10 @@ import {
   FormGroup,
   Button,
   FormHelperText,
-  Tooltip,
-  InputLabel,
   MenuItem,
 } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
-import CustomizedTooltip from "../utils/CustomizedTooltip";
-import { StyledTooltip, DangerTooltip } from "../General/TableGrid";
-import { use } from "react";
+import { StyledTooltip } from "../General/TableGrid";
 
 //Auxiliar Functions:
 
@@ -75,10 +64,6 @@ function convertirArrayAObjeto(arr) {
 //  ¡¡¡Form Maker Component!!!
 
 const FormMaterial = (props) => {
-  const [useHidden, setHidden] = useState(
-    props.task === "copy" || props.task === "edit" ? false : true
-  );
-
   // Preloader State
 
   const [useLoading, setLoading] = useState(
@@ -106,9 +91,11 @@ const FormMaterial = (props) => {
   let dataForm = props.form;
 
   //New props.variant to define the form variant
-  const variant = props.variant || "outlined";
+  const variant = props.variant || "standard";
   // new color prop (default primary)
   const color = props.color || "primary";
+  // Subtitle prop
+  const [useSubTitle, setSubTitle] = [props.subtitle || props.task];
 
   // React Hook Form
   const {
@@ -137,9 +124,6 @@ const FormMaterial = (props) => {
             id
           );
           setItem(itemToEdit);
-
-          console.log("Item to edit fetched:");
-          console.log(itemToEdit);
 
           itemToEdit === undefined && setErrorMessage("Item no encontrado");
 
@@ -171,14 +155,13 @@ const FormMaterial = (props) => {
       };
       fetchItem();
     } else if (props.item) {
-      console.log(useItem);
+      const item = props.item;
     } else {
       for (let inp of props.form) {
         if (inp.type === "checkbox") {
           setSelectedCheckboxItems({ [inp.inputName]: [] });
         }
       }
-      console.log("new");
     }
   }, [setItem]);
 
@@ -209,24 +192,20 @@ const FormMaterial = (props) => {
 
     const formData = convertirArrayAObjeto(datos);
     //formData.checkboxItems = selectedCheckboxItems;
-    console.log("Formato del POST");
-    console.log(formData);
 
     if (props.task === "new" || props.task === "copy") {
       try {
         await addPrivateElement(collection, formData);
-        setHidden(true);
         navigate(-1);
-        props.setState !== undefined
-          ? props.setState(true)
-          : console.log("No es nuevo");
+        if (props.setState !== undefined) {
+          props.setState(true);
+        }
       } catch (e) {
         setErrorMessage(e.response?.data || e.message);
       }
     } else {
       try {
         await putPrivateElement(`${databaseURL}${collection}/${id}`, formData);
-        setHidden(true);
         navigate(-1);
         //props.editor(true);
       } catch (e) {
@@ -243,20 +222,6 @@ const FormMaterial = (props) => {
     } */
   };
 
-  const toogleHandler = () => {
-    setHidden(!useHidden);
-    props.setState !== undefined
-      ? props.setState(false)
-      : console.log("no setState");
-    try {
-      typeof props.view === "function"
-        ? props.view("viewer")
-        : props.view("editor");
-    } catch (e) {
-      setErrorMessage(e.response?.data || e.message);
-    }
-  };
-
   const resetError = () => {
     //console.log("resetError");
     setErrorMessage(null);
@@ -264,15 +229,11 @@ const FormMaterial = (props) => {
   };
 
   const typeOfInput = (inp) => {
-    console.log();
     if (inp.type === "Select") {
       let value;
-      const changeHandler = (e) => {
-        e.preventDefault();
-        return (value = e.target.value);
-      };
+
       return (
-        <Grid item xs={4} sm={2} md={3}>
+        <Grid xs={4} sm={2} md={3}>
           <FormControl key={inp.id}>
             <TextField
               id={inp.id}
@@ -286,6 +247,7 @@ const FormMaterial = (props) => {
                   ? useItem[inp.inputName]?._id || useItem[inp.inputName]
                   : ""
               }
+              autoComplete={inp.inputName}
               name={inp.inputName}
               {...register(inp.inputName)}
               InputLabelProps={{
@@ -314,7 +276,7 @@ const FormMaterial = (props) => {
       );
     } else if (inp.type === "button") {
       return (
-        <Grid item xs={4} sm={4} md={6}>
+        <Grid xs={4} sm={4} md={6}>
           <Button
             variant={variant}
             inputName={inp.inputName}
@@ -372,15 +334,15 @@ const FormMaterial = (props) => {
       };
 
       return (
-        <Grid item xs={12} sm={12} md={12}>
+        <Grid xs={12} sm={12} md={12}>
           <Card
             raised={false}
-            sx={{
+            /* sx={{
               p: 2,
               background: "none",
               border: "1px solid #555",
               borderRadius: "5px",
-            }}
+            }} */
             variant={variant}
           >
             <CardHeader subheader={inp.label || inp.inputName} />
@@ -424,7 +386,6 @@ const FormMaterial = (props) => {
                     {inp.options.sort().map((opt, index) => {
                       return (
                         <Grid
-                          item
                           xs={12}
                           sm={6}
                           md={4}
@@ -470,11 +431,12 @@ const FormMaterial = (props) => {
       );
     } else {
       return (
-        <Grid item xs={4} sm={4} md={6}>
+        <Grid xs={4} sm={4} md={6}>
           <TextField
             id={inp.id}
             type={inp.type}
             label={inp.label || inp.inputName}
+            autoComplete={inp.inputName}
             variant={variant}
             color={color}
             defaultValue={
@@ -512,11 +474,11 @@ const FormMaterial = (props) => {
   const hiddenFalse = () => {
     return (
       <Container>
-        <Card raised>
+        <Card variant={props.variant}>
           <CardHeader
             component="div"
             title={props.title || props.collection}
-            subheader={props.task}
+            subheader={useSubTitle}
           />
           <Divider />
           <Box sx={{ p: 2 }}>
@@ -584,9 +546,7 @@ const FormMaterial = (props) => {
     />
   );
 
-  useEffect(() => {
-    console.log(selectedCheckboxItems);
-  }, [selectedCheckboxItems, useValue]);
+  useEffect(() => {}, [selectedCheckboxItems, useValue]);
 
   //return useHidden ? hiddenTrue : hiddenFalse;
   return useLoading

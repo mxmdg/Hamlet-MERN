@@ -26,7 +26,7 @@ import JobsPerClient from "./utils/stats/JobsPerClient";
 import JobsPerSeller from "./utils/stats/JobsPerSeller";
 import JobsPerType from "./utils/stats/JobsPerType";
 //MUI Material Imports
-import { Container } from "@mui/material";
+import { Container, Box } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 import UploadFilesButton from "./utils/ReusableComponents/UploadFilesButton";
 import JobsPerPartType from "./utils/stats/JobsPerPartType";
@@ -59,53 +59,51 @@ const Home = (props) => {
   }, []);
 
   const homePage = (
-    <Container disableGutters maxWidth={"false"} sx={{ paddingTop: 3 }}>
-      <Grid container columns={{ xs: 1, sm: 12, md: 12, lg: 16 }} spacing={0}>
-        <Grid xs={1} sm={12} md={12} lg={10}>
-          <Container>
-            <Grid
-              container
-              spacing={{ xs: 0, sm: 1, md: 3 }}
-              columns={{ xs: 1, sm: 12, md: 12 }}
-            >
-              <Grid xs={1} sm={12} md={12}>
-                <FullJobsRender
-                  route={useRoute}
-                  settings={{
-                    title: "Proximas entregas",
-                    column: "deadLine",
-                    order: "asc",
-                  }}
-                />
-              </Grid>
-              <Grid xs={1} sm={12} md={12} lg={12}>
-                <StatsCollector route={useRoute}>
-                  <JobsForNextDays />
-                  <JobsPerType />
-                  <JobsPerPartType rank={10} />
-                  <JobsPerClient rank={10} />
-                  <JobsPerSeller />
-                </StatsCollector>
-              </Grid>
+    <>
+      <Grid container columns={{ xs: 1, sm: 12 }} spacing={3} p={2}>
+        <Grid xs={1} sm={8} md={8}>
+          <Grid
+            container
+            spacing={{ xs: 0, sm: 1, md: 3 }}
+            columns={{ xs: 1, sm: 12, md: 12 }}
+          >
+            <Grid xs={1} sm={12} md={12}>
+              <FullJobsRender
+                route={useRoute}
+                settings={{
+                  title: "Proximas entregas",
+                  column: "deadLine",
+                  order: "asc",
+                }}
+              />
             </Grid>
-          </Container>
+            <Grid xs={1} sm={12} md={12} lg={12}>
+              <StatsCollector route={useRoute}>
+                <JobsForNextDays />
+                <JobsPerType />
+                <JobsPerPartType rank={10} />
+                <JobsPerClient rank={10} />
+                <JobsPerSeller />
+              </StatsCollector>
+            </Grid>
+          </Grid>
         </Grid>
-        <Grid xs={1} sm={12} md={12} lg={6}>
+        <Grid xs={1} sm={4} md={4}>
           <Grid container columns={12} spacing={{ xs: 0, sm: 1, md: 3 }}>
-            <Grid xs={12} sm={12} md={10} lg={10}>
+            <Grid xs={12} sm={12}>
               <UploadFilesButton />
               <MyStepper />
             </Grid>
-            <Grid xs={12} sm={12} md={11} lg={10}>
+            <Grid xs={12} sm={12}>
               <QuickSpinCalc color="primary" />
             </Grid>
-            <Grid xs={12} sm={12} md={11} lg={10}>
+            <Grid xs={12} sm={12}>
               <NumberGenerator color="primary" />
             </Grid>
-            <Grid xs={12} sm={12} md={11} lg={10}>
+            <Grid xs={12} sm={12}>
               <ColorSheetRangeGenerator color="primary" />
             </Grid>
-            <Grid xs={12} sm={12} md={11} lg={10}>
+            <Grid xs={12} sm={12}>
               <ImpoProvider>
                 <DarkWoodCard>
                   <Canvas />
@@ -115,7 +113,7 @@ const Home = (props) => {
           </Grid>
         </Grid>
       </Grid>
-    </Container>
+    </>
   );
 
   const logPage = <LogPage />;

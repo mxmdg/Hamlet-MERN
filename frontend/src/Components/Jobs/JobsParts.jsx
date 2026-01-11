@@ -23,6 +23,7 @@ import MenuItem from "@mui/material/MenuItem";
 import { Grid, Autocomplete } from "@mui/material";
 import { fechtData, getPrivateElements } from "../customHooks/FetchDataHook";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
+import Spinner from "../General/Spinner";
 import arrayNormalizer from "../utils/generalData/arrayNormalizer";
 import { orderArrayByKey } from "../utils/generalData/arrayNormalizer";
 
@@ -40,7 +41,8 @@ const JobParts = (props) => {
   const [stocks, setStocks] = useState(props.stocks);
   const [filteredStocks, setFilteredStocks] = useState([]);
   const [useStock, setStock] = useState();
-  const [partsList, setPartsList] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [partsList, setPartsList] = useState([]);
   const [currentPart, setCurrentPart] = useState(props.editPart || null);
   const [useFinishingList, setFinishingList] = useState([]);
   const [selectedFinishings, setSelectedFinishings] = useState(
@@ -56,6 +58,7 @@ const JobParts = (props) => {
   const [useError, setError] = useState(false);
 
   const resetError = () => {
+    console.log(useError);
     setError(false);
   };
 
@@ -71,9 +74,6 @@ const JobParts = (props) => {
   });
 
   const filterStocks = () => {
-    console.log("Ejecutando funcion filterStocks");
-    console.log(currentPart);
-    console.table(stocks);
     const res = stocks.filter((stock) => {
       try {
         if (
@@ -81,25 +81,18 @@ const JobParts = (props) => {
           stock.Gramaje >= currentPart.minStockWeight &&
           stock.Gramaje <= currentPart.maxStockWeight
         ) {
-          // console.log("Filtrando los papelesde una parte nueva");
-          // console.log(stock);
           return stock;
         } else if (
           props.editPart !== null &&
           stock.Gramaje >= props.editPart.part.jobParts[0].minStockWeight &&
           stock.Gramaje <= props.editPart.part.jobParts[0].maxStockWeight
         ) {
-          //console.log("Filtrando los papelesde una parte a editar");
-          //console.log(stock);
           return stock;
         }
       } catch (error) {
-        //console.log(error);
         return error;
       }
     });
-    //console.log("Devuelve lista de materiales filtrada");
-    //console.table(res);
     setFilteredStocks(res);
   };
 
@@ -110,9 +103,10 @@ const JobParts = (props) => {
   };
 
   const handleChange = (selectedValue) => {
+    console.log(selectedValue);
     const part = partsList.find((item) => item._id === selectedValue);
-    setCurrentPart(part);
     console.log(part);
+    setCurrentPart(part);
     if (part?.PrintModAllowed === "Simplex") {
       setSimplex(true);
     } else {
@@ -120,77 +114,58 @@ const JobParts = (props) => {
     }
   };
 
-  const changeHandler = (e, useFinishingList, Finisher) => {
-    if (e.target.checked && useFinishingList.length > 1) {
-      // Agregar el objeto seleccionado al array
-      console.log("Finisher varias opciones");
-      console.log(Finisher);
-      console.log(e);
-      setSelectedFinishings((prevSelected) => [...prevSelected, Finisher._id]);
-    } else if (e.target.checked && useFinishingList.length === 1) {
-      console.log("Finisher una sola opcion");
-      console.log(Finisher);
-      setSelectedFinishings([Finisher._id]);
+  const changeHandler = (e, Finisher) => {
+    const finisherId = Finisher._id;
+
+    if (e.target.checked) {
+      setSelectedFinishings((prev) => [...prev, finisherId]);
     } else {
-      // Remover el objeto si se deselecciona
-      try {
-        setSelectedFinishings((prevSelected) =>
-          prevSelected.filter((item) => item._id !== Finisher._id)
-        );
-      } catch (error) {
-        setError(error);
-      }
+      setSelectedFinishings((prev) => prev.filter((id) => id !== finisherId));
     }
   };
 
-  console.log("Estados y variables declaradoas antes de useEffect");
+  useEffect(() => {
+    //console.log(currentPart?._id);
+  }, [currentPart]);
 
   useEffect(() => {
-    console.log("Inicio useEffect");
-
     const updateStocks = async () => {
       await fechtData("materiales", setStocks);
       filterStocks();
     };
-    console.log(props.onChange);
-    console.log(props.parts);
 
     const filteredParts = props.parts.filter((part) =>
       part.jobTypesAllowed.includes(props.jobType.name)
     );
 
-    if (props.editPart !== null) {
-      try {
-        setCurrentPart(
-          props.parts.find(
-            (item) => item._id === props.editPart.part.jobParts[0]._id
-          )
-        );
-        console.table(currentPart);
-      } catch (e) {
-        console.log(e);
-      }
-    } else if (props.job) {
-      try {
-        const arr = [];
-        console.log(props.job);
-        props.job.Partes.map((p) => {
-          p.Finishing.push(arr);
-        });
-        const Finishers = arrayNormalizer(arr);
-        setSelectedFinishings(Finishers);
-      } catch (error) {
-        console.log(error);
-      }
-    }
+    if (props.editPart) {
+      const partId = props.editPart?.part?.jobParts?.[0]?._id;
+
+      if (!partId || !props.parts?.length) return;
+
+      const found = props.parts.find((item) => item._id === partId);
+      if (found) setCurrentPart(found);
+    } /*else if (props.job?.Partes?.length) {
+      const arr = [];
+
+       props.job.Partes.forEach((p) => {
+        if (Array.isArray(p.Finishing)) {
+          arr.push(...p.Finishing);
+        }
+      });
+
+      const Finishers = arrayNormalizer(arr);
+      setSelectedFinishings(Finishers); 
+    }*/
 
     try {
       //console.table(filteredParts);
       setPartsList(orderArrayByKey(filteredParts, "Type"));
       getFinishers();
       updateStocks();
+      setIsLoading(false);
     } catch (e) {
-      console.log(e);
+      setError(e);
     }
   }, [
     setFilteredStocks,
@@ -200,13 +175,39 @@ const JobParts = (props) => {
     setFinishingList,
   ]);
 
+  useEffect(() => {
+    if (props.editPart !== null && props.editPart.part?.partStock?._id) {
+      setValue("partStock", props.editPart.part.partStock._id);
+    }
+  }, [props.editPart, setValue]);
+
+  useEffect(() => {
+    if (props.editPart?.part?.Finishing) {
+      // Normalizar: si es objeto, extraer _id; si ya es string ID, dejarlo
+      const finishingIds = props.editPart.part.Finishing.map((f) =>
+        typeof f === "object" ? f._id : f
+      ).filter((id) => id); // Filtrar valores nulos/undefined
+      setSelectedFinishings(finishingIds);
+    } else {
+      setSelectedFinishings([]);
+    }
+  }, [props.editPart]);
+
+  useEffect(() => {
+    setValue("Finishing", selectedFinishings);
+  }, [selectedFinishings, setValue]);
+
+  //____________________________________RENDERS___________________________
+
   const failed = (
     <ErrorMessage
-      message={useError.message}
+      title={"Error de JobsParts"}
+      message={useError}
       action={resetError}
-      severity="warning"
     />
   );
+
+  const loading = <Spinner title="Buscando elementos" color="success" />;
 
   const success = (
     <Card raised sx={{ gap: "20px", maxWidth: "600px" }} color="secondary">
@@ -225,12 +226,12 @@ const JobParts = (props) => {
           >
             {partsList !== null && (
               <Grid item xs={1} sm={2} md={4}>
-                <TextField
+                {/* <TextField
                   select
-                  defaultValue={
+                  value={
                     props.editPart !== null
                       ? props.editPart.part.jobParts[0]._id
-                      : ""
+                      : currentPart?._id || ""
                   }
                   id="jobParts"
                   inputProps={{
@@ -250,10 +251,37 @@ const JobParts = (props) => {
                 >
                   {partsList.map((part) => (
                     <MenuItem value={part._id} key={part._id}>
-                      {part.Type}
+                      Parte: {part.Type}
                     </MenuItem>
                   ))}
-                </TextField>
+                </TextField> */}
+                <Controller
+                  name="jobParts"
+                  control={control}
+                  rules={{ required: "Seleccione el tipo de parte" }}
+                  defaultValue={props.editPart?.part?.jobParts?.[0]?._id || ""}
+                  render={({ field }) => (
+                    <TextField
+                      select
+                      {...field}
+                      id="jobParts"
+                      variant="outlined"
+                      color="primary"
+                      label="Partes"
+                      fullWidth
+                      onChange={(e) => {
+                        field.onChange(e.target.value);
+                        handleChange(e.target.value);
+                      }}
+                    >
+                      {partsList.map((part) => (
+                        <MenuItem value={part._id} key={part._id}>
+                          {part.Type}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  )}
+                />
 
                 {errors.jobParts?.type === "required" && (
                   <FormHelperText>Seleccione el tipo de parte</FormHelperText>
@@ -417,24 +445,28 @@ const JobParts = (props) => {
               <Autocomplete
                 id="partStock"
                 options={filteredStocks}
-                defaultValue={() => {
-                  if (props.editPart !== null) {
-                    setValue("partStock", props.editPart.part?.partStock?._id);
-                    return props.editPart.part.partStock;
-                  } else {
-                    return null;
-                  }
-                }}
-                autoHighlight
                 getOptionLabel={(option) =>
-                  `${option.Nombre_Material} - ${option.Marca}(${option.Ancho_Resma} x ${option.Alto_Resma})`
+                  `${option.Nombre_Material} ${option.Gramaje}g - ${option.Marca} (${option.Ancho_Resma}x${option.Alto_Resma})`
+                }
+                isOptionEqualToValue={(option, value) => {
+                  // Si value es un objeto, compara por _id
+                  if (value && typeof value === "object") {
+                    return option._id === value._id;
+                  }
+                  // Si value es un string (ID), compara con option._id
+                  return option._id === value;
+                }}
+                value={
+                  props.editPart !== null
+                    ? filteredStocks.find(
+                        (stock) =>
+                          stock._id === props.editPart.part?.partStock?._id
+                      ) || null
+                    : useStock || null
                 }
                 {...register("partStock", { required: true })}
                 onChange={(event, newValue) => {
                   const currenValue = event;
-                  console.log("New Value Stock");
-                  console.log(currenValue);
-                  console.log(newValue);
                   if (newValue) {
                     // Actualiza el valor del campo Company con el _id seleccionado
                     setValue("partStock", newValue._id);
@@ -459,36 +491,6 @@ const JobParts = (props) => {
                   />
                 )}
               />
-              {/* <TextField
-                select
-                defaultValue={
-                  props.editPart !== null
-                    ? props.editPart.part.partStock._id
-                    : ""
-                }
-                id="partStock"
-                inputProps={{
-                  name: "partStock",
-                  id: "partStock",
-                }}
-                variant="outlined"
-                color="primary"
-                label="Material"
-                name="partStock"
-                fullWidth
-                {...register("partStock", { required: true })}
-                onChange={props.onChange}
-              >
-                {filteredStocks.map((Stock) => (
-                  <MenuItem value={Stock._id} id={Stock._id} key={Stock._id}>
-                    {Stock.Nombre_Material} - {Stock.Marca}{" "}
-                    {`(${Stock.Ancho_Resma} x ${Stock.Alto_Resma})`}
-                  </MenuItem>
-                ))}
-              </TextField> 
-              {errors.partStock?.type === "required" && (
-                <FormHelperText>Seleccione Material</FormHelperText>
-              )}*/}
             </Grid>
             <Grid item xs={1} sm={2} md={4}>
               <TextField
@@ -561,22 +563,13 @@ const JobParts = (props) => {
                 >
                   {useFinishingList
                     .sort((a, b) => {
-                      const nameA = a.Proceso.toUpperCase(); // ignore upper and lowercase
-                      const nameB = b.Proceso.toUpperCase(); // ignore upper and lowercase
-                      if (nameA < nameB) {
-                        return -1;
-                      }
-                      if (nameA > nameB) {
-                        return 1;
-                      }
-
-                      // names must be equal
+                      const nameA = a.Proceso.toUpperCase();
+                      const nameB = b.Proceso.toUpperCase();
+                      if (nameA < nameB) return -1;
+                      if (nameA > nameB) return 1;
                       return 0;
                     })
                     .map((Finisher) => {
-                      const isChecked = Array.isArray(selectedFinishings)
-                        ? selectedFinishings.some((f) => f._id === Finisher._id)
-                        : [];
                       if (
                         Finisher.partTypesAllowed &&
                         Finisher.partTypesAllowed.includes(
@@ -586,33 +579,28 @@ const JobParts = (props) => {
                         return (
                           <FormControlLabel
                             key={Finisher._id}
-                            {...register("Finishing", {
-                              required: true,
-                              defaultValue: [],
-                            })}
                             control={
                               <Checkbox
-                                key={Finisher._id + Finisher.Proceso}
                                 color="secondary"
-                                value={Finisher._id}
-                                defaultChecked={isChecked}
-                                onChange={(e) =>
-                                  changeHandler(e, useFinishingList, Finisher)
+                                checked={
+                                  selectedFinishings.includes(Finisher._id) ||
+                                  false
                                 }
+                                onChange={(e) => changeHandler(e, Finisher)}
                               />
                             }
                             label={`${Finisher.Proceso} ${Finisher.Modelo}`}
                           />
                         );
                       }
+                      return null;
                     })}
-                  {errors.Finishing?.type === "required" && (
-                    <FormHelperText>
-                      Seleccione algun tipo de terminacion
-                    </FormHelperText>
-                  )}
                 </FormGroup>
               }
+              <input
+                type="hidden"
+                {...register("Finishing", { required: true })}
+              />
             </Grid>
             <Grid item xs={1} sm={2} md={4}>
               <FormControl sx={{ width: "85%" }}>
@@ -634,7 +622,7 @@ const JobParts = (props) => {
     </Card>
   );
 
-  return !useError ? success : failed;
+  return isLoading ? loading : !useError ? success : failed;
 };
 
 export default JobParts;

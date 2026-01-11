@@ -312,7 +312,7 @@ jobControl.addJob = async (req, res) => {
   }
 };
 
-jobControl.getJob = async (req, res) => {
+/* jobControl.getJob = async (req, res) => {
   try {
     const tenant = req.header("x-tenant");
     const job = await jobs.esquema
@@ -350,7 +350,76 @@ jobControl.getJob = async (req, res) => {
     console.log(e);
     res.status(404).json({ message: "Trabajo no encontrado: " + e.message });
   }
+}; */
+
+jobControl.getJob = async (req, res) => {
+  try {
+    const tenant = req.header("x-tenant");
+
+    const job = await jobs.esquema
+      .findOne({
+        tenant,
+        _id: req.params.id,
+      })
+      .select(
+        "-Finishing.Costo.Historial  -Finishing.jobTypesAllowed -Finishing.partTypesAllowed"
+      )
+      .populate({
+        path: "Owner",
+        model: users.esquema,
+        select: "Name LastName Role email",
+      })
+      .populate({
+        path: "Company",
+        model: companies.esquema,
+        select: "Nombre email",
+      })
+      .populate({
+        path: "Partes.partStock",
+        model: stocks.esquema,
+      })
+      .lean(); // 👈 importante
+
+    // ❌ Trabajo inexistente
+    if (!job) {
+      return res.status(404).json({ message: "Trabajo no encontrado" });
+    }
+
+    // 🔹 Buscar finishers activos del tenant
+    const activeFinishers = await finishers.esquema
+      .find({ tenant, status: { $ne: "inactivo" } }, "_id")
+      .lean();
+
+    const validFinisherIds = new Set(
+      activeFinishers.map((f) => f._id.toString())
+    );
+
+    // 🔹 Helper local
+    const filterFinishings = (arr) => {
+      if (!Array.isArray(arr)) return arr;
+      return arr.filter((id) => validFinisherIds.has(id.toString()));
+    };
+
+    // 🔹 Limpiar finishing del trabajo
+    job.Finishing = filterFinishings(job.Finishing);
+
+    // 🔹 Limpiar finishing de cada parte
+    if (Array.isArray(job.Partes)) {
+      job.Partes = job.Partes.map((part) => ({
+        ...part,
+        Finishing: filterFinishings(part.Finishing),
+      }));
+    }
+
+    res.json(job);
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({
+      message: "Error al obtener el trabajo: " + e.message,
+    });
+  }
 };
+
 jobControl.updateJob = async (req, res) => {
   {
     try {

@@ -44,6 +44,9 @@ export const pages = [
 function ResponsiveAppBar(props) {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [switchChecked, setSwitchChecked] = React.useState(
+    props.mode === "dark" ? true : false
+  );
   const context = useContext(AuthContext);
 
   const navigate = useNavigate();
@@ -65,21 +68,29 @@ function ResponsiveAppBar(props) {
   ];
 
   const handleOpenNavMenu = (event) => {
-    console.log(event.currentTarget);
     setAnchorElNav(event.currentTarget);
   };
   const handleOpenUserMenu = (event) => {
-    console.log(event.currentTarget);
     setAnchorElUser(event.currentTarget);
   };
 
   const handleCloseNavMenu = (goTo) => {
-    goTo ? navigate("/" + goTo) : console.log("Me quedo aca");
+    if (!goTo) {
+      setAnchorElNav(null);
+      return;
+    }
+
+    navigate("/" + goTo);
     setAnchorElNav(null);
   };
 
   const handleCloseUserMenu = (goTo) => {
-    goTo ? navigate("/" + goTo) : console.log("Me quedo aca");
+    if (!goTo) {
+      setAnchorElUser(null);
+      return;
+    }
+
+    navigate("/" + goTo);
     setAnchorElUser(null);
   };
 
@@ -90,7 +101,7 @@ function ResponsiveAppBar(props) {
       }
       handleCloseUserMenu("/");
     } catch (error) {
-      console.log(error);
+      return error;
     }
   };
 
@@ -111,86 +122,95 @@ function ResponsiveAppBar(props) {
     <AppBar
       color="primary" //{colorList[Math.round(Math.random() * 5)]}
       enableColorOnDark={false}
-      position="fixed"
+      position="relative"
       sx={{ "@media print": { display: "none" } }}
     >
-      <Container maxWidth="xl">
-        <Toolbar disableGutters>
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="warning"
-              //disabled={context.useLogin}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={() => handleCloseNavMenu()}
-              color="secondary"
-              sx={{
-                display: { xs: "block", md: "none" },
-              }}
-            >
-              {pages.map((page) => (
-                <MenuItem
-                  key={page.path}
-                  onClick={() => {
-                    handleCloseNavMenu(page.path);
-                  }}
-                  {...(context.useLogin ? "" : { disabled: true })}
-                >
-                  <Typography textAlign="center">{page.text}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
-          <Box
+      <Toolbar>
+        <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+          <IconButton
+            size={"large"}
+            aria-label="account of current user"
+            aria-controls="menu-appbar"
+            aria-haspopup="true"
+            onClick={handleOpenNavMenu}
+            color="success"
+            //disabled={context.useLogin}
+          >
+            <MenuIcon />
+          </IconButton>
+          <Menu
+            id="menu-appbar"
+            anchorEl={anchorElNav}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "left",
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "left",
+            }}
+            open={Boolean(anchorElNav)}
+            onClose={() => handleCloseNavMenu()}
+            color="secondary"
             sx={{
-              flexGrow: 2,
-              display: { xs: "flex", md: "flex" },
+              display: { xs: "block", md: "none" },
             }}
           >
-            {/* SVG imported as ReactComponent must be used with an uppercase name */}
-            <Button
-              onClick={() => Navigate("/")}
-              color="primary"
-              variant="contained"
-              sx={{ p: "px" }}
-            >
-              <Logo
-                role="img"
-                aria-label="Hamlet logo"
-                style={{
-                  width: "25px",
-                  height: "25px",
-                  display: "block",
-                  margin: "5px",
+            {pages.map((page) => (
+              <MenuItem
+                key={page.path}
+                onClick={() => {
+                  handleCloseNavMenu(page.path);
                 }}
-              />
-              <Typography variant="button">
-                {context.useLogin
-                  ? `HAMLET | ${context.memberships[0].tenant.name}`
-                  : "HAMLET"}
-              </Typography>
-            </Button>
+                {...(context.useLogin ? "" : { disabled: true })}
+              >
+                <Typography textAlign="center">{page.text}</Typography>
+              </MenuItem>
+            ))}
+          </Menu>
+        </Box>
+        <Box
+          sx={{
+            flexGrow: 2,
+            display: { xs: "flex", md: "flex" },
+          }}
+        >
+          {/* SVG imported as ReactComponent must be used with an uppercase name */}
+          <Button
+            onClick={() => Navigate("/")}
+            color="primary"
+            variant="contained"
+            padding={{ sx: "2px 2px 2px 0", md: "5px 5px 5px 0" }}
+          >
+            <Logo
+              role="img"
+              aria-label="Hamlet logo"
+              margin={{ sx: "2px 2px 2px 0", md: "5px 5px 5px 0" }}
+              style={{
+                width: "25px",
+                height: "25px",
+                display: "block",
+              }}
+            />
+            <Typography variant="button" align="left" marginLeft={3}>
+              HAMLET
+              {context.useLogin && (
+                <Box
+                  component="span"
+                  sx={{
+                    display: { xs: "block", sm: "inline" },
+                    ml: { sm: 1 },
+                    fontSize: "0.75em",
+                  }}
+                >
+                  {context.memberships[0].tenant.name}
+                </Box>
+              )}
+            </Typography>
+          </Button>
 
-            {/* <Button
+          {/* <Button
               startIcon={<LocalLibraryIcon />}
               variant="h5"
               color="primary"
@@ -207,98 +227,101 @@ function ResponsiveAppBar(props) {
             >
               HAMLET
             </Button> */}
-          </Box>
+        </Box>
 
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
-              <Button
-                variant="standard"
-                key={page.path}
-                color="primary"
-                onClick={() => {
-                  handleCloseNavMenu(page.path);
+        <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+          {pages.map((page) => (
+            <Button
+              variant="standard"
+              key={page.path}
+              color="primary"
+              onClick={() => {
+                handleCloseNavMenu(page.path);
+              }}
+              sx={{ my: 2, display: "block" }}
+              {...(context.useLogin ? "" : { disabled: true })}
+            >
+              {page.text}
+            </Button>
+          ))}
+        </Box>
+
+        <Box sx={{ flexGrow: 0 }}>
+          <FormControlLabel
+            control={
+              <Switch
+                color="success"
+                onChange={(e) => {
+                  setSwitchChecked(e.target.checked);
+                  props.toogle();
                 }}
-                sx={{ my: 2, display: "block" }}
-                {...(context.useLogin ? "" : { disabled: true })}
-              >
-                {page.text}
-              </Button>
-            ))}
-          </Box>
+                size="small"
+              ></Switch>
+            }
+            label="Dark Mode"
+            labelPlacement="end"
+          />
 
-          <Box sx={{ flexGrow: 0 }}>
-            <FormControlLabel
-              control={
-                <Switch
-                  color="success"
-                  onChange={() => props.toogle()}
-                  size="small"
-                  defaultChecked={props.mode === "dark" ? true : false}
-                ></Switch>
-              }
-              label="Dark Mode"
-            />
-
-            <StyledTooltip
-              title={
-                context.userLogged !== null
-                  ? context.userLogged.Name
-                  : "Registrarse"
-              }
+          <StyledTooltip
+            title={
+              context.userLogged !== null
+                ? context.userLogged.Name
+                : "Registrarse"
+            }
+          >
+            <IconButton
+              onClick={handleOpenUserMenu}
+              sx={{ p: 0 }}
+              size="snall"
+              disabled={false}
             >
-              <IconButton
-                onClick={handleOpenUserMenu}
-                sx={{ p: 0 }}
-                disabled={false}
-              >
-                <Avatar alt={"Nada"} />
-              </IconButton>
-            </StyledTooltip>
-            <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={() => handleCloseUserMenu()}
-            >
-              {context.userLogged && (
-                <MenuItem>
-                  <Typography textAlign="left" color={"primary"}>
-                    {context.userLogged.Name} {context.userLogged.LastName}{" "}
-                  </Typography>
-                </MenuItem>
-              )}
-
-              {dropMenu.map((setting) => (
-                <MenuItem
-                  key={setting.text}
-                  onClick={() => handleCloseUserMenu(setting.path)}
-                >
-                  <Typography textAlign="center">{setting.text}</Typography>
-                </MenuItem>
-              ))}
+              <Avatar alt={"Nada"} />
+            </IconButton>
+          </StyledTooltip>
+          <Menu
+            sx={{ mt: "45px" }}
+            id="menu-appbar"
+            anchorEl={anchorElUser}
+            anchorOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            open={Boolean(anchorElUser)}
+            onClose={() => handleCloseUserMenu()}
+          >
+            {context.userLogged && (
               <MenuItem>
-                <ListItemButton
-                  {...(context.useLogin ? "" : { disabled: true })}
-                  key="logout"
-                  onClick={handleLogOut}
-                >
-                  Cerrar Sesion
-                </ListItemButton>
+                <Typography textAlign="left" color={"primary"}>
+                  {context.userLogged.Name} {context.userLogged.LastName}{" "}
+                </Typography>
               </MenuItem>
-            </Menu>
-          </Box>
-        </Toolbar>
-      </Container>
+            )}
+
+            {dropMenu.map((setting) => (
+              <MenuItem
+                key={setting.text}
+                onClick={() => handleCloseUserMenu(setting.path)}
+              >
+                <Typography textAlign="center">{setting.text}</Typography>
+              </MenuItem>
+            ))}
+            <MenuItem>
+              <ListItemButton
+                {...(context.useLogin ? "" : { disabled: true })}
+                key="logout"
+                onClick={handleLogOut}
+              >
+                Cerrar Sesion
+              </ListItemButton>
+            </MenuItem>
+          </Menu>
+        </Box>
+      </Toolbar>
     </AppBar>
   );
 }

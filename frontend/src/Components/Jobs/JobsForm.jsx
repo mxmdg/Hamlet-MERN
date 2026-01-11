@@ -326,19 +326,14 @@ const JobsForm = (props) => {
                   <Autocomplete
                     id="Company"
                     options={useCompaniesList}
-                    defaultValue={props.data?.Company}
-                    autoHighlight
-                    autoComplete={true}
+                    value={useCompany || null}
+                    isOptionEqualToValue={(option, value) =>
+                      option._id === value?._id
+                    }
                     getOptionLabel={(option) => option.Nombre}
                     onChange={(event, newValue) => {
-                      if (newValue) {
-                        // Actualiza el valor del campo Company con el _id seleccionado
-                        setValue("Company", newValue);
-                        setCompany(newValue);
-                      } else {
-                        // Si el valor es nulo, elimina el valor del campo Company
-                        setValue("Company", "");
-                      }
+                      setCompany(newValue);
+                      setValue("Company", newValue || "");
                     }}
                     renderInput={(params) => (
                       <TextField
@@ -353,6 +348,7 @@ const JobsForm = (props) => {
                       />
                     )}
                   />
+
                   {/* <TextField
                     select
                     id="Company"
@@ -418,7 +414,7 @@ const JobsForm = (props) => {
                                   <Checkbox
                                     color="secondary"
                                     value={Finisher._id}
-                                    defaultChecked={isChecked}
+                                    checked={isChecked}
                                     onChange={(e) =>
                                       changeHandler(
                                         e,

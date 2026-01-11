@@ -22,14 +22,14 @@ export const fechtData = async (collection, setFunction) => {
 export const checkHealth = async () => {
   try {
     const res = await axios.get(`${url}${backendPort}/health`);
-    console.log(
+    /* console.log(
       `Health check response: ${res.data.status} ${
         getMyDate(res.data.timestamp).ddmmyy
       }`
-    );
+    ); */
     return true;
   } catch (e) {
-    console.log(`Health check response: ${e}`);
+    //console.log(`Health check response: ${e}`);
     return false;
   }
 };
@@ -40,7 +40,7 @@ export const getPrivateElements = async (collection) => {
   const tenantId = memberships[0]?.tenant?.id;
 
   if (!tenantId) {
-    throw new Error("Tenant activo no encontrado");
+    throw new Error("Imprenta activa no encontrada");
   }
 
   const elements = await axios.get(`${databaseURL}${collection}`, {
@@ -83,17 +83,13 @@ export const addPrivateElement = async (collection, formData) => {
         "X-Tenant": tenantId,
       },
     });
-    console.log(elements);
     return elements;
   } catch (e) {
-    console.log(e);
     throw e;
   }
 };
 
 export const uploadFile = async (endpoint, data) => {
-  console.log(endpoint);
-  console.log(data);
   try {
     const elements = await axios.post(`${endpoint}`, data[0], {});
     return elements;
@@ -108,7 +104,6 @@ export const putPrivateElement = async (itemURL, formData) => {
   const tenantId = memberships[0]?.tenant?.id;
 
   try {
-    console.log("URL from FetchDataHook: " + itemURL);
     const elements = await axios.put(itemURL, formData, {
       headers: {
         Authorization: `Bearer ${token}`,

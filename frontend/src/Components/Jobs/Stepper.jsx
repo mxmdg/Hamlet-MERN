@@ -72,29 +72,18 @@ export default function MyStepper(props) {
 
   const handleJobTypeChange = (e) => {
     setJobType(e.target.value);
-    console.table(e.value);
-    console.table(useJobType);
   };
 
   const parts = allParts;
 
   const addParts = (newPart) => {
-    console.log("adding part...");
-    console.log(newPart);
     try {
       const getStock = async (id) => {
         const stock = await getPrivateElementByID("materiales", id);
         newPart.partStock = stock;
       };
       getStock(newPart.partStock);
-      /*  const part = parts.find((parte)=>{
-        parte.id == newPart.jobParts ?
-        parte :
-        console.log("No encuentro " + parte.id)
-      }) */
-      //newPart.jobParts = part
     } catch (e) {
-      console.log(e);
       setError(e);
     }
     const part = parts.filter((part) => part._id === newPart.jobParts);
@@ -106,12 +95,8 @@ export default function MyStepper(props) {
       setParts(partes);
       handleNext();
     } catch (e) {
-      console.log(e);
       setError(e);
     }
-
-    console.log("____________________");
-    console.log(useParts);
   };
 
   const removePart = (n) => {
@@ -126,14 +111,7 @@ export default function MyStepper(props) {
         newPart.partStock = stock;
       };
       getStock(newPart.partStock);
-      /*  const part = parts.find((parte)=>{
-        parte.id == newPart.jobParts ?
-        parte :
-        console.log("No encuentro " + parte.id)
-      }) */
-      //newPart.jobParts = part
     } catch (e) {
-      console.log(e);
       setError(e);
     }
     const part = parts.filter((part) => part._id === newPart.jobParts);
@@ -145,14 +123,11 @@ export default function MyStepper(props) {
       useParts
     );
     setParts(partsOk);
-    //console.log(`Reemplazar la parte ${n + 1} de ${partsOk.length}`);
-    //console.log(partsOk);
     setPartToEdit(null);
     handleNext();
   };
 
   const editPart = (n) => {
-    console.log(`Editar la parte ${n + 1} de ${useParts.length}`);
     const res = setPartToEdit({ part: useParts[n], index: n });
     return res;
   };
@@ -237,23 +212,17 @@ export default function MyStepper(props) {
 
   const handlePost = async () => {
     const Job = useJob;
-    console.log(Job);
     Job.Partes = useParts;
     // Este forEach me parece que no hace falta...
     /* Job.Partes.forEach((part) => {
       part.Finishing = part.Finishing.map((f) => f._id);
     }); */
     Job.JobType = props.job ? props.job.Tipo[0] : useJobType;
-    console.log(Job);
     try {
-      console.log("Guardando...");
       const res = await addPrivateElement("Jobs", Job);
-      console.log(res);
       setNewJobId(res.data);
-      console.log(`Trabajo ${Job.Nombre} agregado`);
       handleNext();
     } catch (e) {
-      console.log(e);
       setError(e);
     }
   };
@@ -261,17 +230,13 @@ export default function MyStepper(props) {
   const handleUpdate = async () => {
     const Job = useJob;
     Job.Partes = useParts;
-    console.log(Job);
     try {
-      console.log("Guardando...");
       const res = await putPrivateElement(
         `${databaseURL}jobs/${props.job._id}`,
         Job
       );
-      console.log(`Trabajo ${Job.Nombre} actualizado, ${res}`);
       handleNext();
     } catch (e) {
-      console.log(e);
       setError(e);
     }
   };

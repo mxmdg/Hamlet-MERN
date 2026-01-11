@@ -11,6 +11,7 @@ import {
 
 import { ToolTipNice } from "./ToolTipNice";
 import { Title } from "./Title";
+import { Box } from "@mui/material";
 
 export const myWrapperStyle = {
   bottom: "0",
@@ -101,7 +102,13 @@ export default function NewRadialBar(props) {
   }
 
   return (
-    <>
+    <Box
+      sx={{
+        width: "100%",
+        maxWidth: "100%",
+        overflowX: "hidden",
+      }}
+    >
       {props.title && <Title title={props.title} />}
       <ResponsiveContainer
         width={"100%"}
@@ -134,6 +141,6 @@ export default function NewRadialBar(props) {
           <Tooltip content={<ToolTipNice />} />
         </RadialBarChart>
       </ResponsiveContainer>
-    </>
+    </Box>
   );
 }
