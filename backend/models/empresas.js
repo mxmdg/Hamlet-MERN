@@ -25,7 +25,7 @@ const empresaSchema = new Schema({
     default: "activo",
   },
   tenant: {
-    type: mongoose.Schema.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: "Tenant",
     required: false,
     index: true,

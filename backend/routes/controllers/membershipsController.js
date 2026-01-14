@@ -118,6 +118,13 @@ membershipsController.createMembership = async (req, res, next) => {
     const membership = await newMembership.save();
     res.status(201).json(membership);
   } catch (e) {
+    res.status(500).json({
+      message:
+        e.code === 11000
+          ? `Este usuario ya tiene una membresia para esta imprenta.`
+          : "No se pudo crear la membresía.",
+      code: e.code,
+    });
     next(e);
   }
 };

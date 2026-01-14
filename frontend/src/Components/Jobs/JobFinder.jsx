@@ -202,7 +202,7 @@ const JobFinder = (props) => {
                             variant={inputsVariant}
                             color={inputsColor}
                             fullWidth
-                            value={""}
+                            value={useQuery ?? ""}
                             onChange={(e) => {
                               setURL(null);
                               setQuery(e.target.value);
@@ -229,7 +229,7 @@ const JobFinder = (props) => {
                             variant={inputsVariant}
                             color={inputsColor}
                             fullWidth
-                            value={""}
+                            value={useQuery ?? ""}
                             onChange={(e) => {
                               setURL(null);
                               setQuery(e.target.value);

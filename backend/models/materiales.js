@@ -1,7 +1,7 @@
 const { Schema, model, default: mongoose } = require("mongoose");
 
 const materialSchema = new Schema({
-  Nombre_Material: { type: String, required: false },
+  Nombre_Material: { type: String, required: true },
   Marca: { type: String, required: true },
   Gramaje: { type: Number, required: true },
   Tipo: { type: String, required: true },
@@ -28,6 +28,8 @@ const materialSchema = new Schema({
     index: true,
   },
 });
+
+materialSchema.index({ Nombre_Material: 1, tenant: 1 }, { unique: true });
 
 module.exports.esquema = model("Material", materialSchema);
 module.exports.claseMaterial = materialSchema;

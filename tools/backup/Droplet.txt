@@ -1,0 +1,16 @@
+Your identification has been saved in dropletKey
+Your public key has been saved in dropletKey.pub
+The key fingerprint is:
+SHA256:6SyZxxnvW8a5XP5idGxkp7javZyEcUhDZov+gc835KI maxi@DESKTOP-ETGM0EE
+The key's randomart image is:
++--[ED25519 256]--+
+|            +    |
+|           = .   |
+|          . +    |
+|         o o o  +|
+|        S o +.o=.|
+|       * + =.Oo +|
+|      + * . @o*o |
+|       o . *.Xoo |
+|          Eo+.*+.|
++----[SHA256]-----+

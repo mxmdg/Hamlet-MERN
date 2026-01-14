@@ -1,0 +1,21 @@
+# Imagen base estable
+FROM node:18-alpine
+
+# Directorio de trabajo dentro del container
+WORKDIR /app
+
+# Copiamos solo package.json primero (cache de dependencias)
+COPY package*.json ./
+
+# Instalamos SOLO dependencias de producción
+RUN npm install --omit=dev
+
+# Copiamos el resto del código
+COPY . .
+
+# Exponemos el puerto del backend
+EXPOSE 5000
+
+# Comando de arranque en producción
+CMD ["node", "index.js"]
+

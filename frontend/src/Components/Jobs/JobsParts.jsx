@@ -40,7 +40,7 @@ const JobParts = (props) => {
 */
   const [stocks, setStocks] = useState(props.stocks);
   const [filteredStocks, setFilteredStocks] = useState([]);
-  const [useStock, setStock] = useState();
+  const [useStock, setStock] = useState(props.editPart?.part.partStock || "");
   const [isLoading, setIsLoading] = useState(true);
   const [partsList, setPartsList] = useState([]);
   const [currentPart, setCurrentPart] = useState(props.editPart || null);
@@ -58,7 +58,6 @@ const JobParts = (props) => {
   const [useError, setError] = useState(false);
 
   const resetError = () => {
-    console.log(useError);
     setError(false);
   };
 
@@ -103,9 +102,7 @@ const JobParts = (props) => {
   };
 
   const handleChange = (selectedValue) => {
-    console.log(selectedValue);
     const part = partsList.find((item) => item._id === selectedValue);
-    console.log(part);
     setCurrentPart(part);
     if (part?.PrintModAllowed === "Simplex") {
       setSimplex(true);
@@ -446,7 +443,7 @@ const JobParts = (props) => {
                 id="partStock"
                 options={filteredStocks}
                 getOptionLabel={(option) =>
-                  `${option.Nombre_Material} ${option.Gramaje}g - ${option.Marca} (${option.Ancho_Resma}x${option.Alto_Resma})`
+                  `${option.Nombre_Material} - ${option.Marca} (${option.Ancho_Resma}x${option.Alto_Resma})`
                 }
                 isOptionEqualToValue={(option, value) => {
                   // Si value es un objeto, compara por _id
@@ -456,15 +453,12 @@ const JobParts = (props) => {
                   // Si value es un string (ID), compara con option._id
                   return option._id === value;
                 }}
-                value={
-                  props.editPart !== null
-                    ? filteredStocks.find(
-                        (stock) =>
-                          stock._id === props.editPart.part?.partStock?._id
-                      ) || null
-                    : useStock || null
-                }
+                value={useStock !== "" ? useStock : ""}
+                //{...register("partStock", { required: true })}
                 {...register("partStock", { required: true })}
+                onBlur={() => {
+                  trigger("partStock");
+                }}
                 onChange={(event, newValue) => {
                   const currenValue = event;
                   if (newValue) {

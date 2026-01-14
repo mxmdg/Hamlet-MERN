@@ -201,7 +201,7 @@ const FormMaterial = (props) => {
           props.setState(true);
         }
       } catch (e) {
-        setErrorMessage(e.response?.data || e.message);
+        setErrorMessage(e.response?.data?.message || e.message);
       }
     } else {
       try {
@@ -209,7 +209,6 @@ const FormMaterial = (props) => {
         navigate(-1);
         //props.editor(true);
       } catch (e) {
-        //console.log(e);
         setErrorMessage(e.response?.data || e.message);
       }
     }
@@ -223,7 +222,6 @@ const FormMaterial = (props) => {
   };
 
   const resetError = () => {
-    //console.log("resetError");
     setErrorMessage(null);
     //navigate(-1);
   };
@@ -539,7 +537,7 @@ const FormMaterial = (props) => {
 
   const alertError = (
     <ErrorMessage
-      title={"Error"}
+      title={"No se pudo guardar en la base de datos."}
       message={useErrorMessage}
       severity={"error"}
       action={resetError}

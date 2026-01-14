@@ -28,7 +28,7 @@ materialControl.getDeletedMaterials = async (req, res, next) => {
   }
 };
 
-materialControl.addMaterial = async (req, res) => {
+materialControl.addMaterial = async (req, res, next) => {
   {
     try {
       const {
@@ -59,8 +59,13 @@ materialControl.addMaterial = async (req, res) => {
       await newMaterial.save();
       res.json({ message: newMaterial.Nombre_Material + " guardado OK" });
     } catch (e) {
-      console.log(e);
-      res.status(404).json({ message: e });
+      res.status(500).json({
+        message:
+          e.code === 11000
+            ? `El nombre "${req.body.Nombre_Material}" se esta utilizando para otro material, por favor ingrese otro.`
+            : "Error al crear el nuevo material.",
+        code: e.code,
+      });
     }
   }
 };

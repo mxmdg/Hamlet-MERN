@@ -1,0 +1,58 @@
+services:
+  mongo:
+    image: mongo:6
+    container_name: hamlet-mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: hamlet
+      MONGO_INITDB_ROOT_PASSWORD: hamlet123
+      MONGO_INITDB_DATABASE: hamlet
+    volumes:
+      - mongo_data:/data/db
+    restart: always  
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.prod
+    container_name: hamlet-backend
+    env_file:
+      - ./backend/.env
+    depends_on:
+      - mongo
+    ports:
+      - "5000:5000"
+    restart: always
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod
+    container_name: hamlet-frontend
+    env_file:
+      - ./frontend/.env
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: always
+
+  mongo-backup:
+    image: mongo:6
+    container_name: hamlet-mongo-backup
+    depends_on:
+      - mongo
+    environment:
+      MONGO_HOST: mongo
+      MONGO_PORT: 27017
+      MONGO_DB: hamlet
+      MONGO_USER: hamlet
+      MONGO_PASS: hamlet123
+    volumes:
+      - mongo_backups:/backups
+      - ./tools/backup:/scripts
+    entrypoint: ["/bin/bash", "/scripts/backup.sh"]
+    restart: always
+
+volumes:
+  mongo_data:
+  mongo_backups:

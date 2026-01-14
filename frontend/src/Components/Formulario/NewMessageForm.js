@@ -65,6 +65,14 @@ let preferencesForm = [
     required: true,
     help: "Porcentaje máximo de ganancia (valor por defecto 60%).",
   },
+  {
+    inputName: "pricing.gain.def",
+    label: "Ganancia predeterminada (%)",
+    type: "Number",
+    id: "pricing_gain_def",
+    required: true,
+    help: "Porcentaje predeterminado de ganancia.",
+  },
 
   // Pricing - Commission
   {
@@ -82,6 +90,14 @@ let preferencesForm = [
     id: "pricing_comm_max",
     required: true,
     help: "Porcentaje máximo de comisión (valor por defecto 20%).",
+  },
+  {
+    inputName: "pricing.commission.def",
+    label: "Comisión predeterminada (%)",
+    type: "Number",
+    id: "pricing_comm_def",
+    required: true,
+    help: "Porcentaje predeterminado de comisión (valor por defecto 0%).",
   },
 
   // Mail

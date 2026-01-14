@@ -464,7 +464,9 @@ export default function EnhancedTable(props) {
 
   let i = 0;
 
-  return (
+  const failure = <ErrorMessage message={error} />;
+
+  const success = (
     <>
       <EnhancedTableToolbar
         collection={props.collection.replace("/urg", "")}
@@ -597,4 +599,6 @@ export default function EnhancedTable(props) {
       />
     </>
   );
+
+  return error ? failure : success;
 }

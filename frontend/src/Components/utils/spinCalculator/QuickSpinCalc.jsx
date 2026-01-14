@@ -75,7 +75,10 @@ const QuickSpinCalc = (props) => {
 
   return (
     <Card elevation={10}>
-      <CardHeader title="Calculadora de lomo" titleTypographyProps={{color: useColor, fontWeight: "600"}}></CardHeader>
+      <CardHeader
+        title="Calculadora de lomo"
+        titleTypographyProps={{ color: useColor, fontWeight: "600" }}
+      ></CardHeader>
       <Divider />
       <CardContent>
         <form name="form2" action="">
@@ -117,7 +120,9 @@ const QuickSpinCalc = (props) => {
               />
             </Grid>
             <Grid item xs={1} sm={2} md={4}>
-              <Typography variant="h5" color={useColor}>Lomo: {useSpin} mm</Typography>
+              <Typography variant="h5" color={useColor}>
+                Lomo: {useSpin} mm
+              </Typography>
             </Grid>
           </Grid>
         </form>

@@ -28,10 +28,12 @@ const TenantSchema = new mongoose.Schema(
       pricing: {
         gain: {
           min: { type: Number, default: 20 },
+          def: { type: Number, default: 40 },
           max: { type: Number, default: 60 },
         },
         commission: {
           min: { type: Number, default: 0 },
+          def: { type: Number, default: 0 },
           max: { type: Number, default: 20 },
         },
       },

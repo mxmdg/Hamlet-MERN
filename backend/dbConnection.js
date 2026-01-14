@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+/* const mongoose = require("mongoose");
 
 const URI = process.env.MONGODB_URI
   ? process.env.MONGODB_URI
@@ -39,6 +39,22 @@ mongoose.connect(URI + DB.printer, {
 const objectDB = mongoose.connection;
 
 objectDB.on("connected", () => "Connected to DB: " + DB.title);
+objectDB.on("error", (e) => "Not connected to DB. Error: " + e);
+
+module.exports = mongoose; */
+
+const mongoose = require("mongoose");
+
+const URI = process.env.MONGODB_URI || "mongodb://mongo:27017/test";
+
+mongoose.connect(URI, {
+  useNewUrlParser: true,
+  //useUnifiedTopology: true,
+});
+
+const objectDB = mongoose.connection;
+
+objectDB.on("connected", () => "Connected to DB: " + URI);
 objectDB.on("error", (e) => "Not connected to DB. Error: " + e);
 
 module.exports = mongoose;

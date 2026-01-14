@@ -70,7 +70,7 @@ empresasControl.addCompany = async (req, res, next) => {
 
       if (companyExists) {
         return res.status(400).json({
-          message: `La empresa ${Nombre} ya se encuentra en nuestra base de datos para este tenant.`,
+          message: `La empresa ${Nombre} ya se encuentra en nuestra base de datos.`,
         });
       }
 

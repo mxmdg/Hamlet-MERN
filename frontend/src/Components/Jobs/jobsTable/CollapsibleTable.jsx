@@ -527,7 +527,6 @@ export default function CollapsibleTable(props) {
       message={useError?.message}
       severity="warning"
       action={() => setError(null)}
-      title={"Error en la Tabla de Pedidos"}
     />
   );
 

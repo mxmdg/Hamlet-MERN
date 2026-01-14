@@ -48,13 +48,13 @@ const ProductionQuote = (props) => {
     mode: "onChange",
     defaultValues: {
       gainPercentage:
-        props.quoteOptions && props.quoteOptions?.gainPercentage !== undefined
+        props.quoteOptions?.gainPercentage !== undefined
           ? parseFloat(props.quoteOptions.gainPercentage)
-          : 45,
+          : undefined,
       salesCommission:
-        props.quoteOptions && props.quoteOptions?.salesCommission !== undefined
+        props.quoteOptions?.salesCommission !== undefined
           ? props.quoteOptions.salesCommission
-          : 0,
+          : undefined,
     },
   });
 
@@ -76,8 +76,10 @@ const ProductionQuote = (props) => {
     ? {
         gainMin: useSettings["pricing.gain.min"],
         gainMax: useSettings["pricing.gain.max"],
+        gainDef: useSettings["pricing.gain.def"],
         commissionMin: useSettings["pricing.commission.min"],
         commissionMax: useSettings["pricing.commission.max"],
+        commissionDef: useSettings["pricing.commission.def"],
       }
     : null;
 
@@ -172,6 +174,30 @@ const ProductionQuote = (props) => {
 
     fetchSettings();
   }, []);
+
+  useEffect(() => {
+    if (!useSettings) return;
+
+    // 👉 SOLO para cotización nueva
+    if (!props.quoteOptions) {
+      const gainDef = useSettings["pricing.gain.def"];
+      const commissionDef = useSettings["pricing.commission.def"];
+
+      if (gainDef !== undefined) {
+        setValue("gainPercentage", gainDef, {
+          shouldValidate: true,
+          shouldDirty: false,
+        });
+      }
+
+      if (commissionDef !== undefined) {
+        setValue("salesCommission", commissionDef, {
+          shouldValidate: true,
+          shouldDirty: false,
+        });
+      }
+    }
+  }, [useSettings, props.quoteOptions, setValue]);
 
   const quote = calculateQuote();
 

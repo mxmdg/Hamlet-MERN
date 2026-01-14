@@ -42,7 +42,7 @@ export const LogPage = () => {
                 form={tenantsDataForm}
                 collection="tenants"
                 task="new"
-                title="Agregar nueva Imprenta"
+                title="Registrar Imprenta"
                 variant={variant4All}
                 color={color4All}
               />
