@@ -1,3 +1,5 @@
+import { databaseURL } from "../../Config/config";
+
 export const roundCents = (value) => {
   return Math.round(value * 100) / 100;
 };
@@ -33,28 +35,32 @@ export const currencyFormat = (value) => {
 
 export const currencyCotization = async (code = "usd") => {
   try {
-    const response = await fetch(
-      `https://api.bcra.gob.ar/estadisticascambiarias/v1.0/Cotizaciones/${code}`
-    );
+    const response = await fetch(`${databaseURL}apibcra`, code);
+
     if (!response.ok) {
-      return new Error(`API responded with status ${response.status}`);
+      // Es mejor lanzar el error para que el 'catch' lo atrape
+      throw new Error(`Error en el servidor: ${response.status}`);
     }
     const data = await response.json();
+    //console.log(data);
     return data;
   } catch (error) {
-    console.error("Error fetching currency data:", error);
+    //console.log(error);
     return error;
   }
 };
 
 export const currencyCotizationPerDate = async (code = "usd", date) => {
   try {
-    const response = await fetch(
-      `https://api.bcra.gob.ar/estadisticascambiarias/v1.0/Cotizaciones/${code}?fechaDesde=${date}&fechaHasta=${date}`
-    );
+    const response = await fetch(`${databaseURL}apibcra-date`, {
+      body: JSON.stringify({ code: code, date: date }), // Enviamos el código (ej: "usd")
+    });
+
     const data = await response.json();
+    //console.log(data);
     return data;
   } catch (error) {
+    //console.log(error);
     return error;
   }
 };

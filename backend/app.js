@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const uuid = require("uuid");
 const Membership = require("./models/memberships");
+const apiBCRA = require("./services/api_bcra");
 
 //settings
 app.set("port", process.env.PORT || 5000);
@@ -311,6 +312,21 @@ app.use(
   require("./routes/memberships")
 );
 
+app.use(
+  "/apibcra",
+  requireRoleByMethod({
+    get: "public", // todos pueden hacer GET
+  }),
+  apiBCRA.getCotization
+);
+
+app.use(
+  "/apibcra-date",
+  requireRoleByMethod({
+    get: "public", // todos pueden hacer GET
+  }),
+  apiBCRA.getCotizationPerDate
+);
 // error handler
 app.use(function (err, req, res, next) {
   // set locals, only providing error in development

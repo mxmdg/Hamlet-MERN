@@ -28,8 +28,10 @@ services:
       context: ./frontend
       dockerfile: Dockerfile.prod
     container_name: hamlet-frontend
+    # Importante: El frontend servido por Nginx no lee el .env en runtime, 
+    # pero lo dejamos por si tu config de Nginx usa variables.
     env_file:
-      - ./frontend/.env
+      - ./frontend/.env.production 
     ports:
       - "80:80"
     depends_on:

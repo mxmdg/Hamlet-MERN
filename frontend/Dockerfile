@@ -1,12 +1,13 @@
-FROM node:18-alpine
+FROM nginx:stable-alpine
 
-WORKDIR /app
+# 1. Borramos la configuración por defecto de Nginx para que no haya conflictos
+RUN rm /etc/nginx/conf.d/default.conf
 
-COPY package*.json ./
-RUN npm install
+# 2. Copiamos TU archivo y lo renombramos a default.conf en el destino
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-COPY . .
+# 3. Copiamos el build
+COPY ./build /usr/share/nginx/html
 
-EXPOSE 3000
-
-CMD ["npm", "start"]
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]

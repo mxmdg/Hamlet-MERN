@@ -73,7 +73,7 @@ const PricesMainContainer = () => {
         setCotizationEnable(true);
         setLoading(false);
       } catch (error) {
-        setError({ message: error.message || "Error obteniendo cotizacion" });
+        setCotizationEnable(false);
         setLoading(false);
       }
     };
@@ -86,12 +86,12 @@ const PricesMainContainer = () => {
       <ErrorMessage
         message={error?.message || "Unknown error"}
         action={() => {
-          navigate(-1);
           setLoading(false);
+          setError(null);
           setCotizationEnable(false);
         }}
-        buttonTxt={"Volver"}
-        title="Error!"
+        buttonTxt={"Aceptar"}
+        title="Error de BCRA"
       />
     </Container>
   );
