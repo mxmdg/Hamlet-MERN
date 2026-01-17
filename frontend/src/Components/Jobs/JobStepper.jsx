@@ -30,7 +30,7 @@ import {
   fechtData,
 } from "../customHooks/FetchDataHook";
 
-import { serverURL, databaseURL } from "../Config/config";
+import { serverURL, HAMLET_API } from "../Config/config";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import PartCard from "./PartCard";
 
@@ -162,7 +162,7 @@ const JobStepper = (props) => {
     Job.Partes = useParts;
     try {
       const res = await putPrivateElement(
-        `${databaseURL}jobs/${props.job._id}`,
+        `${HAMLET_API}jobs/${props.job._id}`,
         Job
       );
       handleNext();

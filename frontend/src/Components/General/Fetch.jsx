@@ -3,7 +3,7 @@ import axios from "axios";
 import ItemsDetails from "./itemsDetails";
 import "../../Styles/hamlet.css";
 import "../Stocks/Stocks.css";
-import { databaseURL } from "../Config/config";
+import { HAMLET_API } from "../Config/config";
 import ItemsTable from "./ItemsTable";
 import CircularColor from "./Spinner";
 import { Paper, Container, TextField, MenuItem, Stack } from "@mui/material";

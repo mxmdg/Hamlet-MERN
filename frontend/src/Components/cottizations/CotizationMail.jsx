@@ -1,4 +1,4 @@
-import { databaseURL } from "../Config/config";
+import { HAMLET_API } from "../Config/config";
 
 export const CotizationMail = ({ cotizacion, cliente, items, jobName }) => {
   const currencyFormat = (num) => {
@@ -61,7 +61,7 @@ export const CotizationMail = ({ cotizacion, cliente, items, jobName }) => {
     <hr/>
     <p>
     <button 
-        href={"${databaseURL}/quotations/${cotizacion._id}/"} 
+        href={"${HAMLET_API}/quotations/${cotizacion._id}/"} 
         style={{
         backgroundColor: "#4CAF50",
         color: "white",
@@ -75,7 +75,7 @@ export const CotizationMail = ({ cotizacion, cliente, items, jobName }) => {
     </button>
 
     <button 
-        href={"${databaseURL}/quotations/${cotizacion._id}/"} 
+        href={"${HAMLET_API}/quotations/${cotizacion._id}/"} 
         style={{
         backgroundColor: "#F44336",
         color: "white",

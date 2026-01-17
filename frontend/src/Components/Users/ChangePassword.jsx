@@ -9,7 +9,7 @@ import {
   Button,
 } from "@mui/material";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
-import { serverURL, databaseURL } from "../Config/config";
+import { HAMLET_API } from "../Config/config";
 import { putPrivateElement } from "../customHooks/FetchDataHook";
 
 const ChangePassword = (props) => {
@@ -30,7 +30,7 @@ const ChangePassword = (props) => {
       // Hacer la solicitud para cambiar la contraseña
       if (user) {
         const response = await putPrivateElement(
-          `${serverURL}/hamlet/users/${user._id}/change-password`,
+          `${HAMLET_API}/users/${user._id}/change-password`,
           data
         );
       }

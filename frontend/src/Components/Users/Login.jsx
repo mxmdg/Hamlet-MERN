@@ -21,7 +21,7 @@ import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import { Grid } from "@mui/material";
-import { serverURL, databaseURL, url } from "../Config/config";
+import { serverURL, HAMLET_API, url } from "../Config/config";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import { AuthContext } from "../context/AuthContext";
 import { useContext } from "react";
@@ -60,7 +60,9 @@ export const Login = (props) => {
     try {
       setLoading(true);
       setError("");
-      const token = await axios.post(databaseURL + "users/login", data);
+      console.log(data);
+      console.log(HAMLET_API);
+      const token = await axios.post(HAMLET_API + "users/login", data);
       if (token.data.message) {
         setError({
           message: token.data.message,
@@ -87,6 +89,7 @@ export const Login = (props) => {
         return;
       }
     } catch (e) {
+      console.log(e);
       setError({
         message: "Fallo el login: " + e,
         action: { resetError },
@@ -101,7 +104,7 @@ export const Login = (props) => {
     setError("");
     try {
       const response = await axios.post(
-        `${databaseURL}users/forgot-password`,
+        `${HAMLET_API}users/forgot-password`,
         data
       );
       setSuccessMessage({

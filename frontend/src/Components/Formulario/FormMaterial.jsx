@@ -7,7 +7,7 @@ import { useForm, Controller } from "react-hook-form";
 
 //Hamlet services imports
 
-import { serverURL, databaseURL } from "../Config/config";
+import { serverURL, HAMLET_API } from "../Config/config";
 //import "./form.css";
 import {
   addPrivateElement,
@@ -205,7 +205,7 @@ const FormMaterial = (props) => {
       }
     } else {
       try {
-        await putPrivateElement(`${databaseURL}${collection}/${id}`, formData);
+        await putPrivateElement(`${HAMLET_API}${collection}/${id}`, formData);
         navigate(-1);
         //props.editor(true);
       } catch (e) {

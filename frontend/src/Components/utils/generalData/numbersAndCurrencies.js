@@ -1,4 +1,4 @@
-import { databaseURL } from "../../Config/config";
+import { HAMLET_API } from "../../Config/config";
 
 export const roundCents = (value) => {
   return Math.round(value * 100) / 100;
@@ -35,7 +35,7 @@ export const currencyFormat = (value) => {
 
 export const currencyCotization = async (code = "usd") => {
   try {
-    const response = await fetch(`${databaseURL}apibcra`, code);
+    const response = await fetch(`${HAMLET_API}apibcra`, code);
 
     if (!response.ok) {
       // Es mejor lanzar el error para que el 'catch' lo atrape
@@ -52,7 +52,7 @@ export const currencyCotization = async (code = "usd") => {
 
 export const currencyCotizationPerDate = async (code = "usd", date) => {
   try {
-    const response = await fetch(`${databaseURL}apibcra-date`, {
+    const response = await fetch(`${HAMLET_API}apibcra-date`, {
       body: JSON.stringify({ code: code, date: date }), // Enviamos el código (ej: "usd")
     });
 

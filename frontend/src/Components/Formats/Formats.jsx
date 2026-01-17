@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import FormatDataForm from "../Formulario/FormatDataForm";
 import ItemsDetails from "../General/itemsDetails";
 // import "../../Styles/hamlet.css";
 // import "../Stocks/Stocks.css";
-import { serverURL } from "../Config/config";
+import { HAMLET_API } from "../Config/config";
 import Grid from "@mui/material/Unstable_Grid2"; // Grid version 2
 import Spinner from "../General/Spinner";
 
@@ -14,7 +14,7 @@ const Formats = (props) => {
   const [useLoading, setLoading] = useState(true);
 
   const getElements = async () => {
-    const formats = await axios.get(`${serverURL}/hamlet/${props.collection}/`);
+    const formats = await axios.get(`${HAMLET_API}/${props.collection}/`);
     setLoading(false);
     setFormatList(formats.data);
   };

@@ -4,7 +4,7 @@ import StockDataForm from "../Formulario/StockDataForm";
 import ItemsDetails from "../General/itemsDetails";
 // import "../../Styles/hamlet.css";
 // import "./Stocks.css";
-import { serverURL } from "../Config/config";
+import { HAMLET_API } from "../Config/config";
 import Grid from "@mui/material/Unstable_Grid2"; // Grid version 2
 import Spinner from "../General/Spinner";
 
@@ -16,7 +16,7 @@ const Stocks = (props) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get(`${serverURL}/hamlet/${props.collection}`);
+        const res = await axios.get(`${HAMLET_API}/${props.collection}`);
         setStockList(res.data);
         setEdit(false);
         setLoading(false);

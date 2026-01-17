@@ -63,6 +63,25 @@ export const calcularLomo = (pags, resma) => {
   return Math.ceil(Math.ceil(pags / 2) * (resma / 500));
 };
 
+/**
+ * ⚠️ COMPLEX COMPONENT WARNING
+ *
+ * JobDetail maneja:
+ * - visualización de Job
+ * - imposición
+ * - cotizaciones (snapshot histórico)
+ * - plan de producción
+ * - cálculo de materiales
+ *
+ * Este componente mezcla modos "edit" y "quotation".
+ * Funciona, pero NO es mantenible.
+ *
+ * TODO (future):
+ * - separar JobViewModel
+ * - dividir en subcomponentes
+ * - congelar cotización
+ */
+
 const JobDetail = (props) => {
   const [expanded, setExpanded] = useState(false);
   const [job, setJob] = useState(props.job);

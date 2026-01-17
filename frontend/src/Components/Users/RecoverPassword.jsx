@@ -10,7 +10,7 @@ import {
   Button,
 } from "@mui/material";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
-import { databaseURL, serverURL, url } from "../Config/config";
+import { HAMLET_API, serverURL, url } from "../Config/config";
 import axios from "axios";
 
 const ResetPassword = () => {
@@ -36,7 +36,7 @@ const ResetPassword = () => {
     try {
       // Hacer la solicitud para restablecer la contraseña
       const response = await axios.put(
-        `${databaseURL}users/resetPassword/${token}`,
+        `${HAMLET_API}users/resetPassword/${token}`,
         data
       );
       setSuccessMessage(response.data.message);

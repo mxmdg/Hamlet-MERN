@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { databaseURL } from "../Config/config";
+import { HAMLET_API } from "../Config/config";
 import { useNavigate } from "react-router-dom";
 
 //Mui Material Imports
@@ -466,7 +466,6 @@ const JobFinder = (props) => {
                                 color={inputsColor}
                                 label="Maximo"
                                 fullWidth
-                                value={useQuery ?? ""}
                                 onBlur={(e) => {
                                   setURL(null);
                                   setMax(e.target.value);

@@ -2,8 +2,9 @@
 //export const url = "http://192.168.0.198:";
 //export const url = "http://192.168.56.1:";
 //export const url = "http://192.168.0.137:";
-export const url = process.env.REACT_APP_BASE_URL || "http://192.168.0.198:";
-export const backendPort = "5000";
-export const serverURL = url + "3000";
-export const databaseURL = url + "5000/hamlet/";
-export const VALIDATE_PDF = url + "8000/upload";
+export const API_BASE = `${process.env.REACT_APP_API_HOST}:${process.env.REACT_APP_API_PORT}`;
+
+// módulos
+export const HAMLET_API = `${API_BASE}/Hamlet/`;
+export const HEALTH_API = `${API_BASE}/health`;
+export const VALIDATE_PDF = `${process.env.REACT_APP_API_HOST}:8000/upload`;

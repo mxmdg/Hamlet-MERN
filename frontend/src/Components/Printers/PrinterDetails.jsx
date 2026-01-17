@@ -1,42 +1,28 @@
 import "./printers.css";
 import Cmyk from "./Cmyk";
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import axios from "axios";
-import { serverURL } from "../Config/config";
+import { HAMLET_API } from "../Config/config";
 import { useNavigate } from "react-router-dom";
 
 import { NewSimpleLineChart } from "../utils/stats/NewSimpleLineChart";
 import FormMaterial from "../Formulario/FormMaterial";
 import PrintersDataForm from "../Formulario/PrintersDataForm";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
-import NewStackedBarChart from "../utils/stats/NewStackedBarChart";
 import { spanishFormat } from "../utils/generalData/numbersAndCurrencies";
-import {
-  getMyDate,
-  getWeekNumber,
-  handleDate,
-  procesarFechaISO,
-} from "../utils/generalData/fechaDiccionario";
+import { procesarFechaISO } from "../utils/generalData/fechaDiccionario";
 
 import {
-  Avatar,
   Container,
-  Box,
-  Card,
   CardContent,
   CardActions,
   List,
   ListItem,
   ListItemText,
-  Modal,
   Divider,
   CardHeader,
   Typography,
   Button,
-  IconButton,
-  Paper,
-  Stack,
-  Select,
   ButtonGroup,
 } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
@@ -60,7 +46,7 @@ const PrinterDetails = (props) => {
   const deleteClickHandler = async (id) => {
     if (window.confirm("Estas recontra seguro de borrar esta impresora?")) {
       try {
-        await axios.delete(`${serverURL}/hamlet/impresoras/${id}`);
+        await axios.delete(`${HAMLET_API}/impresoras/${id}`);
       } catch (e) {
         alert(e);
       }

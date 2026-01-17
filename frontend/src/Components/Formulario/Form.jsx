@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 //Hamlet services imports
 
-import { serverURL, databaseURL } from "../Config/config";
+import { serverURL, HAMLET_API } from "../Config/config";
 import "./form.css";
 import {
   addPrivateElement,
@@ -169,7 +169,7 @@ const Form = (props) => {
       }
     } else {
       try {
-        await putPrivateElement(`${databaseURL}${collection}/${id}`, formData);
+        await putPrivateElement(`${HAMLET_API}${collection}/${id}`, formData);
         setHidden(true);
         navigate(-1);
         //props.editor(true);

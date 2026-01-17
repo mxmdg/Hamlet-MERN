@@ -34,7 +34,7 @@ import {
   TextField,
 } from "@mui/material";
 //import { parts } from "./JobsParts";
-import { serverURL, databaseURL } from "../Config/config";
+import { serverURL, HAMLET_API } from "../Config/config";
 import {
   getPrivateElementByID,
   addPrivateElement,
@@ -232,7 +232,7 @@ export default function MyStepper(props) {
     Job.Partes = useParts;
     try {
       const res = await putPrivateElement(
-        `${databaseURL}jobs/${props.job._id}`,
+        `${HAMLET_API}jobs/${props.job._id}`,
         Job
       );
       handleNext();

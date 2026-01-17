@@ -17,7 +17,7 @@ import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import { Grid } from "@mui/material";
-import { serverURL, databaseURL } from "../Config/config";
+import { serverURL, HAMLET_API } from "../Config/config";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 
 export const Register = (props) => {
@@ -39,7 +39,7 @@ export const Register = (props) => {
 
   const onSubmit = async (data) => {
     try {
-      await axios.post(databaseURL + "users/register", data);
+      await axios.post(HAMLET_API + "users/register", data);
       console.log(data);
       navigate(-1);
     } catch (e) {

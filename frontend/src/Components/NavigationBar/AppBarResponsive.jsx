@@ -19,7 +19,7 @@ import DropdownMenu from "./DropdownMenu";
 import { AuthContext } from "../context/AuthContext";
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { serverURL, databaseURL } from "../Config/config";
+import { serverURL, HAMLET_API } from "../Config/config";
 import { ListItemButton, Paper } from "@mui/material";
 import SessionTimer from "../Users/SessionTimer";
 import FormControlLabel from "@mui/material/FormControlLabel";

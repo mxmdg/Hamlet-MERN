@@ -18,7 +18,7 @@ import {
   spanishFormat,
   currencyFormat,
 } from "../utils/generalData/numbersAndCurrencies";
-import { databaseURL } from "../Config/config";
+import { HAMLET_API } from "../Config/config";
 import { JobViewer } from "../jobViewer/JobViewer";
 import {
   patchPrivateElement,

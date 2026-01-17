@@ -34,12 +34,22 @@ export const ImpositionForm = (props) => {
   const [useLoading, setLoading] = useState(true);
 
   const filterPrinters = (printersList) => {
-    const filteredPrinters = printersList.filter(
-      (impresora) =>
-        impresora.Colores >=
-        Math.max(props.part?.ColoresFrente || 0, props.part?.ColoresDorso || 0)
-    );
-    return filteredPrinters;
+    try {
+      setLoading(true);
+      const filteredPrinters = printersList.filter(
+        (impresora) =>
+          impresora.Colores >=
+          Math.max(
+            props.part?.ColoresFrente || 0,
+            props.part?.ColoresDorso || 0
+          )
+      );
+      setLoading(false);
+      return filteredPrinters;
+    } catch (error) {
+      setLoading(false);
+      setErrorMessage(error);
+    }
   };
 
   let useFormatsFiltered = useFormats.filter(
@@ -83,6 +93,8 @@ export const ImpositionForm = (props) => {
 
       const filteredPrinters = filterPrinters(await getPrinters);
 
+      console.table(filteredPrinters);
+
       setFormats(gettedFormats);
       setPrinters(filteredPrinters);
       setLoading(false);
@@ -104,44 +116,17 @@ export const ImpositionForm = (props) => {
 
   useEffect(() => {
     fetchingData();
-    if (props.impositionSettings?.printerSelector && usePrinters.length) {
-      const validPrinter = usePrinters.find(
-        (p) => p._id === props.impositionSettings.printerSelector._id
-      );
-
-      if (validPrinter) {
-        setSelectedPrinter(validPrinter);
-        setValue("printerSelector", validPrinter._id);
-      } else {
-        // impresora inválida → reset limpio
-        setSelectedPrinter({});
-        setValue("printerSelector", "");
-      }
+    if (props.impositionSettings?.printerSelector) {
+      setSelectedPrinter(props.impositionSettings?.printerSelector);
     }
-
     // Inicializar formato y tamaño personalizado si corresponde
     if (props.impositionSettings?.formatSelector === "Personalizado") {
       setCustomFormat(true);
       setSelectedFormat("Personalizado");
+    } else if (props.impositionSettings?.formatSelector) {
+      setSelectedFormat(props.impositionSettings?.formatSelector);
+      setCustomFormat(false);
     }
-    if (
-      props.impositionSettings?.formatSelector &&
-      props.impositionSettings.formatSelector !== "Personalizado"
-    ) {
-      const validFormat = useFormatsFiltered.find(
-        (f) => f._id === props.impositionSettings.formatSelector._id
-      );
-
-      if (validFormat) {
-        setSelectedFormat(validFormat);
-        setCustomFormat(false);
-        setValue("formatSelector", validFormat._id);
-      } else {
-        setSelectedFormat("");
-        setValue("formatSelector", "");
-      }
-    }
-
     if (props.impositionSettings) {
       setValue(
         "printerSelector",
@@ -185,7 +170,8 @@ export const ImpositionForm = (props) => {
                 name={"printerSelector"}
                 variant="outlined"
                 color="primary"
-                value={useSelectedPrinter._id || ""}
+                value={useSelectedPrinter?._id ?? ""}
+                SelectProps={{ displayEmpty: true }}
                 label="Impresora"
                 size="small"
                 margin="dense"

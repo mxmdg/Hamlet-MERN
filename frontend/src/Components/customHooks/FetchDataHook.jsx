@@ -1,13 +1,12 @@
 import axios from "axios";
-import { databaseURL, url, backendPort } from "../Config/config";
-import { getMyDate } from "../utils/generalData/fechaDiccionario";
+import { HAMLET_API, HEALTH_API } from "../Config/config";
 
 export const fechtData = async (collection, setFunction) => {
   const token = localStorage.getItem("token");
   const memberships = JSON.parse(localStorage.getItem("memberships") || "[]");
   const tenantId = memberships[0]?.tenant?.id;
   try {
-    const res = await axios.get(`${databaseURL}${collection}`, {
+    const res = await axios.get(`${HAMLET_API}${collection}`, {
       headers: {
         Authorization: `Bearer ${token}`,
         "X-Tenant": tenantId,
@@ -21,7 +20,7 @@ export const fechtData = async (collection, setFunction) => {
 
 export const checkHealth = async () => {
   try {
-    const res = await axios.get(`${url}${backendPort}/health`);
+    const res = await axios.get(`${HEALTH_API}`);
     /* console.log(
       `Health check response: ${res.data.status} ${
         getMyDate(res.data.timestamp).ddmmyy
@@ -43,7 +42,7 @@ export const getPrivateElements = async (collection) => {
     throw new Error("Imprenta activa no encontrada");
   }
 
-  const elements = await axios.get(`${databaseURL}${collection}`, {
+  const elements = await axios.get(`${HAMLET_API}${collection}`, {
     headers: {
       Authorization: `Bearer ${token}`,
       "X-Tenant": tenantId,
@@ -62,7 +61,7 @@ export const getPrivateElementByID = async (collection, id) => {
     throw new Error("Tenant activo no encontrado");
   }
 
-  const elements = await axios.get(`${databaseURL}${collection}/${id}`, {
+  const elements = await axios.get(`${HAMLET_API}${collection}/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
       "X-Tenant": tenantId,
@@ -77,7 +76,7 @@ export const addPrivateElement = async (collection, formData) => {
   const memberships = JSON.parse(localStorage.getItem("memberships") || "[]");
   const tenantId = memberships[0]?.tenant?.id;
   try {
-    const elements = await axios.post(`${databaseURL + collection}`, formData, {
+    const elements = await axios.post(`${HAMLET_API + collection}`, formData, {
       headers: {
         Authorization: `Bearer ${token}`,
         "X-Tenant": tenantId,
@@ -122,7 +121,7 @@ export const patchPrivateElement = async (collection, id, formData) => {
   const tenantId = memberships[0]?.tenant?.id;
   try {
     const elements = await axios.patch(
-      `${databaseURL + collection}/${id}`,
+      `${HAMLET_API + collection}/${id}`,
       formData,
       {
         headers: {
@@ -142,7 +141,7 @@ export const deletePrivateElement = async (collection, id) => {
   const memberships = JSON.parse(localStorage.getItem("memberships") || "[]");
   const tenantId = memberships[0]?.tenant?.id;
   try {
-    const elements = await axios.delete(`${databaseURL + collection}/${id}`, {
+    const elements = await axios.delete(`${HAMLET_API + collection}/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
         "X-Tenant": tenantId,

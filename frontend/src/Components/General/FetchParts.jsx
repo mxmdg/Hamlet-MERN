@@ -3,7 +3,7 @@ import axios from "axios";
 import ItemsDetails from "./itemsDetails";
 import "../../Styles/hamlet.css";
 import "../Stocks/Stocks.css";
-import { databaseURL } from "../Config/config";
+import { HAMLET_API } from "../Config/config";
 import ItemsTable from "./ItemsTable";
 import CircularColor from "./Spinner";
 import { Paper, Container, TextField, MenuItem, Stack } from "@mui/material";
@@ -45,7 +45,6 @@ const FetchParts = (props) => {
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
-  
 
   const filterList = (query, column) => {
     //Inicializar o reiniciar variables
@@ -106,15 +105,16 @@ const FetchParts = (props) => {
             colors: `${p.ColoresFrente} / ${p.ColoresDorso || "0"}`,
             stock: `${p.partStock.Marca} ${p.partStock.Tipo} ${p.partStock.Gramaje}`,
             _id: p._id,
-          }
-        arr.push(data);
+          };
+          arr.push(data);
         });
-        setList(arr)
+        setList(arr);
         setHeaders(() => {
           const arr = [];
-          const labels = useList.length > 0
-            ? Object.getOwnPropertyNames(useList[0])
-            : ["Error", "Datos inexistentes"];
+          const labels =
+            useList.length > 0
+              ? Object.getOwnPropertyNames(useList[0])
+              : ["Error", "Datos inexistentes"];
           labels.map((e) => {
             const obj = {
               id: e,
@@ -125,7 +125,7 @@ const FetchParts = (props) => {
             arr.push(obj);
           });
           return arr;
-        });    
+        });
       } catch (error) {
         console.log(error);
         setError(error);
@@ -198,16 +198,16 @@ const FetchParts = (props) => {
           data={useFilteredList.length > 0 ? useFilteredList : useList}
         />
         <TablePagination
-        component="div"
-        count={rows.length}
-        rowsPerPageOptions={[5, 10, 15, 20, 25]}
-        showFirstButton={true}
-        showLastButton={true}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
+          component="div"
+          count={rows.length}
+          rowsPerPageOptions={[5, 10, 15, 20, 25]}
+          showFirstButton={true}
+          showLastButton={true}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
       </DarkWoodCard>
     </>
   );
