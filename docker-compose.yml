@@ -20,7 +20,7 @@ services:
     depends_on:
       - mongo
     ports:
-      - "5000:5000"
+      - "127.0.0.1:5000:5000"
     restart: always
 
   frontend:
@@ -28,10 +28,12 @@ services:
       context: ./frontend
       dockerfile: Dockerfile.prod
     container_name: hamlet-frontend
+    # Importante: El frontend servido por Nginx no lee el .env en runtime, 
+    # pero lo dejamos por si tu config de Nginx usa variables.
     env_file:
       - ./frontend/.env.production 
     ports:
-      - "3000:80"   # ⬅️ CAMBIO CLAVE (antes era 80:80)
+      - "127.0.0.1:3000:80"
     depends_on:
       - backend
     restart: always

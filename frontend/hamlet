@@ -1,0 +1,42 @@
+server {
+    listen 80 default_server; # <--- Agregado default_server
+    server_name hamlet.com.ar www.hamlet.com.ar;
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl default_server; # <--- Agregado default_server
+    server_name hamlet.com.ar www.hamlet.com.ar;
+
+    ssl_certificate /etc/letsencrypt/live/hamlet.com.ar/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/hamlet.com.ar/privkey.pem;
+
+    # 1. FRONTEND
+    location / {
+    proxy_pass http://127.0.0.1:3000; # <--- CAMBIA ESTO
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+}
+
+    # 2. BACKEND (HAMLET)
+    location /Hamlet/ {
+    proxy_pass http://127.0.0.1:5000/Hamlet/; # <--- CAMBIA ESTO
+    proxy_http_version 1.1;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+}
+
+    # 3. BACKEND (HEALTH)
+    location /health {
+        proxy_pass http://127.0.0.1:5000/health;
+        proxy_http_version 1.1;
+    }
+
+    # 4. VALIDATE PDF (Si tienes otro servicio en el 8000)
+    location /upload {
+        proxy_pass http://127.0.0.1:8000/upload;
+        proxy_http_version 1.1;
+    }
+}
