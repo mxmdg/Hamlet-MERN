@@ -93,7 +93,7 @@ export const ImpositionForm = (props) => {
 
       const filteredPrinters = filterPrinters(await getPrinters);
 
-      console.table(filteredPrinters);
+      //console.table(filteredPrinters);
 
       setFormats(gettedFormats);
       setPrinters(filteredPrinters);

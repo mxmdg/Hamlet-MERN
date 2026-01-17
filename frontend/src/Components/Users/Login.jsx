@@ -60,8 +60,6 @@ export const Login = (props) => {
     try {
       setLoading(true);
       setError("");
-      console.log(data);
-      console.log(HAMLET_API);
       const token = await axios.post(HAMLET_API + "users/login", data);
       if (token.data.message) {
         setError({
@@ -89,7 +87,6 @@ export const Login = (props) => {
         return;
       }
     } catch (e) {
-      console.log(e);
       setError({
         message: "Fallo el login: " + e,
         action: { resetError },

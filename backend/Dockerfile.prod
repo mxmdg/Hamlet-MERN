@@ -14,7 +14,7 @@ RUN npm install --omit=dev
 COPY . .
 
 # Exponemos el puerto del backend
-EXPOSE 5000:5000
+EXPOSE 5000
 
 # Comando de arranque en producción
 CMD ["node", "index.js"]
