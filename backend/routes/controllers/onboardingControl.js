@@ -70,7 +70,7 @@ onboardingController.register = async (req, res, next) => {
     });
 
     return res.status(201).json({
-      message: "Onboarding completado",
+      message: `${newUser.Name} gracias por incorporar Hamlet a ${newTenant.name}, `,
     });
   } catch (e) {
     next(e);

@@ -195,8 +195,13 @@ const FormMaterial = (props) => {
 
     if (props.task === "new" || props.task === "copy") {
       try {
-        await addPrivateElement(collection, formData);
-        navigate(-1);
+        const response = await addPrivateElement(collection, formData);
+        console.log(response);
+        setErrorMessage({
+          message: response.data.message,
+          color: "success",
+        });
+        //navigate(-1);
         if (props.setState !== undefined) {
           props.setState(true);
         }
@@ -537,9 +542,8 @@ const FormMaterial = (props) => {
 
   const alertError = (
     <ErrorMessage
-      title={"No se pudo guardar en la base de datos."}
       message={useErrorMessage}
-      severity={"error"}
+      severity={useErrorMessage?.color || "error"}
       action={resetError}
     />
   );

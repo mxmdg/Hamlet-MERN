@@ -18,10 +18,12 @@ const usersSchema = new Schema({
       "manager",
       "operator",
       "customer",
+      "master",
       "Admin",
       "Manager",
       "Operator",
       "Customer",
+      "Master",
     ],
   },
   email: {

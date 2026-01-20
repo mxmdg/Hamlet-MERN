@@ -12,6 +12,7 @@ const {
   updateStatus,
   forgotPassword,
   resetPassword,
+  hardDeleteUser,
 } = require("./controllers/usersController");
 
 /* GET users listing. */
@@ -26,5 +27,6 @@ router.put("/resetPassword/:token", resetPassword);
 router.put("/:id", updateUser);
 router.delete("/:id", updateStatus);
 router.delete("/trash/:id", updateStatus);
+router.delete("/destroy/:id", hardDeleteUser);
 
 module.exports = router;

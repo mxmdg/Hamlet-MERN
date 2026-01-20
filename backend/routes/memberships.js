@@ -8,7 +8,9 @@ router
 
 router.route("/trash").get(membershipsController.getDeletedMemberships);
 
-router.get("/user/:userId", membershipsController.getByUser);
+router
+  .get("/user/:userId", membershipsController.getByUser)
+  .delete("/user/:userId", membershipsController.getByUserAndDelete);
 router.get("/tenant/:tenantId", membershipsController.getByTenant);
 router.get("/:id", membershipsController.getMembershipById);
 router.put("/:id", membershipsController.updateMembership);

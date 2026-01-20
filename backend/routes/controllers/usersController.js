@@ -85,6 +85,18 @@ const deleteUser = async (req, res, next) => {
   }
 };
 
+const hardDeleteUser = async (req, res, next) => {
+  try {
+    const user = await usersModel.esquema.findByIdAndDelete(req.params.id);
+    if (!user)
+      return res.status(404).json({ message: "Usuario no encontrado" });
+    res.json({ message: `Usuario ${user.Name} ELIMINADO`, user });
+  } catch (error) {
+    console.error("Error:" + error);
+    next(error);
+  }
+};
+
 const updateStatus = async (req, res, next) => {
   try {
     const user = await usersModel.esquema.findById(req.params.id);
@@ -322,4 +334,5 @@ module.exports = {
   changePassword,
   forgotPassword,
   resetPassword,
+  hardDeleteUser,
 };

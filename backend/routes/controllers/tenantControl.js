@@ -1,5 +1,14 @@
 const tenant = require("../../models/tenants");
 const Membership = require("../../models/memberships");
+const Printer = require("../../models/printers");
+const Material = require("../../models/materiales");
+const Formato = require("../../models/formatos");
+const Price = require("../../models/prices");
+const JobPart = require("../../models/jobParts");
+const Job = require("../../models/Jobs");
+const Quotation = require("../../models/quotations");
+const Empresa = require("../../models/empresas");
+const Finisher = require("../../models/finishers");
 
 const flattenNestedItems = (elements) => {
   const flattened = {};
@@ -146,6 +155,149 @@ tenantsControl.updateSettings = async (req, res, next) => {
     });
   } catch (e) {
     next(e);
+  }
+};
+
+tenantsControl.hardDeleteTenant = async (req, res, next) => {
+  try {
+    const tenantId = req.params.id;
+
+    // Verificar que no haya elementos relacionados al tenant
+    const [
+      printers,
+      materials,
+      formatos,
+      prices,
+      jobParts,
+      jobs,
+      quotations,
+      empresas,
+      finishers,
+    ] = await Promise.all([
+      Printer.esquema.countDocuments({ tenant: tenantId }),
+      Material.esquema.countDocuments({ tenant: tenantId }),
+      Formato.esquema.countDocuments({ tenant: tenantId }),
+      Price.esquema.countDocuments({ tenant: tenantId }),
+      JobPart.esquema.countDocuments({ tenant: tenantId }),
+      Job.esquema.countDocuments({ tenant: tenantId }),
+      Quotation.esquema.countDocuments({ tenant: tenantId }),
+      Empresa.esquema.countDocuments({ tenant: tenantId }),
+      Finisher.esquema.countDocuments({ tenant: tenantId }),
+    ]);
+
+    const totalElements =
+      printers +
+      materials +
+      formatos +
+      prices +
+      jobParts +
+      jobs +
+      quotations +
+      empresas +
+      finishers;
+
+    if (totalElements > 0) {
+      return res.status(400).json({
+        message:
+          "No se puede eliminar el tenant porque contiene elementos relacionados",
+        details: {
+          printers,
+          materials,
+          formatos,
+          prices,
+          jobParts,
+          jobs,
+          quotations,
+          empresas,
+          finishers,
+        },
+      });
+    }
+
+    const deletedTenant = await tenant.esquema.findByIdAndDelete(tenantId);
+
+    res.json({
+      message: `${deletedTenant.name} eliminado correctamente`,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+tenantsControl.definitiveDelete = async (req, res, next) => {
+  try {
+    const tenantId = req.params.id;
+
+    // Obtener datos del tenant antes de eliminarlo
+    const deletedTenant = await tenant.esquema.findById(tenantId);
+
+    if (!deletedTenant) {
+      return res.status(404).json({ message: "Tenant no encontrado" });
+    }
+
+    // Eliminar todos los elementos relacionados con el tenant en paralelo
+    const deletionResults = await Promise.allSettled([
+      Printer.esquema.deleteMany({ tenant: tenantId }),
+      Material.esquema.deleteMany({ tenant: tenantId }),
+      Formato.esquema.deleteMany({ tenant: tenantId }),
+      Price.esquema.deleteMany({ tenant: tenantId }),
+      JobPart.esquema.deleteMany({ tenant: tenantId }),
+      Job.esquema.deleteMany({ tenant: tenantId }),
+      Quotation.esquema.deleteMany({ tenant: tenantId }),
+      Empresa.esquema.deleteMany({ tenant: tenantId }),
+      Finisher.esquema.deleteMany({ tenant: tenantId }),
+    ]);
+
+    // Eliminar el tenant
+    await tenant.esquema.findByIdAndDelete(tenantId);
+
+    // Contar cuántos elementos fueron eliminados
+    const deletedCounts = {
+      printers:
+        deletionResults[0].status === "fulfilled"
+          ? deletionResults[0].value.deletedCount
+          : 0,
+      materials:
+        deletionResults[1].status === "fulfilled"
+          ? deletionResults[1].value.deletedCount
+          : 0,
+      formatos:
+        deletionResults[2].status === "fulfilled"
+          ? deletionResults[2].value.deletedCount
+          : 0,
+      prices:
+        deletionResults[3].status === "fulfilled"
+          ? deletionResults[3].value.deletedCount
+          : 0,
+      jobParts:
+        deletionResults[4].status === "fulfilled"
+          ? deletionResults[4].value.deletedCount
+          : 0,
+      jobs:
+        deletionResults[5].status === "fulfilled"
+          ? deletionResults[5].value.deletedCount
+          : 0,
+      quotations:
+        deletionResults[6].status === "fulfilled"
+          ? deletionResults[6].value.deletedCount
+          : 0,
+      empresas:
+        deletionResults[7].status === "fulfilled"
+          ? deletionResults[7].value.deletedCount
+          : 0,
+      finishers:
+        deletionResults[8].status === "fulfilled"
+          ? deletionResults[8].value.deletedCount
+          : 0,
+    };
+
+    res.json({
+      message: `Tenant "${deletedTenant.name}" y todos sus elementos relacionados han sido eliminados`,
+      deletedTenant: deletedTenant.name,
+      deletedElements: deletedCounts,
+    });
+  } catch (error) {
+    next(error);
   }
 };
 

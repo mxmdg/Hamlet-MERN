@@ -68,12 +68,23 @@ membershipsController.getMembershipById = async (req, res, next) => {
 
 membershipsController.getByUser = async (req, res, next) => {
   try {
-    const tenant = req.header("x-tenant");
+    //const tenant = req.header("x-tenant");
     const memberships = await Membership.find({
       userId: req.params.userId,
-      tenant,
     }).populate("tenant", "key name status");
     res.json(memberships);
+  } catch (e) {
+    next(e);
+  }
+};
+
+membershipsController.getByUserAndDelete = async (req, res, next) => {
+  try {
+    //const tenant = req.header("x-tenant");
+    const memberships = await Membership.findOneAndDelete({
+      userId: req.params.userId,
+    });
+    res.json(`Membresia Eliminada ${memberships._id}`);
   } catch (e) {
     next(e);
   }
