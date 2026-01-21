@@ -1,9 +1,7 @@
 const usersModel = require("../../models/usersSchema");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const nodemailer = require("nodemailer");
 const uuid = require("uuid");
-const mailAccount = { user: process.env.MAILUSER, pass: process.env.MAILPASS };
 const mailer = require("../../services/mail");
 const Membership = require("../../models/memberships");
 
@@ -239,48 +237,17 @@ const forgotPassword = async (req, res, next) => {
     user.resetPasswordExpires = Date.now() + expireTime; // 1 dia de expiración
     await user.save();
 
-    // Enviar correo electrónico con el enlace para restablecer la contraseña
-    const transporterOutOfService = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 465,
-      secure: true, // true for 465, false for other ports
-      auth: {
-        user: mailAccount.user, // tu dirección de correo electrónico de Gmail
-        pass: mailAccount.pass, // tu contraseña de Gmail
-      },
-    });
-
-    // verify connection configuration
-    mailer.transporter.verify(function (error, success) {
-      if (error) {
-        console.log(error);
-      } else {
-        console.log("Server is ready to take our messages");
-      }
-    });
-
-    const resetPasswordLink = `${process.env.URL}${uiPort}/users/reset-password/${token}`;
+    const resetPasswordLink = `www.hamlet.com.ar/users/reset-password/${token}`;
     const mailOptions = {
-      from: "webapproval@imprentadorrego.com.ar",
+      from: "Seguridad Hamlet <no-reply@hamlet.com.ar>",
       to: email,
       subject: "Recuperar mi contraseña en Hamlet",
       text: `Para restablecer tu contraseña, hacé clic en el siguiente enlace: ${resetPasswordLink}`,
     };
 
-    mailer.transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        console.log(error);
-        return res.status(500).json({
-          message:
-            "Error al enviar el correo electrónico de recuperación de contraseña: " +
-            error,
-        });
-      } else {
-        return res.status(200).json({
-          message: "Revisá tu correo " + resetPasswordLink,
-        });
-      }
-    });
+    await mailer.sendMailByResend(mailOptions);
+
+    res.json({ message: "Correo de recuperación enviado" });
   } catch (error) {
     console.error("Error al solicitar recuperación de contraseña:", error);
     next(error);

@@ -1,11 +1,7 @@
 const quotations = require("../../models/quotations");
 const Jobs = require("../../models/Jobs");
 const Users = require("../../models/usersSchema");
-const nodemailer = require("nodemailer");
-const uuid = require("uuid");
-const mailAccount = { user: process.env.MAILUSER, pass: process.env.MAILPASS };
-//const mailer = require("../../services/mail");
-const { sendMail } = require("../../services/mail");
+const { sendMailByResend } = require("../../services/mail");
 const { getTenantSettings } = require("../../services/getTenantSettings");
 
 function extractMailSettings(flatSettings) {
@@ -205,41 +201,37 @@ quotationsControl.updateQuotation = async (req, res) => {
 
 quotationsControl.sendQuotationEmail = async (req, res, next) => {
   try {
-    const { quotationId, toEmail, subject, message, html } = req.body;
+    const { toEmail, subject, message, html } = req.body;
+    const tenantId = req.header("x-tenant");
+
+    // 1. Obtenemos los ajustes del tenant
+    const settings = await getTenantSettings(tenantId);
+
+    // 2. Extraemos solo lo que necesitamos para la nueva lógica
+    // Usamos el mail configurado como 'from' en tu tabla para el 'replyTo'
+    const tenantReplyEmail = settings["mail.from"] || settings["mail.user"];
+    // Podrías obtener el nombre de la imprenta de los ajustes si existe
+    const tenantName = settings["tenant.name"] || "Imprenta";
 
     if (!toEmail) {
-      return res.status(400).json({
-        message: "La dirección de correo no es válida",
-      });
+      return res
+        .status(400)
+        .json({ message: "La dirección de correo no es válida" });
     }
 
-    const tenant = req.header("x-tenant");
-
-    console.log(tenant); //6959117c2456ff4ead71ac49
-
-    // ✅ ACÁ está la clave
-    const settings = await getTenantSettings(tenant);
-
-    const mailSettings = extractMailSettings(settings);
-
-    if (!mailSettings.user || !mailSettings.pass) {
-      return res.status(400).json({
-        message: "El correo de la empresa no está configurado",
-      });
-    }
-
-    await sendMail({
-      mailSettings,
-      mailDetails: {
-        to: toEmail,
-        subject,
-        text: message,
-        html: html || message.replace(/\n/g, "<br/>"),
-      },
+    // 3. Enviamos vía Resend (usando la función que ya tenés)
+    await sendMailByResend({
+      from: `${tenantName} <no-reply@hamlet.com.ar>`, // Identidad de Hamlet, nombre de Imprenta
+      to: toEmail,
+      subject: subject,
+      text: message,
+      html: html || message.replace(/\n/g, "<br/>"),
+      reply_to: tenantReplyEmail, // <-- ACÁ sucede la magia del contacto directo
+      bcc: [tenantReplyEmail], // <-- Copia oculta para el historial del cliente
     });
 
     return res.status(200).json({
-      message: "Correo enviado exitosamente",
+      message: "Presupuesto enviado exitosamente",
     });
   } catch (error) {
     console.error("Error al enviar cotización:", error);

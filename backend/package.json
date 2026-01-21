@@ -24,6 +24,7 @@
     "nodemailer": "^6.9.9",
     "nodemon": "^2.0.22",
     "openai": "^4.20.1",
+    "resend": "^6.8.0",
     "uuid": "^9.0.1"
   },
   "devDependencies": {

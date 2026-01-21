@@ -100,56 +100,24 @@ let preferencesForm = [
     help: "Porcentaje predeterminado de comisión (valor por defecto 0%).",
   },
 
-  // Mail
+  // Mail simplificado
+  {
+    inputName: "mail.displayName", // Nuevo campo
+    label: "Nombre de la Imprenta",
+    type: "Text",
+    id: "mail_display_name",
+    help: "Nombre que verán tus clientes al recibir el presupuesto (ej: Imprenta Dorrego).",
+  },
   {
     inputName: "mail.from",
-    label: "Mail desde (from)",
+    label: "Mail de contacto (Responder a)",
     type: "email",
     id: "mail_from",
-    help: "Dirección de correo remitente usada por el sistema.",
-  },
-  {
-    inputName: "mail.host",
-    label: "Host SMTP",
-    type: "Text",
-    id: "mail_host",
-    help: "Servidor SMTP (ej: smtp.mail.com).",
-  },
-  {
-    inputName: "mail.port",
-    label: "Puerto SMTP",
-    type: "Number",
-    id: "mail_port",
-    help: "Puerto del servidor SMTP (ej: 587).",
-  },
-  {
-    inputName: "mail.secure",
-    label: "Conexión segura (SSL/TLS)",
-    type: "Select",
-    id: "mail_secure",
-    options: [
-      { text: "Sí", value: true },
-      { text: "No", value: false },
-    ],
-    help: "Usar conexión segura para SMTP (valor por defecto: Sí).",
-  },
-  {
-    inputName: "mail.user",
-    label: "Usuario SMTP",
-    type: "Text",
-    id: "mail_user",
-    help: "Usuario para autenticación SMTP.",
-  },
-  {
-    inputName: "mail.pass",
-    label: "Password SMTP",
-    type: "Password",
-    id: "mail_pass",
-    help: "Contraseña para autenticación SMTP.",
+    help: "Dirección donde recibirás las respuestas de tus clientes.",
   },
 
   // Locale
-  {
+  /* {
     inputName: "locale.currency",
     label: "Moneda por defecto",
     type: "Select",
@@ -171,7 +139,7 @@ let preferencesForm = [
       { text: "Inglés (en)", value: "en" },
     ],
     help: "Idioma por defecto del sistema.",
-  },
+  }, */
 ];
 
 export default preferencesForm;
