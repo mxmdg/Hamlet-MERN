@@ -53,7 +53,7 @@ const TenantSchema = new mongoose.Schema(
       },
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 TenantSchema.index({ key: 1 }, { unique: true });

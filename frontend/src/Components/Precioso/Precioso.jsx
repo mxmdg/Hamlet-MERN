@@ -98,6 +98,12 @@ const Precioso = (props) => {
     props.priceState,
   ]);
 
+  useEffect(() => {
+    if (priceList && Array.isArray(priceList)) {
+      setFilteredPriceList(priceList);
+    }
+  }, [priceList]);
+
   return (
     <Grid container columns={{ xs: 2, sm: 12, md: 12 }} spacing={2}>
       {loading ? (
@@ -165,8 +171,10 @@ const Precioso = (props) => {
               <TextField
                 size="small"
                 onChange={(e) => {
-                  setFilter({ ...fiter, value: e.target.value });
-                  if (e.target.value === "") {
+                  const value = e.target.value;
+                  setFilter({ ...fiter, value });
+
+                  if (!value || !fiter.property) {
                     setFilteredPriceList(priceList);
                   } else {
                     setFilteredPriceList(
@@ -174,8 +182,8 @@ const Precioso = (props) => {
                         item[fiter.property]
                           ?.toString()
                           .toLowerCase()
-                          .includes(e.target.value.toLowerCase())
-                      )
+                          .includes(value.toLowerCase()),
+                      ),
                     );
                   }
                 }}

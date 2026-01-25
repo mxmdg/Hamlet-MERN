@@ -40,7 +40,11 @@ export default function DialogModal(props) {
 
   return (
     <React.Fragment>
-      <Button variant="contained" onClick={handleClickOpen} color={props.color}>
+      <Button
+        variant={props.variant || "contained"}
+        onClick={handleClickOpen}
+        color={props.color}
+      >
         {props.btnTxt}
       </Button>
       <MyDialogue

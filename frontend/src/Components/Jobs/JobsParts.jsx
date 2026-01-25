@@ -46,7 +46,7 @@ const JobParts = (props) => {
   const [currentPart, setCurrentPart] = useState(props.editPart || null);
   const [useFinishingList, setFinishingList] = useState([]);
   const [selectedFinishings, setSelectedFinishings] = useState(
-    arrayNormalizer(props.editPart?.part.Finishing) || []
+    arrayNormalizer(props.editPart?.part.Finishing) || [],
   );
 
   // Estado para inhabilitar ColoresDorso cuando el trabajo es una sola cara
@@ -132,7 +132,7 @@ const JobParts = (props) => {
     };
 
     const filteredParts = props.parts.filter((part) =>
-      part.jobTypesAllowed.includes(props.jobType.name)
+      part.jobTypesAllowed.includes(props.jobType.name),
     );
 
     if (props.editPart) {
@@ -182,7 +182,7 @@ const JobParts = (props) => {
     if (props.editPart?.part?.Finishing) {
       // Normalizar: si es objeto, extraer _id; si ya es string ID, dejarlo
       const finishingIds = props.editPart.part.Finishing.map((f) =>
-        typeof f === "object" ? f._id : f
+        typeof f === "object" ? f._id : f,
       ).filter((id) => id); // Filtrar valores nulos/undefined
       setSelectedFinishings(finishingIds);
     } else {
@@ -207,13 +207,22 @@ const JobParts = (props) => {
   const loading = <Spinner title="Buscando elementos" color="success" />;
 
   const success = (
-    <Card raised sx={{ gap: "20px", maxWidth: "600px" }} color="secondary">
+    <Card
+      disabledGutters
+      elevation={10}
+      sx={{ gap: "20px", maxWidth: "600px" }}
+      color="secondary"
+    >
+      <CardHeader
+        title="Partes del trabajo"
+        subheader={`${props.editPart === null ? "Agregar" : "Editar"} partes del trabajo`}
+      />
       <CardContent>
         <form
           name="form2"
           onSubmit={handleSubmit(
             //props.editPart === null ?
-            props.editPart === null ? props.addParts : props.replacePart
+            props.editPart === null ? props.addParts : props.replacePart,
           )}
         >
           <Grid
@@ -567,7 +576,7 @@ const JobParts = (props) => {
                       if (
                         Finisher.partTypesAllowed &&
                         Finisher.partTypesAllowed.includes(
-                          currentPart?.Type || ""
+                          currentPart?.Type || "",
                         )
                       ) {
                         return (

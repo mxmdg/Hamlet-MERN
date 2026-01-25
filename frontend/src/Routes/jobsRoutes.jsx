@@ -15,7 +15,7 @@ import JobsEditAndCopy from "../Components/Pages/JobsEditAndCopy";
 import JobsContainer from "../Components/Jobs/JobsContainer";
 import JobsPerPartType from "../Components/utils/stats/JobsPerPartType";
 
-export const jobsRoutes = () => (
+export const jobsRoutes = ({ color, variant }) => (
   <>
     //Rutas en uso, para buscar, ver, editar, copiar, agregar trabajos.
     <Route
@@ -24,7 +24,8 @@ export const jobsRoutes = () => (
         <JobFinder
           entity={"jobs/complete"}
           propertiesMap={JobProperties}
-          inputsColor={"primary"}
+          color={color}
+          variant={variant}
         />
       }
     />

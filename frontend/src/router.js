@@ -3,6 +3,8 @@ import { useContext } from "react";
 import { AuthContext } from "./Components/context/AuthContext";
 import { Routes, Route } from "react-router-dom";
 
+import { useUserPreferences } from "./Hooks/useUserPreferences";
+
 import Error404 from "./Components/Pages/Error404";
 
 // Rutas
@@ -20,28 +22,30 @@ import { quotationsRoutes } from "./Routes/quotationsRoutes";
 import { configuracionRoutes } from "./Routes/configuracionRoutes";
 import { membershipsRoutes } from "./Routes/memberships";
 
-const Router = () => {
+const Router = (props) => {
   const context = useContext(AuthContext);
+
+  const { color, variant } = props.prefs;
 
   return (
     <Routes>
       {/* Public Routes */}
-      {publicRoutes()}
+      {publicRoutes({ color, variant })}
 
       {context.useLogin === true && (
         <>
-          {printersRoutes()}
-          {finishersRoutes()}
-          {materialesRoutes()}
-          {formatosRoutes()}
-          {empresasRoutes()}
-          {jobPartsRoutes()}
-          {usersRoutes()}
-          {jobsRoutes()}
-          {preciosRoutes()}
-          {quotationsRoutes()}
-          {configuracionRoutes()}
-          {membershipsRoutes()}
+          {printersRoutes({ color, variant })}
+          {finishersRoutes({ color, variant })}
+          {materialesRoutes({ color, variant })}
+          {formatosRoutes({ color, variant })}
+          {empresasRoutes({ color, variant })}
+          {jobPartsRoutes({ color, variant })}
+          {usersRoutes({ color, variant })}
+          {jobsRoutes({ color, variant })}
+          {preciosRoutes({ color, variant })}
+          {quotationsRoutes({ color, variant })}
+          {configuracionRoutes({ color, variant })}
+          {membershipsRoutes({ color, variant })}
         </>
       )}
 

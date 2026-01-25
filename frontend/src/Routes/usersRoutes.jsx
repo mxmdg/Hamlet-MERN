@@ -6,7 +6,7 @@ import ChangePassword from "../Components/Users/ChangePassword";
 import FormMaterial from "../Components/Formulario/FormMaterial";
 import UsersDataForm from "../Components/Formulario/UsersDataForm";
 
-export const usersRoutes = () => (
+export const usersRoutes = ({ color, variant }) => (
   <>
     <Route path="/users" element={<MainContainer entity={"users"} />} />
     <Route
@@ -17,12 +17,18 @@ export const usersRoutes = () => (
     <Route path="/users/profile" element={<Profile />} />
     <Route
       path="/users/ChangePassword"
-      element={<ChangePassword variant="outlined" color="primary" />}
+      element={<ChangePassword color={color} variant={variant} />}
     />
     <Route
       path="/users/edit/:id"
       element={
-        <FormMaterial form={UsersDataForm} collection="users" task="edit" />
+        <FormMaterial
+          form={UsersDataForm}
+          collection="users"
+          task="edit"
+          color={color}
+          variant={variant}
+        />
       }
     />
   </>

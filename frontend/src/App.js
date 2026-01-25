@@ -20,6 +20,7 @@ import ErrorMessage from "./Components/ErrorMessage/ErrorMessage";
 import ErrorBoundary from "./Components/ErrorMessage/ErrorBoundary";
 
 import { useBackendStatus } from "./Hooks/useBackendStatus";
+import { useUserPreferences } from "./Hooks/useUserPreferences";
 
 function App() {
   // Verificar si el tema está almacenado en localStorage
@@ -28,8 +29,9 @@ function App() {
   const [useMode, setMode] = useState(initialMode);
 
   const backendStatus = useBackendStatus();
+  const { prefs, savePrefs } = useUserPreferences();
 
-  useEffect(() => {}, [backendStatus]);
+  useEffect(() => {}, [backendStatus, prefs]);
 
   const checking = <Spinner title="Verificando estado del servidor..." />;
 
@@ -41,13 +43,18 @@ function App() {
   );
 
   const toogleMode = () => {
-    if (useMode === "light") {
-      setMode("dark");
-      localStorage.setItem("appTheme", "dark");
-    } else {
-      setMode("light");
-      localStorage.setItem("appTheme", "light");
-    }
+    const stored = localStorage.getItem("userSettings");
+    const currentSettings = stored ? JSON.parse(stored) : {};
+    const nextMode = useMode === "light" ? "dark" : "light";
+
+    const nextSettings = {
+      ...currentSettings,
+      mode: nextMode,
+    };
+
+    setMode(nextMode);
+    localStorage.setItem("userSettings", JSON.stringify(nextSettings));
+    localStorage.setItem("appTheme", nextMode);
   };
 
   const themeInUse = themeMxm;
@@ -92,7 +99,13 @@ function App() {
                   width: "100%",
                 }}
               >
-                <Router />
+                <Router
+                  prefs={
+                    prefs !== null
+                      ? prefs
+                      : { color: "info", variant: "outlined" }
+                  }
+                />
               </Box>
             </AuthProvider>
           </BrowserRouter>
@@ -104,8 +117,8 @@ function App() {
   return backendStatus === "checking"
     ? checking
     : backendStatus === "down"
-    ? failure
-    : success;
+      ? failure
+      : success;
 }
 
 export default App;

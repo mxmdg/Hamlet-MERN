@@ -3,7 +3,7 @@ import MainContainer from "../Components/General/MainContainer";
 import FormMaterial from "../Components/Formulario/FormMaterial";
 import StockDataForm from "../Components/Formulario/StockDataForm";
 
-export const materialesRoutes = () => (
+export const materialesRoutes = ({ color, variant }) => (
   <>
     <Route
       path="/materiales"
@@ -21,8 +21,8 @@ export const materialesRoutes = () => (
           collection="materiales"
           task="new"
           title="Agregar Material"
-          variant="outlined"
-          color="primary"
+          variant={variant}
+          color={color}
         />
       }
     />
@@ -34,8 +34,8 @@ export const materialesRoutes = () => (
           collection="materiales"
           task="copy"
           title="Copiar Material"
-          variant="outlined"
-          color="primary"
+          variant={variant}
+          color={color}
         />
       }
     />
@@ -47,8 +47,8 @@ export const materialesRoutes = () => (
           collection="materiales"
           task="edit"
           title="Editar Material"
-          variant="outlined"
-          color="primary"
+          variant={variant}
+          color={color}
         />
       }
     />

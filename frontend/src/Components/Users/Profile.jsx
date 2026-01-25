@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Button, Typography, Container, CardHeader } from "@mui/material/";
 import Card from "@mui/material/Card";
 import Grid from "@mui/material/Unstable_Grid2";
@@ -8,15 +8,57 @@ import { AuthContext } from "../context/AuthContext";
 import { useContext } from "react";
 import FullJobsRender from "../Pages/FullJobsRender";
 import SessionTimer from "./SessionTimer";
+import FormMaterial from "../Formulario/FormMaterial";
+import { useUserPreferences } from "../../Hooks/useUserPreferences";
 
 export const Profile = () => {
   //User Profile
   const context = useContext(AuthContext);
+  const { prefs, savePrefs } = useUserPreferences();
+
   const [useMemberships, setUseMemberships] = React.useState(
-    context.memberships || []
+    context.memberships || [],
   );
 
   useEffect(() => {}, [setUseMemberships]);
+
+  const userSettingsFormData = [
+    //Apariencia
+    {
+      inputName: "mode",
+      label: "Modo Claro/Oscuro",
+      type: "Select",
+      id: "formMode",
+      options: [
+        { text: "Claro", value: "light" },
+        { text: "Oscuro", value: "dark" },
+      ],
+    },
+    {
+      inputName: "variant",
+      label: "Estilo de formulario",
+      type: "Select",
+      id: "formStyle",
+      options: [
+        { text: "Estandar", value: "standard" },
+        { text: "Relleno", value: "filled" },
+        { text: "Filete", value: "outlined" },
+      ],
+    },
+    {
+      inputName: "color",
+      lable: "Color de formulario",
+      type: "Select",
+      id: "formColor",
+      options: [
+        { text: "Esmeralda", value: "primary" },
+        { text: "Uva", value: "secondary" },
+        { text: "Arena", value: "warning" },
+        { text: "Oceano", value: "info" },
+        { text: "Limon", value: "success" },
+      ],
+    },
+  ];
 
   return (
     <Container>
@@ -54,7 +96,7 @@ export const Profile = () => {
                       setUseMemberships(newMemberships);
                       localStorage.setItem(
                         "memberships",
-                        JSON.stringify(newMemberships)
+                        JSON.stringify(newMemberships),
                       );
                       window.location.reload();
                     }}
@@ -70,14 +112,24 @@ export const Profile = () => {
               )}
 
               <br />
+              <FormMaterial
+                form={userSettingsFormData}
+                task="local"
+                submitText="Guardar"
+                action={savePrefs}
+                variant={prefs?.variant || "outlined"}
+                color={prefs?.color || "info"}
+                item={prefs} // 👈 esto es CLAVE
+              />
 
               <SessionTimer />
             </CardContent>
             {useMemberships[0].role === "admin" && (
-              <CardActions>
+              <CardActions sx={{ justifyContent: "center" }}>
                 <Button
-                  variant="contained"
+                  variant="text"
                   href={"/tenant/settings/" + useMemberships[0]?.tenant.id}
+                  color="warning"
                 >
                   Ajustes del sistema
                 </Button>

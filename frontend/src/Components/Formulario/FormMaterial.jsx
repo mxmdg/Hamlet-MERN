@@ -67,7 +67,7 @@ const FormMaterial = (props) => {
   // Preloader State
 
   const [useLoading, setLoading] = useState(
-    props.task === "new" ? false : true
+    props.task === "new" ? false : props.task === "local" ? false : true,
   );
 
   // This state defines form's action: "copy", "edit" or "new"
@@ -121,7 +121,7 @@ const FormMaterial = (props) => {
         try {
           const itemToEdit = await getPrivateElementByID(
             `${props.collection}`,
-            id
+            id,
           );
           setItem(itemToEdit);
 
@@ -164,6 +164,13 @@ const FormMaterial = (props) => {
       }
     }
   }, [setItem]);
+
+  useEffect(() => {
+    if (props.task === "local" && useItem) {
+      setItem(useItem);
+      setLoading(false);
+    }
+  }, [useItem, props.task]);
 
   const submitHandler = async (e, collection, id) => {
     const datos = [];
@@ -236,7 +243,7 @@ const FormMaterial = (props) => {
       let value;
 
       return (
-        <Grid xs={4} sm={2} md={3}>
+        <Grid xs={12} sm={6} md={6}>
           <FormControl key={inp.id}>
             <TextField
               id={inp.id}
@@ -318,7 +325,7 @@ const FormMaterial = (props) => {
             return {
               ...prevItems,
               [checkboxSetKey]: selectedItemsForSet.filter(
-                (item) => item !== opt
+                (item) => item !== opt,
               ),
             };
           }
@@ -446,8 +453,8 @@ const FormMaterial = (props) => {
               useItem !== "new"
                 ? useItem[inp.inputName]
                 : inp.default
-                ? inp.default
-                : ""
+                  ? inp.default
+                  : ""
             }
             name={inp.inputName}
             {...register(inp.inputName)}
@@ -495,7 +502,7 @@ const FormMaterial = (props) => {
                       submitHandler(
                         values,
                         props.collection,
-                        useItem !== "new" ? useItem._id : ""
+                        useItem !== "new" ? useItem._id : "",
                       );
                     }
                   })}
@@ -520,7 +527,7 @@ const FormMaterial = (props) => {
                       color={color}
                       type="submit"
                     >
-                      Enviar
+                      {props.submitText || "Enviar"}
                     </Button>
                     <Button
                       variant="contained"
@@ -545,6 +552,7 @@ const FormMaterial = (props) => {
       message={useErrorMessage}
       severity={useErrorMessage?.color || "error"}
       action={resetError}
+      title="Respuesta"
     />
   );
 
@@ -554,8 +562,8 @@ const FormMaterial = (props) => {
   return useLoading
     ? loadingItemToEdit
     : useErrorMessage !== null
-    ? alertError
-    : hiddenFalse();
+      ? alertError
+      : hiddenFalse();
 };
 
 export default FormMaterial;

@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
+import { themeMxm } from "../Config/theme";
 import Box from "@mui/material/Box";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
@@ -44,6 +45,8 @@ import {
 import { calcularLomo } from "../jobViewer/JobDetail";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import PartCard from "./PartCard";
+import paperTexture from "../../img/Texturas/craft-texture-brown-journal-note.jpg";
+import darkWoodBackground from "../../img/Dark_Wood_Background.jpg";
 
 import {
   addElementToArray,
@@ -120,7 +123,7 @@ export default function MyStepper(props) {
     const partsOk = replaceElementInArray(
       newPart,
       useParts[usePartToEdit.index],
-      useParts
+      useParts,
     );
     setParts(partsOk);
     setPartToEdit(null);
@@ -136,7 +139,7 @@ export default function MyStepper(props) {
   const openCopyDialog = (part) => {
     setCopySourcePart(part);
     setCopyDraftName(
-      part && part.Name ? `${part.Name} - copia` : "Nueva parte - copia"
+      part && part.Name ? `${part.Name} - copia` : "Nueva parte - copia",
     );
     setCopyDialogOpen(true);
   };
@@ -233,7 +236,7 @@ export default function MyStepper(props) {
     try {
       const res = await putPrivateElement(
         `${HAMLET_API}jobs/${props.job._id}`,
-        Job
+        Job,
       );
       handleNext();
     } catch (e) {
@@ -319,8 +322,8 @@ export default function MyStepper(props) {
   );
 
   const success = (
-    <>
-      <Card raised sx={{ gap: "20px" }} color="info">
+    <Container disableGutters maxWidth={false} sx={{ margin: 0, padding: 0 }}>
+      <Card raised sx={{ height: "100%" }}>
         <CardHeader
           title={useJob?.Nombre || "Nuevo Pedido"}
           subheader={useJob?.Cantidad || "Solicita tu presupuesto!"}
@@ -476,7 +479,7 @@ export default function MyStepper(props) {
           </Grid>
         </CardContent>
       </Card>
-    </>
+    </Container>
   );
 
   return useError !== null ? (

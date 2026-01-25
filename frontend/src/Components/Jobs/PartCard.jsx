@@ -42,7 +42,7 @@ const PartCard = (props) => {
       setLoading(true);
 
       const results = await Promise.all(
-        ids.map((id) => getPrivateElementByID("finishers", id))
+        ids.map((id) => getPrivateElementByID("finishers", id)),
       );
 
       setFinishers(results);
@@ -54,15 +54,11 @@ const PartCard = (props) => {
   };
 
   const StyledCard = styled(Paper)(({ theme }) => ({
-    margin: "2px",
-    backgroundImage: theme.palette.background.dark,
     height: "100%",
     display: "flex",
     flexFlow: "column",
     alignContent: "space-between",
-    border: "1px solid",
-    borderRadius: "8px",
-    borderColor: theme.palette.success.main,
+    maxWidth: "600px",
   }));
 
   React.useEffect(() => {
@@ -88,7 +84,7 @@ const PartCard = (props) => {
         subheader={`${props.part.jobParts[0]?.Type}`}
       ></CardHeader>
       <CardContent sx={{ flexGrow: 1 }}>
-        <Typography variant="body2">
+        <Typography variant="body2" sx={{ marginBottom: "10px" }}>
           Paginas: {props.part.Pages}
           <br />
           Formato: {props.part.Ancho} x {props.part.Alto}
@@ -100,7 +96,7 @@ const PartCard = (props) => {
             <>
               {` (Lomo: ${calcularLomo(
                 props.part.Pages,
-                props.part.partStock.Espesor_Resma
+                props.part.partStock.Espesor_Resma,
               )} mm.)`}
             </>
           ) : (
@@ -131,8 +127,8 @@ const PartCard = (props) => {
           </Fragment>
         )}
       </CardContent>
-      <CardActions>
-        <ButtonGroup size="small" variant="contained" fullWidth>
+      <CardActions sx={{ justifyContent: "flex-start" }}>
+        <ButtonGroup size="small" variant="standard">
           <Button
             color="primary"
             onClick={(e) => {
@@ -169,6 +165,7 @@ const PartCard = (props) => {
           <DialogModal
             title={`Eliminar ${props.part.Name}`}
             color="error"
+            variant="standard"
             message={DeletePartMessage}
             closeAction={props.removePart}
             index={props.index}

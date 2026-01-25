@@ -6,7 +6,7 @@ import StatsCollector from "../Components/utils/stats/StatsCollector";
 import JobsPerPartType from "../Components/utils/stats/JobsPerPartType";
 import { Grid } from "@mui/material";
 
-export const jobPartsRoutes = () => (
+export const jobPartsRoutes = ({ color, variant }) => (
   <>
     <Route
       path="/JobParts"
@@ -35,8 +35,8 @@ export const jobPartsRoutes = () => (
           collection="JobParts"
           task="new"
           title="Agregar Parte de Trabajo"
-          color="primary"
-          variant="outlined"
+          color={color}
+          variant={variant}
         />
       }
     />
@@ -48,8 +48,8 @@ export const jobPartsRoutes = () => (
           collection="JobParts"
           task="copy"
           title="Copiar Parte de Trabajo"
-          color="primary"
-          variant="outlined"
+          color={color}
+          variant={variant}
         />
       }
     />
@@ -61,8 +61,8 @@ export const jobPartsRoutes = () => (
           collection="JobParts"
           task="edit"
           title="Editar Parte de Trabajo"
-          color="primary"
-          variant="outlined"
+          color={color}
+          variant={variant}
         />
       }
     />

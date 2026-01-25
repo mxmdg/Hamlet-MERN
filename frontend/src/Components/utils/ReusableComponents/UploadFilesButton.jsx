@@ -25,7 +25,7 @@ const VisuallyHiddenInput = styled("input")({
 
 export const handleUploadSuccess = (data) => {
   alert(
-    `Uploaded PDF with ${data.pages.length} pages and size ${data.size} KB.`
+    `Uploaded PDF with ${data.pages.length} pages and size ${data.size} KB.`,
   );
 };
 
@@ -33,7 +33,7 @@ const calculateMostCommonSize = (pages) => {
   const sizeMap = new Map();
   pages.forEach((page) => {
     const sizeKey = `${Math.round(page.size.trimbox.width)}x${Math.round(
-      page.size.trimbox.height
+      page.size.trimbox.height,
     )}`;
     sizeMap.set(sizeKey, (sizeMap.get(sizeKey) || 0) + 1);
   });
@@ -51,7 +51,7 @@ const calculateMostCommonSize = (pages) => {
 };
 
 export default function UploadFilesButton({
-  uploadUrl = VALIDATE_PDF, //|| "http://127.0.0.2:8000/upload",
+  uploadUrl = "http://127.0.0.2:8000/upload",
   onUploadSuccess,
   expectedPageCount,
   expectedSize,
@@ -82,7 +82,7 @@ export default function UploadFilesButton({
           "Upload failed with status:",
           response.status,
           "Response:",
-          errorText
+          errorText,
         );
         throw new Error("Failed to upload file.");
       }
@@ -94,8 +94,8 @@ export default function UploadFilesButton({
       const mismatchedPages = data.pages.filter(
         (page) =>
           `${Math.round(page.size.trimbox.width)}x${Math.round(
-            page.size.trimbox.height
-          )}` !== mostCommonSize
+            page.size.trimbox.height,
+          )}` !== mostCommonSize,
       );
 
       if (mismatchedPages.length > 0) {
@@ -105,10 +105,10 @@ export default function UploadFilesButton({
               .map(
                 (page) =>
                   `Page ${page.page_number}: ${Math.round(
-                    page.size.trimbox.width
-                  )}x${Math.round(page.size.trimbox.height)} mm`
+                    page.size.trimbox.width,
+                  )}x${Math.round(page.size.trimbox.height)} mm`,
               )
-              .join("\n")
+              .join("\n"),
         );
       }
 
@@ -118,7 +118,7 @@ export default function UploadFilesButton({
       ) {
         alert(
           `Mismatch detected:\nExpected pages: ${expectedPageCount}, Actual: ${data.page_count}\n` +
-            `Expected size: ${expectedSize}, Most common size: ${mostCommonSize}`
+            `Expected size: ${expectedSize}, Most common size: ${mostCommonSize}`,
         );
       }
 
@@ -129,7 +129,7 @@ export default function UploadFilesButton({
       if (error.name === "TypeError" && error.message === "Failed to fetch") {
         console.error("Network error or CORS issue:", error);
         alert(
-          "Network error or server is unreachable. Please check your connection or contact support."
+          "Network error or server is unreachable. Please check your connection or contact support.",
         );
       } else {
         console.error("Error uploading file:", error);
@@ -140,11 +140,21 @@ export default function UploadFilesButton({
 
   return (
     <div>
-      <Paper rounded={"false"} sx={{ padding: 3 }}>
+      <Paper
+        elevation={10}
+        square={true}
+        sx={{
+          padding: 3,
+          marginTop: 0,
+          marginBottom: 3,
+          borderTop: "1px solid #eee",
+          borderRadius: "0 0 10px 10px",
+        }}
+      >
         <StyledTooltip title="Subir y validar un archivo PDF" arrow>
           <Button
             component="label"
-            variant="contained"
+            variant="standard"
             color="success"
             startIcon={<CloudUploadIcon />}
           >
@@ -163,7 +173,7 @@ export default function UploadFilesButton({
               <ListItemText
                 primary={`${fileInfo.file_name} (${fileInfo.page_count} paginas)`}
                 secondary={`Tamaño principal: ${calculateMostCommonSize(
-                  fileInfo.pages
+                  fileInfo.pages,
                 )}`}
               />
             </ListItem>
@@ -172,34 +182,40 @@ export default function UploadFilesButton({
                 primary={`ubicacion del archivo: ${fileInfo.file_path}`}
               />
             </ListItem>
-            <Typography variant="body2" color="text.secondary">
-              Informacion del documento
-              <br />
-              Productor: {fileInfo.metadata["/Producer"]}
-              <br />
-              Creador: {fileInfo.metadata["/Creator"]}
-              <br />
-              Creado:{" "}
-              {getDateAndTime(fileInfo.metadata["/CreationDate"]).dateAndTime}
-              <br />
-              Modificado:{" "}
-              {getDateAndTime(fileInfo.metadata["/ModDate"]).dateAndTime}
-            </Typography>
+            <ListItem>
+              <Typography variant="h6" color="secondary">
+                Informacion del documento
+              </Typography>
+            </ListItem>
+            <ListItem>
+              <Typography variant="body2" color="text.secondary">
+                Productor: {fileInfo.metadata["/Producer"]}
+                <br />
+                Creador: {fileInfo.metadata["/Creator"]}
+                <br />
+                Creado:{" "}
+                {getDateAndTime(fileInfo.metadata["/CreationDate"]).dateAndTime}
+                <br />
+                Modificado:{" "}
+                {getDateAndTime(fileInfo.metadata["/ModDate"]).dateAndTime}
+              </Typography>
+            </ListItem>
+
             {fileInfo.pages
               .filter(
                 (file) =>
                   `${Math.round(file.size.trimbox.width)}x${Math.round(
-                    file.size.trimbox.height
-                  )}` !== calculateMostCommonSize(fileInfo.pages)
+                    file.size.trimbox.height,
+                  )}` !== calculateMostCommonSize(fileInfo.pages),
               )
               .map((file) => (
-                <ListItem key={file.id}>
+                <ListItem key={file.id + file.page_number}>
                   <ListItemText
                     primary={`Pagina: ${file.page_number}`}
                     secondary={`Tamaño: ${Math.round(
-                      parseFloat(file.size.trimbox.width)
+                      parseFloat(file.size.trimbox.width),
                     )} x ${Math.round(
-                      parseFloat(file.size.trimbox.height)
+                      parseFloat(file.size.trimbox.height),
                     )} mm`}
                   />
                 </ListItem>

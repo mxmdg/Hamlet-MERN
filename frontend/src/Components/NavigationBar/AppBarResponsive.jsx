@@ -45,7 +45,7 @@ function ResponsiveAppBar(props) {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [switchChecked, setSwitchChecked] = React.useState(
-    props.mode === "dark" ? true : false
+    props.mode === "dark" ? true : false,
   );
   const context = useContext(AuthContext);
 
@@ -255,6 +255,7 @@ function ResponsiveAppBar(props) {
                   setSwitchChecked(e.target.checked);
                   props.toogle();
                 }}
+                defaultChecked={props.mode === "dark"}
                 size="small"
               ></Switch>
             }

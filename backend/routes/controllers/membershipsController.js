@@ -1,5 +1,6 @@
 const Membership = require("../../models/memberships");
 const usersModel = require("../../models/usersSchema");
+const tentansModel = require("../../models/tenants");
 
 const membershipsController = {};
 
@@ -40,7 +41,7 @@ membershipsController.updateMembership = async (req, res, next) => {
     const membership = await Membership.findOneAndUpdate(
       { _id: req.params.id, tenant },
       req.body,
-      { new: true }
+      { new: true },
     )
       .populate("userId", "name email")
       .populate("tenant", "key name status");
@@ -119,6 +120,13 @@ membershipsController.createMembership = async (req, res, next) => {
       return res.status(404).json({ message: "El usuario no existe" });
     }
 
+    const activeTenant = await tentansModel.esquema.findOne({ _id: tenant });
+    if (!activeTenant) {
+      return res
+        .status(404)
+        .json({ message: "Error al identificar la imprenta actual" });
+    }
+
     const newMembership = new Membership({
       userId: user._id,
       tenant,
@@ -127,7 +135,9 @@ membershipsController.createMembership = async (req, res, next) => {
     });
     console.log(newMembership);
     const membership = await newMembership.save();
-    res.status(201).json(membership);
+    res.status(201).json({
+      message: `${user.Name} ${user.LastName} ha sido agregado como ${newMembership.role} a ${activeTenant.name}`,
+    });
   } catch (e) {
     res.status(500).json({
       message:
@@ -146,11 +156,14 @@ membershipsController.deleteMembershipSoft = async (req, res, next) => {
     const membership = await Membership.findOneAndUpdate(
       { _id: req.params.id, tenant },
       { status: "inactivo" },
-      { new: true }
-    );
+      { new: true },
+    ).populate("userId");
     if (!membership)
       return res.status(404).json({ message: "Membership no encontrada" });
-    res.json({ message: "Membership desactivada correctamente", membership });
+    res.json({
+      message: `${membership.userId.Name} ${membership.userId.LastName} ha sido desactivado como ${membership.role} de esta empresa.`,
+      membership,
+    });
   } catch (e) {
     next(e);
   }

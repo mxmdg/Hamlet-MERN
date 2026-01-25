@@ -5,7 +5,7 @@ import { Register } from "../Components/Users/Register";
 import membershipsDataForm from "../Components/Formulario/membershipsDataForm";
 import { RegPage } from "../Components/Users/RegPage";
 
-export const membershipsRoutes = () => (
+export const membershipsRoutes = ({ color, variant }) => (
   <>
     <Route
       path="/memberships"
@@ -25,8 +25,8 @@ export const membershipsRoutes = () => (
           collection="memberships"
           task="edit"
           title="Editar Membresía"
-          variant="outlined"
-          color="primary"
+          color={color}
+          variant={variant}
         />
       }
     />
@@ -39,8 +39,8 @@ export const membershipsRoutes = () => (
           collection="memberships"
           task="copy"
           title="Copiar Membresía"
-          variant="outlined"
-          color="primary"
+          color={color}
+          variant={variant}
         />
       }
     />

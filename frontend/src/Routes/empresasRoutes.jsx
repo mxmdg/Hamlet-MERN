@@ -6,7 +6,7 @@ import StatsCollector from "../Components/utils/stats/StatsCollector";
 import JobsPerClient from "../Components/utils/stats/JobsPerClient";
 import { Grid } from "@mui/material";
 
-export const empresasRoutes = () => (
+export const empresasRoutes = ({ color, variant }) => (
   <>
     <Route
       path="/empresas"
@@ -41,8 +41,8 @@ export const empresasRoutes = () => (
           collection="empresas"
           task="new"
           title="Agregar nueva Empresa"
-          color="primary"
-          variant="outlined"
+          variant={variant}
+          color={color}
         />
       }
     />
@@ -54,8 +54,8 @@ export const empresasRoutes = () => (
           collection="empresas"
           task="copy"
           title="Copiar Empresa"
-          color="primary"
-          variant="outlined"
+          variant={variant}
+          color={color}
         />
       }
     />
@@ -67,8 +67,8 @@ export const empresasRoutes = () => (
           collection="empresas"
           task="edit"
           title="Editar Empresa"
-          color="primary"
-          variant="outlined"
+          variant={variant}
+          color={color}
         />
       }
     />

@@ -4,7 +4,7 @@ import PrintersMainContainer from "../Components/Printers/PrintersMainContainer"
 import FormMaterial from "../Components/Formulario/FormMaterial";
 import PrintersDataForm from "../Components/Formulario/PrintersDataForm";
 
-export const printersRoutes = () => {
+export const printersRoutes = ({ color, variant }) => {
   return (
     <>
       <Route
@@ -27,8 +27,8 @@ export const printersRoutes = () => {
             collection="impresoras"
             task="new"
             title="Agregar Impresora"
-            variant="outlined"
-            color="primary"
+            variant={variant}
+            color={color}
           />
         }
       />
@@ -40,8 +40,8 @@ export const printersRoutes = () => {
             collection="impresoras"
             task="copy"
             title="Copiar Impresora"
-            variant="outlined"
-            color="primary"
+            variant={variant}
+            color={color}
           />
         }
       />
@@ -53,8 +53,8 @@ export const printersRoutes = () => {
             collection="impresoras"
             task="edit"
             title="Editar Impresora"
-            variant="outlined"
-            color="primary"
+            variant={variant}
+            color={color}
           />
         }
       />

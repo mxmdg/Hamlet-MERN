@@ -3,7 +3,7 @@ import MainContainer from "../Components/General/MainContainer";
 import FormMaterial from "../Components/Formulario/FormMaterial";
 import FormatDataForm from "../Components/Formulario/FormatDataForm";
 
-export const formatosRoutes = () => (
+export const formatosRoutes = ({ color, variant }) => (
   <>
     <Route path="/formatos" element={<MainContainer entity={"formatos"} />} />
     <Route
@@ -18,8 +18,8 @@ export const formatosRoutes = () => (
           collection="formatos"
           task="new"
           title="Agregar nuevo Formato"
-          color="primary"
-          variant="outlined"
+          variant={variant}
+          color={color}
         />
       }
     />
@@ -31,8 +31,8 @@ export const formatosRoutes = () => (
           collection="formatos"
           task="copy"
           title="Copiar Formato"
-          color="primary"
-          variant="outlined"
+          variant={variant}
+          color={color}
         />
       }
     />
@@ -44,8 +44,8 @@ export const formatosRoutes = () => (
           collection="formatos"
           task="edit"
           title="Editar Formato"
-          color="primary"
-          variant="outlined"
+          variant={variant}
+          color={color}
         />
       }
     />

@@ -1,8 +1,9 @@
 {
   "files": {
     "main.css": "/static/css/main.a0f1457d.css",
-    "main.js": "/static/js/main.5eef7481.js",
+    "main.js": "/static/js/main.049ec3b1.js",
     "static/js/988.82915b6a.chunk.js": "/static/js/988.82915b6a.chunk.js",
+    "static/media/craft-texture-brown-journal-note.jpg": "/static/media/craft-texture-brown-journal-note.fcc1cdfd43cd36a0c90c.jpg",
     "static/media/Dark_Wood_Background.jpg": "/static/media/Dark_Wood_Background.d3a0efb0208f49589659.jpg",
     "static/media/logo ok-01.jpg": "/static/media/logo ok-01.343cd6f1abd93769ab37.jpg",
     "static/media/logo ok-01.svg": "/static/media/logo ok-01.7074cfe503eef1794397b1ee5b14f8b4.svg",
@@ -10,11 +11,11 @@
     "static/media/logo ok-05.svg": "/static/media/logo ok-05.4b867c1709dbca069762cc1984cb0639.svg",
     "index.html": "/index.html",
     "main.a0f1457d.css.map": "/static/css/main.a0f1457d.css.map",
-    "main.5eef7481.js.map": "/static/js/main.5eef7481.js.map",
+    "main.049ec3b1.js.map": "/static/js/main.049ec3b1.js.map",
     "988.82915b6a.chunk.js.map": "/static/js/988.82915b6a.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.a0f1457d.css",
-    "static/js/main.5eef7481.js"
+    "static/js/main.049ec3b1.js"
   ]
 }

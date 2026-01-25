@@ -4,7 +4,7 @@ import FormMaterial from "../Components/Formulario/FormMaterial";
 import PricesDataForm from "../Components/Formulario/PricesDataForm";
 import FormulaEditor from "../Components/Precioso/FormulaEditor";
 
-export const preciosRoutes = () => (
+export const preciosRoutes = ({ color, variant }) => (
   <>
     <Route path="/precios" element={<MainContainer entity={"precios"} />} />
     <Route
@@ -19,8 +19,8 @@ export const preciosRoutes = () => (
           collection="precios"
           task="edit"
           title="Editar Precio"
-          variant="outlined"
-          color="primary"
+          color={color}
+          variant={variant}
         />
       }
     />
@@ -32,8 +32,8 @@ export const preciosRoutes = () => (
           collection="precios"
           task="new"
           title="Agregar Precio"
-          variant="outlined"
-          color="primary"
+          color={color}
+          variant={variant}
         />
       }
     />
@@ -45,8 +45,8 @@ export const preciosRoutes = () => (
           collection="precios"
           task="copy"
           title="Copiar Precio"
-          variant="outlined"
-          color="primary"
+          color={color}
+          variant={variant}
         />
       }
     />

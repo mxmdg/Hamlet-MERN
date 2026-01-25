@@ -40,10 +40,10 @@ const JobsForm = (props) => {
   const [useCompany, setCompany] = useState(props.data?.Company);
   const [useFinishingList, setFinishingList] = useState([]);
   const [selectedFinishings, setSelectedFinishings] = useState(
-    props.data?.Finishing || []
+    props.data?.Finishing || [],
   );
   const [selectedFinishingsBKP, setSelectedFinishingsBKP] = useState(
-    props.data?.Finishing || []
+    props.data?.Finishing || [],
   );
   // This state intializes chebox value
   // const [useValue, setMyValue] = useState({ value: "" });
@@ -70,7 +70,7 @@ const JobsForm = (props) => {
     } else {
       // Remover el objeto si se deselecciona
       setSelectedFinishings((prevSelected) =>
-        prevSelected.filter((item) => item !== Finisher._id)
+        prevSelected.filter((item) => item !== Finisher._id),
       );
     }
   };
@@ -111,7 +111,7 @@ const JobsForm = (props) => {
   const resetFinishers = () => {
     if (
       window.confirm(
-        "¿Seguro que desea cambiar el tipo de trabajo? Se borraran las terminaciones seleccionadas"
+        "¿Seguro que desea cambiar el tipo de trabajo? Se borraran las terminaciones seleccionadas",
       )
     ) {
       setSelectedFinishings([]);
@@ -135,8 +135,19 @@ const JobsForm = (props) => {
         width: "fit-content",
       }}
     >
-      <Card raised sx={{ gap: "20px", maxWidth: "600px" }} color="main">
-        <CardHeader title="+ Nuevo Trabajo" />
+      <Card
+        disabledGutters
+        elevation={10}
+        sx={{
+          gap: "20px",
+          maxWidth: "600px",
+        }}
+        color="primary"
+      >
+        <CardHeader
+          title="Datos del trabajo"
+          subheader="Completar los datos generales del trabajo"
+        />
         <CardContent>
           <FormControl>
             <form name="form1" onSubmit={handleSubmit(onSubmit)}>
@@ -401,7 +412,7 @@ const JobsForm = (props) => {
                         })
                         .map((Finisher) => {
                           const isChecked = selectedFinishings.some(
-                            (f) => f === Finisher._id || f._id === Finisher._id
+                            (f) => f === Finisher._id || f._id === Finisher._id,
                           );
                           if (
                             Finisher.jobTypesAllowed &&
@@ -419,7 +430,7 @@ const JobsForm = (props) => {
                                       changeHandler(
                                         e,
                                         useFinishingList,
-                                        Finisher
+                                        Finisher,
                                       )
                                     }
                                   />

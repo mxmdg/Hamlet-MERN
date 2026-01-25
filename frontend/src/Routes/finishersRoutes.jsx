@@ -2,7 +2,7 @@ import { Route } from "react-router-dom";
 import MainContainer from "../Components/General/MainContainer";
 import FinishersDataForm from "../Components/Formulario/FinishersDataForm";
 
-export const finishersRoutes = () => (
+export const finishersRoutes = ({ color, variant }) => (
   <>
     <Route path="/finishers" element={<MainContainer entity={"finishers"} />} />
     <Route
@@ -16,8 +16,8 @@ export const finishersRoutes = () => (
           collection="finishers"
           task="new"
           title="Agregar nuevo Proceso de Terminación"
-          color="primary"
-          variant="outlined"
+          variant={variant}
+          color={color}
         />
       }
     />
@@ -28,8 +28,8 @@ export const finishersRoutes = () => (
           collection="finishers"
           task="copy"
           title="Copiar Proceso de Terminación"
-          color="primary"
-          variant="outlined"
+          variant={variant}
+          color={color}
         />
       }
     />
@@ -40,8 +40,8 @@ export const finishersRoutes = () => (
           collection="finishers"
           task="edit"
           title="Editar Proceso de Terminación"
-          color="primary"
-          variant="outlined"
+          variant={variant}
+          color={color}
         />
       }
     />
