@@ -63,7 +63,7 @@ const JobsEditAndCopy = () => {
         res.Finishing = result;
 
         res.Partes.forEach((element) => {
-          if (element.Finishing) {
+          if (element.Finishing && Array.isArray(element.Finishing) && element.Finishing.length > 0 ) {
             const res = getId(element.Finishing);
             element.Finishing = res;
           } else {
