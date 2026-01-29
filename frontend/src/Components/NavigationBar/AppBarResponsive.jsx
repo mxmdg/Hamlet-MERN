@@ -11,7 +11,10 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import CustomizedTooltip from "../utils/CustomizedTooltip";
-import { StyledTooltip } from "../General/TableGrid";
+import { StyledTooltip, GradientTooltip } from "../General/TableGrid";
+import Fade from '@mui/material/Fade';
+import Zoom from '@mui/material/Zoom';
+
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
@@ -269,6 +272,7 @@ function ResponsiveAppBar(props) {
                 ? context.userLogged.Name
                 : "Registrarse"
             }
+            arrow
           >
             <IconButton
               onClick={handleOpenUserMenu}
