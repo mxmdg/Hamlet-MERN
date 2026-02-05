@@ -18,6 +18,12 @@ const printerSchema = new Schema({
   Modelo: { type: String, required: true },
   SerialNumber: { type: String, required: true },
   Fabricante: { type: String, required: false },
+  Tipo: {
+    type: String,
+    required: true,
+    enum: ["laser", "inkjet", "offset", "ploter"],
+    default: "laser",
+  },
   Colores: { type: Number, required: true },
   X_Minimo: { type: Number, required: true },
   X_Maximo: { type: Number, required: true },

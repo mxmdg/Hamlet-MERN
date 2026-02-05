@@ -35,6 +35,7 @@ printerControl.addPrinter = async (req, res, next) => {
       Modelo,
       SerialNumber,
       Fabricante,
+      Tipo,
       Colores,
       X_Minimo,
       X_Maximo,
@@ -56,6 +57,7 @@ printerControl.addPrinter = async (req, res, next) => {
       Modelo,
       SerialNumber,
       Fabricante,
+      Tipo,
       Colores,
       X_Minimo,
       X_Maximo,
@@ -105,7 +107,7 @@ printerControl.getPrinterSimple = async (req, res, next) => {
     const printer = await printers.esquema
       .findOne({ _id: req.params.id, tenant })
       .select(
-        "-Billing -Costo.Historial -Costo.Formula -TotalPrints -ColorPrints -BlackPrints -LargePrints -SmallPrints"
+        "-Billing -Costo.Historial -Costo.Formula -TotalPrints -ColorPrints -BlackPrints -LargePrints -SmallPrints",
       );
     if (printer) {
       res.json(printer);
@@ -124,7 +126,7 @@ printerControl.getPrintersSimple = async (req, res, next) => {
     const printer = await printers.esquema
       .find({ tenant, status: { $ne: "inactivo" } })
       .select(
-        "-Billing -TotalPrints -ColorPrints -BlackPrints -LargePrints -SmallPrints"
+        "-Billing -TotalPrints -ColorPrints -BlackPrints -LargePrints -SmallPrints",
       )
       .populate({
         path: "Costo",
@@ -148,6 +150,7 @@ printerControl.updatePrinter = async (req, res) => {
       Modelo,
       SerialNumber,
       Fabricante,
+      Tipo,
       Colores,
       X_Minimo,
       X_Maximo,
@@ -193,12 +196,13 @@ printerControl.updatePrinter = async (req, res) => {
       Math.max(0, printer.Billing.length - 1),
       1,
       currentBilling,
-      newBilling
+      newBilling,
     );
 
     printer.Modelo = Modelo;
     printer.SerialNumber = SerialNumber;
     printer.Fabricante = Fabricante;
+    printer.Tipo = Tipo;
     printer.Colores = Colores;
     printer.X_Minimo = X_Minimo;
     printer.X_Maximo = X_Maximo;
@@ -226,7 +230,7 @@ printerControl.deletePrinter = async (req, res, next) => {
     const impresora = await printers.esquema.findOneAndUpdate(
       { _id: req.params.id, tenant },
       { status: "inactivo" },
-      { new: true }
+      { new: true },
     );
     if (!impresora)
       return res.status(404).json({ message: "Impresora no encontrada" });

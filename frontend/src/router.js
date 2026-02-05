@@ -27,6 +27,8 @@ const Router = (props) => {
 
   const { color, variant } = props.prefs;
 
+  props.setLog(context.useLogin);
+
   return (
     <Routes>
       {/* Public Routes */}

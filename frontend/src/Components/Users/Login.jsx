@@ -75,7 +75,7 @@ export const Login = (props) => {
         localStorage.setItem("user", JSON.stringify(token.data.document));
         localStorage.setItem(
           "memberships",
-          JSON.stringify(token.data.memberships)
+          JSON.stringify(token.data.memberships),
         );
         context.setMemberships(token.data.memberships);
         setError({
@@ -102,7 +102,7 @@ export const Login = (props) => {
     try {
       const response = await axios.post(
         `${HAMLET_API}users/forgot-password`,
-        data
+        data,
       );
       setSuccessMessage({
         message: response.data.message,
@@ -316,6 +316,6 @@ export const Login = (props) => {
   return loading
     ? loadingRender
     : showForgotPasswordForm
-    ? ForgotPassword
-    : success;
+      ? ForgotPassword
+      : success;
 };

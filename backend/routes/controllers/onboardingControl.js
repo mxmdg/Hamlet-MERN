@@ -1,6 +1,7 @@
 const tenant = require("../../models/tenants");
 const user = require("../../models/usersSchema");
 const Membership = require("../../models/memberships");
+const runSeeds = require("../seeds/index").runSeeds;
 
 const onboardingController = {};
 
@@ -61,6 +62,8 @@ onboardingController.register = async (req, res, next) => {
       status,
       plan,
     });
+
+    await runSeeds({ tenantId: newTenant._id });
 
     await Membership.create({
       userId: newUser._id,

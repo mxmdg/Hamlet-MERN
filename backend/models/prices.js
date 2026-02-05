@@ -32,7 +32,18 @@ const priceHistorySchema = new Schema({
 });
 
 const pricesSchema = new Schema({
-  Categoria: { type: String, required: true },
+  Categoria: {
+    type: String,
+    required: true,
+    enum: [
+      "prepress",
+      "print",
+      "finishing",
+      "stock",
+      "supplies",
+      "humanResources",
+    ],
+  },
   Proceso: { type: String, required: true },
   Valor: { type: Number, required: true },
   Minimo: { type: Number, required: true },

@@ -45,7 +45,7 @@ module.exports = mongoose; */
 
 const mongoose = require("mongoose");
 
-const URI = process.env.MONGODB_URI || "mongodb://mongo:27017/test";
+const URI = process.env.MONGODB_URI || "mongodb://mongo:27017/Hamlet_Tenants";
 
 mongoose.connect(URI, {
   useNewUrlParser: true,

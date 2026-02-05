@@ -9,15 +9,15 @@ export const AuthContext = React.createContext();
 
 const AuthProvider = ({ children }) => {
   const [useLogin, setLogin] = useState(
-    localStorage.getItem("login") ? true : false
+    localStorage.getItem("login") ? true : false,
   );
   const [useToken, setToken] = useState(
-    localStorage.getItem("token") ? localStorage.getItem("token") : null
+    localStorage.getItem("token") ? localStorage.getItem("token") : null,
   );
   const [userLogged, setUserLogged] = useState(
     localStorage.getItem("user")
       ? JSON.parse(localStorage.getItem("user"))
-      : null
+      : null,
   );
 
   const [memberships, setMemberships] = useState(() => {
@@ -75,7 +75,7 @@ const AuthProvider = ({ children }) => {
     if (useToken !== null) {
       validateToken();
     }
-  }, []);
+  }, [useLogin, useToken]);
 
   return (
     <AuthContext.Provider

@@ -1,0 +1,43 @@
+const jobPartsSeed = [
+  {
+    Type: "Interior Libro",
+    minWidth: 90,
+    maxWidth: 310,
+    minHeight: 60,
+    maxHeight: 340,
+    minPages: 10,
+    maxPages: 1500,
+    PrintModAllowed: "Duplex",
+    minStockWeight: 57,
+    maxStockWeight: 240,
+    jobTypesAllowed: ["Libro"],
+  },
+  {
+    Type: "Tapa",
+    minWidth: 90,
+    maxWidth: 650,
+    minHeight: 100,
+    maxHeight: 356,
+    minPages: 1,
+    maxPages: 2,
+    PrintModAllowed: "Duplex",
+    minStockWeight: 150,
+    maxStockWeight: 500,
+    jobTypesAllowed: ["Cosido a Hilo", "Revista", "Libro"],
+  },
+  {
+    Type: "Postales",
+    minWidth: 60,
+    maxWidth: 250,
+    minHeight: 50,
+    maxHeight: 250,
+    minPages: 2,
+    maxPages: 2,
+    PrintModAllowed: "Duplex",
+    minStockWeight: 200,
+    maxStockWeight: 400,
+    jobTypesAllowed: ["Sin Encuadernacion", "Multipagina"],
+  },
+];
+
+module.exports = jobPartsSeed;

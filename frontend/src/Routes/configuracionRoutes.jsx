@@ -23,6 +23,7 @@ export const configuracionRoutes = () => (
           collection="tenants/settings"
           task="edit"
           title={"Ajustes del sistema"}
+          submitText={"Guardar cambios"}
         />
       }
     />

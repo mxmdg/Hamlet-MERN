@@ -43,6 +43,7 @@ export const empresasRoutes = ({ color, variant }) => (
           title="Agregar nueva Empresa"
           variant={variant}
           color={color}
+          submitText={"Agregar Empresa"}
         />
       }
     />
@@ -56,6 +57,7 @@ export const empresasRoutes = ({ color, variant }) => (
           title="Copiar Empresa"
           variant={variant}
           color={color}
+          submitText={"Agregar Empresa"}
         />
       }
     />
@@ -69,6 +71,7 @@ export const empresasRoutes = ({ color, variant }) => (
           title="Editar Empresa"
           variant={variant}
           color={color}
+          submitText={"Guardar cambios"}
         />
       }
     />

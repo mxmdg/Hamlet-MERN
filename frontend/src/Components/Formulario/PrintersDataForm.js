@@ -32,6 +32,12 @@ let fabricantesImpresoras = [
   { text: "Panasonic", value: "Panasonic" },
   { text: "Samsung", value: "Samsung" },
   { text: "Toshiba", value: "Toshiba" },
+  { text: "Ricoh", value: "Ricoh" },
+  { text: "Oki", value: "Oki" },
+  { text: "Kyocera", value: "Kyocera" },
+  { text: "Dell", value: "Dell" },
+  { text: "Fuji", value: "Fuji" },
+  { text: "Otros", value: "Otros" },
 ];
 
 let PrintersDataForm = [
@@ -56,6 +62,17 @@ let PrintersDataForm = [
     required: true,
     help: "Ingrese el nombre del fabricante de la impresora",
     options: fabricantesImpresoras,
+  },
+  {
+    inputName: "Tipo",
+    label: "Tipo de impresora",
+    type: "Select",
+    options: [
+      { text: "Laser", value: "laser" },
+      { text: "Inyección de tinta", value: "inkjet" },
+      { text: "Offset", value: "offset" },
+      { text: "Ploter", value: "ploter" },
+    ],
   },
   {
     inputName: "Colores",

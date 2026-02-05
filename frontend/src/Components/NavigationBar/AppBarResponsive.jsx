@@ -122,7 +122,7 @@ function ResponsiveAppBar(props) {
     <AppBar
       color="primary" //{colorList[Math.round(Math.random() * 5)]}
       enableColorOnDark={false}
-      position="relative"
+      position="fixed"
       sx={{ "@media print": { display: "none" } }}
     >
       <Toolbar>

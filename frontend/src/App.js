@@ -2,14 +2,14 @@
 import "./App.css";
 import "./Styles/hamlet.css";
 import Header from "./Components/NavigationBar/Header";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Box } from "@mui/material";
 import ThemeProv from "./Components/Config/theme";
 import AuthProvider from "./Components/context/AuthContext";
 import { BrowserRouter } from "react-router-dom";
 import Router from "./router";
 //import { themeOptions } from "./Components/Config/theme";
-import { themeMxm } from "./Components/Config/theme";
+import { createMxmTheme } from "./Components/Config/theme";
 /*import {
   themeIndependiente,
   themeBocaJuniors,
@@ -18,7 +18,14 @@ import { themeMxm } from "./Components/Config/theme";
 import Spinner from "./Components/General/Spinner";
 import ErrorMessage from "./Components/ErrorMessage/ErrorMessage";
 import ErrorBoundary from "./Components/ErrorMessage/ErrorBoundary";
-
+import cordoba from "./img/cordoba.webp";
+import rio from "./img/rio.jpg";
+import roble from "./img/roble.jpg";
+import pinar from "./img/pinar.jpg";
+import Mateo from "./img/Mateo.jpeg";
+import sky from "./img/Sky.jpg";
+import myIMG_0626 from "./img/IMG_0626.jpeg";
+import paperBackground from "./img/paperBackground.jpg";
 import { useBackendStatus } from "./Hooks/useBackendStatus";
 import { useUserPreferences } from "./Hooks/useUserPreferences";
 
@@ -27,6 +34,7 @@ function App() {
   const storedTheme = localStorage.getItem("appTheme");
   const initialMode = storedTheme ? storedTheme : "light"; // Valor por defecto si no hay nada en localStorage
   const [useMode, setMode] = useState(initialMode);
+  const [useLogin, setLogin] = useState(localStorage.getItem("login"));
 
   const backendStatus = useBackendStatus();
   const { prefs, savePrefs } = useUserPreferences();
@@ -57,8 +65,8 @@ function App() {
     localStorage.setItem("appTheme", nextMode);
   };
 
-  const themeInUse = themeMxm;
-  //const themeInUse = themeOptions;
+  const themeInUse = useMemo(() => createMxmTheme(useMode), [useMode]);
+  //const themeInUse = createThemeOptions(useMode);
 
   const success = (
     <ThemeProv theme={themeInUse} mode={useMode}>
@@ -68,7 +76,6 @@ function App() {
           minHeight: "100vh",
           display: "flex",
           flexDirection: "column",
-          background: themeInUse.palette.background.default,
           overflow: "hidden",
         }}
       >
@@ -97,6 +104,12 @@ function App() {
                   justifyContent: "center",
                   alignItems: "stretch",
                   width: "100%",
+                  background: localStorage.getItem("login")
+                    ? themeInUse.palette.background.default
+                    : `url(${cordoba})`,
+                  backgroundRepeat: "no-repeat",
+                  backgroundSize: "cover",
+                  backgroundPositionY: "30%",
                 }}
               >
                 <Router
@@ -105,6 +118,7 @@ function App() {
                       ? prefs
                       : { color: "info", variant: "outlined" }
                   }
+                  setLog={setLogin}
                 />
               </Box>
             </AuthProvider>
