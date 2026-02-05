@@ -19,6 +19,8 @@ export const preciosRoutes = ({ color, variant }) => (
           collection="precios"
           task="edit"
           title="Editar Precio"
+          subtitle="Edita los valores, mínimos y entradas de este precio. Se agregará una nueva entrada al historial."
+          submitText={"Guardar cambios"}
           color={color}
           variant={variant}
         />
@@ -32,6 +34,8 @@ export const preciosRoutes = ({ color, variant }) => (
           collection="precios"
           task="new"
           title="Agregar Precio"
+          subtitle="Define un nuevo valor, minimo y entradas para este precio. La categoria seleccionada lo hará disponible para los procesos correspondientes."
+          submitText={"Agregar Precio"}
           color={color}
           variant={variant}
         />
@@ -45,6 +49,8 @@ export const preciosRoutes = ({ color, variant }) => (
           collection="precios"
           task="copy"
           title="Copiar Precio"
+          subtitle="Define un nuevo precio a partir del precio seleccionado (no incluirá el historial)."
+          submitText={"Agregar Precio"}
           color={color}
           variant={variant}
         />

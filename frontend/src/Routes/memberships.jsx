@@ -25,6 +25,8 @@ export const membershipsRoutes = ({ color, variant }) => (
           collection="memberships"
           task="edit"
           title="Editar Membresía"
+          subtitle="Modificar el rol asignado a un usuario."
+          submitText={"Guardar cambios"}
           color={color}
           variant={variant}
         />
@@ -39,6 +41,8 @@ export const membershipsRoutes = ({ color, variant }) => (
           collection="memberships"
           task="copy"
           title="Copiar Membresía"
+          subtitle="Asignar rol a un usuario existente."
+          submitText={"Agregar Membresía"}
           color={color}
           variant={variant}
         />

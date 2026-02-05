@@ -35,6 +35,8 @@ export const jobPartsRoutes = ({ color, variant }) => (
           collection="JobParts"
           task="new"
           title="Agregar Parte de Trabajo"
+          subtitle="Definir las caracteristicas principales de la parte de trabajo evita el ingreso de trabajos irrealizables. Asignarlas a los tipos de trabajos correspondientes."
+          submitText={"Agregar Parte de Trabajo"}
           color={color}
           variant={variant}
         />
@@ -48,6 +50,8 @@ export const jobPartsRoutes = ({ color, variant }) => (
           collection="JobParts"
           task="copy"
           title="Copiar Parte de Trabajo"
+          subtitle="Agregar una nueva parte de trabajo basada en una existente."
+          submitText={"Agregar Parte de Trabajo"}
           color={color}
           variant={variant}
         />
@@ -61,6 +65,8 @@ export const jobPartsRoutes = ({ color, variant }) => (
           collection="JobParts"
           task="edit"
           title="Editar Parte de Trabajo"
+          subtitle="Los cambios en las caracteristicas de la parte de trabajo afectaran los trabajos que la utilicen."
+          submitText={"Guardar cambios"}
           color={color}
           variant={variant}
         />

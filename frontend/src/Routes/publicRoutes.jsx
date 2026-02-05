@@ -13,15 +13,7 @@ export const publicRoutes = ({ color, variant }) => {
       <Route path="/" element={<Home />} />
       <Route
         path="/login"
-        element={
-          <Container
-            height="100vh"
-            maxWidth="sm"
-            sx={{ padding: "auto", margin: "auto", alignItems: "center" }}
-          >
-            <Login color={color} variant={variant} />
-          </Container>
-        }
+        element={<Login color={color} variant={variant} />}
       />
       <Route
         path="/register"

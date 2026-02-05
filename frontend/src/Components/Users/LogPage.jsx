@@ -43,7 +43,6 @@ export const LogPage = () => {
   return (
     <Container
       sx={{
-        minHeight: "100vh",
         margin: "15px",
         display: "flex",
         alignItems: "center",
@@ -109,7 +108,7 @@ export const LogPage = () => {
                   background: "#770077",
                   padding: "5px 10px 5px 10px",
                   fontWeight: "700",
-                  fontKerning: "500%",
+                  letterSpacing: "0.25em",
                   textTransform: "uppercase",
                   borderRadius: "5px",
                   display: "inline-block",
@@ -126,7 +125,7 @@ export const LogPage = () => {
                 color={"rgb(2, 56, 66)"}
                 //sx={{ textShadow: "2px 2px 1px #00000088" }}
               >
-                Gestión técnica para talleres gráficos.
+                Gestión para talleres gráficos.
               </Typography>
 
               <Typography
@@ -142,7 +141,7 @@ export const LogPage = () => {
               <ButtonGroup
                 variant="outlined"
                 aria-label="outlined button group"
-                sx={{ margin: "15px 0 0 0", alignSelf: "flex-end" }}
+                sx={{ margin: "15px 0 0 0", alignSelf: "flex-start" }}
               >
                 <Button
                   variant="outlined"
@@ -171,7 +170,7 @@ export const LogPage = () => {
               <Card variant={cardVariant} style={cardStyle}>
                 <CardHeader
                   titleTypographyProps={cardHeaderStyle}
-                  title="Organiza tu taller"
+                  title="Estructura flexible"
                 ></CardHeader>
                 <CardContent>
                   <Typography
@@ -181,9 +180,9 @@ export const LogPage = () => {
                     gutterBottom
                     color={"rgb(2, 56, 66)"}
                   >
-                    Hamlet te permite definir cómo trabaja tu imprenta y usar
-                    esa base para gestionar pedidos, presupuestos y producción
-                    de forma consistente.
+                    Hamlet se adapta a la forma en que trabaja tu imprenta,
+                    permitiendo definir máquinas, materiales, formatos y
+                    procesos para gestionar pedidos, presupuestos y producción.
                   </Typography>
                 </CardContent>
               </Card>
@@ -191,7 +190,7 @@ export const LogPage = () => {
             <Grid item xs={12} md={4} sx={{ padding: "15px" }}>
               <Card variant={cardVariant} style={cardStyle}>
                 <CardHeader
-                  title="Cada pedido, con contexto y criterio"
+                  title="Lógica de trabajo"
                   titleTypographyProps={cardHeaderStyle}
                 />
                 <CardContent>
@@ -202,9 +201,9 @@ export const LogPage = () => {
                     gutterBottom
                     color={"rgb(2, 56, 66)"}
                   >
-                    Los trabajos dejan de ser descripciones sueltas. Hamlet
-                    mantiene la información técnica, comercial y operativa
-                    conectada en un solo lugar.
+                    Hamlet refleja la manera en que los trabajos se piensan y se
+                    producen en el taller, respetando procesos, etapas y
+                    criterios propios de cada imprenta.
                   </Typography>
                 </CardContent>
               </Card>
@@ -212,7 +211,7 @@ export const LogPage = () => {
             <Grid item xs={12} md={4} sx={{ padding: "15px" }}>
               <Card variant={cardVariant} style={cardStyle}>
                 <CardHeader
-                  title="Información clara para el día a día"
+                  title="Información estadística"
                   titleTypographyProps={cardHeaderStyle}
                 />
                 <CardContent>
@@ -223,9 +222,9 @@ export const LogPage = () => {
                     gutterBottom
                     color={"rgb(2, 56, 66)"}
                   >
-                    Accedé rápidamente a datos, históricos y herramientas que te
-                    ayudan a tomar decisiones con más tranquilidad y menos
-                    improvisación.
+                    La información histórica y estadística del taller está
+                    siempre disponible para acompañar la toma de decisiones con
+                    más criterio y menos urgencia.
                   </Typography>
                 </CardContent>
               </Card>

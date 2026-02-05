@@ -136,7 +136,20 @@ export const Login = (props) => {
   );
 
   const success = (
-    <Container>
+    <Container
+      height={"auto"} //context.userLogged === null ? "100%" :
+      maxWidth={context.userLogged === null ? "sm" : "lg"}
+      sx={
+        context.userLogged === null
+          ? {
+              padding: "auto",
+              marginTop: "auto",
+              marginBottom: "auto",
+              alignItems: "center",
+            }
+          : { padding: "0px", marginTop: "0px", marginBottom: "0px" }
+      }
+    >
       <Card variant={props.variant}>
         {context.userLogged === null && (
           <CardHeader
@@ -248,7 +261,16 @@ export const Login = (props) => {
   );
 
   const ForgotPassword = (
-    <Container>
+    <Container
+      height={"auto"} //context.userLogged === null ? "100%" :
+      maxWidth={context.userLogged === null ? "sm" : "lg"}
+      sx={{
+        padding: "auto",
+        marginTop: "auto",
+        marginBottom: "auto",
+        alignItems: "center",
+      }}
+    >
       <Card elevation={10}>
         <CardHeader
           title="Recuperar Contraseña"

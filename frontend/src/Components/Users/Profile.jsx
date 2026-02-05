@@ -115,6 +115,8 @@ export const Profile = () => {
               <FormMaterial
                 form={userSettingsFormData}
                 task="local"
+                title="Preferencias"
+                subtitle="Apariencia de los formularios"
                 submitText="Guardar"
                 action={savePrefs}
                 variant={prefs?.variant || "outlined"}

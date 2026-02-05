@@ -27,6 +27,8 @@ export const printersRoutes = ({ color, variant }) => {
             collection="impresoras"
             task="new"
             title="Agregar Impresora"
+            subtitle="Define las caracteristicas de la impresora, si es necesario recurre al manual del usuario."
+            submitText={"Agregar Impresora"}
             variant={variant}
             color={color}
           />
@@ -40,6 +42,8 @@ export const printersRoutes = ({ color, variant }) => {
             collection="impresoras"
             task="copy"
             title="Copiar Impresora"
+            subtitle="Definir una nueva impresora a partir de la impresora seleccionada."
+            submitText={"Agregar Impresora"}
             variant={variant}
             color={color}
           />
@@ -53,6 +57,8 @@ export const printersRoutes = ({ color, variant }) => {
             collection="impresoras"
             task="edit"
             title="Editar Impresora"
+            subtitle="La configuracion de las impresoras es importante para el correcto funcionamiento del sistema de costos."
+            submitText={"Guardar cambios"}
             variant={variant}
             color={color}
           />

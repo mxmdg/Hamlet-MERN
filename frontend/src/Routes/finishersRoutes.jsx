@@ -16,6 +16,8 @@ export const finishersRoutes = ({ color, variant }) => (
           collection="finishers"
           task="new"
           title="Agregar nuevo Proceso de Terminación"
+          subtitle="Definir las caracteristicas principales del proceso de terminación. Asignar costo y habilitar su uso en los trabajos y partes seleccionados."
+          submitText={"Agregar Proceso"}
           variant={variant}
           color={color}
         />
@@ -28,6 +30,8 @@ export const finishersRoutes = ({ color, variant }) => (
           collection="finishers"
           task="copy"
           title="Copiar Proceso de Terminación"
+          subtitle="Agregar un nuevo proceso de terminación basado en el proceso seleccionado."
+          submitText={"Agregar Proceso"}
           variant={variant}
           color={color}
         />
@@ -40,6 +44,8 @@ export const finishersRoutes = ({ color, variant }) => (
           collection="finishers"
           task="edit"
           title="Editar Proceso de Terminación"
+          subtitle="Los cambios en las caracteristicas del proceso de terminación afectaran los trabajos que lo utilicen."
+          submitText={"Guardar cambios"}
           variant={variant}
           color={color}
         />

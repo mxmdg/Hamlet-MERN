@@ -26,6 +26,9 @@ export const usersRoutes = ({ color, variant }) => (
           form={UsersDataForm}
           collection="users"
           task="edit"
+          title="Editar Usuario"
+          subtitle="Los cambios pueden afectar el acceso del usuario al sistema"
+          submitText={"Guardar cambios"}
           color={color}
           variant={variant}
         />

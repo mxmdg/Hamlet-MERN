@@ -18,6 +18,8 @@ export const formatosRoutes = ({ color, variant }) => (
           collection="formatos"
           task="new"
           title="Agregar nuevo Formato"
+          subtitle="Crear un nuevo formato definiendo sus caracteristicas."
+          submitText={"Agregar Formato"}
           variant={variant}
           color={color}
         />
@@ -31,6 +33,8 @@ export const formatosRoutes = ({ color, variant }) => (
           collection="formatos"
           task="copy"
           title="Copiar Formato"
+          subtitle="Crear un nuevo formato basado en uno existente."
+          submitText={"Agregar Formato"}
           variant={variant}
           color={color}
         />
@@ -44,6 +48,8 @@ export const formatosRoutes = ({ color, variant }) => (
           collection="formatos"
           task="edit"
           title="Editar Formato"
+          subtitle="Los cambios en las caracteristicas del formato afectaran los trabajos que lo utilicen."
+          submitText={"Guardar cambios"}
           variant={variant}
           color={color}
         />

@@ -21,6 +21,8 @@ export const materialesRoutes = ({ color, variant }) => (
           collection="materiales"
           task="new"
           title="Agregar Material"
+          subtitle="Las caracteristicas del material son parte fundamental en los calculos del sistema."
+          submitText={"Agregar Material"}
           variant={variant}
           color={color}
         />
@@ -34,6 +36,8 @@ export const materialesRoutes = ({ color, variant }) => (
           collection="materiales"
           task="copy"
           title="Copiar Material"
+          subtitle="Crear un nuevo material basado en el material seleccionado."
+          submitText={"Agregar Material"}
           variant={variant}
           color={color}
         />
@@ -47,6 +51,8 @@ export const materialesRoutes = ({ color, variant }) => (
           collection="materiales"
           task="edit"
           title="Editar Material"
+          subtitle="Los cambios en las caracteristicas del material afectaran pedidos anteriores."
+          submitText={"Guardar cambios"}
           variant={variant}
           color={color}
         />

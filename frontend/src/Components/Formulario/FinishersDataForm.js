@@ -152,6 +152,8 @@ const FinishersDataForm = (props) => {
       collection={props.collection}
       task={props.task}
       title={props.title}
+      subtitle={props.subtitle}
+      submitText={props.submitText}
       color={props.color}
       variant={props.variant}
     />
