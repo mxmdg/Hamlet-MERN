@@ -572,9 +572,9 @@ const JobDetail = (props) => {
                 {previousCotizations.reverse().map((cotizacion) => (
                   <Button
                     color={
-                      cotizacion.status === "Aprobada"
+                      cotizacion.status === "Aprobado"
                         ? "success"
-                        : cotizacion.status === "Rechazada"
+                        : cotizacion.status === "Rechazado"
                         ? "error"
                         : "primary"
                     }
