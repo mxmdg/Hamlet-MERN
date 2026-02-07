@@ -138,24 +138,45 @@ export const LogPage = () => {
                 Presupuestos, pedidos y producción basados en la realidad de tu
                 imprenta.
               </Typography>
+              <Divider />
+              <Typography
+                variant="h5"
+                color={"#000"}
+                fontWeight={300}
+                fontFamily={"Open Sans, sans-serif"}
+              >
+                Hamlet se encuentra en etapa inicial, te invitamos a probarlo y
+                agradecemos tus comentarios!.
+              </Typography>
               <ButtonGroup
-                variant="outlined"
-                aria-label="outlined button group"
-                sx={{ margin: "15px 0 0 0", alignSelf: "flex-start" }}
+                variant="contained"
+                aria-label="text button group"
+                sx={{
+                  margin: "15px 0 0 0",
+                  alignSelf: "flex-start",
+                  background: "#fff",
+                }}
               >
                 <Button
-                  variant="outlined"
+                  variant="text"
                   color="primary"
                   onClick={() => Navigate("/login")}
                 >
                   Ingresar
                 </Button>
                 <Button
-                  variant="outlined"
+                  variant="text"
                   color="secondary"
                   onClick={() => Navigate("/register")}
                 >
                   Registrarse
+                </Button>
+                <Button
+                  variant="text"
+                  color="warning"
+                  onClick={() => Navigate("/feedback")}
+                >
+                  feedback
                 </Button>
               </ButtonGroup>
             </Grid>

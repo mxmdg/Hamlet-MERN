@@ -63,9 +63,8 @@ formatControl.addFormat = async (req, res, next) => {
         tenant,
       });
       await newFormat.save();
-      console.log(newFormat.Nombre + " ha sido agregado" + newFormat.tenant);
       res.json({
-        message: newFormat.Nombre + " ha sido agregado" + newFormat.tenant,
+        message: newFormat.Nombre + " ha sido agregado",
       });
     } catch (e) {
       console.error(e);
@@ -104,7 +103,7 @@ formatControl.updateFormat = async (req, res, next) => {
     const format = await formatos.esquema.findOneAndUpdate(
       { _id: req.params.id, tenant },
       { Nombre, Alto, Ancho },
-      { new: true }
+      { new: true },
     );
     if (!format) {
       return res.status(404).json({ message: "Formato no encontrado" });
@@ -122,7 +121,7 @@ formatControl.deleteFormat = async (req, res, next) => {
     const format = await formatos.esquema.findOneAndUpdate(
       { _id: req.params.id, tenant },
       { status: "inactivo" },
-      { new: true }
+      { new: true },
     );
 
     if (!format) {

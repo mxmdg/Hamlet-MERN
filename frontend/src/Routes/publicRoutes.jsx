@@ -1,5 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import Home from "../Components/home";
+import Feedback from "../Components/Users/Feedback";
 import { Login } from "../Components/Users/Login";
 import { Register } from "../Components/Users/Register";
 import ResetPassword from "../Components/Users/RecoverPassword";
@@ -14,6 +15,10 @@ export const publicRoutes = ({ color, variant }) => {
       <Route
         path="/login"
         element={<Login color={color} variant={variant} />}
+      />
+      <Route
+        path="/feedback"
+        element={<Feedback color={color} variant={variant} />}
       />
       <Route
         path="/register"

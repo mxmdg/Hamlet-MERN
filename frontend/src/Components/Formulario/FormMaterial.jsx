@@ -447,6 +447,7 @@ const FormMaterial = (props) => {
             type={inp.type}
             label={inp.label || inp.inputName}
             autoComplete={inp.inputName}
+            multiline={inp.multiline || false}
             variant={variant}
             color={color}
             defaultValue={
