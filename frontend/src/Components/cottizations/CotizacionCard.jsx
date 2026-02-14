@@ -114,7 +114,7 @@ const CotizacionCard = ({ cotizacion, job }) => {
           message: "Error enviando el presupuesto.",
           severity: "error",
           title: "Error",
-        }
+        },
       );
       setLoading(false);
       setWaitingFor(null);
@@ -190,23 +190,25 @@ const CotizacionCard = ({ cotizacion, job }) => {
                         key={statusOption}
                         onClick={() => statusUpdater(statusOption)}
                         variant={
-                          localStatus === statusOption
+                          localStatus.includes(
+                            statusOption.slice(0, statusOption.length - 1),
+                          )
                             ? "contained"
                             : "outlined"
                         }
                         color={
-                          localStatus === "Aprobado"
+                          localStatus.includes("Aprobad")
                             ? "success"
-                            : localStatus === "Rechazado"
-                            ? "error"
-                            : localStatus === "Enviado"
-                            ? "success"
-                            : "warning"
+                            : localStatus.includes("Rechazado")
+                              ? "error"
+                              : localStatus === "Enviado"
+                                ? "success"
+                                : "warning"
                         }
                       >
                         {statusOption}
                       </Button>
-                    )
+                    ),
                   )}
                 </ButtonGroup>
               </>

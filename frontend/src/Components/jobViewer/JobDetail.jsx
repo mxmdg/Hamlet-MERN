@@ -88,21 +88,21 @@ const JobDetail = (props) => {
   const navigate = useNavigate();
   // El siguiente estado es para almacenar la informacion de la imposicion en todas las partes.
   const [stockRequired, setStockRequired] = useState(
-    props.cot ? props.cot.impositionData : []
+    props.cot ? props.cot.impositionData : [],
   );
 
   const [useLoading, setLoading] = useState(false);
   const [useError, setError] = useState(null);
 
   const [productionPlan, setProductionPlan] = useState(
-    props.cot ? props.cot.impositionData : {}
+    props.cot ? props.cot.impositionData : {},
   );
   const [productionPlanAvaible, setProductionPlanAvaible] = useState(false);
   const [useJobFinishingData, setJobFinishingData] = useState(
-    props.cot ? props.cot.finishing : null
+    props.cot ? props.cot.finishing : null,
   );
   const [usePartFinishingData, setPartFinishingData] = useState(
-    props.cot ? props.cot.partsFinishing : []
+    props.cot ? props.cot.partsFinishing : [],
   );
   const [previousCotizations, setPreviousCotizations] = useState([]);
 
@@ -161,10 +161,10 @@ const JobDetail = (props) => {
 
   const PartDetail = (part) => {
     const [usePoses, setPoses] = useState(
-      props.cot ? props.cot?.impositionData[part._id]?.Poses : null
+      props.cot ? props.cot?.impositionData[part._id]?.Poses : null,
     );
     const [useImpoData, setImpoData] = useState(
-      props.cot ? props.cot?.impositionData[part._id]?.impositionData : null
+      props.cot ? props.cot?.impositionData[part._id]?.impositionData : null,
     );
     const [imposed, setImposed] = useState(props.cot ? true : false);
     const [useData, setData] = useState(null);
@@ -181,7 +181,7 @@ const JobDetail = (props) => {
           part.partStock.Alto_Resma,
           part,
           job,
-          usePoses
+          usePoses,
         )
       : "";
 
@@ -196,13 +196,13 @@ const JobDetail = (props) => {
       partCosts.totalPliegos = stockCalculated.cantidadDePliegos;
       partCosts.totalHojas = stockCalculated.totalHojas;
       partCosts.tirada = Math.ceil(
-        job.Cantidad > 1 ? job.Cantidad / partCosts.Poses : job.Cantidad
+        job.Cantidad > 1 ? job.Cantidad / partCosts.Poses : job.Cantidad,
       );
       partCosts.id = part._id;
       partCosts.stock = part.partStock;
       partCosts.colores = Math.max(part.ColoresFrente, part.ColoresDorso);
       partCosts.impresiones = Math.ceil(
-        partCosts.totalPliegos * (part.ColoresDorso > 0 ? 2 : 1)
+        partCosts.totalPliegos * (part.ColoresDorso > 0 ? 2 : 1),
       );
 
       setProductionPlan((prevState) => ({
@@ -224,8 +224,8 @@ const JobDetail = (props) => {
         });
         setStockRequired(`
                         Poses: ${usePoses} / Tirada: ${Math.ceil(
-          job.Cantidad / usePoses
-        )}
+                          job.Cantidad / usePoses,
+                        )}
                         Pliegos: ${
                           stockCalculated.cantidadDePliegos
                         } - Salen: ${stockCalculated.pliegosPorHoja} del 
@@ -334,14 +334,14 @@ const JobDetail = (props) => {
                                   } ${
                                     Math.max(
                                       part.ColoresFrente,
-                                      part.ColoresDorso
+                                      part.ColoresDorso,
                                     ) > 1
                                       ? "CMYK"
                                       : "K"
                                   }`
                                 : ""
                             }\nPoses: ${usePoses} / Tirada: ${Math.ceil(
-                              job.Cantidad / usePoses
+                              job.Cantidad / usePoses,
                             )}\nPliegos: ${
                               stockCalculated.cantidadDePliegos
                             } - Salen: ${stockCalculated.pliegosPorHoja} del ${
@@ -350,7 +350,7 @@ const JobDetail = (props) => {
                               part.partStock.Alto_Resma
                             }\nCantidad de resmas: ${
                               Math.ceil(
-                                (stockCalculated.totalHojas / 500) * 100
+                                (stockCalculated.totalHojas / 500) * 100,
                               ) / 100
                             } (${stockCalculated.totalHojas} hojas)`
                           : `${part.partStock.Tipo} ${part.partStock.Gramaje}`
@@ -378,7 +378,7 @@ const JobDetail = (props) => {
                             style={{ whiteSpace: "pre-line" }}
                           >
                             {`Poses: ${usePoses} / Tirada: ${Math.ceil(
-                              job.Cantidad / usePoses
+                              job.Cantidad / usePoses,
                             )}\nPliegos: ${
                               stockCalculated.cantidadDePliegos
                             } - Salen: ${stockCalculated.pliegosPorHoja} del ${
@@ -387,7 +387,7 @@ const JobDetail = (props) => {
                               part.partStock.Alto_Resma
                             }\nCantidad de resmas: ${
                               Math.ceil(
-                                (stockCalculated.totalHojas / 500) * 100
+                                (stockCalculated.totalHojas / 500) * 100,
                               ) / 100
                             } (${stockCalculated.totalHojas} hojas)`}
                           </Typography>
@@ -439,7 +439,7 @@ const JobDetail = (props) => {
                         sendFinishingData={(finishingData) => {
                           setPartFinishingData((prevData) => {
                             const existingIndex = prevData.findIndex(
-                              (item) => item.partId === part._id
+                              (item) => item.partId === part._id,
                             );
                             const updatedData = {
                               partId: part._id,
@@ -474,7 +474,7 @@ const JobDetail = (props) => {
     const fetchPreviousCotizations = async () => {
       try {
         const previousCotizations = await getPrivateElements(
-          `quotations/?P=jobId&Q=${job._id}`
+          `quotations/?P=jobId&Q=${job._id}`,
         );
         setPreviousCotizations(previousCotizations);
       } catch (error) {
@@ -569,25 +569,27 @@ const JobDetail = (props) => {
             <>
               <ButtonGroup variant="text" size="small" orientation="vertical">
                 <Typography variant="button">Pesupuestos: </Typography>
-                {previousCotizations.reverse().map((cotizacion) => (
-                  <Button
-                    color={
-                      cotizacion.status === "Aprobado"
-                        ? "success"
-                        : cotizacion.status === "Rechazado"
-                        ? "error"
-                        : "primary"
-                    }
-                    //variant={cotizacion.status === "Aprobada" ? "contained" : cotizacion.status === "Rechazada" ? "contained" : "outlined"}
-                    key={cotizacion._id}
-                    onClick={() =>
-                      navigate(`/quotations/edit/${cotizacion._id}`)
-                    }
-                  >
-                    <b># {cotizacion.index} </b> -{" "}
-                    {getMyDate(cotizacion.fecha).ddmmyy}
-                  </Button>
-                ))}
+                {previousCotizations
+                  .sort((a, b) => a - b)
+                  .map((cotizacion) => (
+                    <Button
+                      color={
+                        cotizacion.status.includes("Aprobad")
+                          ? "success"
+                          : cotizacion.status.includes("Rechazad")
+                            ? "error"
+                            : "primary"
+                      }
+                      //variant={cotizacion.status === "Aprobada" ? "contained" : cotizacion.status === "Rechazada" ? "contained" : "outlined"}
+                      key={cotizacion._id}
+                      onClick={() =>
+                        navigate(`/quotations/edit/${cotizacion._id}`)
+                      }
+                    >
+                      <b># {cotizacion.index} </b> -{" "}
+                      {getMyDate(cotizacion.fecha).ddmmyy}
+                    </Button>
+                  ))}
               </ButtonGroup>
             </>
           )}

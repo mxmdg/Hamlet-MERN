@@ -68,7 +68,7 @@ quotationsControl.getQuotations = async (req, res) => {
 
     // incluir tenant y excluir estados rechazados
     const allQuotations = await quotations.esquema
-      .find({ ...query, tenant })
+      .find({ ...query, tenant, status: { $ne: "Rechazado" } })
       .populate({
         path: "jobId",
         model: Jobs.esquema,
@@ -126,7 +126,7 @@ quotationsControl.updateQuotation = async (req, res) => {
     const updatedQuotation = await quotations.esquema.findOneAndUpdate(
       { _id: req.params.id, tenant },
       req.body,
-      { new: true }
+      { new: true },
     );
     if (updatedQuotation) {
       res.json({
@@ -245,8 +245,8 @@ quotationsControl.deleteQuotation = async (req, res, next) => {
     const tenant = req.header("x-tenant");
     const deletedQuotation = await quotations.esquema.findOneAndUpdate(
       { _id: req.params.id, tenant },
-      { status: "inactivo" },
-      { new: true }
+      { status: "Rechazado" },
+      { new: true },
     );
     if (deletedQuotation) {
       res.json({
@@ -266,7 +266,7 @@ quotationsControl.getDeletedQuotations = async (req, res, next) => {
     const tenant = req.header("x-tenant");
     const deleted = await quotations.esquema.find({
       tenant,
-      status: { $eq: "Rechazado" },
+      status: { $eq: "Rechazado" || "Rechazada" },
     });
     res.json(deleted);
   } catch (error) {
