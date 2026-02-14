@@ -9,7 +9,9 @@ import { addPrivateElement } from "../customHooks/FetchDataHook";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import Spinner from "../General/Spinner";
 
-const Feedback = () => {
+const Feedback = (props) => {
+  const [useColor, setColor] = React.useState(props.color || "primary");
+  const [useVariant, setVariant] = React.useState(props.variant || "filled");
   const [useLoading, setLoading] = useState(false);
   const [useError, setError] = useState(null);
   const navigate = useNavigate();
@@ -84,6 +86,8 @@ const Feedback = () => {
         title={useError.title}
         severity={useError.severity}
         action={useError.action}
+        color={useColor}
+        variant={useVariant}
       />
     );
   }

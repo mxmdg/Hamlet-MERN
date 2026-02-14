@@ -9,6 +9,7 @@ const Job = require("../../models/Jobs");
 const Quotation = require("../../models/quotations");
 const Empresa = require("../../models/empresas");
 const Finisher = require("../../models/finishers");
+const resolveTenant = require("../../middlewares/magicTenant");
 
 const flattenNestedItems = (elements) => {
   const flattened = {};
@@ -118,7 +119,7 @@ tenantsControl.updateTenant = async (req, res, next) => {
     const updatedTenant = await tenant.esquema.findByIdAndUpdate(
       req.params.id,
       update,
-      { new: true, runValidators: true }
+      { new: true, runValidators: true },
     );
 
     if (!updatedTenant) {
@@ -142,7 +143,7 @@ tenantsControl.updateSettings = async (req, res, next) => {
     const updatedTenant = await tenant.esquema.findByIdAndUpdate(
       tenantId,
       { $set: { settings: settingsUpdate } },
-      { new: true, runValidators: true }
+      { new: true, runValidators: true },
     );
 
     if (!updatedTenant) {

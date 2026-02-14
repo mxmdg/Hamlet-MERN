@@ -175,7 +175,7 @@ app.use(
     put: "public",
     delete: ["admin", "manager", "vendedor"],
   }),
-  require("./routes/jobs")
+  require("./routes/jobs"),
 );
 app.use(
   "/Hamlet/jobs/urg",
@@ -185,7 +185,7 @@ app.use(
     put: ["admin", "manager", "vendedor"],
     delete: ["admin", "manager", "vendedor"],
   }),
-  require("./routes/jobs")
+  require("./routes/jobs"),
 );
 app.use(
   "/Hamlet/Impresoras",
@@ -195,7 +195,7 @@ app.use(
     put: ["admin", "manager"],
     delete: ["admin", "manager"],
   }),
-  require("./routes/printers")
+  require("./routes/printers"),
 );
 
 app.use(
@@ -206,7 +206,7 @@ app.use(
     put: ["admin", "manager"],
     delete: ["admin", "manager"],
   }),
-  require("./routes/printers")
+  require("./routes/printers"),
 );
 app.use(
   "/Hamlet/finishers",
@@ -216,7 +216,7 @@ app.use(
     put: ["admin", "manager"],
     delete: ["admin", "manager"],
   }),
-  require("./routes/finishers")
+  require("./routes/finishers"),
 );
 app.use(
   "/Hamlet/formatos",
@@ -226,7 +226,7 @@ app.use(
     put: ["admin", "manager", "vendedor"],
     delete: ["admin", "manager"],
   }),
-  require("./routes/formatos")
+  require("./routes/formatos"),
 );
 app.use(
   "/Hamlet/empresas",
@@ -236,7 +236,7 @@ app.use(
     put: ["admin", "manager", "vendedor"],
     delete: ["admin", "manager", "vendedor"],
   }),
-  require("./routes/empresas")
+  require("./routes/empresas"),
 );
 app.use(
   "/Hamlet/precios",
@@ -247,7 +247,7 @@ app.use(
     put: ["admin", "manager"],
     delete: ["admin", "manager"],
   }), // Solo admin puede acceder
-  require("./routes/prices")
+  require("./routes/prices"),
 );
 app.use("/Hamlet/JobParts", require("./routes/jobParts"));
 app.use(
@@ -258,7 +258,7 @@ app.use(
     put: ["admin", "manager"],
     delete: ["admin", "manager"],
   }),
-  require("./routes/materiales")
+  require("./routes/materiales"),
 );
 app.use(
   "/Hamlet/users",
@@ -268,7 +268,7 @@ app.use(
     put: "public",
     delete: ["admin", "manager"],
   }),
-  require("./routes/users")
+  require("./routes/users"),
 );
 app.use(
   "/Hamlet/quotations",
@@ -278,7 +278,7 @@ app.use(
     put: ["admin", "manager"],
     delete: ["admin", "manager"],
   }),
-  require("./routes/quotations")
+  require("./routes/quotations"),
 );
 
 app.use(
@@ -286,10 +286,10 @@ app.use(
   requireRoleByMethod({
     get: "public", // todos pueden hacer GET
     post: "public", // todos pueden hacer GET
-    put: "admin", // todos pueden hacer GET
+    put: "public", // todos pueden hacer GET
     delete: "admin", // todos pueden hacer GET
   }),
-  require("./routes/tenants")
+  require("./routes/tenants"),
 );
 
 app.use(
@@ -298,7 +298,7 @@ app.use(
     get: "public", // todos pueden hacer GET
     put: "admin", // solo admin puede hacer PUT
   }),
-  require("./routes/tenants")
+  require("./routes/tenants"),
 );
 
 app.use(
@@ -309,7 +309,7 @@ app.use(
     put: ["admin", "manager"], // todos pueden hacer GET
     delete: ["admin", "manager"], // todos pueden hacer GET
   }),
-  require("./routes/memberships")
+  require("./routes/memberships"),
 );
 
 app.use(
@@ -317,7 +317,7 @@ app.use(
   requireRoleByMethod({
     get: "public", // todos pueden hacer GET
   }),
-  apiBCRA.getCotization
+  apiBCRA.getCotization,
 );
 
 app.use(
@@ -325,7 +325,7 @@ app.use(
   requireRoleByMethod({
     get: "public", // todos pueden hacer GET
   }),
-  apiBCRA.getCotizationPerDate
+  apiBCRA.getCotizationPerDate,
 );
 // error handler
 app.use(function (err, req, res, next) {

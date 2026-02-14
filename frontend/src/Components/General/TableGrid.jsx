@@ -27,6 +27,8 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
 import { deleteMultiple } from "../customHooks/FetchDataHook";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
+import Fade from '@mui/material/Fade';
+import Zoom from '@mui/material/Zoom';
 import CustomizedTooltip from "../utils/CustomizedTooltip";
 import { styled, alpha } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
@@ -143,26 +145,38 @@ EnhancedTableHead.propTypes = {
 };
 
 export const StyledTooltip = styled(({ className, ...props }) => (
-  <Tooltip {...props} classes={{ popper: className }} />
+  <Tooltip {...props} classes={{ popper: className }} 
+            slots={{
+          transition: Zoom,
+        }}
+        slotProps={{
+          transition: { timeout: 600 },
+        }}/>
 ))(({ theme }) => ({
   [`& .${tooltipClasses.tooltip}`]: {
-    background:
-      "linear-gradient(0deg,rgba(41, 125, 133, 1) 0%, rgba(89, 227, 234, 1) 100%)",
-    color: "#fff",
-    border: "2px solid #297D85",
-    borderRadius: 8,
+    background: "#efe",
+      //"linear-gradient(0deg,rgba(41, 125, 133, 1) 0%, rgba(89, 227, 234, 1) 100%)",
+    color: "#000",
+    border: "2px solid #efe",
+    borderRadius: 3,
     boxShadow: "10px 10px 7px #00000033",
     padding: "10px",
     fontSize: 13,
     textTransform: "uppercase",
   },
   [`& .${tooltipClasses.arrow}`]: {
-    color: "#59e3ea",
+    color: "#efe",
   },
 }));
 
 export const DangerTooltip = styled(({ className, ...props }) => (
-  <Tooltip {...props} classes={{ popper: className }} />
+  <Tooltip {...props} classes={{ popper: className }} 
+            slots={{
+          transition: Zoom,
+        }}
+        slotProps={{
+          transition: { timeout: 600 },
+        }}/>
 ))(({ theme }) => ({
   [`& .${tooltipClasses.tooltip}`]: {
     background:
@@ -191,17 +205,22 @@ const makeGradient = (color) =>
 
 export const GradientTooltip = styled(
   ({ className, color = "primary", ...props }) => (
-    <Tooltip {...props} arrow classes={{ popper: className }} />
+    <Tooltip {...props} arrow classes={{ popper: className }} slots={{
+          transition: Zoom,
+        }}
+        slotProps={{
+          transition: { timeout: 600 },
+        }} />
   )
 )(({ theme, color }) => {
   const paletteColor = theme.palette[color] || theme.palette.primary;
 
   return {
     [`& .${tooltipClasses.tooltip}`]: {
-      background: makeGradient(paletteColor.main),
-      color: paletteColor.contrastText,
-      border: `2px solid ${paletteColor.main}`,
-      borderRadius: 8,
+      background: "#efe",//makeGradient("#efe"),
+      color: paletteColor.dark,
+      border: `1px solid ${paletteColor.main}`,
+      borderRadius: 3,
       boxShadow: "8px 10px 10px rgba(0,0,0,0.35)",
       padding: "10px",
       fontSize: 13,

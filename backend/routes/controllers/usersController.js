@@ -59,7 +59,7 @@ const updateUser = async (req, res, next) => {
   try {
     const newUser = await usersModel.esquema.findOneAndUpdate(
       { _id: req.params.id },
-      req.body
+      req.body,
     );
     res.json({ message: newUser.Name + newUser.LastName + " Saved" });
   } catch (error) {
@@ -72,7 +72,7 @@ const deleteUser = async (req, res, next) => {
   try {
     const user = await usersModel.esquema.findByIdAndUpdate(
       { status: "inactivo" },
-      { new: true }
+      { new: true },
     );
     if (!user)
       return res.status(404).json({ message: "Usuario no encontrado" });
@@ -125,7 +125,7 @@ const login = async (req, res, next) => {
             role: document.Role, // se mantiene
           },
           req.app.get("secretKey"),
-          { expiresIn: expireTime / 1000 }
+          { expiresIn: expireTime / 1000 },
         );
 
         const expirationTime = Date.now() + expireTime;
@@ -134,7 +134,7 @@ const login = async (req, res, next) => {
         const memberships = await Membership.find({
           userId: document._id,
           status: "activo",
-        }).populate("tenant", "key name status");
+        }).populate("tenant", "key name status plan");
 
         // 3. Normalizar respuesta (no mandamos todo el modelo crudo)
         const formattedMemberships = memberships.map((m) => ({
@@ -143,6 +143,7 @@ const login = async (req, res, next) => {
             key: m.tenant.key,
             name: m.tenant.name,
             status: m.tenant.status,
+            plan: m.tenant.plan,
           },
           role: m.role,
         }));
@@ -254,6 +255,46 @@ const forgotPassword = async (req, res, next) => {
   }
 };
 
+const sendFeedback = async (req, res, next) => {
+  try {
+    const { name, lastName, email, message, page, company } = req.body;
+
+    if (!message) {
+      return res.status(400).json({
+        message: "Por favor, no olvides dejarnos tu mensaje!",
+      });
+    }
+
+    const mailOptions = {
+      from: "Feedback Hamlet <no-reply@hamlet.com.ar>",
+      to: "maxiomaro@gmail.com", // o el mail que uses vos
+      subject: `Feedback de ${name || ""} ${lastName || ""} (${email})`,
+      text: `
+Se recibió un nuevo feedback:
+
+Mensaje:
+${message}
+
+Email del usuario:
+${email || "No informado"}
+
+Página:
+${page || "No informada"}
+
+Empresa:
+${company || "No informado"}
+      `,
+    };
+
+    await mailer.sendMailByResend(mailOptions);
+
+    res.json({ message: "Feedback enviado correctamente" });
+  } catch (error) {
+    console.error("Error al enviar feedback:", error);
+    next(error);
+  }
+};
+
 const resetPassword = async (req, res, next) => {
   try {
     const { token } = req.params;
@@ -302,4 +343,5 @@ module.exports = {
   forgotPassword,
   resetPassword,
   hardDeleteUser,
+  sendFeedback,
 };

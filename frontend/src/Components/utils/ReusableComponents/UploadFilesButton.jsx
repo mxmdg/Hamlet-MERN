@@ -6,10 +6,19 @@ import { useState } from "react";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
-import { Divider, Paper, Tooltip, Typography } from "@mui/material";
+import {
+  Card,
+  CardContent,
+  Divider,
+  Paper,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import { getDateAndTime } from "../generalData/fechaDiccionario";
 import { VALIDATE_PDF } from "../../Config/config";
 import { StyledTooltip } from "../../General/TableGrid";
+import ErrorMessage from "../../ErrorMessage/ErrorMessage";
+import Spinner from "../../General/Spinner";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -57,13 +66,31 @@ export default function UploadFilesButton({
   expectedSize,
 }) {
   const [fileInfo, setFileInfo] = useState(null);
-
+  const [usePlan, setPlan] = useState(
+    localStorage.getItem("memberships")
+      ? JSON.parse(localStorage.getItem("memberships"))[0].tenant.plan
+      : null,
+  );
+  const [useError, setError] = useState(false);
+  const [useLoading, setLoading] = useState(false);
   const handleFileUpload = async (files) => {
-    if (files.length === 0) return;
+    setLoading(true);
+    if (files.length === 0) {
+      setLoading(false);
+      setError({
+        title: "No se seleccionó archivo",
+        message: "Por favor seleccione un archivo PDF válido.",
+      });
+      return;
+    }
 
     const file = files[0];
     if (file.type !== "application/pdf") {
-      alert("Please upload a valid PDF file.");
+      setLoading(false);
+      setError({
+        title: "Tipo de archivo inválido",
+        message: "Por favor seleccione un archivo PDF válido.",
+      });
       return;
     }
 
@@ -77,17 +104,17 @@ export default function UploadFilesButton({
       });
 
       if (!response.ok) {
+        setLoading(false);
         const errorText = await response.text();
-        console.error(
-          "Upload failed with status:",
-          response.status,
-          "Response:",
-          errorText,
-        );
-        throw new Error("Failed to upload file.");
+        setError({
+          title: "Error al subir el archivo",
+          message: `El servidor respondió con un error: ${response.status} ${response.statusText}`,
+        });
+        return;
       }
 
       const data = await response.json();
+      setLoading(false);
       setFileInfo(data);
 
       const mostCommonSize = calculateMostCommonSize(data.pages);
@@ -116,29 +143,40 @@ export default function UploadFilesButton({
         data.page_count !== expectedPageCount ||
         mostCommonSize !== expectedSize
       ) {
-        alert(
-          `Mismatch detected:\nExpected pages: ${expectedPageCount}, Actual: ${data.page_count}\n` +
-            `Expected size: ${expectedSize}, Most common size: ${mostCommonSize}`,
-        );
+        setLoading(false);
+        setError({
+          message: `Diferencias detectadas:\nPaginas esperadas: ${expectedPageCount}, paginas recibidas: ${data.page_count}\nTamaño esperado: ${expectedSize}, tamaño mas común: ${mostCommonSize}`,
+          title:
+            "El archivo PDF no coincide con las especificaciones esperadas",
+          severity: "info",
+        });
+        return;
       }
 
       if (onUploadSuccess) {
+        setLoading(false);
         onUploadSuccess(data);
       }
     } catch (error) {
+      setLoading(false);
       if (error.name === "TypeError" && error.message === "Failed to fetch") {
-        console.error("Network error or CORS issue:", error);
-        alert(
-          "Network error or server is unreachable. Please check your connection or contact support.",
-        );
+        setError({
+          title: "Error de red",
+          message:
+            "No se pudo conectar al servidor. Por favor revise su conexión o contacte al soporte.",
+        });
       } else {
-        console.error("Error uploading file:", error);
-        alert("Error uploading file. Please try again.");
+        setError({
+          title: "Error al subir el archivo",
+          message: "Ocurrió un error inesperado al subir el archivo.",
+        });
       }
     }
   };
 
-  return (
+  const loading = <Spinner></Spinner>;
+
+  const success = (
     <div>
       <Paper
         elevation={10}
@@ -225,4 +263,34 @@ export default function UploadFilesButton({
       </Paper>
     </div>
   );
+
+  if (useError) {
+    return (
+      <ErrorMessage
+        title={useError.title}
+        message={useError.message}
+        severity={useError.severity || "error"}
+        action={() => setError(null)}
+      />
+    );
+  }
+
+  if (useLoading) {
+    return <Spinner />;
+  }
+
+  if (usePlan !== "pro") {
+    return (
+      <Card>
+        <CardContent>
+          <Typography variant="body1" color="text.secondary">
+            Actualiza a nuestro plan Pro para habilitar la validación de
+            archivos PDF.
+          </Typography>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  return success;
 }

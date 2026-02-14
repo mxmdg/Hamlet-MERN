@@ -10,7 +10,8 @@ const CustomizedTooltip = styled(({ className, ...props }) => (
   [`& .${tooltipClasses.tooltip}`]: {
     backgroundColor: theme.palette.common.white,
     color: "rgb(0, 0, 0)",
-    boxShadow: theme.shadows[1],
+    border: "1px solid #000",
+    boxShadow: theme.shadows[2],
     fontSize: 12,
   },
 }));

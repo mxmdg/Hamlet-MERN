@@ -12,7 +12,7 @@ membershipsController.getMemberships = async (req, res, next) => {
       status: { $ne: "inactivo" },
     })
       .populate("userId", "Name LastName email")
-      .populate("tenant", "key name")
+      .populate("tenant", "key name plan status")
       .select("role status");
     res.json(memberships);
   } catch (e) {
@@ -28,7 +28,7 @@ membershipsController.getDeletedMemberships = async (req, res, next) => {
       status: { $eq: "inactivo" },
     })
       .populate("userId", "name email")
-      .populate("tenant", "key name");
+      .populate("tenant", "key name plan status");
     res.json(memberships);
   } catch (e) {
     next(e);
@@ -44,7 +44,7 @@ membershipsController.updateMembership = async (req, res, next) => {
       { new: true },
     )
       .populate("userId", "name email")
-      .populate("tenant", "key name status");
+      .populate("tenant", "key name status plan");
     if (!membership)
       return res.status(404).json({ message: "Membership no encontrada" });
     res.json(membership);
@@ -58,7 +58,7 @@ membershipsController.getMembershipById = async (req, res, next) => {
     const tenant = req.header("x-tenant");
     const membership = await Membership.findOne({ _id: req.params.id, tenant })
       .populate("userId", "name email")
-      .populate("tenant", "key name status");
+      .populate("tenant", "key name status plan");
     if (!membership)
       return res.status(404).json({ message: "Membership no encontrada" });
     res.json(membership);
@@ -72,7 +72,7 @@ membershipsController.getByUser = async (req, res, next) => {
     //const tenant = req.header("x-tenant");
     const memberships = await Membership.find({
       userId: req.params.userId,
-    }).populate("tenant", "key name status");
+    }).populate("tenant", "key name status plan");
     res.json(memberships);
   } catch (e) {
     next(e);
@@ -98,7 +98,7 @@ membershipsController.getByTenant = async (req, res, next) => {
       tenant,
     })
       .populate("userId", "name email")
-      .populate("tenant", "key name status");
+      .populate("tenant", "key name status plan");
     res.json(memberships);
   } catch (e) {
     next(e);

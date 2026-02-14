@@ -369,34 +369,40 @@ export default function CollapsibleTable(props) {
     );
   }
 
-  React.useEffect(() => {
-    const loadData = async () => {
-      try {
-        const res = await getPrivateElements(props.route);
-        setLoading(false);
-        const Rows = res.map((job) => {
-          return createData(
-            job._id,
-            job.Nombre,
-            job.Tipo[0]?.name,
-            job.Cantidad,
-            job.Company?.Nombre,
-            job.Owner?.Name + " " + job.Owner?.LastName,
-            job.Emision,
-            job.DeadLine,
-            job.Partes,
-            job.Finishing
-          );
-        });
+ React.useEffect(() => {
+  const loadData = async () => {
+    try {
+      setLoading(true);
 
-        rows.push(...Rows); // Use spread operator to push elements individually
-        setRows([...Rows]); // Update state with the fetched data
-      } catch (error) {
-        setError(error);
-      }
-    };
-    loadData();
-  }, [setRows]);
+      const res = await getPrivateElements(props.route);
+
+      const Rows = res.map((job) =>
+        createData(
+          job._id,
+          job.Nombre,
+          job.Tipo?.[0]?.name,
+          job.Cantidad,
+          job.Company?.Nombre,
+          `${job.Owner?.Name || ""} ${job.Owner?.LastName || ""}`.trim(),
+          job.Emision,
+          job.DeadLine,
+          job.Partes
+        )
+      );
+
+      // ✅ ÚNICA forma correcta
+      setRows(Rows);
+
+      setLoading(false);
+    } catch (error) {
+      setError(error);
+      setLoading(false);
+    }
+  };
+
+  loadData();
+}, [props.route]);
+
 
   function EnhancedTableHead(props) {
     const {

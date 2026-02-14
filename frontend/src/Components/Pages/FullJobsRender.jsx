@@ -33,6 +33,8 @@ const FullJobsRender = (props) => {
     />
   );
 
+  console.log("ANTES", jobList.length);
+
   const JobListRender = () => {
     return (
       <>
@@ -49,6 +51,7 @@ const FullJobsRender = (props) => {
       try {
         const jobs = await getPrivateElements(props.route);
         setJobList(jobs);
+        console.log("Despues", jobList.length);
         setError(null);
         setLoading(false);
       } catch (e) {

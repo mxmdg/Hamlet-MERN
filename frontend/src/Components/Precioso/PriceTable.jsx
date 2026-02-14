@@ -35,6 +35,11 @@ import {
 import { fillMonthlyData } from "../utils/generalData/fillMonthlyData";
 
 const PriceTable = (props) => {
+  const [usePlan, setPlan] = useState(
+    localStorage.getItem("memberships")
+      ? JSON.parse(localStorage.getItem("memberships"))[0].tenant.plan
+      : null,
+  );
   const [isThereHistory, setIsThereHistory] = useState();
   const [showHistory, setShowHistory] = useState(false);
   const [showSim, setShowSim] = useState(false);
@@ -62,7 +67,7 @@ const PriceTable = (props) => {
           props.pd.Nombre_Material ||
           props.pd.Modelo ||
           props.pd.Proceso
-        }`
+        }`,
       )
     ) {
       try {
@@ -156,18 +161,22 @@ const PriceTable = (props) => {
                     </TableCell>
                     <TableCell align="left">
                       {key === "formula" ? (
-                        <Modal
-                          btnText={`ver ${key}`}
-                          modalTitle={`${props.pd.Proceso} ${key}`}
-                          modalText={value}
-                        />
+                        usePlan === "pro" ? (
+                          <Modal
+                            btnText={`ver ${key}`}
+                            modalTitle={`${props.pd.Proceso} ${key}`}
+                            modalText={value}
+                          />
+                        ) : (
+                          `No disponible`
+                        )
                       ) : key === "valor" ? (
                         `${value} (u$d ${(value / props.cotization).toFixed(
-                          4
+                          4,
                         )})`
-                      ) : (
+                      ) : key !== "formula" ? (
                         value
-                      )}
+                      ) : null}
                     </TableCell>
                   </TableRow>
                 ))}

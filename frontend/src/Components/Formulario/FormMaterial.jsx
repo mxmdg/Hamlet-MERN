@@ -235,7 +235,7 @@ const FormMaterial = (props) => {
 
   const resetError = () => {
     setErrorMessage(null);
-    //navigate(-1);
+    navigate(-1);
   };
 
   const typeOfInput = (inp) => {
