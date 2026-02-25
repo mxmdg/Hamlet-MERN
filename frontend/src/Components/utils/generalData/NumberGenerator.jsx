@@ -52,7 +52,7 @@ const NumberGenerator = (props) => {
       <Divider />
       <CardContent>
         <Grid container spacing={2}>
-          <Grid item xs={12} sm={4}>
+          <Grid size={{ xs: 12, sm: 4 }}>
             <TextField
               label="Número inicial"
               type="number"
@@ -64,7 +64,7 @@ const NumberGenerator = (props) => {
               onChange={(e) => setStart(e.target.value)}
             />
           </Grid>
-          <Grid item xs={12} sm={4}>
+          <Grid size={{ xs: 12, sm: 4 }}>
             <TextField
               label="Número final"
               type="number"
@@ -76,7 +76,7 @@ const NumberGenerator = (props) => {
               onChange={(e) => setEnd(e.target.value)}
             />
           </Grid>
-          <Grid item xs={12} sm={4}>
+          <Grid size={{ xs: 12, sm: 4 }}>
             <TextField
               label="Cantidad de dígitos"
               type="number"
@@ -88,7 +88,7 @@ const NumberGenerator = (props) => {
               onChange={(e) => setDigits(e.target.value)}
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid size={{ xs: 12 }}>
             <Button
               variant="outlined"
               color={useColor}
@@ -99,7 +99,7 @@ const NumberGenerator = (props) => {
             </Button>
           </Grid>
           {fileContent && (
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <Typography variant="body2" color={useColor}>
                 Archivo generado con éxito.
               </Typography>

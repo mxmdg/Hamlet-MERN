@@ -19,6 +19,8 @@ export const cutOptimizer = (x1, y1, x2, y2, margen = 0, calle = 0) => {
 
   let yPoses = Math.floor(y1 / (y2 + calle));
 
+  //console.log("x: " + xPoses, "y: " + yPoses);
+
   let poses = xPoses * yPoses;
 
   let xResto = x1 - x2 * xPoses - calle * (xPoses - 1); //((x1 - margen) % x2) - calle * xPoses;
@@ -52,7 +54,7 @@ export const drawCutting = (
   calle = 0,
   ctx,
   xCtx,
-  yCtx
+  yCtx,
 ) => {
   let xPoses1 = Math.floor(x1 / parseInt(x2));
   let yPoses1 = Math.floor(y1 / parseInt(y2));
@@ -85,7 +87,7 @@ export const drawCutting = (
           izq + (x1 - x2 * xPoses1) / 2 + x2 * i,
           top + (y1 - y2 * yPoses1) / 2,
           x2,
-          y2
+          y2,
         );
       }
     }
@@ -98,7 +100,7 @@ export const drawCutting = (
           izq + (x1 - y2 * xPoses2) / 2 + y2 * i,
           top + (y1 - x2 * yPoses2) / 2,
           y2,
-          x2
+          x2,
         );
       }
     }
@@ -123,7 +125,7 @@ export const drawSimpleCutting = (
   y3,
   calle = 0,
   margen = 0,
-  ctx
+  ctx,
 ) => {
   let xPoses1 = Math.floor(x1 / (x2 + calle));
   let yPoses1 = Math.floor(y1 / (y2 + calle));
@@ -157,7 +159,7 @@ export const drawSimpleCutting = (
             (x2 + calle) * i,
           top + (y1 - y2 * yPoses1 - calle * (yPoses1 - 1)) / 2,
           x2,
-          y2
+          y2,
         );
       }
     }
@@ -172,7 +174,7 @@ export const drawSimpleCutting = (
             (y2 + calle) * i,
           top + (y1 - x2 * yPoses2 - calle * (yPoses2 - 1)) / 2,
           y2,
-          x2
+          x2,
         );
       }
     }
@@ -188,7 +190,7 @@ export const drawOptimusCutting = (
   calle = 0,
   ctx,
   xCtx,
-  yCtx
+  yCtx,
 ) => {
   let printAreaX = x1 - margen * 2;
   let printAreaY = y1 - margen * 2;
@@ -270,7 +272,7 @@ export const drawOptimusCutting = (
       top2,
       calle,
       margen,
-      ctx
+      ctx,
     );
     return { tPoses };
   } else if (x < yResto) {
@@ -283,7 +285,7 @@ export const drawOptimusCutting = (
       yImpo,
       calle,
       margen,
-      ctx
+      ctx,
     );
     return { tPoses };
   }
@@ -298,10 +300,10 @@ export const calculateStock = (
   sheetHeight,
   part,
   job,
-  poses
+  poses,
 ) => {
   /* 
-  console.log(
+  //console.log(
     "Parametros recibidos ",
     signnatureWidth,
     signatureHeight,
@@ -316,19 +318,21 @@ export const calculateStock = (
     sheetWidth, //part.partStock.Ancho_Resma,
     sheetHeight, //part.partStock.Alto_Resma,
     parseInt(signnatureWidth), //useImpoData.width,
-    parseInt(signatureHeight) //useImpoData.height
+    parseInt(signatureHeight), //useImpoData.height
   );
 
   const rotatedtCut = cutOptimizer(
     sheetWidth, //part.partStock.Ancho_Resma,
     sheetHeight, //part.partStock.Alto_Resma,
     parseInt(signatureHeight), //useImpoData.height,
-    parseInt(signnatureWidth) //useImpoData.width
+    parseInt(signnatureWidth), //useImpoData.width
   );
+
+  //console.log(straightCut, rotatedtCut);
 
   const pliegosPorHoja = Math.max(
     parseInt(straightCut.totalPoses),
-    parseInt(rotatedtCut.totalPoses)
+    parseInt(rotatedtCut.totalPoses),
   );
 
   const cantidadDePliegos =
@@ -337,22 +341,22 @@ export const calculateStock = (
       : Math.ceil(part.Pages / (part.ColoresDorso > 0 ? 2 : 1)) *
         Math.ceil(job.Cantidad / poses);
 
-  /* console.log(
+  /*console.log(
     "Cantidad de pliegos calculada: ",
     cantidadDePliegos,
     "Pliegos por hoja: ",
-    pliegosPorHoja
-  ); */
+    pliegosPorHoja,
+  );*/
   const totalHojas = Math.ceil(cantidadDePliegos / pliegosPorHoja);
 
-  /* console.log(
+  /*console.log(
     "Pliegos por hoja: ",
     pliegosPorHoja,
     "Cantidad de pliegos: ",
     cantidadDePliegos,
     "Total de hojas: ",
-    totalHojas
-  ); */
+    totalHojas,
+  );*/
 
   return { pliegosPorHoja, cantidadDePliegos, totalHojas };
 };

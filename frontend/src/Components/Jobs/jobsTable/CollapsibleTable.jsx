@@ -77,7 +77,7 @@ export function createData(
   owner,
   emited,
   deadLine,
-  parts
+  parts,
 ) {
   const arr = [];
   parts.map((p) => {
@@ -176,9 +176,7 @@ export const PartsTable = (props) => {
           {props.data?.map((historyRow) => (
             <TableRow key={historyRow._id}>
               <TableCell component="th" scope="row">
-                <Typography color={"info"} variant="body2">
-                  {historyRow.type}
-                </Typography>
+                {historyRow.type}
               </TableCell>
               <TableCell>{historyRow.name}</TableCell>
               <TableCell align="left">{historyRow.pages}</TableCell>
@@ -246,7 +244,7 @@ export default function CollapsibleTable(props) {
     } else if (selectedIndex > 0) {
       newSelected = newSelected.concat(
         selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
+        selected.slice(selectedIndex + 1),
       );
     }
     setSelected(newSelected);
@@ -271,7 +269,7 @@ export default function CollapsibleTable(props) {
       } else {
         return stableSort(rows, getComparator(order, orderBy)).slice(
           page * rowsPerPage,
-          page * rowsPerPage + rowsPerPage
+          page * rowsPerPage + rowsPerPage,
         );
       }
     } catch (error) {
@@ -338,7 +336,7 @@ export default function CollapsibleTable(props) {
             <Typography variant={fontVariant}>{row.quantity}</Typography>
           </TableCell>
           <TableCell>
-            <Typography color={"info"}>{row.customer}</Typography>
+            <Typography variant={fontVariant}>{row.customer}</Typography>
           </TableCell>
           <TableCell>
             <Typography variant={fontVariant}>{row.owner}</Typography>
@@ -369,40 +367,39 @@ export default function CollapsibleTable(props) {
     );
   }
 
- React.useEffect(() => {
-  const loadData = async () => {
-    try {
-      setLoading(true);
+  React.useEffect(() => {
+    const loadData = async () => {
+      try {
+        setLoading(true);
 
-      const res = await getPrivateElements(props.route);
+        const res = await getPrivateElements(props.route);
 
-      const Rows = res.map((job) =>
-        createData(
-          job._id,
-          job.Nombre,
-          job.Tipo?.[0]?.name,
-          job.Cantidad,
-          job.Company?.Nombre,
-          `${job.Owner?.Name || ""} ${job.Owner?.LastName || ""}`.trim(),
-          job.Emision,
-          job.DeadLine,
-          job.Partes
-        )
-      );
+        const Rows = res.map((job) =>
+          createData(
+            job._id,
+            job.Nombre,
+            job.Tipo?.[0]?.name,
+            job.Cantidad,
+            job.Company?.Nombre,
+            `${job.Owner?.Name || ""} ${job.Owner?.LastName || ""}`.trim(),
+            job.Emision,
+            job.DeadLine,
+            job.Partes,
+          ),
+        );
 
-      // ✅ ÚNICA forma correcta
-      setRows(Rows);
+        // ✅ ÚNICA forma correcta
+        setRows(Rows);
 
-      setLoading(false);
-    } catch (error) {
-      setError(error);
-      setLoading(false);
-    }
-  };
+        setLoading(false);
+      } catch (error) {
+        setError(error);
+        setLoading(false);
+      }
+    };
 
-  loadData();
-}, [props.route]);
-
+    loadData();
+  }, [props.route]);
 
   function EnhancedTableHead(props) {
     const {

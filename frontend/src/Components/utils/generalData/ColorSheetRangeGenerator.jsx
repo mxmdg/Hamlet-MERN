@@ -64,7 +64,7 @@ const ColorSheetRangeGenerator = () => {
       <Divider />
       <CardContent>
         <Grid container spacing={2}>
-          <Grid item xs={12} sm={8}>
+          <Grid size={{ xs: 12, sm: 8 }}>
             <TextField
               label="Lista de páginas (ej: 3,5,7,8,10-19,23,38-44,50)"
               variant="outlined"
@@ -84,7 +84,7 @@ const ColorSheetRangeGenerator = () => {
               }
             />
           </Grid>
-          <Grid item xs={12} sm={4}>
+          <Grid size={{ xs: 12, sm: 4 }}>
             <TextField
               label="Offset"
               type="number"
@@ -102,7 +102,7 @@ const ColorSheetRangeGenerator = () => {
               helperText={!!error && error.includes("offset") ? error : ""}
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid size={{ xs: 12 }}>
             <Button
               variant="outlined"
               color="primary"
@@ -114,7 +114,7 @@ const ColorSheetRangeGenerator = () => {
             </Button>
           </Grid>
           {result && !error && (
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <Card variant="elevation" sx={{ padding: 2 }}>
                 <CardHeader
                   subheader="Copiar Rangos Generados"

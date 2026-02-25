@@ -123,7 +123,7 @@ const NewStackedBarChart = (props) => {
       {props.title && <Title title={props.title} />}
       <FormGroup>
         <Grid container spacing={4}>
-          <Grid item xs={12} sm={6} textAlign={"right"}>
+          <Grid textAlign={"right"} size={{ xs: 12, sm: 6 }}>
             <TextField
               type="date"
               label="Desde"
@@ -140,7 +140,7 @@ const NewStackedBarChart = (props) => {
               }}
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid size={{ xs: 12, sm: 6 }}>
             <TextField
               type="date"
               label="Hasta"

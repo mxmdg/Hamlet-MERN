@@ -137,10 +137,10 @@ const Simulator = (props) => {
             <form name="Simulador">
               <Grid
                 container
-                spacing={{ xs: 2, md: 3 }}
+                spacing={{ xs: 2, sm: 3 }}
                 columns={{ xs: 12, sm: 12, md: 12 }}
               >
-                <Grid item xs={12} sm={8} md={4}>
+                <Grid size={{ xs: 12, sm: 8, md: 4 }}>
                   <TextField
                     type="number"
                     id="Cantidad"
@@ -154,7 +154,7 @@ const Simulator = (props) => {
                     }}
                   />
                 </Grid>
-                <Grid item xs={12} sm={8} md={4}>
+                <Grid size={{ xs: 12, sm: 8, md: 4 }}>
                   <TextField
                     select
                     id="Pliego"
@@ -180,7 +180,7 @@ const Simulator = (props) => {
                   </TextField>
                 </Grid>
 
-                <Grid item xs={12} sm={6} md={3}>
+                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                   <Button
                     variant="contained"
                     color="success"
@@ -197,7 +197,7 @@ const Simulator = (props) => {
                   </Button>
                 </Grid>
                 {useSimulation && (
-                  <Grid item xs={12} sm={8} md={12}>
+                  <Grid size={{ xs: 12, sm: 8, md: 12 }}>
                     <Typography>Unitario: {useSimulation.Unitario}</Typography>
                     <br />
                     <Typography>Cantidad: {useSimulation.Cantidad}</Typography>

@@ -139,7 +139,7 @@ const CotizacionCard = ({ cotizacion, job }) => {
 
   const success = (
     <Grid container spacing={2}>
-      <Grid item xs={12} md={4}>
+      <Grid size={{ xs: 12, md: 4 }}>
         <Card sx={{ borderRadius: 2, margin: 2 }}>
           <CardHeader
             title={`Cotización #${index}`}
@@ -311,7 +311,7 @@ const CotizacionCard = ({ cotizacion, job }) => {
           </CardActions>
         </Card>
       </Grid>
-      <Grid item xs={12} md={8}>
+      <Grid size={{ xs: 12, md: 8 }}>
         <JobViewer job={job} cot={cotizacion.data} />
       </Grid>
     </Grid>

@@ -241,12 +241,12 @@ const ProductionQuote = (props) => {
   const success = (
     <Container maxWidth="lg" sx={{ padding: "2rem" }}>
       <Grid container spacing={2}>
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12 }}>
           <FormControl>
             <form name="gainAndTaxes" onSubmit={handleSubmit(() => {})}>
               <FormGroup>
                 <Grid container spacing={0}>
-                  <Grid item xs={12} md={12}>
+                  <Grid size={{ xs: 12, md: 12 }}>
                     <TextField
                       name="gainPercentage"
                       label="Porcentaje de utilidad"
@@ -277,14 +277,14 @@ const ProductionQuote = (props) => {
                       </FormHelperText>
                     )}
                   </Grid>
-                  <Grid item xs={12} md={12}>
+                  <Grid size={{ xs: 12, md: 12 }}>
                     <ListItemNumbers
                       primary={currencyFormat(roundInteger(quote.gain))}
                       secondary={`Utilidad (${quote.utilityPercentage} %)`}
                     />
                   </Grid>
 
-                  <Grid item xs={12} md={12}>
+                  <Grid size={{ xs: 12, md: 12 }}>
                     <TextField
                       name="salesCommission"
                       label="Comisión Ventas"
@@ -315,7 +315,7 @@ const ProductionQuote = (props) => {
                       </FormHelperText>
                     )}
                   </Grid>
-                  <Grid item xs={12} md={12}>
+                  <Grid size={{ xs: 12, md: 12 }}>
                     <ListItemNumbers
                       primary={currencyFormat(
                         roundInteger(quote.salesCommission)
@@ -324,7 +324,7 @@ const ProductionQuote = (props) => {
                     />
                   </Grid>
 
-                  <Grid item xs={12} md={12}>
+                  <Grid size={{ xs: 12, md: 12 }}>
                     <FormControlLabel
                       control={
                         <Checkbox
@@ -335,7 +335,7 @@ const ProductionQuote = (props) => {
                       label="Aplicar IVA"
                     />
                   </Grid>
-                  <Grid item xs={12} md={12}>
+                  <Grid size={{ xs: 12, md: 12 }}>
                     <TextField
                       label="Porcentaje de IVA"
                       variant="outlined"
@@ -348,14 +348,14 @@ const ProductionQuote = (props) => {
                       fullWidth
                     />
                   </Grid>
-                  <Grid item xs={12} md={12}>
+                  <Grid size={{ xs: 12, md: 12 }}>
                     <ListItemNumbers
                       primary={currencyFormat(roundInteger(quote.iva))}
                       secondary={isIvaEnabled ? "IVA" : "IVA sobre el material"}
                     />
                   </Grid>
                   <Divider />
-                  <Grid item xs={12} md={12}>
+                  <Grid size={{ xs: 12, md: 12 }}>
                     <ListItemNumbers
                       primary={currencyFormat(roundInteger(quote.total))}
                       secondary={"Precio Final"}

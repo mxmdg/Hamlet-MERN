@@ -12,7 +12,7 @@ import {
   formIgenBN,
   formDefault,
 } from "./updateService";
-import Grid from "@mui/material/Unstable_Grid2"; // Grid version 2
+import Grid from "@mui/material/Grid"; // Grid version 2
 import IconButton from "@mui/material/IconButton";
 import Button from "@mui/material/Button";
 import ArrowDropDown from "@mui/icons-material/ArrowDropDown";
@@ -115,7 +115,7 @@ const Precioso = (props) => {
         //priceList &&
 
         <>
-          {/* <Grid xs={6} sm={6} md={6} lg={6} xl={6} key="orderer">
+          {/* <Grid key="orderer" size={{ xs: 6, sm: 6, md: 6, lg: 6, xl: 6 }}>
             <ButtonGroup variant="outlined" size="small" color="secondary">
               <TextField
                 variant="outlined"
@@ -148,7 +148,7 @@ const Precioso = (props) => {
               </Button>
             </ButtonGroup>
           </Grid> */}
-          <Grid xs={12} sm={12} md={12} lg={12} xl={12} key="filter">
+          <Grid key="filter" size={{ xs: 12, sm: 12, md: 12, lg: 12, xl: 12 }}>
             <ButtonGroup variant="outlined" size="small" color="primary">
               <TextField
                 variant="outlined"
@@ -191,7 +191,7 @@ const Precioso = (props) => {
             </ButtonGroup>
           </Grid>
           {filteredPriceList.map((price) => (
-            <Grid xs={12} sm={6} md={4} lg={3} xl={2} key={price._id}>
+            <Grid key={price._id} size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}>
               <PriceTable
                 pd={price}
                 collection={props.collection}

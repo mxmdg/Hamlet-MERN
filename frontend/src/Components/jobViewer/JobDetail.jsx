@@ -26,7 +26,6 @@ import MenuBookIcon from "@mui/icons-material/MenuBook";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import SaveIcon from "@mui/icons-material/Save";
 
-import { styled } from "@mui/material/styles";
 import ReactTimeAgo from "react-time-ago";
 // Acordion Imports:
 import Accordion from "@mui/material/Accordion";
@@ -50,9 +49,11 @@ import DarkWoodCard from "../utils/DarkWoodCard";
 // Mis componentes
 import ProductionPlan from "./ProductionPlan";
 import FinishingList from "./FinishingList";
+import FinishingListAuto from "./FinishingListAuto";
 import CopyToClipboardWrapper from "../General/CopyToClipboardWrapper";
 import Spinner from "../General/Spinner";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
+import { Item, Item2 } from "./StyledComponents";
 
 // Mis hooks
 import { getPrivateElements } from "../customHooks/FetchDataHook";
@@ -110,7 +111,7 @@ const JobDetail = (props) => {
     setExpanded(isExpanded ? panel : false);
   };
 
-  const Item = styled(Paper)(({ theme }) => ({
+  /* const Item = styled(Paper)(({ theme }) => ({
     backgroundColor:
       theme.palette.mode === "dark"
         ? theme.palette.primary.dark
@@ -130,7 +131,7 @@ const JobDetail = (props) => {
     padding: theme.spacing(2),
     textAlign: "left",
     color: theme.palette.text,
-  }));
+  })); */
 
   // Date Format Options:
   const options = {
@@ -204,6 +205,7 @@ const JobDetail = (props) => {
       partCosts.impresiones = Math.ceil(
         partCosts.totalPliegos * (part.ColoresDorso > 0 ? 2 : 1),
       );
+      setImposed(true);
 
       setProductionPlan((prevState) => ({
         ...prevState,
@@ -213,7 +215,7 @@ const JobDetail = (props) => {
 
     useEffect(() => {
       if (usePoses !== null) {
-        setImposed(true);
+        setImposed(false);
         setData({
           widthSheet: part.partStock.Ancho_Resma,
           heightSheet: part.partStock.Alto_Resma,
@@ -282,10 +284,12 @@ const JobDetail = (props) => {
               sx={{ maxWidth: "100%", overflow: "auto" }}
               container
               direction={{ xs: "column", md: "row" }}
-              spacing={2}
+              columnSpacing={2}
               alignItems={"start"}
+              size={12}
+              wrap
             >
-              <Grid item xs={12} md={8}>
+              <Grid size={{ xs: 12, md: 8 }}>
                 <ImpoProvider>
                   <DarkWoodCard>
                     <Canvas
@@ -299,7 +303,7 @@ const JobDetail = (props) => {
                 </ImpoProvider>
               </Grid>
               <Divider />
-              <Grid item xs={12} md={4}>
+              <Grid size={{ xs: 12, md: 4 }}>
                 <Stack spacing={0.25} sx={{ p: "2px" }}>
                   <Item>{part.jobParts[0].Type}</Item>
                   <Item>
@@ -401,12 +405,7 @@ const JobDetail = (props) => {
                       {useData !== null && (
                         <ImpoProvider>
                           <Card elevation={10}>
-                            <CardHeader
-                              title="Corte de plana"
-                              titleTypographyProps={{
-                                variant: "subtitle2",
-                              }}
-                            />
+                            <CardHeader title="Corte de plana" />
                             <ImpositionDraw data={useData} />
                           </Card>
                         </ImpoProvider>
@@ -419,6 +418,7 @@ const JobDetail = (props) => {
                         variant="contained"
                         color="success"
                         startIcon={<SaveIcon />}
+                        disabled={imposed}
                       >
                         Guardar Imposición
                       </Button>
@@ -427,7 +427,7 @@ const JobDetail = (props) => {
                   <ColorSheetRangeGenerator />
                   {part.Finishing && (
                     <Item>
-                      <FinishingList
+                      <FinishingListAuto
                         finishing={part.Finishing}
                         cantidad={job.Cantidad}
                         paginas={part.Pages}
@@ -602,7 +602,7 @@ const JobDetail = (props) => {
           })}
           {job.Finishing && (
             <Item>
-              <FinishingList
+              <FinishingListAuto
                 finishing={job.Finishing}
                 cantidad={job.Cantidad}
                 sendFinishingData={setJobFinishingData}

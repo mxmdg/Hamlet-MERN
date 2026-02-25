@@ -325,13 +325,7 @@ const ProductionPlan = (props) => {
     <Grid container columns={12} spacing={2} padding={2}>
       {resumen.slice(0, resumen.length - 1).map((data) => {
         return (
-          <Grid
-            item
-            xs={12}
-            sm={6}
-            lg={3}
-            key={data.printer._id + data.stock._id + resumen.indexOf(data)}
-          >
+          <Grid key={data.printer._id + data.stock._id + resumen.indexOf(data)} size={{ xs: 12, sm: 6, lg: 3 }}>
             <Card elevation={8}>
               <CardHeader
                 title={`${data.printer.Fabricante} ${data.printer.Modelo}`}
@@ -421,7 +415,7 @@ const ProductionPlan = (props) => {
         );
       })}
 
-      <Grid item xs={12} sm={6} lg={3} key={"general"}>
+      <Grid key={"general"} size={{ xs: 12, sm: 6, lg: 3 }}>
         <Card elevation={8}>
           <CardHeader
             title={`${props.job.Nombre}`}
@@ -472,7 +466,7 @@ const ProductionPlan = (props) => {
           </CardContent>
         </Card>
       </Grid>
-      <Grid item xs={12} sm={6} lg={3} key={"ProductionQuote"}>
+      <Grid key={"ProductionQuote"} size={{ xs: 12, sm: 6, lg: 3 }}>
         <Card elevation={8}>
           <CardHeader
             title={`Presupuesto`}

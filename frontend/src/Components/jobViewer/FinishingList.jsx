@@ -32,6 +32,7 @@ import { UNSAFE_NavigationContext } from "react-router-dom";
 
 const FinishingList = (props) => {
   const [useFinishingCosts, setFinishingCosts] = useState(null);
+  const [useSent, setSent] = useState(false);
   const [useLoading, setLoading] = useState(true);
   const [useError, setError] = useState(null);
   const [clearError, setClearError] = useState(() => setError(null));
@@ -75,13 +76,14 @@ const FinishingList = (props) => {
 
   const costFunction = (finishing, cantidad) => {
     const calculate = (f) => {
+      setSent(false);
       switch (f.Unidad) {
         case "un":
           return productoPorUnidad(
             f.Costo.Valor,
             f.Costo.Minimo,
             f.Costo.Entrada,
-            cantidad
+            cantidad,
           );
 
         case "CF":
@@ -91,7 +93,7 @@ const FinishingList = (props) => {
             f.Costo.Valor,
             f.Costo.Minimo,
             f.Costo.Entrada,
-            props.paginas
+            props.paginas,
           );
         case "pl":
           try {
@@ -100,7 +102,7 @@ const FinishingList = (props) => {
                 f.Costo.Valor,
                 f.Costo.Minimo,
                 f.Costo.Entrada,
-                props.imposition.totalPliegos
+                props.imposition.totalPliegos,
               );
             } else {
               setError({ message: "No hay imposicion", severity: "warning" });
@@ -124,9 +126,9 @@ const FinishingList = (props) => {
               Math.ceil(props.imposition.totalPliegos),
               Math.max(
                 props.imposition.impositionData.sheetOriginalSize.width,
-                props.imposition.impositionData.sheetOriginalSize.height
+                props.imposition.impositionData.sheetOriginalSize.height,
               ),
-              [508, 660]
+              [508, 660],
             );
           } catch (error) {
             setError({
@@ -141,10 +143,11 @@ const FinishingList = (props) => {
             f.Costo.Valor,
             f.Costo.Minimo,
             f.Costo.Entrada,
-            cantidad
+            cantidad,
           );
       }
     };
+
     return calculate(finishing);
   };
 
@@ -163,7 +166,7 @@ const FinishingList = (props) => {
                     Cost: costFunction(
                       props.finishing,
                       props.cantidad,
-                      props.imposition
+                      props.imposition,
                     ),
                   },
                 ])
@@ -174,14 +177,14 @@ const FinishingList = (props) => {
               try {
                 const finishing = await getPrivateElementByID(
                   "finishers",
-                  finisher
+                  finisher,
                 );
                 finisherList.push({
                   Finisher: finishing,
                   Cost: costFunction(
                     finishing,
                     props.cantidad,
-                    props.impositionData
+                    props.impositionData,
                   ),
                 });
               } catch (error) {
@@ -205,14 +208,18 @@ const FinishingList = (props) => {
             "Error accediendo a los procesos de terminacion: " + error.message,
         });
       } finally {
-        /* if (useFinishingCosts !== null) {
+        if (useFinishingCosts !== null) {
           props.sendFinishingData(totalCost());
-        } */
+        }
         setLoading(false);
       }
     };
 
     fetchFinishingDetails();
+  }, [useFinishingCosts]);
+
+  useEffect(() => {
+    setSent(false);
   }, []);
 
   const totalCost = () => {
@@ -224,6 +231,7 @@ const FinishingList = (props) => {
 
   const handleSendData = () => {
     props.sendFinishingData(totalCost());
+    setSent(true);
   };
 
   if (useLoading) return <Spinner color="primary" />;
@@ -290,8 +298,8 @@ const FinishingList = (props) => {
                 {currencyFormat(
                   useFinishingCosts.reduce(
                     (acc, item) => acc + item.Cost.Total,
-                    0
-                  )
+                    0,
+                  ),
                 )}
               </StyledTableCell>
             </StyledTableRow>
@@ -305,6 +313,7 @@ const FinishingList = (props) => {
           color="success"
           onClick={() => handleSendData()}
           sx={{ fontSize: "1rem", fontWeight: "bold" }}
+          disabled={useSent}
         >
           Enviar Datos
         </Button>

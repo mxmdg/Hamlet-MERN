@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Spinner from "../General/Spinner";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import JobDetail from "./JobDetail";
+import JobTabsView from "./JobTabsView";
 
 import {
   addPrivateElement,

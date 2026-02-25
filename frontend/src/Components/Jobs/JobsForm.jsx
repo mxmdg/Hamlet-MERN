@@ -153,10 +153,10 @@ const JobsForm = (props) => {
             <form name="form1" onSubmit={handleSubmit(onSubmit)}>
               <Grid
                 container
-                spacing={{ xs: 2, md: 3 }}
+                spacing={{ xs: 2, sm: 3 }}
                 columns={{ xs: 1, sm: 4, md: 8 }}
               >
-                <Grid item xs={1} sm={2} md={4}>
+                <Grid size={{ xs: 1, sm: 2, md: 4 }}>
                   <TextField
                     id="Nombre"
                     label="Nombre del Trabajo"
@@ -187,7 +187,7 @@ const JobsForm = (props) => {
                     <FormHelperText>Este campo es requerido</FormHelperText>
                   )}
                 </Grid>
-                <Grid item xs={1} sm={2} md={4}>
+                <Grid size={{ xs: 1, sm: 2, md: 4 }}>
                   <TextField
                     select
                     defaultValue={
@@ -232,7 +232,7 @@ const JobsForm = (props) => {
                     </FormHelperText>
                   )}
                 </Grid>
-                <Grid item xs={1} sm={2} md={4}>
+                <Grid size={{ xs: 1, sm: 2, md: 4 }}>
                   <TextField
                     id="Cantidad"
                     type="number"
@@ -262,7 +262,7 @@ const JobsForm = (props) => {
                     </FormHelperText>
                   )}
                 </Grid>
-                <Grid item xs={1} sm={2} md={4}>
+                <Grid size={{ xs: 1, sm: 2, md: 4 }}>
                   <TextField
                     id="Entrega"
                     type="date"
@@ -290,7 +290,7 @@ const JobsForm = (props) => {
                     </FormHelperText>
                   )}
                 </Grid>
-                <Grid item xs={1} sm={2} md={4}>
+                <Grid size={{ xs: 1, sm: 2, md: 4 }}>
                   {useUsersList.length > 0 && (
                     <TextField
                       select
@@ -333,7 +333,7 @@ const JobsForm = (props) => {
                     <FormHelperText>Seleccione un usuario</FormHelperText>
                   )}
                 </Grid>
-                <Grid item xs={1} sm={2} md={4}>
+                <Grid size={{ xs: 1, sm: 2, md: 4 }}>
                   <Autocomplete
                     id="Company"
                     options={useCompaniesList}
@@ -390,7 +390,7 @@ const JobsForm = (props) => {
                     <FormHelperText>Seleccione una empresa</FormHelperText>
                   )} */}
                 </Grid>
-                <Grid item xs={12} sm={12} md={12}>
+                <Grid size={{ xs: 12, sm: 12, md: 12 }}>
                   {
                     <FormGroup
                       id="Finishing"
@@ -448,7 +448,7 @@ const JobsForm = (props) => {
                     </FormGroup>
                   }
                 </Grid>
-                <Grid item xs={1} sm={2} md={4} sx={{ alignSelf: "center" }}>
+                <Grid sx={{ alignSelf: "center" }} size={{ xs: 1, sm: 2, md: 4 }}>
                   <Button type="submit" variant="contained" color="success">
                     {props.data ? "Modificar Trabajo" : "Agregar Trabajo"}
                   </Button>

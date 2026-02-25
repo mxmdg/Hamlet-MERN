@@ -111,14 +111,10 @@ const ErrorMessage = (props) => {
         color={props.severity || "primary"}
       >
         <Grid container alignItems="center" spacing={2}>
-          <Grid item sx={{ margin: "auto" }}>
+          <Grid sx={{ margin: "auto" }}>
             <Typography variant="h5">{props.title}</Typography>
           </Grid>
-          <Grid
-            item
-            alignSelf={"flex-end"}
-            sx={{ marginLeft: "auto", marginTop: 0 }}
-          >
+          <Grid alignSelf={"flex-end"} sx={{ marginLeft: "auto", marginTop: 0 }}>
             <IconButton
               aria-label="close"
               onClick={handleClose}

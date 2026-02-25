@@ -16,6 +16,8 @@ router.get("/:id", membershipsController.getMembershipById);
 router.put("/:id", membershipsController.updateMembership);
 router.delete("/:id", membershipsController.updateStatus);
 
-router.delete("/trash/:id", membershipsController.updateStatus);
+router
+  .delete("/trash/:id", membershipsController.updateStatus)
+  .delete("/destroy/:id", membershipsController.deleteMembership);
 
 module.exports = router;

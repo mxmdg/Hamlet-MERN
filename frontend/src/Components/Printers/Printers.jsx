@@ -5,7 +5,7 @@ import PrintersDataForm from "../Formulario/PrintersDataForm";
 import Spinner from "../General/Spinner";
 import { serverURL } from "../Config/config";
 import { spanishFormat } from "../utils/generalData/numbersAndCurrencies";
-import Grid from "@mui/material/Unstable_Grid2"; // Grid version 2
+import Grid from "@mui/material/Grid"; // Grid version 2
 import {
   Card,
   List,
@@ -59,7 +59,7 @@ const Printers = (props) => {
   const getMonthForPeriod = (periodOffset) => {
     const currentDate = new Date();
     const adjustedDate = new Date(
-      currentDate.setMonth(currentDate.getMonth() - periodOffset)
+      currentDate.setMonth(currentDate.getMonth() - periodOffset),
     );
     const month = adjustedDate.toLocaleString("default", { month: "long" });
     const year = adjustedDate.getFullYear();
@@ -81,7 +81,7 @@ const Printers = (props) => {
 
         // Calculamos el número máximo de periodos
         const maxLength = Math.max(
-          ...printers.map((printer) => printer.Billing.length)
+          ...printers.map((printer) => printer.Billing.length),
         );
         setMaxPeriods(maxLength);
 
@@ -112,20 +112,20 @@ const Printers = (props) => {
               if (p.Colores > 1) {
                 periodTotals.color += parseInt(
                   p.Billing[periodIndex].Color || 0,
-                  10
+                  10,
                 );
                 periodTotals.blackHQ += parseInt(
                   p.Billing[periodIndex].Black || 0,
-                  10
+                  10,
                 );
               } else if (p.Colores === 1) {
                 periodTotals.large += parseInt(
                   p.Billing[periodIndex].Large || 0,
-                  10
+                  10,
                 );
                 periodTotals.small += parseInt(
                   p.Billing[periodIndex].Small || 0,
-                  10
+                  10,
                 );
               }
             }
@@ -165,18 +165,9 @@ const Printers = (props) => {
   const currentMonth = getMonthForPeriod(usePeriod - 1);
 
   return (
-    <Grid
-      xs={12}
-      sm={12}
-      md={12}
-      lg={18}
-      container
-      spacing={5}
-      maxWidth={"95%"}
-      margin={"auto"}
-    >
+    <Grid container spacing={5} maxWidth={"95%"} margin={"auto"} size={{ xs: 12, sm: 12, md: 12, lg: 18 }}>
       {/* Gráfico de barras de totales por periodo */}
-      <Grid xs={12} md={9} lg={9} key={"chart"}>
+      <Grid key={"chart"} size={{ xs: 12, md: 9, lg: 9 }}>
         <Card elevation={10} sx={cardStyle}>
           <Typography variant="h6" sx={{ mb: 2 }}>
             Totales de impresiones por periodo
@@ -219,7 +210,7 @@ const Printers = (props) => {
           </Box>
         </Card>
       </Grid>
-      <Grid xs={12} md={3} lg={3} key={"totalPrints"}>
+      <Grid key={"totalPrints"} size={{ xs: 12, md: 3, lg: 3 }}>
         <Card elevation={10} sx={cardStyle}>
           <Box
             display="flex"
@@ -281,7 +272,7 @@ const Printers = (props) => {
         <Spinner color="warning" />
       ) : (
         printerList.map((printer) => (
-          <Grid xs={12} sm={6} md={6} lg={3} key={printer._id}>
+          <Grid key={printer._id} size={{ xs: 12, sm: 6, md: 6, lg: 3 }}>
             <Card elevation={10} sx={cardStyle}>
               <PrinterDetails
                 pd={printer}

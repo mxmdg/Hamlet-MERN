@@ -45,7 +45,7 @@ const JobEditor = (props) => {
   const success = (
     <Container>
       <Grid container columns={12}>
-        <Grid item columns={4}>
+        <Grid columns={4}>
           <Paper elevation={16} square>
             <Card>
               <CardHeader

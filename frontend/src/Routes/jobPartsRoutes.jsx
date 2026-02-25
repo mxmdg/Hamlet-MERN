@@ -12,10 +12,10 @@ export const jobPartsRoutes = ({ color, variant }) => (
       path="/JobParts"
       element={
         <Grid container columns={12}>
-          <Grid item columns={4}>
+          <Grid columns={4}>
             <MainContainer entity={"JobParts"} />
           </Grid>
-          <Grid item columns={4} width={"30%"}>
+          <Grid columns={4} width={"30%"}>
             <StatsCollector route="jobs/complete">
               <JobsPerPartType rank={10} />
             </StatsCollector>

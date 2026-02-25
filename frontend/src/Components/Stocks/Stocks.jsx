@@ -5,7 +5,7 @@ import ItemsDetails from "../General/itemsDetails";
 // import "../../Styles/hamlet.css";
 // import "./Stocks.css";
 import { HAMLET_API } from "../Config/config";
-import Grid from "@mui/material/Unstable_Grid2"; // Grid version 2
+import Grid from "@mui/material/Grid"; // Grid version 2
 import Spinner from "../General/Spinner";
 
 const Stocks = (props) => {
@@ -34,7 +34,7 @@ const Stocks = (props) => {
         <Spinner color="info" /> // Asegúrate de importar el componente Spinner si lo tienes
       ) : (
         stockList.map((stock) => (
-          <Grid xs={12} md={4} key={stock._id}>
+          <Grid key={stock._id} size={{ xs: 12, md: 4 }}>
             <ItemsDetails
               pd={stock}
               id={stock._id}

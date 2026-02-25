@@ -163,7 +163,7 @@ export const ImpositionForm = (props) => {
     <FormControl sx={{ width: "100%" }}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Grid container columns={12} spacing={1}>
-          <Grid item xs={12} md={12}>
+          <Grid size={{ xs: 12, md: 12 }}>
             <FormControl fullWidth>
               <TextField
                 select
@@ -227,7 +227,7 @@ export const ImpositionForm = (props) => {
               <FormHelperText>Seleccione una impresora</FormHelperText>
             )}
           </Grid>
-          <Grid item xs={12} md={3}>
+          <Grid size={{ xs: 12, md: 3 }}>
             <FormControl>
               <TextField
                 type="number"
@@ -249,7 +249,7 @@ export const ImpositionForm = (props) => {
               )}
             </FormControl>
           </Grid>
-          <Grid item xs={12} md={3}>
+          <Grid size={{ xs: 12, md: 3 }}>
             <FormControl>
               <TextField
                 type="number"
@@ -272,7 +272,7 @@ export const ImpositionForm = (props) => {
               <FormHelperText>Este campo es requerido</FormHelperText>
             )}
           </Grid>
-          <Grid item xs={12} md={3}>
+          <Grid size={{ xs: 12, md: 3 }}>
             <FormControl>
               <TextField
                 type="number"
@@ -291,7 +291,7 @@ export const ImpositionForm = (props) => {
               />
             </FormControl>
           </Grid>
-          <Grid item xs={12} md={3}>
+          <Grid size={{ xs: 12, md: 3 }}>
             <FormControl>
               <TextField
                 type="number"
@@ -310,7 +310,7 @@ export const ImpositionForm = (props) => {
               />
             </FormControl>
           </Grid>
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <FormControl fullWidth>
               <TextField
                 select
@@ -388,7 +388,7 @@ export const ImpositionForm = (props) => {
               <FormHelperText>Seleccione un formato</FormHelperText>
             )}
           </Grid>
-          <Grid item xs={12} md={3}>
+          <Grid size={{ xs: 12, md: 3 }}>
             <FormControl>
               <TextField
                 type="number"
@@ -419,7 +419,7 @@ export const ImpositionForm = (props) => {
               <FormHelperText>Este campo es requerido</FormHelperText>
             )}
           </Grid>
-          <Grid item xs={12} md={3}>
+          <Grid size={{ xs: 12, md: 3 }}>
             <FormControl>
               <TextField
                 type="number"
@@ -446,7 +446,7 @@ export const ImpositionForm = (props) => {
               )}
             </FormControl>
           </Grid>
-          <Grid item xs={12} md={12}>
+          <Grid size={{ xs: 12, md: 12 }}>
             <FormControl>
               <Button variant="outlined" type="submit" color="primary">
                 Imponer

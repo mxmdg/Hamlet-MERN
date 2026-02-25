@@ -27,7 +27,7 @@ import JobsPerSeller from "./utils/stats/JobsPerSeller";
 import JobsPerType from "./utils/stats/JobsPerType";
 //MUI Material Imports
 import { Container, Box } from "@mui/material";
-import Grid from "@mui/material/Unstable_Grid2";
+import Grid from "@mui/material/Grid";
 import UploadFilesButton from "./utils/ReusableComponents/UploadFilesButton";
 import JobsPerPartType from "./utils/stats/JobsPerPartType";
 
@@ -60,14 +60,13 @@ const Home = (props) => {
 
   const homePage = (
     <>
-      <Grid container columns={{ xs: 1, sm: 12 }} spacing={3} p={2}>
-        <Grid xs={1} sm={8} md={8}>
+      <Grid container spacing={3} p={2}>
+        <Grid size={{ xs: 12, sm: 8, md: 8 }}>
           <Grid
             container
             spacing={{ xs: 0, sm: 1, md: 3 }}
-            columns={{ xs: 1, sm: 12, md: 12 }}
           >
-            <Grid xs={1} sm={12} md={12}>
+            <Grid size={12}>
               <FullJobsRender
                 route={useRoute}
                 settings={{
@@ -77,7 +76,7 @@ const Home = (props) => {
                 }}
               />
             </Grid>
-            <Grid xs={1} sm={12} md={12} lg={12}>
+            <Grid size={12}>
               <StatsCollector route={useRoute}>
                 <JobsForNextDays />
                 <JobsPerType />
@@ -88,22 +87,25 @@ const Home = (props) => {
             </Grid>
           </Grid>
         </Grid>
-        <Grid xs={1} sm={4} md={4}>
-          <Grid container columns={12} spacing={{ xs: 0, sm: 1, md: 3 }}>
-            <Grid xs={12} sm={12}>
+        <Grid size={{ xs: 12, md: 4 }}>
+          <Grid
+            container
+            spacing={{ xs: 0, sm: 1, md: 3 }}
+          >
+            <Grid size={12}>
               <UploadFilesButton />
               <MyStepper />
             </Grid>
-            <Grid xs={12} sm={12}>
+            <Grid size={12}>
               <QuickSpinCalc color="primary" />
             </Grid>
-            <Grid xs={12} sm={12}>
+            <Grid size={12}>
               <NumberGenerator color="primary" />
             </Grid>
-            <Grid xs={12} sm={12}>
+            <Grid size={12}>
               <ColorSheetRangeGenerator color="primary" />
             </Grid>
-            <Grid xs={12} sm={12}>
+            <Grid size={12}>
               <ImpoProvider>
                 <DarkWoodCard>
                   <Canvas />

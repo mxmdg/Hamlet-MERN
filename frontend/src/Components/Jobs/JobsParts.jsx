@@ -227,11 +227,11 @@ const JobParts = (props) => {
         >
           <Grid
             container
-            spacing={{ xs: 2, md: 3 }}
+            spacing={{ xs: 2, sm: 3 }}
             columns={{ xs: 1, sm: 4, md: 8 }}
           >
             {partsList !== null && (
-              <Grid item xs={1} sm={2} md={4}>
+              <Grid size={{ xs: 1, sm: 2, md: 4 }}>
                 {/* <TextField
                   select
                   value={
@@ -294,7 +294,7 @@ const JobParts = (props) => {
                 )}
               </Grid>
             )}
-            <Grid item xs={1} sm={2} md={4}>
+            <Grid size={{ xs: 1, sm: 2, md: 4 }}>
               <TextField
                 variant="outlined"
                 type="text"
@@ -328,7 +328,7 @@ const JobParts = (props) => {
               )}
             </Grid>
 
-            <Grid item xs={1} sm={2} md={4}>
+            <Grid size={{ xs: 1, sm: 2, md: 4 }}>
               <TextField
                 variant="outlined"
                 type="number"
@@ -366,7 +366,7 @@ const JobParts = (props) => {
                 </FormHelperText>
               )}
             </Grid>
-            <Grid item xs={1} sm={2} md={4}>
+            <Grid size={{ xs: 1, sm: 2, md: 4 }}>
               <TextField
                 variant="outlined"
                 type="number"
@@ -401,7 +401,7 @@ const JobParts = (props) => {
                 </FormHelperText>
               )}
             </Grid>
-            <Grid item xs={1} sm={2} md={4}>
+            <Grid size={{ xs: 1, sm: 2, md: 4 }}>
               <TextField
                 id="Pages"
                 type="number"
@@ -447,7 +447,7 @@ const JobParts = (props) => {
                 </FormHelperText>
               )}
             </Grid>
-            <Grid item xs={1} sm={2} md={4}>
+            <Grid size={{ xs: 1, sm: 2, md: 4 }}>
               <Autocomplete
                 id="partStock"
                 options={filteredStocks}
@@ -495,7 +495,7 @@ const JobParts = (props) => {
                 )}
               />
             </Grid>
-            <Grid item xs={1} sm={2} md={4}>
+            <Grid size={{ xs: 1, sm: 2, md: 4 }}>
               <TextField
                 variant="outlined"
                 type="number"
@@ -530,7 +530,7 @@ const JobParts = (props) => {
                 </FormHelperText>
               )}
             </Grid>
-            <Grid item xs={1} sm={2} md={4}>
+            <Grid size={{ xs: 1, sm: 2, md: 4 }}>
               <TextField
                 variant="outlined"
                 type="number"
@@ -558,7 +558,7 @@ const JobParts = (props) => {
                 </FormHelperText>
               )}
             </Grid>
-            <Grid item xs={12} sm={12} md={12}>
+            <Grid size={{ xs: 12, sm: 12, md: 12 }}>
               {
                 <FormGroup
                   id="Finishing"
@@ -605,7 +605,7 @@ const JobParts = (props) => {
                 {...register("Finishing", { required: true })}
               />
             </Grid>
-            <Grid item xs={1} sm={2} md={4}>
+            <Grid size={{ xs: 1, sm: 2, md: 4 }}>
               <FormControl sx={{ width: "85%" }}>
                 <Button
                   type="submit"

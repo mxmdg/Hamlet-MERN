@@ -259,7 +259,7 @@ const JobStepper = (props) => {
             columns={12}
             sx={{ width: "100%", display: "flex", flexDirection: "row" }}
           >
-            <Grid item>
+            <Grid>
               <Stepper activeStep={activeStep}>
                 {steps.map((label, index) => {
                   const stepProps = {};
@@ -349,7 +349,7 @@ const JobStepper = (props) => {
                 </React.Fragment>
               )}
             </Grid>
-            <Grid item xs={12} md={12} lg={12} sx={{ ml: 2 }}>
+            <Grid sx={{ ml: 2 }} size={{ xs: 12, md: 12, lg: 12 }}>
               <Container>
                 <Grid
                   container
@@ -359,7 +359,7 @@ const JobStepper = (props) => {
                   sx={{ height: "98%" }}
                 >
                   {useParts?.map((part, index) => (
-                    <Grid item xs={12} sm={12} md={12} key={"Parte-" + index}>
+                    <Grid key={"Parte-" + index} size={{ xs: 12, sm: 12, md: 12 }}>
                       <Typography variant="h6" gutterBottom>
                         Parte {index + 1}
                       </Typography>

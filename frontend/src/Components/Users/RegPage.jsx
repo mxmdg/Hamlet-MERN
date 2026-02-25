@@ -1,5 +1,9 @@
 import React from "react";
-import { Container, Grid, Box, Divider } from "@mui/material/";
+import Container from "@mui/material/Container";
+// Grid, Box, Divider
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import Divider from "@mui/material/Divider";
 import { Login } from "./Login";
 import { Register } from "./Register";
 import FormMaterial from "../Formulario/FormMaterial";
@@ -14,7 +18,7 @@ export const RegPage = () => {
     <Container maxWidth="lg" sx={{ mt: 4 }}>
       <Grid container spacing={5} alignItems="flex-start">
         {/* COLUMNA IZQUIERDA – LOGO */}
-        <Grid item xs={12} md={4}>
+        <Grid size={{ xs: 12, md: 4 }}>
           <Box
             sx={{
               display: "flex",
@@ -32,9 +36,9 @@ export const RegPage = () => {
         </Grid>
 
         {/* COLUMNA DERECHA – FORMULARIOS */}
-        <Grid item xs={12} md={8}>
+        <Grid size={{ xs: 12, md: 8 }}>
           <Grid container spacing={5} direction="column">
-            <Grid item>
+            <Grid size={12}>
               <Register
                 title={"Agregar usuario"}
                 subtitle="Ingresar usuario al sistema, si no existe, antes de crear la membresía."
@@ -43,7 +47,7 @@ export const RegPage = () => {
               />
             </Grid>
 
-            <Grid item>
+            <Grid size={12}>
               <FormMaterial
                 form={membershipsDataForm}
                 collection="memberships"

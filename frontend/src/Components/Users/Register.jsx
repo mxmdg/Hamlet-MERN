@@ -76,10 +76,10 @@ export const Register = (props) => {
             <form name="Register" onSubmit={handleSubmit(onSubmit)}>
               <Grid
                 container
-                spacing={{ xs: 2, md: 5 }}
+                spacing={{ xs: 2, sm: 5 }}
                 columns={{ xs: 1, sm: 4, md: 6 }}
               >
-                <Grid item xs={6} sm={6} md={3}>
+                <Grid size={{ xs: 6, sm: 6, md: 3 }}>
                   <TextField
                     id="Name"
                     label="Nombre"
@@ -97,7 +97,7 @@ export const Register = (props) => {
                     }}
                   />
                 </Grid>
-                <Grid item xs={6} sm={6} md={3}>
+                <Grid size={{ xs: 6, sm: 6, md: 3 }}>
                   <TextField
                     id="LastName"
                     label="Apellido"
@@ -115,7 +115,7 @@ export const Register = (props) => {
                     }}
                   />
                 </Grid>
-                <Grid item xs={6} sm={6} md={3}>
+                <Grid size={{ xs: 6, sm: 6, md: 3 }}>
                   <TextField
                     select
                     defaultValue="Customer"
@@ -154,7 +154,7 @@ export const Register = (props) => {
                     </FormHelperText>
                   )}
                 </Grid>
-                <Grid item xs={6} sm={6} md={3}>
+                <Grid size={{ xs: 6, sm: 6, md: 3 }}>
                   <TextField
                     id="email"
                     label="email"
@@ -172,7 +172,7 @@ export const Register = (props) => {
                     }}
                   />
                 </Grid>
-                <Grid item xs={6} sm={6} md={3}>
+                <Grid size={{ xs: 6, sm: 6, md: 3 }}>
                   <TextField
                     id="password"
                     label="password"
@@ -191,7 +191,7 @@ export const Register = (props) => {
                     }}
                   />
                 </Grid>
-                <Grid item xs={6} sm={6} md={3} sx={{ alignSelf: "center" }}>
+                <Grid sx={{ alignSelf: "center" }} size={{ xs: 6, sm: 6, md: 3 }}>
                   <Button type="submit" variant="contained" color={useColor}>
                     Agregar Usuario
                   </Button>

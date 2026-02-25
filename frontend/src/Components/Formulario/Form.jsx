@@ -208,7 +208,7 @@ const Form = (props) => {
         return (value = e.target.value);
       };
       return (
-        <Grid item xs={1} sm={2} md={4}>
+        <Grid size={{ xs: 1, sm: 2, md: 4 }}>
           <FormControl sx={{ m: 1, minWidth: 120 }}>
             {/*<InputLabel id={inp.id}>{inp.inputName}</InputLabel>
               <Select
@@ -243,7 +243,7 @@ const Form = (props) => {
       );
     } else if (inp.type === "button") {
       return (
-        <Grid item xs={1} sm={2} md={4}>
+        <Grid size={{ xs: 1, sm: 2, md: 4 }}>
           <Button
             variant="outlined"
             inputName={inp.inputName}
@@ -283,7 +283,7 @@ const Form = (props) => {
         });
       };
       return (
-        <Grid item xs={1} sm={4} md={8}>
+        <Grid size={{ xs: 1, sm: 4, md: 8 }}>
           <FormControl
             label={inp.label || inp.inputName}
             inputname={inp.inputName}
@@ -318,7 +318,7 @@ const Form = (props) => {
       );
     } else {
       return (
-        <Grid item xs={12} sm={3} md={3}>
+        <Grid size={{ xs: 12, sm: 3, md: 3 }}>
           <Input
             inputName={inp.inputName}
             label={inp.label}
@@ -362,7 +362,7 @@ const Form = (props) => {
             >
               <Grid
                 container
-                spacing={{ xs: 2, md: 3 }}
+                spacing={{ xs: 2, sm: 3 }}
                 columns={{ xs: 4, sm: 8, md: 12 }}
               >
                 {dataForm.map((inp) => typeOfInput(inp))}

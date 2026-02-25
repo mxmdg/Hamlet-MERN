@@ -162,7 +162,7 @@ const FormMaker = (props) => {
       <Grid container columns={12} spacing={2}>
         {props.form.map((input) => {
           return (
-            <Grid item key={input.id} sm={12} md={6} lg={4}>
+            <Grid key={input.id} size={{ sm: 12, md: 6, lg: 4 }}>
               {useItem !== null && (
                 <TextFieldInput
                   input={input}

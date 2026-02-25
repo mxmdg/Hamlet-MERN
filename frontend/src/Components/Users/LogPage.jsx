@@ -1,26 +1,15 @@
 import React from "react";
-import {
-  Container,
-  Grid,
-  Card,
-  CardHeader,
-  CardContent,
-  Typography,
-  Divider,
-} from "@mui/material/";
+import Container from "@mui/material/Container";
+import Grid from "@mui/material/Grid";
+import Card from "@mui/material/Card";
+import CardHeader from "@mui/material/CardHeader";
+import CardContent from "@mui/material/CardContent";
+import Typography from "@mui/material/Typography";
+import Divider from "@mui/material/Divider";
 import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import { useNavigate } from "react-router-dom";
-import { Login } from "./Login";
-import FormMaterial from "../Formulario/FormMaterial";
-import tenantsDataForm from "../Formulario/tenantsDataForm";
 import { ReactComponent as Logo } from "../../img/Logo/logo ok-05.svg";
-import sky from "../../img/Sky.jpg";
-import rio from "../../img/rio.jpg";
-import paperBackground from "../../img/paperBackground.jpg";
-import pinar from "../../img/pinar.jpg";
-import roble from "../../img/roble.jpg";
-import cordoba from "../../img/cordoba.webp";
 
 export const LogPage = () => {
   const variant4All = "standard";
@@ -51,7 +40,7 @@ export const LogPage = () => {
       }}
     >
       <Grid container spacing={6} alignItems="center">
-        <Grid item xs={12} md={12}>
+        <Grid size={{ xs: 12, md: 12 }}>
           <Grid
             container
             sx={{
@@ -66,18 +55,7 @@ export const LogPage = () => {
               justifyItems: "space-around",
             }}
           >
-            <Grid
-              item
-              xs={12}
-              md={4}
-              alignItems={"center"}
-              sx={{
-                padding: "0",
-                width: "fit-content",
-                display: "flex",
-                justifyContent: "center",
-              }}
-            >
+            <Grid alignItems={"center"} sx={{ padding: "0", width: "fit-content", display: "flex", justifyContent: "center", }} size={{ xs: 12, md: 4 }}>
               <Logo
                 role="img"
                 aria-label="Hamlet logo"
@@ -88,20 +66,7 @@ export const LogPage = () => {
                 }}
               />
             </Grid>
-            <Grid
-              item
-              xs={12}
-              md={8}
-              sx={{
-                padding: "15px",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-start",
-                justifyContent: "space-evenly",
-                minHeight: "390px",
-                height: "100%",
-              }}
-            >
+            <Grid sx={{ padding: "15px", display: "flex", flexDirection: "column", alignItems: "flex-start", justifyContent: "space-evenly", minHeight: "390px", height: "100%", }} size={{ xs: 12, md: 8 }}>
               <Typography
                 color={"white"}
                 sx={{
@@ -180,14 +145,7 @@ export const LogPage = () => {
                 </Button>
               </ButtonGroup>
             </Grid>
-            <Grid
-              item
-              xs={12}
-              md={4}
-              sx={{
-                padding: "15px",
-              }}
-            >
+            <Grid sx={{ padding: "15px", }} size={{ xs: 12, md: 4 }}>
               <Card variant={cardVariant} style={cardStyle}>
                 <CardHeader
                   titleTypographyProps={cardHeaderStyle}
@@ -208,7 +166,7 @@ export const LogPage = () => {
                 </CardContent>
               </Card>
             </Grid>
-            <Grid item xs={12} md={4} sx={{ padding: "15px" }}>
+            <Grid sx={{ padding: "15px" }} size={{ xs: 12, md: 4 }}>
               <Card variant={cardVariant} style={cardStyle}>
                 <CardHeader
                   title="Lógica de trabajo"
@@ -229,7 +187,7 @@ export const LogPage = () => {
                 </CardContent>
               </Card>
             </Grid>
-            <Grid item xs={12} md={4} sx={{ padding: "15px" }}>
+            <Grid sx={{ padding: "15px" }} size={{ xs: 12, md: 4 }}>
               <Card variant={cardVariant} style={cardStyle}>
                 <CardHeader
                   title="Información estadística"
@@ -254,13 +212,13 @@ export const LogPage = () => {
         </Grid>
 
         {/* COLUMNA DERECHA – ACCESO */}
-        {/*<Grid item xs={12} md={7}>
+        {/*<Grid size={{ xs: 12, md: 7 }}>
           <Grid container spacing={4} direction="column">
-            <Grid item>
+            <Grid>
               <Login color={color4All} variant={variant4All} />
             </Grid>
 
-            <Grid item>
+            <Grid>
               <FormMaterial
                 form={tenantsDataForm}
                 collection="tenants"

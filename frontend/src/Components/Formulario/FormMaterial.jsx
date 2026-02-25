@@ -40,7 +40,7 @@ import {
   FormHelperText,
   MenuItem,
 } from "@mui/material";
-import Grid from "@mui/material/Unstable_Grid2";
+import Grid from "@mui/material/Grid";
 import { StyledTooltip } from "../General/TableGrid";
 
 //Auxiliar Functions:
@@ -243,7 +243,7 @@ const FormMaterial = (props) => {
       let value;
 
       return (
-        <Grid xs={12} sm={6} md={6}>
+        <Grid size={{ xs: 12, sm: 6, md: 6 }}>
           <FormControl key={inp.id}>
             <TextField
               id={inp.id}
@@ -286,7 +286,7 @@ const FormMaterial = (props) => {
       );
     } else if (inp.type === "button") {
       return (
-        <Grid xs={4} sm={4} md={6}>
+        <Grid size={{ xs: 4, sm: 4, md: 6 }}>
           <Button
             variant={variant}
             inputName={inp.inputName}
@@ -344,7 +344,7 @@ const FormMaterial = (props) => {
       };
 
       return (
-        <Grid xs={12} sm={12} md={12}>
+        <Grid size={{ xs: 12, sm: 12, md: 12 }}>
           <Card
             raised={false}
             /* sx={{
@@ -395,13 +395,7 @@ const FormMaterial = (props) => {
                   <Grid container columns={12}>
                     {inp.options.sort().map((opt, index) => {
                       return (
-                        <Grid
-                          xs={12}
-                          sm={6}
-                          md={4}
-                          lg={3}
-                          key={index + inp.inputName}
-                        >
+                        <Grid key={index + inp.inputName} size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
                           <FormControlLabel
                             key={inp.inputName + index}
                             control={
@@ -441,7 +435,7 @@ const FormMaterial = (props) => {
       );
     } else {
       return (
-        <Grid xs={4} sm={4} md={6}>
+        <Grid size={{ xs: 4, sm: 4, md: 6 }}>
           <TextField
             id={inp.id}
             type={inp.type}
@@ -510,7 +504,7 @@ const FormMaterial = (props) => {
                 >
                   <Grid
                     container
-                    spacing={{ xs: 2, md: 4 }}
+                    spacing={{ xs: 2, sm: 4 }}
                     columns={{ xs: 4, sm: 8, md: 12 }}
                     sx={{ pb: 4 }}
                   >

@@ -1,5 +1,5 @@
 //import "../../Styles/hamlet.css";
-import Grid from "@mui/material/Unstable_Grid2";
+import Grid from "@mui/material/Grid";
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
@@ -11,13 +11,13 @@ const JobsContainer = (props) => {
   /* return (
     <Grid
       container
-      spacing={{ xs: 2, md: 3 }}
+      spacing={{ xs: 2, sm: 3 }}
       columns={{ xs: 1, sm: 4, md: 8 }}
     >
-      <Grid item xs={1} sm={2} md={3}>
+      <Grid size={{ xs: 1, sm: 2, md: 3 }}>
         <MyStepper />
       </Grid>
-      <Grid item xs={1} sm={2} md={4}>
+      <Grid size={{ xs: 1, sm: 2, md: 4 }}>
         <Fetch collection={props.entity} />
       </Grid>
     </Grid>
@@ -39,10 +39,10 @@ export default JobsContainer;
         justifyContent="center"
         alignItems="flex-start"
     >
-          <Grid item xs={1} sm={2} md={3}>
+          <Grid size={{ xs: 1, sm: 2, md: 3 }}>
             <MyStepper />
           </Grid>
-          <Grid item xs={1} sm={2} md={4}>
+          <Grid size={{ xs: 1, sm: 2, md: 4 }}>
             <Fetch collection={props.entity} />
           </Grid>
     </Grid>

@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Box, Button, Typography, Container, CardHeader } from "@mui/material/";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import CardHeader from "@mui/material/CardHeader";
 import Card from "@mui/material/Card";
-import Grid from "@mui/material/Unstable_Grid2";
+import Grid from "@mui/material/Grid";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import { AuthContext } from "../context/AuthContext";
@@ -62,8 +66,8 @@ export const Profile = () => {
 
   return (
     <Container>
-      <Grid container columns={12} spacing={1}>
-        <Grid xs={12} sm={3}>
+      <Grid container spacing={1}>
+        <Grid size={{ xs: 12, sm: 3 }}>
           <Card>
             <CardHeader title={`Hola ${context.userLogged.Name}`} />
             <CardContent>
@@ -144,7 +148,7 @@ export const Profile = () => {
           </Card>
         </Grid>
 
-        <Grid xs={12} sm={9}>
+        <Grid size={{ xs: 12, sm: 9 }}>
           <Box>
             <FullJobsRender
               route={`jobs/owner/${context.userLogged._id}`}

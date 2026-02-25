@@ -10,7 +10,7 @@ import JobsForNextDays from "../utils/stats/JobsForNextWeeks";
 const StatsGrid = () => {
   const render = (
     <Grid container>
-      <Grid item>
+      <Grid>
         <StatsCollector>
           <JobsForNextDays></JobsForNextDays>
         </StatsCollector>

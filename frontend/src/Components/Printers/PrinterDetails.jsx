@@ -25,7 +25,7 @@ import {
   Button,
   ButtonGroup,
 } from "@mui/material";
-import Grid from "@mui/material/Unstable_Grid2";
+import Grid from "@mui/material/Grid";
 
 const PrinterDetails = (props) => {
   const navigate = useNavigate();
@@ -77,7 +77,7 @@ const PrinterDetails = (props) => {
           <CardContent>
             <Cmyk colores={props.pd.Colores} />
             <Grid container columns={12} spacing={1} divider={true}>
-              <Grid item columns={12} sx={{ width: "49%" }}>
+              <Grid columns={12} sx={{ width: "49%" }}>
                 <List>
                   <ListItem divider={true}>
                     <ListItemText primary="Contadores" />
@@ -125,7 +125,7 @@ const PrinterDetails = (props) => {
                 </List>
               </Grid>
               <Divider />
-              <Grid item columns={6} sx={{ width: "49%" }}>
+              <Grid columns={6} sx={{ width: "49%" }}>
                 <List>
                   <ListItem divider={true}>
                     <ListItemText primary="Ultimo Mes" />
@@ -135,7 +135,7 @@ const PrinterDetails = (props) => {
                       primary="Total:"
                       secondary={
                         spanishFormat(
-                          props.pd.Billing[props.pd.Billing.length - 1].Total
+                          props.pd.Billing[props.pd.Billing.length - 1].Total,
                         ) || 0
                       }
                       primaryTypographyProps={titleType}
@@ -147,7 +147,7 @@ const PrinterDetails = (props) => {
                       primary="Color:"
                       secondary={
                         spanishFormat(
-                          props.pd.Billing[props.pd.Billing.length - 1].Color
+                          props.pd.Billing[props.pd.Billing.length - 1].Color,
                         ) || 0
                       }
                       primaryTypographyProps={titleType}
@@ -159,7 +159,7 @@ const PrinterDetails = (props) => {
                       primary="Blanco y negro:"
                       secondary={
                         spanishFormat(
-                          props.pd.Billing[props.pd.Billing.length - 1].Black
+                          props.pd.Billing[props.pd.Billing.length - 1].Black,
                         ) || 0
                       }
                       primaryTypographyProps={titleType}
@@ -171,7 +171,7 @@ const PrinterDetails = (props) => {
                       primary="Grandes:"
                       secondary={
                         spanishFormat(
-                          props.pd.Billing[props.pd.Billing.length - 1].Large
+                          props.pd.Billing[props.pd.Billing.length - 1].Large,
                         ) || 0
                       }
                       primaryTypographyProps={titleType}
@@ -183,7 +183,7 @@ const PrinterDetails = (props) => {
                       primary="Chicas:"
                       secondary={
                         spanishFormat(
-                          props.pd.Billing[props.pd.Billing.length - 1].Small
+                          props.pd.Billing[props.pd.Billing.length - 1].Small,
                         ) || 0
                       }
                       primaryTypographyProps={titleType}

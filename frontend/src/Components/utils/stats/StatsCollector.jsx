@@ -43,17 +43,11 @@ const StatsCollector = ({ children, route }) => {
     />
   );
   const success = (
-    <Grid columns={12} container spacing={{ sm: 1, md: 2, xl: 3 }}>
+    <Grid columns={12} container spacing={{ xs: 1, sm: 2, md: 3 }}>
       {React.Children.map(children, (child, index) => {
         if (React.isValidElement(child)) {
           return (
-            <Grid
-              item
-              xs={12}
-              sm={12}
-              xl={index === 0 ? 12 : 6}
-              key={child.key}
-            >
+            <Grid key={child.key} size={{ xs: 12, sm: 12, xl: index === 0 ? 12 : 6 }}>
               <Paper
                 elevation={2}
                 sx={{
@@ -74,7 +68,7 @@ const StatsCollector = ({ children, route }) => {
           );
         }
         return (
-          <Grid item xs={12} sm={12} md={6} key={child.key}>
+          <Grid key={child.key} size={{ xs: 12, sm: 12, md: 6 }}>
             <Paper elevation={2}>{child}</Paper>
           </Grid>
         );

@@ -27,9 +27,12 @@ const Canvas = (props) => {
     const canvas = canvasRef.current;
     const Parent = canvas.parentNode;
 
+    console.log(Parent.clientWidth, Parent.clientHeight);
+    console.log(useCanvasSize);
+
     setCanvasSize({
-      x: Parent.clientWidth * 0.8,
-      y: Parent.clientWidth * 0.6,
+      x: Parent.clientHeight * 0.6,
+      y: Parent.clientHeight * 0.4,
     });
   };
 
@@ -73,7 +76,7 @@ const Canvas = (props) => {
         parseInt(data.Calle),
         newContext,
         useCanvasSize.x,
-        useCanvasSize.y
+        useCanvasSize.y,
       );
 
       //console.log("Total Poses: " + totalPoses.tPoses);
@@ -83,6 +86,7 @@ const Canvas = (props) => {
         props.getSheet(data);
       }
     }
+    props.save(false);
   };
 
   useEffect(() => {
@@ -96,10 +100,10 @@ const Canvas = (props) => {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, []);
+  }, [setCanvasSize]);
 
   return (
-    <>
+    <Box>
       <CardHeader
         title="Imposición"
         titleTypographyProps={{ color: "primary", fontWeight: "600" }}
@@ -116,7 +120,7 @@ const Canvas = (props) => {
           }}
           minWidth={200}
         >
-          <Grid item xs={12} md={12} sm={12}>
+          <Grid size={{ xs: 12, sm: 12, md: 12 }}>
             <ImpositionForm
               impositionSettings={props.sheet || null}
               canvasSize={useCanvasSize}
@@ -126,7 +130,7 @@ const Canvas = (props) => {
           </Grid>
 
           <Divider />
-          <Grid item xs={12} sm={12}>
+          <Grid size={{ xs: 12, sm: 12 }}>
             <canvas
               ref={canvasRef}
               width={useCanvasSize.x}
@@ -142,7 +146,7 @@ const Canvas = (props) => {
           </Grid>
         </Grid>
       </CardContent>
-    </>
+    </Box>
   );
 };
 

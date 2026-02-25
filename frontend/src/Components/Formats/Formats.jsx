@@ -5,7 +5,7 @@ import ItemsDetails from "../General/itemsDetails";
 // import "../../Styles/hamlet.css";
 // import "../Stocks/Stocks.css";
 import { HAMLET_API } from "../Config/config";
-import Grid from "@mui/material/Unstable_Grid2"; // Grid version 2
+import Grid from "@mui/material/Grid"; // Grid version 2
 import Spinner from "../General/Spinner";
 
 const Formats = (props) => {
@@ -38,7 +38,7 @@ const Formats = (props) => {
         <Spinner color="info" /> // Asegúrate de importar el componente Spinner si lo tienes
       ) : (
         formatList.map((format) => (
-          <Grid xs={12} md={4} key={format._id}>
+          <Grid key={format._id} size={{ xs: 12, md: 4 }}>
             <ItemsDetails
               pd={format}
               id={format._id}

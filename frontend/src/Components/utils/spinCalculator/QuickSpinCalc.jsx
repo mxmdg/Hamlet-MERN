@@ -84,10 +84,10 @@ const QuickSpinCalc = (props) => {
         <form name="form2" action="">
           <Grid
             container
-            spacing={{ xs: 1, md: 2 }}
+            spacing={{ xs: 1, sm: 2 }}
             columns={{ xs: 1, sm: 4, md: 8 }}
           >
-            <Grid item xs={1} sm={2} md={4}>
+            <Grid size={{ xs: 1, sm: 2, md: 4 }}>
               <TextField
                 id="Pages"
                 type="number"
@@ -100,7 +100,7 @@ const QuickSpinCalc = (props) => {
               />
             </Grid>
 
-            <Grid item xs={1} sm={2} md={4}>
+            <Grid size={{ xs: 1, sm: 2, md: 4 }}>
               <Autocomplete
                 color={useColor}
                 options={stocks}
@@ -119,7 +119,7 @@ const QuickSpinCalc = (props) => {
                 )}
               />
             </Grid>
-            <Grid item xs={1} sm={2} md={4}>
+            <Grid size={{ xs: 1, sm: 2, md: 4 }}>
               <Typography variant="h5" color={useColor}>
                 Lomo: {useSpin} mm
               </Typography>

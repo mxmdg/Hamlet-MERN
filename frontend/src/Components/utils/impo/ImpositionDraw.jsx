@@ -72,7 +72,7 @@ const ImpositionDraw = (props) => {
         parseInt(data.Calle),
         newContext,
         useCanvasSize.x,
-        useCanvasSize.y
+        useCanvasSize.y,
       );
     }
   };
@@ -100,10 +100,11 @@ const ImpositionDraw = (props) => {
         sx={{
           padding: "1%",
           borderRadius: "5px",
+          maxHeight: "80vh",
         }}
         minWidth={200}
       >
-        <Grid item xs={12} sm={12}>
+        <Grid size={{ xs: 12, sm: 12 }}>
           <canvas
             ref={canvasRef}
             width={useCanvasSize.x}

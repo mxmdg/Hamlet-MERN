@@ -20,7 +20,7 @@ const ColorPalette = () => {
           <Typography variant="title">{color}</Typography>
           <Grid container spacing={1}>
             {Object.keys(themeOptions.palette[color]).map((variant) => (
-              <Grid item key={variant} xs={6} sm={4} md={3} lg={2}>
+              <Grid key={variant} size={{ xs: 6, sm: 4, md: 3, lg: 2 }}>
                 <input
                   type="color"
                   value={themeOptions.palette[color][variant]}

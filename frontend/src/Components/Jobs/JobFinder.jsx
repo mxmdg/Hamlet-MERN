@@ -146,14 +146,14 @@ const JobFinder = (props) => {
 
   const urlForm = (
     <Grid container columns={12} spacing={1} width={"96%"} margin={2}>
-      <Grid item xs={12} sm={12} md={12}>
+      <Grid size={{ xs: 12, sm: 12, md: 12 }}>
         <Card elevation={6}>
           <CardContent>
             <FormControl fullWidth>
               <form name="search" onSubmit={onSubmit}>
                 <FormGroup>
                   <Grid container columns={12} spacing={3} width={"100%"}>
-                    <Grid item xs={12} sm={6} md={4}>
+                    <Grid size={{ xs: 12, sm: 6, md: 4 }}>
                       <TextField
                         fullWidth
                         id="url_P"
@@ -194,7 +194,7 @@ const JobFinder = (props) => {
                     {useResponse !== null &&
                       useQueryType === "id" &&
                       useProperty.label === "Tipo de Parte" && (
-                        <Grid item xs={12} sm={12} md={4}>
+                        <Grid size={{ xs: 12, sm: 12, md: 4 }}>
                           <TextField
                             select
                             id="queryPartType"
@@ -221,7 +221,7 @@ const JobFinder = (props) => {
                     {useResponse !== null &&
                       useQueryType === "id" &&
                       useProperty.label === "Tipo de Trabajo" && (
-                        <Grid item xs={12} sm={12} md={4}>
+                        <Grid size={{ xs: 12, sm: 12, md: 4 }}>
                           <TextField
                             select
                             id="queryJobType"
@@ -247,7 +247,7 @@ const JobFinder = (props) => {
                     {useResponse !== null &&
                       useQueryType === "id" &&
                       useProperty.label === "Material de Parte" && (
-                        <Grid item xs={12} sm={12} md={4}>
+                        <Grid size={{ xs: 12, sm: 12, md: 4 }}>
                           <Autocomplete
                             id="queryStock"
                             options={useResponse.stock}
@@ -281,7 +281,7 @@ const JobFinder = (props) => {
                     {useResponse !== null &&
                       useQueryType === "id" &&
                       useProperty.label.startsWith("Acabado") && (
-                        <Grid item xs={12} sm={12} md={4}>
+                        <Grid size={{ xs: 12, sm: 12, md: 4 }}>
                           <TextField
                             select
                             id="queryFinisher"
@@ -307,7 +307,7 @@ const JobFinder = (props) => {
                         </Grid>
                       )}
                     {useResponse !== null && useQueryType === "select" && (
-                      <Grid item xs={12} sm={12} md={4}>
+                      <Grid size={{ xs: 12, sm: 12, md: 4 }}>
                         <TextField
                           select
                           id="querySelect"
@@ -332,7 +332,7 @@ const JobFinder = (props) => {
                     {useResponse !== null &&
                       useQueryType === "id" &&
                       useProperty.label === "Cliente" && (
-                        <Grid item xs={12} sm={12} md={4}>
+                        <Grid size={{ xs: 12, sm: 12, md: 4 }}>
                           <Autocomplete
                             id="queryCompany"
                             options={useResponse.companies}
@@ -362,7 +362,7 @@ const JobFinder = (props) => {
                     {useResponse !== null &&
                       useQueryType === "id" &&
                       useProperty.label === "Representante" && (
-                        <Grid item xs={12} sm={12} md={4}>
+                        <Grid size={{ xs: 12, sm: 12, md: 4 }}>
                           <TextField
                             select
                             id="queryUsers"
@@ -388,7 +388,7 @@ const JobFinder = (props) => {
                         </Grid>
                       )}
                     {useResponse !== null && useQueryType === "string" && (
-                      <Grid item xs={12} sm={12} md={4}>
+                      <Grid size={{ xs: 12, sm: 12, md: 4 }}>
                         <TextField
                           id="query"
                           variant={inputsVariant}
@@ -403,7 +403,7 @@ const JobFinder = (props) => {
                       </Grid>
                     )}
                     {useResponse !== null && useQueryType === "date" && (
-                      <Grid item xs={12} sm={12} md={4}>
+                      <Grid size={{ xs: 12, sm: 12, md: 4 }}>
                         <TextField
                           id="query"
                           type="date"
@@ -420,7 +420,7 @@ const JobFinder = (props) => {
                     )}
                     {useResponse !== null && useQueryType === "number" && (
                       <>
-                        <Grid item xs={12} sm={6} md={2}>
+                        <Grid size={{ xs: 12, sm: 6, md: 2 }}>
                           <TextField
                             type="Select"
                             id="operator"
@@ -442,7 +442,7 @@ const JobFinder = (props) => {
                             ))}
                           </TextField>
                         </Grid>
-                        <Grid item xs={12} sm={6} md={2}>
+                        <Grid size={{ xs: 12, sm: 6, md: 2 }}>
                           <TextField
                             type="number"
                             id="query"
@@ -458,7 +458,7 @@ const JobFinder = (props) => {
                         </Grid>
                         {useOperator === "bt" && (
                           <>
-                            <Grid item xs={12} sm={6} md={2}>
+                            <Grid size={{ xs: 12, sm: 6, md: 2 }}>
                               <TextField
                                 type="number"
                                 id="query2"
@@ -476,13 +476,7 @@ const JobFinder = (props) => {
                         )}
                       </>
                     )}
-                    <Grid
-                      item
-                      xs={12}
-                      sm={12}
-                      md={12}
-                      sx={{ alignSelf: "center" }}
-                    >
+                    <Grid sx={{ alignSelf: "center" }} size={{ xs: 12, sm: 12, md: 12 }}>
                       <Button
                         type="submit"
                         variant="contained"
@@ -513,13 +507,13 @@ const JobFinder = (props) => {
       </Grid>
       {useURL !== null && props.entity === "jobs/complete" && (
         <Grid container columns={12} spacing={2} width={"100%"} margin={2}>
-          <Grid item xs={12} sm={12} md={12}>
+          <Grid size={{ xs: 12, sm: 12, md: 12 }}>
             <FullJobsRender
               route={props.entity + useURL}
               settings={{ title: "Pedidos", column: "emited", order: "asc" }}
             />
           </Grid>
-          <Grid item xs={12} sm={12} md={12}>
+          <Grid size={{ xs: 12, sm: 12, md: 12 }}>
             <StatsCollector route={props.entity + useURL}>
               <JobsForNextDays from={60} to={60} />
               <JobsPerDate />
@@ -533,10 +527,10 @@ const JobFinder = (props) => {
       )}
       {useURL !== null && props.entity !== "jobs/complete" && (
         <Grid container columns={12} spacing={2} width={"100%"} margin={2}>
-          <Grid item xs={12} sm={12} md={12}>
+          <Grid size={{ xs: 12, sm: 12, md: 12 }}>
             <Fetch collection={"quotations"} subdir={useURL} />
           </Grid>
-          <Grid item xs={12} sm={12} md={12}>
+          <Grid size={{ xs: 12, sm: 12, md: 12 }}>
             <StatsCollector route={props.entity + useURL}>
               <StockCount />
             </StatsCollector>

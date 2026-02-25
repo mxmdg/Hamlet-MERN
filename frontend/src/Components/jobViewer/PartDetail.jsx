@@ -1,76 +1,47 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  Typography,
   Grid,
-  Stack,
   Divider,
+  Stack,
+  Typography,
   Button,
   Card,
   CardHeader,
+  Container,
 } from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import SaveIcon from "@mui/icons-material/Save";
-import DarkWoodCard from "../utils/DarkWoodCard";
+import ImpoProvider from "../utils/impo/ImpoContext";
 import Canvas from "../utils/impo/Canvas";
 import ImpositionDraw from "../utils/impo/ImpositionDraw";
+import { calculateStock } from "../utils/impo/ImpositionService";
+import DarkWoodCard from "../utils/DarkWoodCard";
+import CopyToClipboardWrapper from "../General/CopyToClipboardWrapper";
+import ColorSheetRangeGenerator from "../utils/generalData/ColorSheetRangeGenerator";
 import FinishingList from "./FinishingList";
-import { styled } from "@mui/material/styles";
-import { calcularLomo } from "./JobDetail";
-
-// Imposition imports
-import {
-  bestCut,
-  cutOptimizer,
-  calculateStock,
-} from "../utils/impo/ImpositionService";
+import { Item, Item2 } from "./StyledComponents"; // Sugerencia: mover estilos a un archivo aparte
 
 const PartDetail = ({
   part,
   job,
-  expanded,
-  handleChange,
-  setProductionPlan,
+  isCotization,
+  onSaveImposition,
+  onFinishingChange,
 }) => {
-  const [usePoses, setPoses] = useState(null);
-  const [useImpoData, setImpoData] = useState(null);
-  const [usePartFinishingData, setPartFinishingData] = useState(null);
-  const [imposed, setImposed] = useState(false);
+  // Estados locales para que cada Tab maneje su propia lógica
+  const [usePoses, setPoses] = useState(
+    isCotization?.impositionData?.Poses || null,
+  );
+  const [useImpoData, setImpoData] = useState(
+    isCotization?.impositionData[part._id]?.impositionData || null,
+  );
   const [useData, setData] = useState(null);
-  const partNumber = job.Partes.indexOf(part) + 1;
-  const myKey = part._id + partNumber;
 
-  const partCosts = {
-    Poses: usePoses,
-    impositionData: useImpoData,
-    finishingData: usePartFinishingData,
-  };
+  const [useSavedImpo, setSavedImpo] = useState(true);
 
-  const Item = styled(Box)(({ theme }) => ({
-    backgroundColor:
-      theme.palette.mode === "dark"
-        ? theme.palette.success.dark
-        : theme.palette.success.light,
-    ...theme.typography.subtitle2,
-    padding: theme.spacing(2),
-    textAlign: "left",
-    color: theme.palette.text.primary,
-  }));
+  console.log(useImpoData, useSavedImpo);
 
-  const Item2 = styled(Box)(({ theme }) => ({
-    backgroundColor:
-      theme.palette.mode === "dark"
-        ? theme.palette.info.dark
-        : theme.palette.info.light,
-    ...theme.typography.subtitle2,
-    padding: theme.spacing(2),
-    textAlign: "left",
-    color: theme.palette.text,
-  }));
-
+  // Lógica de cálculo de stock (extraída de tu código original)
   const stockCalculated = useImpoData
     ? calculateStock(
         useImpoData.sheetOriginalSize.width,
@@ -79,180 +50,153 @@ const PartDetail = ({
         part.partStock.Alto_Resma,
         part,
         job,
-        usePoses
+        usePoses,
       )
-    : "";
+    : null;
 
-  const saveProductionPlan = () => {
-    partCosts.totalPliegos = stockCalculated.cantidadDePliegos;
-    partCosts.totalHojas = stockCalculated.totalHojas;
-    partCosts.tirada =
-      job.Cantidad > 1 ? Math.ceil(job.Cantidad / usePoses) : job.Cantidad;
-    partCosts.id = part._id;
-    partCosts.stock = part.partStock;
-    partCosts.colores = Math.max(part.ColoresFrente, part.ColoresDorso);
-    partCosts.impresiones =
-      Math.ceil(part.Pages * (job.coloresDorso > 0 ? 2 : 1)) * partCosts.tirada;
-    setProductionPlan((prevState) => ({
-      ...prevState,
-      [part._id]: partCosts,
-    }));
-  };
+  /*const stockCalculated = {
+    cantidadDePliegos: 22,
+    pliegosPorHoja: 3,
+    totalHojas: 8,
+  };*/
 
   useEffect(() => {
-    if (usePoses !== null) {
-      setImposed(true);
+    if (isCotization) {
+      setImpoData(isCotization?.impositionData[part._id]?.impositionData);
+    }
+    if (usePoses !== null && useImpoData) {
       setData({
-        widthSheet: part.partStock.Ancho_Resma,
-        heightSheet: part.partStock.Alto_Resma,
-        widthPage: useImpoData.sheetOriginalSize.width,
-        heightPage: useImpoData.sheetOriginalSize.height,
+        widthSheet: parseInt(part.partStock.Ancho_Resma),
+        heightSheet: parseInt(part.partStock.Alto_Resma),
+        widthPage: parseInt(
+          isCotization.impositionData.sheetOriginalSize?.width,
+        ),
+        heightPage: parseInt(useImpoData?.sheetOriginalSize?.height),
         margenes: 0,
         Calle: 0,
       });
     }
-  }, [useImpoData, stockCalculated.cantidadDePliegos]);
+  }, [setImpoData, setData, useSavedImpo]);
+
+  const handleSave = () => {
+    const partCosts = {
+      id: part._id,
+      Poses: usePoses,
+      totalPliegos: stockCalculated?.cantidadDePliegos,
+      totalHojas: stockCalculated?.totalHojas,
+      tirada: Math.ceil(
+        job.Cantidad > 1 ? job.Cantidad / usePoses : job.Cantidad,
+      ),
+      stock: part.partStock,
+      colores: Math.max(part.ColoresFrente, part.ColoresDorso),
+      impresiones: Math.ceil(
+        stockCalculated.cantidadDePliegos * (part.ColoresDorso > 0 ? 2 : 1),
+      ),
+      impositionData: useImpoData,
+    };
+    onSaveImposition(part._id, partCosts);
+    setSavedImpo(true);
+  };
 
   return (
-    <Box key={part._id} mb={1}>
-      <Accordion
-        key={myKey}
-        id={myKey}
-        expanded={expanded === myKey}
-        onChange={handleChange(myKey)}
+    <Box>
+      <Grid
+        container
+        columns={12}
+        spacing={2}
+        sx={{
+          m: 0,
+          width: "100%",
+          alignItems: "start", // Obliga a las columnas a medir lo mismo de alto
+        }}
+        direction={{ xs: "column", md: "row" }}
       >
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1bh-content"
-          id="panel1bh-header"
-        >
-          <Typography sx={{ width: "33%", flexShrink: 0 }}>
-            {part.Name}
-            <br /> {part.jobParts[0].Type}
-          </Typography>
-          <Typography sx={{ width: "33%", flexShrink: 0 }}>
-            Parte {partNumber} de {job.Partes.length}
-          </Typography>
-          <Typography sx={{ color: "text.secondary" }}>
-            Material pelpa: {part.partStock.Nombre_Material}
-          </Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Grid
-            sx={{ maxWidth: "100%", overflow: "auto" }}
-            container
-            direction={{ xs: "column", md: "row" }}
-            spacing={2}
-            alignItems={"start"}
-          >
-            <Grid item xs={12} md={4}>
-              <Stack spacing={0.25} sx={{ p: "2px" }}>
-                <Item>{part.jobParts[0].Type}</Item>
-                <Item>
-                  Formato: {part.Ancho} x {part.Alto} - Orientacion:{" "}
-                  {part.Orientacion}
-                </Item>
-                <Item>
-                  Paginas: {part.Pages}
-                  {parseInt(part.Pages) > 10 ? (
-                    <>
-                      {" ("}Lomo:{" "}
-                      {calcularLomo(part.Pages, part.partStock.Espesor_Resma)}{" "}
-                      mm.
-                      {")"}
-                    </>
-                  ) : (
-                    ""
-                  )}
-                </Item>
+        {/* Visualización de Imposición (Izquierda) */}
+        <Grid size={{ xs: 12, lg: 6 }}>
+          <ImpoProvider>
+            <DarkWoodCard>
+              <Canvas
+                part={part}
+                getPoses={setPoses}
+                poses={usePoses}
+                getSheet={setImpoData}
+                sheet={useImpoData}
+                save={setSavedImpo}
+              />
+            </DarkWoodCard>
+          </ImpoProvider>
+        </Grid>
+        {/* Detalles y Acciones (Derecha) */}
+        <Grid size={{ xs: 12, lg: 6 }}>
+          <Stack spacing={1}>
+            <Item>
+              <strong>Tipo:</strong> {part.jobParts[0].Type}
+            </Item>
+            <Item>
+              <strong>Formato:</strong> {part.Ancho} x {part.Alto} (
+              {part.Orientacion})
+            </Item>
 
-                <ColorSheetRangeGenerator />
-                <Item>
-                  Impresion: {part.ColoresFrente} / {part.ColoresDorso}
-                </Item>
-                <Item2>
-                  <Typography variant="h6">
-                    {part.partStock.Nombre_Material} {part.partStock.Tipo}{" "}
-                    {part.partStock.Gramaje}{" "}
-                    {useImpoData
-                      ? ` - ${useImpoData.sheetOriginalSize.width} x ${
-                          useImpoData.sheetOriginalSize.height
-                        } ${
-                          Math.max(part.ColoresFrente, part.ColoresDorso) > 1
-                            ? "CMYK"
-                            : "K"
-                        }`
-                      : ""}
+            <Item2>
+              <Typography variant="subtitle2" color="primary">
+                Especificaciones de Material
+              </Typography>
+              <Typography variant="body2">
+                {part.partStock.Nombre_Material}
+              </Typography>
+              {usePoses && (
+                <Box mt={1}>
+                  <Typography variant="caption" display="block">
+                    Poses: {usePoses} | Tirada:{" "}
+                    {Math.ceil(job.Cantidad / usePoses)}
                   </Typography>
-                  {usePoses && (
-                    <Typography variant="h6">
-                      Poses: {usePoses} / Tirada:{" "}
-                      {Math.ceil(job.Cantidad / usePoses)}
-                      <br />
-                      Pliegos: {stockCalculated.cantidadDePliegos} - Salen:{" "}
-                      {stockCalculated.pliegosPorHoja} del{" "}
-                      {part.partStock.Ancho_Resma} x {part.partStock.Alto_Resma}
-                      <br />
-                      Cantidad de resmas:{" "}
-                      {Math.ceil((stockCalculated.totalHojas / 500) * 100) /
-                        100}{" "}
-                      {`(${stockCalculated.totalHojas} hojas)`}
-                    </Typography>
-                  )}
-                </Item2>
+                  <Typography variant="caption" display="block">
+                    Pliegos: {stockCalculated?.cantidadDePliegos}
+                  </Typography>
+                </Box>
+              )}
+            </Item2>
 
-                {usePoses && (
-                  <>
-                    {useData !== null && (
-                      <Card elevation={10}>
+            {usePoses && (
+              <>
+                {useData && (
+                  <Container maxHeight={"50%"}>
+                    <ImpoProvider>
+                      <Card variant="outlined" sx={{ mt: 1 }}>
                         <CardHeader
                           title="Corte de plana"
-                          titleTypographyProps={{
-                            variant: "subtitle2",
-                          }}
+                          titleTypographyProps={{ variant: "caption" }}
                         />
                         <ImpositionDraw data={useData} />
                       </Card>
-                    )}
-                    <Button
-                      onClick={() => {
-                        saveProductionPlan();
-                      }}
-                      variant="contained"
-                      color="secondary"
-                      startIcon={<SaveIcon />}
-                    >
-                      Guardar Impo
-                    </Button>
-                  </>
+                    </ImpoProvider>
+                  </Container>
                 )}
-                {part.Finishing && (
-                  <Item>
-                    <FinishingList
-                      finishing={part.Finishing}
-                      cantidad={job.Cantidad}
-                      imposition={
-                        useImpoData !== null ? partCosts : "Guardar Imposición"
-                      }
-                      sendFinishingData={setPartFinishingData}
-                    />
-                  </Item>
-                )}
-              </Stack>
-            </Grid>
-            <Divider />
-            <Grid item xs={12} md={8}>
-              <DarkWoodCard>
-                <Canvas
-                  part={part}
-                  getPoses={setPoses}
-                  getSheet={setImpoData}
-                ></Canvas>
-              </DarkWoodCard>
-            </Grid>
-          </Grid>
-        </AccordionDetails>
-      </Accordion>
+                <Button
+                  onClick={handleSave}
+                  variant="contained"
+                  color="success"
+                  fullWidth={false}
+                  startIcon={<SaveIcon />}
+                  disabled={useSavedImpo}
+                >
+                  Guardar Imposición
+                </Button>
+              </>
+            )}
+
+            {part.Finishing && (
+              <FinishingList
+                finishing={part.Finishing}
+                cantidad={job.Cantidad}
+                paginas={part.Pages}
+                imposition={useImpoData ? { Poses: usePoses } : null}
+                sendFinishingData={(data) => onFinishingChange(part._id, data)}
+              />
+            )}
+          </Stack>
+        </Grid>
+      </Grid>
     </Box>
   );
 };

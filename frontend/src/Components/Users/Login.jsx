@@ -87,6 +87,7 @@ export const Login = (props) => {
         return;
       }
     } catch (e) {
+      setLoading(false);
       setError({
         message: "Fallo el login: " + e,
         action: { resetError },
@@ -188,7 +189,7 @@ export const Login = (props) => {
                   spacing={{ xs: 2, sm: 3, md: 5 }}
                   columns={{ xs: 1, sm: 4, md: 12 }}
                 >
-                  <Grid item xs={6} sm={6} md={6}>
+                  <Grid size={{ xs: 6, sm: 6, md: 6 }}>
                     <TextField
                       id="email"
                       label="email"
@@ -207,7 +208,7 @@ export const Login = (props) => {
                       variant={useVariant}
                     />
                   </Grid>
-                  <Grid item xs={6} sm={6} md={6}>
+                  <Grid size={{ xs: 6, sm: 6, md: 6 }}>
                     <TextField
                       id="password"
                       label="password"
@@ -227,12 +228,18 @@ export const Login = (props) => {
                       }}
                     />
                   </Grid>
-                  <Grid item xs={6} sm={6} md={6} sx={{ alignSelf: "left" }}>
+                  <Grid
+                    sx={{ alignSelf: "left" }}
+                    size={{ xs: 6, sm: 6, md: 6 }}
+                  >
                     <Button type="submit" color={useColor} variant="contained">
                       Ingresar
                     </Button>
                   </Grid>
-                  <Grid item xs={6} sm={6} md={6} sx={{ alignSelf: "left" }}>
+                  <Grid
+                    sx={{ alignSelf: "left" }}
+                    size={{ xs: 6, sm: 6, md: 6 }}
+                  >
                     <Button
                       color={useColor}
                       variant="text"
@@ -243,7 +250,10 @@ export const Login = (props) => {
                   </Grid>
                 </Grid>
                 {error !== "" && (
-                  <Grid item xs={6} sm={2} md={9} sx={{ alignSelf: "right" }}>
+                  <Grid
+                    sx={{ alignSelf: "right" }}
+                    size={{ xs: 6, sm: 2, md: 9 }}
+                  >
                     <ErrorMessage
                       title="Credenciales inválidas"
                       message={error.message}
@@ -283,7 +293,7 @@ export const Login = (props) => {
               spacing={{ xs: 2, sm: 3, md: 5 }}
               columns={{ xs: 1, sm: 4, md: 12 }}
             >
-              <Grid item xs={12} sm={6}>
+              <Grid size={{ xs: 12, sm: 6 }}>
                 <TextField
                   id="email"
                   label="Correo Electrónico"
@@ -302,7 +312,7 @@ export const Login = (props) => {
                   <FormHelperText>{errors.email.message}</FormHelperText>
                 )}
               </Grid>
-              <Grid item xs={12}>
+              <Grid size={{ xs: 12 }}>
                 <Button type="submit" color={useColor} variant="contained">
                   Enviar Correo de Recuperación
                 </Button>
