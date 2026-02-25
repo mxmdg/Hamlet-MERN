@@ -1,5 +1,3 @@
-import { Backdrop, Typography } from "@mui/material";
-import { borderRadius, fontSize, height, margin, textAlign } from "@mui/system";
 import React from "react";
 import {
   RadialBarChart,

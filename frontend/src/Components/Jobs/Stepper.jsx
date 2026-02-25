@@ -344,7 +344,7 @@ export default function MyStepper(props) {
             columns={12}
             sx={{ width: "100%", display: "flex", flexDirection: "row" }}
           >
-            <Grid>
+            <Grid size={{xs: 12, md: 4} }>
               <Stepper activeStep={activeStep}>
                 {steps.map((label, index) => {
                   const stepProps = {};
@@ -441,7 +441,7 @@ export default function MyStepper(props) {
                 </React.Fragment>
               )}
             </Grid>
-            <Grid size={{ xs: 12 }}>
+            <Grid size={{xs: 12, md: 8} }>
               <Container>
                 <Grid
                   container
