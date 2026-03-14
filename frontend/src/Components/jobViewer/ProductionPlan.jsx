@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 
 // Simulador de costos Papyrus - Imprenta Dorrego
 import {
@@ -48,6 +48,7 @@ const ProductionPlan = (props) => {
   const [useError, setError] = useState(null);
   const [useQuoteSettings, setQuoteSettings] = useState(null);
   const [usePricingSettings, setPricingSettings] = useState(null);
+  const savedRef = useRef(false);
   const AllData = objectToArray(props.impositionData);
 
   /* Modelo del datos:
@@ -133,11 +134,11 @@ const ProductionPlan = (props) => {
         minimo,
         cantidad,
         entrada,
-        largoPliego
+        largoPliego,
       ) => {
         largoPliego = Math.max(
           parseInt(totals[key].sheetOriginalSize.width),
-          parseInt(totals[key].sheetOriginalSize.height)
+          parseInt(totals[key].sheetOriginalSize.height),
         );
         try {
           if (printerSelector.Colores === 1 && data.colores === 1) {
@@ -156,7 +157,7 @@ const ProductionPlan = (props) => {
               minimo,
               cantidad,
               entrada,
-              largoPliego
+              largoPliego,
             );
           } else {
             return () => {
@@ -203,7 +204,7 @@ const ProductionPlan = (props) => {
         cost.Minimo,
         totals[key].impresiones,
         cost.Entrada,
-        Math.max(totals[key].format.Alto, totals[key].format.Ancho)
+        Math.max(totals[key].format.Alto, totals[key].format.Ancho),
       );
       totals[key].stockCost = stockCost(totals[key].totalHojas);
       totals[key].FinishingCost =
@@ -227,11 +228,18 @@ const ProductionPlan = (props) => {
     } catch (error) {
       setError(error);
     }
-
     return Object.values(totals);
   };
 
-  const resumen = totalResume(AllData);
+  const resumen = useMemo(() => {
+    savedRef.current = false;
+    return totalResume(AllData);
+  }, [
+    props.impositionData,
+    props.partFinishingData,
+    props.totalFinishingCosts,
+    usePrices,
+  ]);
 
   const handleSaveProductionPlan = async (resumen) => {
     const data = {
@@ -254,8 +262,8 @@ const ProductionPlan = (props) => {
           parseFloat(
             resumen[resumen.length - 1].print +
               resumen[resumen.length - 1].stock +
-              resumen[resumen.length - 1].finishing
-          )
+              resumen[resumen.length - 1].finishing,
+          ),
         ),
         data,
         jobType: props.job.Tipo[0].name,
@@ -263,6 +271,7 @@ const ProductionPlan = (props) => {
         jobId: props.job._id,
         customerId: props.job.Company._id,
       });
+      savedRef.current = true;
       setError({
         title: "Presupuesto guardado",
         message: "Presupuesto guardado correctamente",
@@ -325,7 +334,10 @@ const ProductionPlan = (props) => {
     <Grid container columns={12} spacing={2} padding={2}>
       {resumen.slice(0, resumen.length - 1).map((data) => {
         return (
-          <Grid key={data.printer._id + data.stock._id + resumen.indexOf(data)} size={{ xs: 12, sm: 6, lg: 3 }}>
+          <Grid
+            key={data.printer._id + data.stock._id + resumen.indexOf(data)}
+            size={{ xs: 12, sm: 6, lg: 3 }}
+          >
             <Card elevation={8}>
               <CardHeader
                 title={`${data.printer.Fabricante} ${data.printer.Modelo}`}
@@ -374,7 +386,7 @@ const ProductionPlan = (props) => {
                     <ListItemNumbers
                       secondary={"Costo final impreiones"}
                       primary={`${currencyFormat(
-                        Math.ceil(data.printPrice.Total)
+                        Math.ceil(data.printPrice.Total),
                       )}`}
                     />
                   </ListItem>
@@ -389,7 +401,7 @@ const ProductionPlan = (props) => {
                   <ListItem alignItems="flex-start">
                     <ListItemNumbers
                       primary={`${currencyFormat(
-                        roundInteger(data.FinishingCost || 0)
+                        roundInteger(data.FinishingCost || 0),
                       )}`}
                       secondary={`Costo Terminacion`}
                     />
@@ -401,8 +413,8 @@ const ProductionPlan = (props) => {
                         roundInteger(
                           data.printPrice.Total +
                             data.stockCost.cost +
-                            (data.FinishingCost || 0)
-                        )
+                            (data.FinishingCost || 0),
+                        ),
                       )}`}
                       secondary={`Total`}
                     />
@@ -458,7 +470,7 @@ const ProductionPlan = (props) => {
                 primary={`${currencyFormat(
                   resumen[resumen.length - 1].print +
                     resumen[resumen.length - 1].stock +
-                    (props.totalFinishingCosts || 0)
+                    (props.totalFinishingCosts || 0),
                 )}`}
                 secondary={` Costo total`}
               />
@@ -493,7 +505,7 @@ const ProductionPlan = (props) => {
               variant="contained"
               color="success"
               size="small"
-              disabled={!isButtonEnabled()}
+              disabled={!isButtonEnabled() || savedRef.current}
               onClick={() => {
                 handleSaveProductionPlan(resumen);
               }}

@@ -12,7 +12,7 @@ const counterSchema = new Schema(
     },
     seq: { type: Number, default: 0 },
   },
-  { timestamps: false }
+  { timestamps: false },
 );
 
 // Unique composite index: one counter per (entity, tenant)
@@ -74,16 +74,16 @@ quotationsSchema.pre("save", async function (next) {
       return next(err);
     }
 
-    console.log("Generating tenant-scoped index for tenant:", this.tenant);
+    //console.log("Generating tenant-scoped index for tenant:", this.tenant);
 
     // Atomically increment (or create) the counter for this tenant+entity
     const counter = await Counter.findOneAndUpdate(
       { entity: "quotations", tenant: this.tenant },
       { $inc: { seq: 1 } },
-      { new: true, upsert: true, setDefaultsOnInsert: true }
+      { new: true, upsert: true, setDefaultsOnInsert: true },
     ).exec();
 
-    console.log("Counter after increment:", counter);
+    //console.log("Counter after increment:", counter);
 
     if (!counter || typeof counter.seq !== "number") {
       return next(new Error("Failed to generate quotation index"));

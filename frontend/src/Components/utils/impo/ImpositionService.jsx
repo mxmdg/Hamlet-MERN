@@ -107,7 +107,7 @@ export const drawCutting = (
   } else if (n1 === 0 && n2 === 0) {
     ctx.clearRect(0, 0, xCtx, yCtx);
     ctx.strokeStyle = "#F00";
-    ctx.strokeWidth = "3";
+    ctx.strokeWidth = "5";
     ctx.strokeRect(izq, top, x1, y1);
   }
 
