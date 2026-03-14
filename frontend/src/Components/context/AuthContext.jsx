@@ -20,6 +20,12 @@ const AuthProvider = ({ children }) => {
       : null,
   );
 
+  const [usePlan, setPlan] = useState(
+      localStorage.getItem("memberships")
+        ? JSON.parse(localStorage.getItem("memberships"))[0].tenant.plan
+        : null,
+    );
+
   const [memberships, setMemberships] = useState(() => {
     try {
       const stored = localStorage.getItem("memberships");
@@ -85,6 +91,7 @@ const AuthProvider = ({ children }) => {
         handleLogout,
         useToken,
         userLogged,
+        usePlan,
         setUserLogged,
         memberships,
         setMemberships,

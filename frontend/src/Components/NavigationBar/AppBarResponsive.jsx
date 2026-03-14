@@ -63,7 +63,8 @@ function ResponsiveAppBar(props) {
     { text: "Cambiar Contraseña", path: "users/ChangePassword" },
     { text: "Trabajo Nuevo", path: "jobs/add" },
     { text: "Contadores", path: "billing" },
-    { text: "Editor de formulas", path: "precios/formula" },
+    { text: "Editor de fórmulas", path: "precios/formula" },
+    { text: "Conexión a Papyrus", path: "papyrus", disabled: context.usePlan !== 'Pro' ? true : false},
     { text: "Mensajes", path: "messages" },
   ];
 
@@ -306,9 +307,10 @@ function ResponsiveAppBar(props) {
             {dropMenu.map((setting) => (
               <MenuItem
                 key={setting.text}
+                disabled={setting.disabled}
                 onClick={() => handleCloseUserMenu(setting.path)}
               >
-                <Typography textAlign="center">{setting.text}</Typography>
+                <Typography textAlign="right" >{setting.text}</Typography>
               </MenuItem>
             ))}
             <MenuItem>

@@ -76,16 +76,19 @@ const JobParts = (props) => {
     const res = stocks.filter((stock) => {
       try {
         if (
-          props.editPart === null &&
+          //props.editPart === null ||
+          props.editPart.part.jobParts &&
           stock.Gramaje >= currentPart.minStockWeight &&
           stock.Gramaje <= currentPart.maxStockWeight
         ) {
+          console.log(stock.Nombre_Material, "1ra Condicion")
           return stock;
         } else if (
           props.editPart !== null &&
           stock.Gramaje >= props.editPart.part.jobParts[0].minStockWeight &&
           stock.Gramaje <= props.editPart.part.jobParts[0].maxStockWeight
         ) {
+          console.log(stock.Nombre_Material, "2da. Condicion")
           return stock;
         }
       } catch (error) {
@@ -109,6 +112,8 @@ const JobParts = (props) => {
     } else {
       setSimplex(false);
     }
+    filterStocks()
+    getFinishers()
   };
 
   const changeHandler = (e, Finisher) => {
@@ -122,7 +127,8 @@ const JobParts = (props) => {
   };
 
   useEffect(() => {
-    //console.log(currentPart?._id);
+    currentPart?._id === undefined ? setPartsList(orderArrayByKey(props.parts, "Type")) : console.log(currentPart?._id);
+    setIsLoading(false)
   }, [currentPart]);
 
   useEffect(() => {
@@ -162,6 +168,7 @@ const JobParts = (props) => {
       updateStocks();
       setIsLoading(false);
     } catch (e) {
+      setIsLoading(false);
       setError(e);
     }
   }, [

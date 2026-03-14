@@ -81,7 +81,7 @@ const PartCard = (props) => {
     <StyledCard variant="elevation" square={true} elevation={10}>
       <CardHeader
         title={props.part.Name}
-        subheader={`${props.part.jobParts[0]?.Type}`}
+        subheader={`${props.part?.jobParts[0]?.Type}` || ""}
       ></CardHeader>
       <CardContent sx={{ flexGrow: 1 }}>
         <Typography variant="body2" sx={{ marginBottom: "10px" }}>

@@ -12,8 +12,9 @@ import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import Spinner from "./Spinner";
 import DarkWoodCard from "../utils/DarkWoodCard";
 import { useNavigate } from "react-router-dom";
-import { fechtData, getPrivateElements } from "../customHooks/FetchDataHook";
+import { fechtData, getPrivateElements, importFromPapyrus } from "../customHooks/FetchDataHook";
 import flattenArrayOfObjects from "../utils/flattener/flatenDicts";
+import { MyQuery, queryOT, finalQuery, queryTrabajosTerceros,queryProcesos, queryProximasEntregas, queryEntrega,queryProcesosPorFecha } from "../utils/PropertiesMaps/sqlQueries";
 import { Filter } from "../customHooks/Filter";
 
 const Fetch = (props) => {
@@ -27,6 +28,7 @@ const Fetch = (props) => {
   const [useColumn, setColumn] = useState("Todo");
 
   const navigate = useNavigate();
+  const url = process.env.REACT_APP_PAPYRUS_API || "http://181.104.19.45:3001/api/papyrus/extract";
 
   const orderObjectProperties = (obj, headers) => {
     const ordered = {};
@@ -39,9 +41,16 @@ const Fetch = (props) => {
   };
 
   const getElements = async () => {
-    let elements = await getPrivateElements(
+    let elements
+
+    if (props.collection === 'papyrus') {
+      elements = await importFromPapyrus(props.querySQL, url)
+      console.log(elements)
+    } else {
+      elements = await getPrivateElements(
       props.collection + (props.subdir ? `/${props.subdir}` : "")
     );
+    }
 
     if (props.collection === "memberships") {
       elements = await flattenArrayOfObjects(elements);

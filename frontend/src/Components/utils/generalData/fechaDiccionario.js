@@ -47,11 +47,16 @@ export function getWeekNumber(d) {
   // Return array of year and week number
   return [d.getUTCFullYear(), weekNo];
 }
+/**
+ * Devuelve un objeto con diferentes formatos de una fecha:
+  * - `ddmmyy`: Fecha en formato "dd/mm/yyyy".
+  * - `mmyy`: Fecha en formato "mm/yyyy".
+  * - `ww`: Número de la semana del año.
+  * @param {string|number|Date} event - Acepta un string de fecha (ISO, "2026-03-11"), 
+  * un timestamp o un objeto Date de JS.
+  * return { ddmmyy, mmyy, ww, yymmdd, mm: mm + 1, yy: yy, yyyymmdd: yyyymmdd};
+ */
 
-// Devuelve un objeto con diferentes formatos de una fecha:
-// - `ddmmyy`: Fecha en formato "dd/mm/yyyy".
-// - `mmyy`: Fecha en formato "mm/yyyy".
-// - `ww`: Número de la semana del año.
 export const getMyDate = (event) => {
   const dd = new Date(event).getUTCDate();
   const mm = new Date(event).getUTCMonth();
@@ -61,9 +66,12 @@ export const getMyDate = (event) => {
   const ddmmyy = `${dd}/${mm + 1}/${yy}`;
   const mmyy = `${mm + 1}/${yy}`.toString();
   const yymmdd = `${yy}-${mm + 1}-${dd}`;
+  const yyyymmdd = `${yy}-${mm + 1}-${dd}`
 
-  return { ddmmyy, mmyy, ww, yymmdd, mm: mm + 1, yy: yy };
+  return { ddmmyy, mmyy, ww, yymmdd, mm: mm + 1, yy: yy, yyyymmdd: yyyymmdd};
 };
+
+export const todayDate = () => getMyDate(new Date());
 
 // Formatea una fecha en formato "dd/mm/yyyy" según la configuración regional "es-ES".
 export const handleDate = (date) => {

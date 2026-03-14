@@ -206,7 +206,7 @@ const JobsForm = (props) => {
                     name="JobType"
                     fullWidth
                     {...register("JobType", { required: true })}
-                    onBlur={(e) => {
+                    onChange={(e) => {
                       e.preventDefault();
                       trigger("JobType");
                       //resetFinishers();

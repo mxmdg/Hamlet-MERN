@@ -31,7 +31,7 @@ const JobsForNextDays = (props) => {
         formatDateFromDict(endDate).ddmmyy
       }`
     ); // Actualiza el título del gráfico
-  }, [from, to]);
+  }, []);
 
   let outDate = {};
 

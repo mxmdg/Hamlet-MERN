@@ -10,7 +10,10 @@ import Typography from "@mui/material/Typography";
 const MainContainer = (props) => {
   return (
     <Container sx={{ width: "100vw" }}>
-      <Fetch collection={props.entity} />
+      <Fetch
+        collection={props.entity}
+        {...(props.querySQL !== undefined ? { querySQL: props.querySQL } : {})}
+      />
     </Container>
   );
 };

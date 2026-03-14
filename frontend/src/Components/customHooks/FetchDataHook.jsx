@@ -97,6 +97,16 @@ export const uploadFile = async (endpoint, data) => {
   }
 };
 
+export const importFromPapyrus = async (query, endpoint ) => {
+  try {
+    const res = await axios.post(endpoint, query);
+    return res.data
+  } catch (error) {
+    console.log(error)
+    throw error
+  }
+}
+
 export const putPrivateElement = async (itemURL, formData) => {
   const token = localStorage.getItem("token");
   const memberships = JSON.parse(localStorage.getItem("memberships") || "[]");

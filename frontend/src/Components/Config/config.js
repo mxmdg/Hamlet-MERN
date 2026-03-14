@@ -5,5 +5,6 @@
 export const API_BASE = process.env.REACT_APP_API_HOST; // https://www.hamlet.com.ar
 
 export const HAMLET_API = `${API_BASE}/Hamlet/`;
+export const PAPYRUS_API = `http://192.168.1.46:3001/api/papyrus/extract` // Esto va en la configuracion principal.
 export const HEALTH_API = `${API_BASE}/health/`; // Asegúrate que termine en /
 export const VALIDATE_PDF = `127.0.0.2/upload`;

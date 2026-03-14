@@ -80,6 +80,8 @@ export default function MyStepper(props) {
   const parts = allParts;
 
   const addParts = (newPart) => {
+    console.log("add")
+    console.log(newPart)
     try {
       const getStock = async (id) => {
         const stock = await getPrivateElementByID("materiales", id);
@@ -108,6 +110,8 @@ export default function MyStepper(props) {
   };
 
   const replacePart = (newPart) => {
+    console.log("Replace")
+    console.log(newPart)
     try {
       const getStock = async (id) => {
         const stock = await getPrivateElementByID("materiales", id);

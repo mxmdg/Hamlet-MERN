@@ -432,7 +432,7 @@ const ProductionPlan = (props) => {
           <CardHeader
             title={`${props.job.Nombre}`}
             titleTypographyProps={{ color: "primary" }}
-            subheader={`${props.job.Tipo[0].name}`}
+            subheader={`${props.job.Tipo[0].name || ""}`}
             subheaderTypographyProps={{ color: "secondary" }}
           ></CardHeader>
           <Divider />

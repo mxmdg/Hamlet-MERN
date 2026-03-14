@@ -1,5 +1,5 @@
 import React from "react";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "./Components/context/AuthContext";
 import { Routes, Route } from "react-router-dom";
 
@@ -21,9 +21,16 @@ import { preciosRoutes } from "./Routes/preciosRoutes";
 import { quotationsRoutes } from "./Routes/quotationsRoutes";
 import { configuracionRoutes } from "./Routes/configuracionRoutes";
 import { membershipsRoutes } from "./Routes/memberships";
+import { papyrusRoutes } from "./Routes/papyrusRoutes";
 
 const Router = (props) => {
   const context = useContext(AuthContext);
+
+  const [usePlan, setPlan] = useState(
+      localStorage.getItem("memberships")
+        ? JSON.parse(localStorage.getItem("memberships"))[0].tenant.plan
+        : null,
+    );
 
   const { color, variant } = props.prefs;
 
@@ -48,6 +55,7 @@ const Router = (props) => {
           {quotationsRoutes({ color, variant })}
           {configuracionRoutes({ color, variant })}
           {membershipsRoutes({ color, variant })}
+          {usePlan === 'Pro' && papyrusRoutes({ color, variant })}
         </>
       )}
 
