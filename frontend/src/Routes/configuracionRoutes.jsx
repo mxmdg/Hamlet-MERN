@@ -3,10 +3,10 @@ import ConfigMainContainer from "../Components/Config/ConfigMainContainer";
 import FormatsMainContainer from "../Components/Formats/FormatsMainContainer";
 import StocksMainContainer from "../Components/Stocks/StocksMainContainer";
 import PrintersMainContainer from "../Components/Printers/PrintersMainContainer";
-import preferencesForm from "../Components/Formulario/NewMessageForm";
+import PreferencesForm from "../Components/Formulario/NewMessageForm";
 import FormMaterial from "../Components/Formulario/FormMaterial";
 
-export const configuracionRoutes = () => (
+export const configuracionRoutes = ({ color, variant }) => (
   <>
     <Route path="/configuracion" element={<ConfigMainContainer />} />
     <Route path="/configuracion/formatos" element={<FormatsMainContainer />} />
@@ -19,10 +19,12 @@ export const configuracionRoutes = () => (
       path="/tenant/settings/:id"
       element={
         <FormMaterial
-          form={preferencesForm}
+          form={PreferencesForm()}
           collection="tenants/settings"
           task="edit"
           title={"Ajustes del sistema"}
+          variant={variant}
+          color={color}
           subtitle={"Configuraciones generales de la aplicación"}
           submitText={"Guardar cambios"}
         />

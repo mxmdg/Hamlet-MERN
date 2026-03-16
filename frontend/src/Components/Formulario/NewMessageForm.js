@@ -1,20 +1,25 @@
 import { getPrivateElements } from "../customHooks/FetchDataHook";
-const usersList = [];
-const users = async () => {
-  try {
-    const res = await getPrivateElements("memberships");
-    //console.log(res);
-    res.map((item) => {
-      usersList.push({
-        text: item.userId.Name + " " + item.userId.LastName,
-        value: item.userId._id,
+import { AuthContext } from "../context/AuthContext";
+import { useContext } from "react";
+
+const PreferencesForm = ()=> {
+  const context =useContext(AuthContext)
+  const usersList = [];
+  const users = async () => {
+    try {
+      const res = await getPrivateElements("memberships");
+      //console.log(res);
+      res.map((item) => {
+        usersList.push({
+          text: item.userId.Name + " " + item.userId.LastName,
+          value: item.userId._id,
+        });
       });
-    });
-    return res;
-  } catch (error) {
-    return error.message;
-  }
-};
+      return res;
+    } catch (error) {
+      return error.message;
+    }
+  };
 
 users();
 
@@ -46,10 +51,34 @@ users();
       },
     },
 */
+const papyrusConnection = [
+  {
+    label: "Conexion a Papyrus",
+    type: "Divider",
+    id: "papyrus_concection_div",
+    size: 12,
+    align: "center",
+    orientation: "horizontal",
+  },{
+    inputName: "extensions.papyrusExtractUrl",
+    label: "URL Papyrus Extract Extension",
+    type: "Text",
+    id: "papyrusExtract_url",
+    required: true,
+    help: "URL de la aplicacion Papyrus Extract.",
+  },
+]
 
 let preferencesForm = [
   // Pricing - Gain
   {
+    label: "Margenes de ganancia",
+    type: "Divider",
+    id: "pricing_commission_div",
+    size: 12,
+    align: "center",
+    orientation: "horizontal",
+  },{
     inputName: "pricing.gain.min",
     label: "Ganancia mínima (%)",
     type: "Number",
@@ -76,6 +105,13 @@ let preferencesForm = [
 
   // Pricing - Commission
   {
+    label: "Margenes de Comisiones",
+    type: "Divider",
+    id: "pricing_gain_div",
+    size: 12,
+    align: "center",
+    orientation: "horizontal",
+  },{
     inputName: "pricing.commission.min",
     label: "Comisión mínima (%)",
     type: "Number",
@@ -102,9 +138,16 @@ let preferencesForm = [
 
   // Mail simplificado
   {
+    label: "Correo electronico",
+    type: "Divider",
+    id: "mail_div",
+    size: 12,
+    align: "center",
+    orientation: "horizontal",
+  },{
     inputName: "mail.displayName", // Nuevo campo
     label: "Nombre de la Imprenta",
-    type: "Text",
+    type: "Text", 
     id: "mail_display_name",
     help: "Nombre que verán tus clientes al recibir el presupuesto (ej: Imprenta Dorrego).",
   },
@@ -115,6 +158,8 @@ let preferencesForm = [
     id: "mail_from",
     help: "Dirección donde recibirás las respuestas de tus clientes.",
   },
+
+  // Conexion a Papyrus (solo plan PRO)
 
   // Locale
   /* {
@@ -142,4 +187,14 @@ let preferencesForm = [
   }, */
 ];
 
-export default preferencesForm;
+if (context.usePlan === 'pro') {
+  preferencesForm.push(papyrusConnection[0],papyrusConnection[1])
+}
+
+console.log(preferencesForm)
+
+return preferencesForm
+
+}
+
+export default PreferencesForm;

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import SettingsIcon from '@mui/icons-material/Settings';
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import CardHeader from "@mui/material/CardHeader";
@@ -133,9 +134,10 @@ export const Profile = () => {
             {useMemberships[0].role === "admin" && (
               <CardActions sx={{ justifyContent: "center" }}>
                 <Button
-                  variant="text"
+                  variant="contained"
                   href={"/tenant/settings/" + useMemberships[0]?.tenant.id}
                   color="warning"
+                  startIcon= {<SettingsIcon />}
                 >
                   Ajustes del sistema
                 </Button>

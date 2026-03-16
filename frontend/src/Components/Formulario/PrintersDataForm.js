@@ -42,6 +42,14 @@ let fabricantesImpresoras = [
 
 let PrintersDataForm = [
   {
+    label: "Datos del equipo",
+    type: "Divider",
+    id: "printerData_div",
+    size: 12,
+    align: "center",
+    orientation: "horizontal",
+  },
+  {
     inputName: "Modelo",
     type: "Text",
     id: "id_001",
@@ -59,6 +67,7 @@ let PrintersDataForm = [
     inputName: "Fabricante",
     type: "Select",
     id: "id_002",
+    size: {xs: 12,sm: 6, md: 3},
     required: true,
     help: "Ingrese el nombre del fabricante de la impresora",
     options: fabricantesImpresoras,
@@ -67,6 +76,7 @@ let PrintersDataForm = [
     inputName: "Tipo",
     label: "Tipo de impresora",
     type: "Select",
+    size: {xs: 12,sm: 6, md: 3},
     options: [
       { text: "Laser", value: "laser" },
       { text: "Inyección de tinta", value: "inkjet" },
@@ -79,6 +89,7 @@ let PrintersDataForm = [
     label: "Tintas",
     type: "Select",
     id: "id_003",
+    size: {xs: 12,sm: 6, md: 6},
     options: [
       { text: "CMYK", value: 4 },
       { text: "B&N", value: 1 },
@@ -86,6 +97,13 @@ let PrintersDataForm = [
     ],
     required: true,
     help: "Seleccione las tintas con las que cuenta su impresora",
+  },{
+    label: "Caracteristicas",
+    type: "Divider",
+    id: "printerSettings_div",
+    size: 12,
+    align: "center",
+    orientation: "horizontal",
   },
   {
     inputName: "X_Minimo",
@@ -126,6 +144,13 @@ let PrintersDataForm = [
     id: "id_008",
     required: true,
     help: "Consulte el manual de la impresora para corroborar la cantidad de paginas por minuto que puede imprimir.",
+  },{
+    label: "Informacion de facturacion",
+    type: "Divider",
+    id: "printerBillings_div",
+    size: 12,
+    align: "center",
+    orientation: "horizontal",
   },
   {
     inputName: "Costo",
@@ -136,6 +161,7 @@ let PrintersDataForm = [
     required: true,
     help: "Seleccione la formula de costos mas apropiada para su impresora",
   },
+  
   {
     inputName: "TotalPrints",
     label: "Impresiones totales",

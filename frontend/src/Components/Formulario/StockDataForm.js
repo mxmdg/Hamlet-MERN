@@ -20,10 +20,18 @@ const costos = async () => {
 
 costos();
 
-let PrintersDataForm = [
+let PrintersDataForm = [{
+    label: "Datos del Material",
+    type: "Divider",
+    id: "stockData_div",
+    size: 12,
+    align: "center",
+    orientation: "horizontal",
+  },
   {
     inputName: "Nombre_Material",
     label: "Nombre",
+    size: {sm: 12, md: 3},
     type: "Text",
     id: "id_001",
   },
@@ -31,6 +39,7 @@ let PrintersDataForm = [
     inputName: "Marca",
     type: "Select",
     id: "id_002",
+    size: {sm: 12, md: 3},
     options: [
       { text: "Boreal", value: "Boreal" },
       { text: "Chambrill", value: "Chambrill" },
@@ -39,17 +48,14 @@ let PrintersDataForm = [
       { text: "Suzanno", value: "Suzanno" },
       { text: "Fasson", value: "Fasson" },
       { text: "Colacril", value: "Colacril" },
+      { text: "Otros", value: "Otros"},
     ],
-  },
-  {
-    inputName: "Gramaje",
-    type: "Number",
-    id: "id_003",
   },
   {
     inputName: "Tipo",
     type: "Select",
     id: "id_004",
+    size: {sm: 12, md: 3},
     options: [
       { text: "Obra", value: "Obra" },
       { text: "Bookcell", value: "Bookcell" },
@@ -66,26 +72,43 @@ let PrintersDataForm = [
     ],
   },
   {
+    inputName: "Gramaje",
+    type: "Number",
+    id: "id_003",
+    size: {sm: 12, md: 3},
+  },{
+    label: "Especificacines del Material",
+    type: "Divider",
+    id: "stockSpecs_div",
+    size: 12,
+    align: "center",
+    orientation: "horizontal",
+  },
+  {
     inputName: "Ancho_Resma",
     label: "Ancho de la resma",
     type: "Number",
+    size: {sm: 12, md: 3},
     id: "id_005",
   },
   {
     inputName: "Alto_Resma",
     label: "Alto de la resma",
     type: "Number",
+    size: {sm: 12, md: 3},
     id: "id_006",
   },
   {
     inputName: "Espesor_Resma",
     label: "Espesor de la resma",
     type: "Number",
+    size: {sm: 12, md: 3},
     id: "id_007",
   },
   {
     inputName: "Fibra",
     type: "Number",
+    size: {sm: 12, md: 3},
     id: "id_008",
     required: true,
     help: "Ingrese la longitud del lado paralelo a la fibra en milimetros",

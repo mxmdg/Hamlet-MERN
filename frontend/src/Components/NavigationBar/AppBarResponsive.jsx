@@ -64,7 +64,7 @@ function ResponsiveAppBar(props) {
     { text: "Trabajo Nuevo", path: "jobs/add" },
     { text: "Contadores", path: "billing" },
     { text: "Editor de fórmulas", path: "precios/formula" },
-    { text: "Conexión a Papyrus", path: "papyrus", disabled: context.usePlan !== 'Pro' ? true : false},
+    { text: "Conexión a Papyrus", path: "papyrus", disabled: context.usePlan !== 'pro' ? true : false},
     { text: "Mensajes", path: "messages" },
   ];
 

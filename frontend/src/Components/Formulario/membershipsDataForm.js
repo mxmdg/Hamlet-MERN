@@ -1,6 +1,6 @@
 let membershipsDataForm = [
   {
-    inputName: "userEmail",
+    inputName: "userId.email",
     label: "Email del usuario",
     type: "email",
     id: "id_001",

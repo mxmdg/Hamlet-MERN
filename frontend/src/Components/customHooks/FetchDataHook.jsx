@@ -5,6 +5,7 @@ export const fechtData = async (collection, setFunction) => {
   const token = localStorage.getItem("token");
   const memberships = JSON.parse(localStorage.getItem("memberships") || "[]");
   const tenantId = memberships[0]?.tenant?.id;
+
   try {
     const res = await axios.get(`${HAMLET_API}${collection}`, {
       headers: {
@@ -97,7 +98,7 @@ export const uploadFile = async (endpoint, data) => {
   }
 };
 
-export const importFromPapyrus = async (query, endpoint ) => {
+export const importFromPapyrus = async (query, endpoint = "" ) => {
   try {
     const res = await axios.post(endpoint, query);
     return res.data

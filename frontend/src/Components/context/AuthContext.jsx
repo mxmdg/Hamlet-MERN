@@ -8,66 +8,61 @@ import { getPrivateElements } from "../customHooks/FetchDataHook";
 export const AuthContext = React.createContext();
 
 const AuthProvider = ({ children }) => {
-  const [useLogin, setLogin] = useState(
-    localStorage.getItem("login") ? true : false,
-  );
-  const [useToken, setToken] = useState(
-    localStorage.getItem("token") ? localStorage.getItem("token") : null,
-  );
-  const [userLogged, setUserLogged] = useState(
-    localStorage.getItem("user")
-      ? JSON.parse(localStorage.getItem("user"))
-      : null,
-  );
-
-  const [usePlan, setPlan] = useState(
-      localStorage.getItem("memberships")
-        ? JSON.parse(localStorage.getItem("memberships"))[0].tenant.plan
-        : null,
-    );
-
-  const [memberships, setMemberships] = useState(() => {
-    try {
-      const stored = localStorage.getItem("memberships");
-      return stored ? JSON.parse(stored) : [];
-    } catch {
-      return [];
-    }
-  });
-
-  const Navigate = useNavigate();
-
-  const handleLogout = () => {
-    setLogin(false);
-    localStorage.removeItem("login");
-    setToken(null);
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    localStorage.removeItem("memberships");
-    setMemberships([]);
-    setUserLogged(null);
-    Navigate("/");
-    console.log("Logout exitoso");
+  // Función auxiliar para obtener datos seguros de localStorage
+  const getStoredItem = (key, isJson = false) => {
+    const item = localStorage.getItem(key);
+    if (!item || item === "undefined") return null;
+    return isJson ? JSON.parse(item) : item;
   };
 
-  const handleLogin = (token, expirationTime, user, memberships) => {
-    setTimeout(() => {
-      handleLogout();
-    }, expirationTime - Date.now());
+  const [useLogin, setLogin] = useState(!!localStorage.getItem("login"));
+  const [useToken, setToken] = useState(localStorage.getItem("token"));
+  const [userLogged, setUserLogged] = useState(getStoredItem("user", true));
+  const [memberships, setMemberships] = useState(getStoredItem("memberships", true) || []);
+
+  const Navigate = useNavigate()
+
+  // Derivamos estados de las memberships cargadas
+  const [usePlan, setPlan] = useState(
+    memberships.length > 0 ? memberships[0].tenant.plan : null
+  );
+  const [useSettings, setSettings] = useState(
+    memberships.length > 0 ? memberships[0].tenant.settings : null
+  );
+
+  const handleLogin = (token, expirationTime, user, membershipsData) => {
+    // Seteamos logout automático
+    setTimeout(() => handleLogout(), expirationTime - Date.now());
 
     if (Date.now() < expirationTime) {
       setLogin(true);
-      localStorage.setItem("login", true);
-
       setToken(token);
-      localStorage.setItem("token", token);
-
       setUserLogged(user);
-      localStorage.setItem("user", JSON.stringify(user));
+      setMemberships(membershipsData);
+      
+      // Actualizamos estados derivados inmediatamente
+      if (membershipsData && membershipsData.length > 0) {
+        setPlan(membershipsData[0].tenant.plan);
+        setSettings(membershipsData[0].tenant.settings);
+      }
 
-      setMemberships(memberships);
-      localStorage.setItem("memberships", memberships);
+      // GUARDADO CORRECTO EN LOCALSTORAGE
+      localStorage.setItem("login", "true");
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("memberships", JSON.stringify(membershipsData)); // CLAVE: JSON.stringify
     }
+  };
+
+  const handleLogout = () => {
+    setLogin(false);
+    setToken(null);
+    setUserLogged(null);
+    setMemberships([]);
+    setPlan(null);
+    setSettings(null);
+    localStorage.clear(); // Limpia todo de una vez
+    Navigate("/");
   };
 
   const validateToken = () => {
@@ -92,8 +87,9 @@ const AuthProvider = ({ children }) => {
         useToken,
         userLogged,
         usePlan,
-        setUserLogged,
+        useSettings,
         memberships,
+        setUserLogged,
         setMemberships,
       }}
     >

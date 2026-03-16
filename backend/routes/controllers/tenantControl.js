@@ -97,7 +97,11 @@ tenantsControl.getSettings = async (req, res, next) => {
   try {
     const tenantData = await tenant.esquema.findById(req.params.id);
     const settingsFlattened = flattenNestedItems(tenantData.settings);
+    settingsFlattened.extensions = flattenNestedItems(tenantData.extensions);
+    
     const flattenLevel2 = flattenNestedItems(settingsFlattened);
+
+    console.log(flattenLevel2)
 
     res.json(flattenLevel2);
   } catch (e) {

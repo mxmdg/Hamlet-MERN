@@ -40,6 +40,7 @@ const TenantSchema = new mongoose.Schema(
 
       mail: {
         from: { type: String },
+        displayName: {type: String },
         host: { type: String },
         port: { type: Number },
         secure: { type: Boolean, default: true },
@@ -51,6 +52,10 @@ const TenantSchema = new mongoose.Schema(
         currency: { type: String, default: "ARS" },
         language: { type: String, default: "es" },
       },
+
+      extensions: {
+        papyrusExtractUrl: {type: String, required: false}
+      }
     },
   },
   { timestamps: true },

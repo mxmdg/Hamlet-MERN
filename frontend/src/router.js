@@ -55,7 +55,7 @@ const Router = (props) => {
           {quotationsRoutes({ color, variant })}
           {configuracionRoutes({ color, variant })}
           {membershipsRoutes({ color, variant })}
-          {usePlan === 'Pro' && papyrusRoutes({ color, variant })}
+          {usePlan === 'pro' && papyrusRoutes({ color, variant })}
         </>
       )}
 

@@ -243,7 +243,7 @@ const FormMaterial = (props) => {
       let value;
 
       return (
-        <Grid size={{ xs: 12, sm: 6, md: 6 }}>
+        <Grid size={inp.size || { xs: 12, sm: 6, md: 6 }}>
           <FormControl key={inp.id}>
             <TextField
               id={inp.id}
@@ -344,7 +344,7 @@ const FormMaterial = (props) => {
       };
 
       return (
-        <Grid size={{ xs: 12, sm: 12, md: 12 }}>
+        <Grid size={inp.size || 12}>
           <Card
             raised={false}
             /* sx={{
@@ -433,9 +433,18 @@ const FormMaterial = (props) => {
           </Card>
         </Grid>
       );
+    } else if (inp.type === "Divider") {
+      return <Grid size={inp.size || 12} >
+            <Divider color={color} textAlign={inp.align || "center"} orientation={inp.orientation || "horizontal"} sx={{margin: "15px 0 10px 0"}}>
+              {inp.label && <Typography variant={"button"} color={color}>
+                {inp.label || ""}
+              </Typography>}
+            </Divider>
+        </Grid>
+
     } else {
       return (
-        <Grid size={{ xs: 4, sm: 4, md: 6 }}>
+        <Grid size={inp.size || { xs: 4, sm: 4, md: 6 }}>
           <TextField
             id={inp.id}
             type={inp.type}

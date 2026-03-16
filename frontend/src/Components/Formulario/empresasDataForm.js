@@ -1,6 +1,13 @@
 import provinciasArgentinas from "../utils/generalData/provinciasArgentinas";
 
-let MoldeEmpresas = [
+let MoldeEmpresas = [{
+    label: "Datos del cliente",
+    type: "Divider",
+    id: "customerData_div",
+    size: 12,
+    align: "center",
+    orientation: "horizontal",
+  },
   {
     inputName: "Nombre",
     type: "Text",
@@ -10,6 +17,18 @@ let MoldeEmpresas = [
     inputName: "email",
     type: "email",
     id: "id_702",
+  },
+  {
+    inputName: "Telefono",
+    type: "Text",
+    id: "id_708",
+  },{
+    label: "Direccion",
+    type: "Divider",
+    id: "address_div",
+    size: 12,
+    align: "center",
+    orientation: "horizontal",
   },
   {
     inputName: "Calle",
@@ -37,11 +56,6 @@ let MoldeEmpresas = [
     type: "Text",
     default: "Argentina",
     id: "id_707",
-  },
-  {
-    inputName: "Telefono",
-    type: "Text",
-    id: "id_708",
   },
 ];
 

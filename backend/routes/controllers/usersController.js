@@ -134,7 +134,7 @@ const login = async (req, res, next) => {
         const memberships = await Membership.find({
           userId: document._id,
           status: "activo",
-        }).populate("tenant", "key name status plan");
+        }).populate("tenant", "key name status plan settings");
 
         // 3. Normalizar respuesta (no mandamos todo el modelo crudo)
         const formattedMemberships = memberships.map((m) => ({
@@ -144,6 +144,7 @@ const login = async (req, res, next) => {
             name: m.tenant.name,
             status: m.tenant.status,
             plan: m.tenant.plan,
+            settings: m.tenant.settings
           },
           role: m.role,
         }));

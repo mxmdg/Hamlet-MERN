@@ -1,11 +1,7 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import ItemsDetails from "./itemsDetails";
+import React, { useState, useEffect, useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
 import "../../Styles/hamlet.css";
 import "../Stocks/Stocks.css";
-import { HAMLET_API } from "../Config/config";
-import ItemsTable from "./ItemsTable";
-import CircularColor from "./Spinner";
 import { Paper, Container, TextField, MenuItem, Stack } from "@mui/material";
 import EnhancedTable from "./TableGrid";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
@@ -14,8 +10,7 @@ import DarkWoodCard from "../utils/DarkWoodCard";
 import { useNavigate } from "react-router-dom";
 import { fechtData, getPrivateElements, importFromPapyrus } from "../customHooks/FetchDataHook";
 import flattenArrayOfObjects from "../utils/flattener/flatenDicts";
-import { MyQuery, queryOT, finalQuery, queryTrabajosTerceros,queryProcesos, queryProximasEntregas, queryEntrega,queryProcesosPorFecha } from "../utils/PropertiesMaps/sqlQueries";
-import { Filter } from "../customHooks/Filter";
+
 
 const Fetch = (props) => {
   const [useList, setList] = useState([]);
@@ -28,7 +23,11 @@ const Fetch = (props) => {
   const [useColumn, setColumn] = useState("Todo");
 
   const navigate = useNavigate();
-  const url = process.env.REACT_APP_PAPYRUS_API || "http://181.104.19.45:3001/api/papyrus/extract";
+  //const url = process.env.REACT_APP_PAPYRUS_API || "http://181.104.19.45:3001/api/papyrus/extract";
+
+  const context = useContext(AuthContext)
+
+  const url = context.useSettings.extensions.papyrusExtractUrl
 
   const orderObjectProperties = (obj, headers) => {
     const ordered = {};
