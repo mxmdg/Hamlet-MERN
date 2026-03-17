@@ -196,6 +196,7 @@ const JobsForm = (props) => {
                         : props.jobType?.id || props.data?.Tipo[0]?.id
                     }
                     id="JobType"
+                    required= {true}
                     inputProps={{
                       name: "JobType",
                       id: "JobType",

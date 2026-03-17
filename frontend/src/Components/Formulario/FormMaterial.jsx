@@ -203,7 +203,7 @@ const FormMaterial = (props) => {
     if (props.task === "new" || props.task === "copy") {
       try {
         const response = await addPrivateElement(collection, formData);
-        console.log(response);
+        //console.log(response);
         setErrorMessage({
           message: response.data.message,
           color: "success",

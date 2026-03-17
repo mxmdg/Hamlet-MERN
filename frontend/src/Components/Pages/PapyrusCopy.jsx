@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
 import { useParams } from "react-router-dom";
 import Spinner from "../General/Spinner";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
@@ -22,13 +23,17 @@ const PapyrusCopy = () => {
         
         // 2. Traemos la data cruda
         const sql = queryDetalleOT(otNumber);
-        const url = process.env.REACT_APP_PAPYRUS_API || "http://181.104.19.45:3001/api/papyrus/extract";
+        //const url = process.env.REACT_APP_PAPYRUS_API || "http://181.104.19.45:3001/api/papyrus/extract";
+
+         const context = useContext(AuthContext)
+        
+          const url = context.useSettings.extensions.papyrusExtractUrl
         
         const rows = await importFromPapyrus({ sql }, url);
 
         if (!rows || rows.length === 0) throw new Error("OT no encontrada en Papyrus");
 
-        console.log(rows)
+        
 
         // 3. Transformamos filas SQL en un objeto Job de Hamlet
         const jobMimetizado = transformSqlToHamlet(rows);
@@ -74,16 +79,12 @@ const transformSqlToHamlet = (rows) => {
         acc.push({
           Name: row.nombre_parte || "Parte",
           num_parte: row.nro_parte,
-          Alto: row.Alto,
-          Ancho: row.Ancho,
+          Alto: (row.Alto * 10),
+          Ancho: (row.Ancho * 10),
           Pages: row.Paginas,
           jobParts: [{Type: row.tipo_producto}],
           jobTypesAllowed: [], 
-          partStock: [{
-            Nombre_Material: row.papel_nombre,
-            Gramage: row.papel_gramaje,
-            Size: `${row.papel_largo}x${row.papel_ancho}`,
-          }],
+          partStock: `${row.papel_nombre} ${row.papel_gramaje} (${row.papel_largo}x${row.papel_ancho})`,
           ColoresFrente: row.colores_frente || 0,
           ColoresDorso: row.colores_dorso || 0,
           // Pasamos los nombres de procesos como array

@@ -191,7 +191,6 @@ if (context.usePlan === 'pro') {
   preferencesForm.push(papyrusConnection[0],papyrusConnection[1])
 }
 
-console.log(preferencesForm)
 
 return preferencesForm
 
