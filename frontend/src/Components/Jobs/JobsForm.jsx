@@ -145,8 +145,11 @@ const JobsForm = (props) => {
         color="primary"
       >
         <CardHeader
-          title="Datos del trabajo"
-          subheader="Completar los datos generales del trabajo"
+          title={props?.data?.Tipo?.name || "Datos del trabajo"}
+          subheader={
+            props?.data?.Description ||
+            "Completar los datos generales del trabajo"
+          }
         />
         <CardContent>
           <FormControl>
@@ -196,7 +199,7 @@ const JobsForm = (props) => {
                         : props.jobType?.id || props.data?.Tipo[0]?.id
                     }
                     id="JobType"
-                    required= {true}
+                    required={true}
                     inputProps={{
                       name: "JobType",
                       id: "JobType",
@@ -449,7 +452,10 @@ const JobsForm = (props) => {
                     </FormGroup>
                   }
                 </Grid>
-                <Grid sx={{ alignSelf: "center" }} size={{ xs: 1, sm: 2, md: 4 }}>
+                <Grid
+                  sx={{ alignSelf: "center" }}
+                  size={{ xs: 1, sm: 2, md: 4 }}
+                >
                   <Button type="submit" variant="contained" color="success">
                     {props.data ? "Modificar Trabajo" : "Agregar Trabajo"}
                   </Button>

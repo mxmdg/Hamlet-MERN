@@ -1,7 +1,7 @@
-import { todayDate } from "../generalData/fechaDiccionario"
+import { todayDate } from "../generalData/fechaDiccionario";
 
-const hoy = todayDate().yyyymmdd
-console.log(hoy)
+const hoy = todayDate().yyyymmdd;
+console.log(hoy);
 
 export const MyQuery = `
 SELECT 
@@ -29,7 +29,7 @@ INNER JOIN trtp00 ON trcp00.cod_tpp = trtp00.cod_tpp
 INNER JOIN trlp00 ON trcp00.cod_pre = trlp00.cod_pre
 INNER JOIN trtm00 ON trlp00.cod_pap = trtm00.cod_pap
 WHERE trcp00.cod_pre = 6654000
-`
+`;
 export const queryOT = `
 SELECT
     (STRING(ot.ot)+ot.fecha_emision) AS key,
@@ -49,12 +49,13 @@ INNER JOIN sys_entidades ON ot.cliente = sys_entidades.entidad
     AND ot.suc_cliente = sys_entidades.suc_entidad
 WHERE ot.ot = 26730
   AND sys_entidades.tipo_entidad = "CL"
-`
+`;
 export const queryDetalleOT = (nroOt) => `
     SELECT 
         (STRING(ot.ot) + '-' + STRING(lp.num_tbj)) AS id, -- Key única: OT + Nro de Parte
         ot.ot AS nro_ot,
         ot.descripcion AS Nombre,
+        ot.observacion AS Observacion,
         ot.cod_pre AS presupuesto,
         ot.fecha AS Fecha,
         ot.estado AS estado_ot,
@@ -153,13 +154,13 @@ LEFT JOIN ot_entregas ON (ot_entregas.ot = ot.ot)
 
 WHERE ot.ot = 27703  -- El parámetro que pasamos desde Node.js
   AND ent.tipo_entidad = 'CL'
-`
+`;
 
-export const queryTrabajosTerceros = `SELECT * FROM ot_trabajos_terceros WHERE cod_pre > '644700' `
+export const queryTrabajosTerceros = `SELECT * FROM ot_trabajos_terceros WHERE cod_pre > '644700' `;
 
-export const queryProcesos = ` SELECT op.producto, otp.descripcion, op.uni_tbj, op.num_tbj FROM otr_presup op INNER JOIN otr_productos otp ON op.producto = otp.producto WHERE op.cod_pre = 6447000 `
+export const queryProcesos = ` SELECT op.producto, otp.descripcion, op.uni_tbj, op.num_tbj FROM otr_presup op INNER JOIN otr_productos otp ON op.producto = otp.producto WHERE op.cod_pre = 6447000 `;
 
-export const queryProximasEntregas = ` SELECT * FROM ot WHERE fecha >= '2026-03-10'`
+export const queryProximasEntregas = ` SELECT * FROM ot WHERE fecha >= '2026-03-10'`;
 
 export const queryEntrega = ` SELECT 
     
@@ -186,7 +187,7 @@ INNER JOIN sys_entidades ent ON (ot.cliente = ent.entidad AND ot.suc_cliente = e
 
 WHERE ote.fecha >= '2026-03-10'
   AND ent.tipo_entidad = 'CL'
-ORDER BY ote.fecha ASC `
+ORDER BY ote.fecha ASC `;
 
 export const queryProcesosPorFecha = ` 
 SELECT 

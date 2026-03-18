@@ -12,6 +12,8 @@ const PapyrusCopy = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const { id } = useParams();
+  const context = useContext(AuthContext);
+  const url = context.useSettings.extensions.papyrusExtractUrl;
 
   useEffect(() => {
     const fetchFromPapyrus = async () => {
@@ -19,27 +21,24 @@ const PapyrusCopy = () => {
         setLoading(true);
         // 1. Limpiamos el ID (27650-DIG-7 -> 27650)
         const otNumber = id.split("-")[0];
-        console.log("OT: ", otNumber)
-        
+        console.log("OT: ", otNumber);
+
         // 2. Traemos la data cruda
         const sql = queryDetalleOT(otNumber);
-        //const url = process.env.REACT_APP_PAPYRUS_API || "http://181.104.19.45:3001/api/papyrus/extract";
+        /* const url =
+          process.env.REACT_APP_PAPYRUS_API ||
+          "http://181.104.19.45:3001/api/papyrus/extract"; */
 
-         const context = useContext(AuthContext)
-        
-          const url = context.useSettings.extensions.papyrusExtractUrl
-        
         const rows = await importFromPapyrus({ sql }, url);
 
-        if (!rows || rows.length === 0) throw new Error("OT no encontrada en Papyrus");
-
-        
+        if (!rows || rows.length === 0)
+          throw new Error("OT no encontrada en Papyrus");
 
         // 3. Transformamos filas SQL en un objeto Job de Hamlet
         const jobMimetizado = transformSqlToHamlet(rows);
 
         setJob(jobMimetizado);
-        console.log(jobMimetizado)
+        console.log(jobMimetizado);
         setLoading(false);
       } catch (e) {
         setError({ message: e.message });
@@ -51,52 +50,57 @@ const PapyrusCopy = () => {
   }, [id]);
 
   if (loading) return <Spinner color="primary" />;
-  if (error) return <ErrorMessage message={error.message} action={() => window.history.back()} />;
+  if (error)
+    return (
+      <ErrorMessage
+        message={error.message}
+        action={() => window.history.back()}
+      />
+    );
 
   // Al pasarle el job, el Stepper entrará en modo "Edición/Copia" automáticamente
   return <MyStepper job={useJob} />;
 };
 
 /**
- * Función que convierte el array de filas de Papyrus 
+ * Función que convierte el array de filas de Papyrus
  * en la estructura que espera JobsForm y JobsParts
  */
 const transformSqlToHamlet = (rows) => {
   const first = rows[0];
 
-  const otDetail = ({
+  const otDetail = {
     Nombre: first.Nombre || first.detalle_trabajo || "Nuevo Trabajo (Papyrus)",
-    Company: {Nombre: first.Company || first.cliente_nombre},
+    Company: { Nombre: first.Company || first.cliente_nombre },
     Cantidad: first.Cantidad || 0,
     Entrega: first.entrega_fecha,
-    Tipo: {name: first.tipo_producto},
-    Description: first.obs_produccion || "",
+    Tipo: { name: first.tipo_producto },
+    Description: first.Observacion || "",
     // Inicializamos como strings para la conciliación posterior
-    Finishing: [], 
+    Finishing: [],
     Partes: rows.reduce((acc, row) => {
       // Evitamos duplicados por las filas de entregas
-      if (!acc.find(p => p.num_parte === row.nro_parte)) {
+      if (!acc.find((p) => p.num_parte === row.nro_parte)) {
         acc.push({
           Name: row.nombre_parte || "Parte",
           num_parte: row.nro_parte,
-          Alto: (row.Alto * 10),
-          Ancho: (row.Ancho * 10),
+          Alto: row.Alto * 10,
+          Ancho: row.Ancho * 10,
           Pages: row.Paginas,
-          jobParts: [{Type: row.tipo_producto}],
-          jobTypesAllowed: [], 
+          jobParts: [{ Type: row.tipo_producto }],
           partStock: `${row.papel_nombre} ${row.papel_gramaje} (${row.papel_largo}x${row.papel_ancho})`,
           ColoresFrente: row.colores_frente || 0,
           ColoresDorso: row.colores_dorso || 0,
           // Pasamos los nombres de procesos como array
-          Finishing: row.procesos_lista ? row.procesos_lista.split(' | ') : []
+          Finishing: row.procesos_lista ? row.procesos_lista.split(" | ") : [],
         });
       }
       return acc;
-    }, [])
-  });
+    }, []),
+  };
 
-  console.log(otDetail)
-  return otDetail
+  console.log(otDetail);
+  return otDetail;
 };
 
 export default PapyrusCopy;

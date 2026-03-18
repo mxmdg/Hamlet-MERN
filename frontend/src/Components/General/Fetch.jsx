@@ -8,9 +8,12 @@ import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import Spinner from "./Spinner";
 import DarkWoodCard from "../utils/DarkWoodCard";
 import { useNavigate } from "react-router-dom";
-import { fechtData, getPrivateElements, importFromPapyrus } from "../customHooks/FetchDataHook";
+import {
+  fechtData,
+  getPrivateElements,
+  importFromPapyrus,
+} from "../customHooks/FetchDataHook";
 import flattenArrayOfObjects from "../utils/flattener/flatenDicts";
-
 
 const Fetch = (props) => {
   const [useList, setList] = useState([]);
@@ -23,9 +26,9 @@ const Fetch = (props) => {
   const [useColumn, setColumn] = useState("Todo");
 
   const navigate = useNavigate();
-  //const url = process.env.REACT_APP_PAPYRUS_API || "http://181.104.19.45:3001/api/papyrus/extract";
+  //const url = "http://181.104.19.45:3001/api/papyrus/extract";
 
-  const context = useContext(AuthContext)
+  const context = useContext(AuthContext);
 
   const url = context.useSettings.extensions.papyrusExtractUrl
 
@@ -40,15 +43,15 @@ const Fetch = (props) => {
   };
 
   const getElements = async () => {
-    let elements
+    let elements;
 
-    if (props.collection === 'papyrus') {
-      elements = await importFromPapyrus(props.querySQL, url)
-      console.log(elements)
+    if (props.collection === "papyrus") {
+      elements = await importFromPapyrus(props.querySQL, url);
+      console.log(elements);
     } else {
       elements = await getPrivateElements(
-      props.collection + (props.subdir ? `/${props.subdir}` : "")
-    );
+        props.collection + (props.subdir ? `/${props.subdir}` : ""),
+      );
     }
 
     if (props.collection === "memberships") {
@@ -74,7 +77,7 @@ const Fetch = (props) => {
             }
           });
           const orderedElements = elements.map((e) =>
-            orderObjectProperties(e, arr)
+            orderObjectProperties(e, arr),
           );
           setList(orderedElements);
           return arr;
@@ -82,7 +85,7 @@ const Fetch = (props) => {
       : setErrMessage(
           "Error: " + elements.response.data.message ||
             elements.message ||
-            "Error desconocido"
+            "Error desconocido",
         );
 
     return elements;
