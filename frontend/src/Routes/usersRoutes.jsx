@@ -1,5 +1,5 @@
 import { Route } from "react-router-dom";
-import MainContainer from "../Components/General/MainContainer";
+import MainContainer from "../Components/Pages/MainContainer";
 import { Register } from "../Components/Users/Register";
 import { Profile } from "../Components/Users/Profile";
 import ChangePassword from "../Components/Users/ChangePassword";

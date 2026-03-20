@@ -2,8 +2,7 @@ import { Route } from "react-router-dom";
 import JobFinder from "../Components/Jobs/JobFinder";
 import { QuotationProperties } from "../Components/utils/PropertiesMaps/jobsMap";
 import CotFetcher from "../Components/cottizations/CotFetcher";
-import MainContainer from "../Components/General/MainContainer";
-
+import MainContainer from "../Components/Pages/MainContainer";
 
 export const quotationsRoutes = () => (
   <>
@@ -19,7 +18,7 @@ export const quotationsRoutes = () => (
     />
     <Route
       path="/quotations/trash"
-       element={<MainContainer entity={"quotations/trash"} />}
+      element={<MainContainer entity={"quotations/trash"} />}
     />
     <Route path="/quotations/edit/:id" element={<CotFetcher />} />
   </>

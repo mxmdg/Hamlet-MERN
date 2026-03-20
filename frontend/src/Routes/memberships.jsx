@@ -1,5 +1,5 @@
 import { Route } from "react-router-dom";
-import MainContainer from "../Components/General/MainContainer";
+import MainContainer from "../Components/Pages/MainContainer";
 import FormMaterial from "../Components/Formulario/FormMaterial";
 import { Register } from "../Components/Users/Register";
 import membershipsDataForm from "../Components/Formulario/membershipsDataForm";

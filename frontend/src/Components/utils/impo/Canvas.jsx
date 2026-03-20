@@ -86,7 +86,7 @@ const Canvas = (props) => {
         props.getSheet(data);
       }
     }
-    props.save(false);
+    //props.save(false);
   };
 
   useEffect(() => {

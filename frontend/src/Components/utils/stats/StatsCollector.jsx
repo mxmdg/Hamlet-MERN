@@ -1,12 +1,14 @@
 import React from "react";
-import { getPrivateElements } from "../../customHooks/FetchDataHook";
+import {
+  getPrivateElements,
+  importFromPapyrus,
+} from "../../customHooks/FetchDataHook";
 import ErrorMessage from "../../ErrorMessage/ErrorMessage";
 import { CircularProgress, Grid, Paper } from "@mui/material";
 import Spinner from "../../General/Spinner";
 
 const StatsCollector = ({ children, route }) => {
   const [jobsList, setJobsList] = React.useState([]);
-  //const [partsList, setPartsList] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
 
   // Manejo de errores
@@ -18,7 +20,10 @@ const StatsCollector = ({ children, route }) => {
   React.useEffect(() => {
     const fetchData = async () => {
       try {
-        const jobs = await getPrivateElements(route);
+        const jobs =
+          route === "papyrus"
+            ? await importFromPapyrus(route)
+            : await getPrivateElements(route);
         //const parts = await getPrivateElements("jobs/partes");
         setJobsList(jobs);
         //setPartsList(parts);
@@ -47,7 +52,10 @@ const StatsCollector = ({ children, route }) => {
       {React.Children.map(children, (child, index) => {
         if (React.isValidElement(child)) {
           return (
-            <Grid key={child.key} size={{ xs: 12, sm: 12, xl: index === 0 ? 12 : 6 }}>
+            <Grid
+              key={child.key}
+              size={{ xs: 12, sm: 12, xl: index === 0 ? 12 : 6 }}
+            >
               <Paper
                 elevation={2}
                 sx={{

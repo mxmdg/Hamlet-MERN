@@ -1,5 +1,5 @@
 import { Route } from "react-router-dom";
-import MainContainer from "../Components/General/MainContainer";
+import MainContainer from "../Components/Pages/MainContainer";
 import FormMaterial from "../Components/Formulario/FormMaterial";
 import empresasDataForm from "../Components/Formulario/empresasDataForm";
 import StatsCollector from "../Components/utils/stats/StatsCollector";
@@ -12,10 +12,10 @@ export const empresasRoutes = ({ color, variant }) => (
       path="/empresas"
       element={
         <Grid container columns={12}>
-          <Grid columns={4}>
+          <Grid columns={{ sm: 12, md: 6 }}>
             <MainContainer entity={"empresas"} />
           </Grid>
-          <Grid columns={4} width={"30%"}>
+          <Grid columns={{ sm: 12, md: 6 }}>
             <StatsCollector route="jobs/complete">
               <JobsPerClient rank={6} />
             </StatsCollector>

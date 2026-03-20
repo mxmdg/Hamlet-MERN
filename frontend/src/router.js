@@ -1,10 +1,7 @@
-import React from "react";
-import { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react"; // add useEffect
 import { AuthContext } from "./Components/context/AuthContext";
 import { Routes, Route } from "react-router-dom";
-
 import { useUserPreferences } from "./Hooks/useUserPreferences";
-
 import Error404 from "./Components/Pages/Error404";
 
 // Rutas
@@ -27,14 +24,17 @@ const Router = (props) => {
   const context = useContext(AuthContext);
 
   const [usePlan, setPlan] = useState(
-      localStorage.getItem("memberships")
-        ? JSON.parse(localStorage.getItem("memberships"))[0].tenant.plan
-        : null,
-    );
+    localStorage.getItem("memberships")
+      ? JSON.parse(localStorage.getItem("memberships"))[0].tenant.plan
+      : null,
+  );
 
   const { color, variant } = props.prefs;
 
-  props.setLog(context.useLogin);
+  // ✅ Moved out of render into an effect
+  useEffect(() => {
+    props.setLog(context.useLogin);
+  }, [context.useLogin]);
 
   return (
     <Routes>
@@ -55,7 +55,7 @@ const Router = (props) => {
           {quotationsRoutes({ color, variant })}
           {configuracionRoutes({ color, variant })}
           {membershipsRoutes({ color, variant })}
-          {usePlan === 'pro' && papyrusRoutes({ color, variant })}
+          {usePlan === "pro" && papyrusRoutes({ color, variant })}
         </>
       )}
 

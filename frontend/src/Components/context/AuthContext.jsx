@@ -7,27 +7,29 @@ import { getPrivateElements } from "../customHooks/FetchDataHook";
 
 export const AuthContext = React.createContext();
 
-const AuthProvider = ({ children }) => {
-  // Función auxiliar para obtener datos seguros de localStorage
-  const getStoredItem = (key, isJson = false) => {
-    const item = localStorage.getItem(key);
-    if (!item || item === "undefined") return null;
-    return isJson ? JSON.parse(item) : item;
-  };
+// Función auxiliar para obtener datos seguros de localStorage
+export const getStoredItem = (key, isJson = false) => {
+  const item = localStorage.getItem(key);
+  if (!item || item === "undefined") return null;
+  return isJson ? JSON.parse(item) : item;
+};
 
+const AuthProvider = ({ children }) => {
   const [useLogin, setLogin] = useState(!!localStorage.getItem("login"));
   const [useToken, setToken] = useState(localStorage.getItem("token"));
   const [userLogged, setUserLogged] = useState(getStoredItem("user", true));
-  const [memberships, setMemberships] = useState(getStoredItem("memberships", true) || []);
+  const [memberships, setMemberships] = useState(
+    getStoredItem("memberships", true) || [],
+  );
 
-  const Navigate = useNavigate()
+  const Navigate = useNavigate();
 
   // Derivamos estados de las memberships cargadas
   const [usePlan, setPlan] = useState(
-    memberships.length > 0 ? memberships[0].tenant.plan : null
+    memberships.length > 0 ? memberships[0].tenant.plan : null,
   );
   const [useSettings, setSettings] = useState(
-    memberships.length > 0 ? memberships[0].tenant.settings : null
+    memberships.length > 0 ? memberships[0].tenant.settings : null,
   );
 
   const handleLogin = (token, expirationTime, user, membershipsData) => {
@@ -39,7 +41,7 @@ const AuthProvider = ({ children }) => {
       setToken(token);
       setUserLogged(user);
       setMemberships(membershipsData);
-      
+
       // Actualizamos estados derivados inmediatamente
       if (membershipsData && membershipsData.length > 0) {
         setPlan(membershipsData[0].tenant.plan);

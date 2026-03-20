@@ -77,11 +77,23 @@ export default function MyStepper(props) {
     setJobType(e.target.value);
   };
 
+  const getMode = (job) => {
+    if (!job) return "new";
+
+    if (job.Description && !job._id) return "import";
+
+    if (job._id) return "edit";
+
+    return "new"; // fallback seguro
+  };
+
+  const [useMode, setMode] = React.useState(getMode(props.job));
+
   const parts = allParts;
 
   const addParts = (newPart) => {
-    console.log("add")
-    console.log(newPart)
+    console.log("add");
+    console.log(newPart);
     try {
       const getStock = async (id) => {
         const stock = await getPrivateElementByID("materiales", id);
@@ -110,8 +122,8 @@ export default function MyStepper(props) {
   };
 
   const replacePart = (newPart) => {
-    console.log("Replace")
-    console.log(newPart)
+    console.log("Replace");
+    console.log(newPart);
     try {
       const getStock = async (id) => {
         const stock = await getPrivateElementByID("materiales", id);
@@ -183,7 +195,7 @@ export default function MyStepper(props) {
 
   const handleNext = () => {
     let newSkipped = skipped;
-    let stepForward = props.job !== undefined && activeStep === 0 ? 2 : 1;
+    let stepForward = useMode !== "new" && activeStep === 0 ? 2 : 1;
 
     if (isStepSkipped(activeStep)) {
       newSkipped = new Set(newSkipped.values());
@@ -224,7 +236,12 @@ export default function MyStepper(props) {
     /* Job.Partes.forEach((part) => {
       part.Finishing = part.Finishing.map((f) => f._id);
     }); */
-    Job.JobType = props.job ? props.job.Tipo[0] : useJobType;
+    if (useMode === "new" || useMode === "import") {
+      Job.JobType = useJobType;
+    } else if (useMode === "edit") {
+      Job.JobType = props.job.Tipo[0];
+    }
+
     try {
       const res = await addPrivateElement("Jobs", Job);
       setNewJobId(res.data);
@@ -348,7 +365,7 @@ export default function MyStepper(props) {
             columns={12}
             sx={{ width: "100%", display: "flex", flexDirection: "row" }}
           >
-            <Grid >
+            <Grid>
               <Stepper activeStep={activeStep}>
                 {steps.map((label, index) => {
                   const stepProps = {};
@@ -432,7 +449,7 @@ export default function MyStepper(props) {
                           ? "Enviar Nuevo Pedido"
                           : "Siguiente"}
                       </Button>
-                      {props.job !== undefined &&
+                      {useMode === "edit" &&
                         activeStep === steps.length - 1 && (
                           <Button onClick={handleUpdate} color="warning">
                             Guardar
@@ -445,7 +462,7 @@ export default function MyStepper(props) {
                 </React.Fragment>
               )}
             </Grid>
-            <Grid size={{xs: 12, lg: 8} }>
+            <Grid size={{ xs: 12, lg: 8 }}>
               <Container>
                 <Grid
                   container
@@ -456,7 +473,15 @@ export default function MyStepper(props) {
                 >
                   {useParts?.map((part, index) => {
                     return (
-                      <Grid key={"Parte-" + index} size={{ xs: 12, sm: useParts.length < 3 ? 12 / useParts.length : 6, md: useParts.length < 3 ? 12 / useParts.length : 6, lg: useParts.length < 3 ? 12 / useParts.length : 4 }}>
+                      <Grid
+                        key={"Parte-" + index}
+                        size={{
+                          xs: 12,
+                          sm: useParts.length < 3 ? 12 / useParts.length : 6,
+                          md: useParts.length < 3 ? 12 / useParts.length : 6,
+                          lg: useParts.length < 3 ? 12 / useParts.length : 4,
+                        }}
+                      >
                         <PartCard
                           part={part}
                           index={index}

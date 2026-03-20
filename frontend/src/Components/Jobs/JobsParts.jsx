@@ -81,14 +81,12 @@ const JobParts = (props) => {
           stock.Gramaje >= currentPart.minStockWeight &&
           stock.Gramaje <= currentPart.maxStockWeight
         ) {
-          console.log(stock.Nombre_Material, "1ra Condicion");
           return stock;
         } else if (
           props.editPart !== null &&
           stock.Gramaje >= props.editPart.part.jobParts[0].minStockWeight &&
           stock.Gramaje <= props.editPart.part.jobParts[0].maxStockWeight
         ) {
-          console.log(stock.Nombre_Material, "2da. Condicion");
           return stock;
         }
       } catch (error) {

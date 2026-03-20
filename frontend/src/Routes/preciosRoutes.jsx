@@ -1,5 +1,5 @@
 import { Route } from "react-router-dom";
-import MainContainer from "../Components/General/MainContainer";
+import MainContainer from "../Components/Pages/MainContainer";
 import FormMaterial from "../Components/Formulario/FormMaterial";
 import PricesDataForm from "../Components/Formulario/PricesDataForm";
 import FormulaEditor from "../Components/Precioso/FormulaEditor";

@@ -1,5 +1,5 @@
 import { Route } from "react-router-dom";
-import MainContainer from "../Components/General/MainContainer";
+import MainContainer from "../Components/Pages/MainContainer";
 import FinishersDataForm from "../Components/Formulario/FinishersDataForm";
 
 export const finishersRoutes = ({ color, variant }) => (

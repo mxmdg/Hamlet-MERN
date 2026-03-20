@@ -1,7 +1,7 @@
 import { Route } from "react-router-dom";
 import JobFinder from "../Components/Jobs/JobFinder";
 import { JobProperties } from "../Components/utils/PropertiesMaps/jobsMap";
-import MainContainer from "../Components/General/MainContainer";
+import MainContainer from "../Components/Pages/MainContainer";
 import StatsCollector from "../Components/utils/stats/StatsCollector";
 import JobsPerDate from "../Components/utils/stats/JobsPerDate";
 import JobsPerType from "../Components/utils/stats/JobsPerType";

@@ -1,11 +1,13 @@
+import React from "react";
 import axios from "axios";
 import { HAMLET_API, HEALTH_API } from "../Config/config";
 
-export const fechtData = async (collection, setFunction) => {
-  const token = localStorage.getItem("token");
-  const memberships = JSON.parse(localStorage.getItem("memberships") || "[]");
-  const tenantId = memberships[0]?.tenant?.id;
+const token = localStorage.getItem("token");
+const memberships = JSON.parse(localStorage.getItem("memberships") || "[]");
+const tenantId = memberships[0]?.tenant?.id;
+const papyrusEndpoint = memberships;
 
+export const fechtData = async (collection, setFunction) => {
   try {
     const res = await axios.get(`${HAMLET_API}${collection}`, {
       headers: {
@@ -35,10 +37,6 @@ export const checkHealth = async () => {
 };
 
 export const getPrivateElements = async (collection) => {
-  const token = localStorage.getItem("token");
-  const memberships = JSON.parse(localStorage.getItem("memberships") || "[]");
-  const tenantId = memberships[0]?.tenant?.id;
-
   if (!tenantId) {
     throw new Error("Imprenta activa no encontrada");
   }
@@ -54,10 +52,6 @@ export const getPrivateElements = async (collection) => {
 };
 
 export const getPrivateElementByID = async (collection, id) => {
-  const token = localStorage.getItem("token");
-  const memberships = JSON.parse(localStorage.getItem("memberships") || "[]");
-  const tenantId = memberships[0]?.tenant?.id;
-
   if (!tenantId) {
     throw new Error("Tenant activo no encontrado");
   }
@@ -73,9 +67,6 @@ export const getPrivateElementByID = async (collection, id) => {
 };
 
 export const addPrivateElement = async (collection, formData) => {
-  const token = localStorage.getItem("token");
-  const memberships = JSON.parse(localStorage.getItem("memberships") || "[]");
-  const tenantId = memberships[0]?.tenant?.id;
   try {
     const elements = await axios.post(`${HAMLET_API + collection}`, formData, {
       headers: {
@@ -98,21 +89,17 @@ export const uploadFile = async (endpoint, data) => {
   }
 };
 
-export const importFromPapyrus = async (query, endpoint = "" ) => {
+export const importFromPapyrus = async (query, endpoint = papyrusEndpoint) => {
   try {
     const res = await axios.post(endpoint, query);
-    return res.data
+    return res.data;
   } catch (error) {
-    console.log(error)
-    throw error
+    console.log(error);
+    throw error;
   }
-}
+};
 
 export const putPrivateElement = async (itemURL, formData) => {
-  const token = localStorage.getItem("token");
-  const memberships = JSON.parse(localStorage.getItem("memberships") || "[]");
-  const tenantId = memberships[0]?.tenant?.id;
-
   try {
     const elements = await axios.put(itemURL, formData, {
       headers: {
@@ -127,9 +114,6 @@ export const putPrivateElement = async (itemURL, formData) => {
 };
 
 export const patchPrivateElement = async (collection, id, formData) => {
-  const token = localStorage.getItem("token");
-  const memberships = JSON.parse(localStorage.getItem("memberships") || "[]");
-  const tenantId = memberships[0]?.tenant?.id;
   try {
     const elements = await axios.patch(
       `${HAMLET_API + collection}/${id}`,
@@ -139,7 +123,7 @@ export const patchPrivateElement = async (collection, id, formData) => {
           Authorization: `Bearer ${token}`,
           "X-Tenant": tenantId,
         },
-      }
+      },
     );
     return elements;
   } catch (e) {
@@ -148,9 +132,6 @@ export const patchPrivateElement = async (collection, id, formData) => {
 };
 
 export const deletePrivateElement = async (collection, id) => {
-  const token = localStorage.getItem("token");
-  const memberships = JSON.parse(localStorage.getItem("memberships") || "[]");
-  const tenantId = memberships[0]?.tenant?.id;
   try {
     const elements = await axios.delete(`${HAMLET_API + collection}/${id}`, {
       headers: {

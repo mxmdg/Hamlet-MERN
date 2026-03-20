@@ -30,7 +30,7 @@ const Fetch = (props) => {
 
   const context = useContext(AuthContext);
 
-  const url = context.useSettings.extensions.papyrusExtractUrl
+  const url = context.useSettings.extensions.papyrusExtractUrl;
 
   const orderObjectProperties = (obj, headers) => {
     const ordered = {};
@@ -47,7 +47,6 @@ const Fetch = (props) => {
 
     if (props.collection === "papyrus") {
       elements = await importFromPapyrus(props.querySQL, url);
-      console.log(elements);
     } else {
       elements = await getPrivateElements(
         props.collection + (props.subdir ? `/${props.subdir}` : ""),

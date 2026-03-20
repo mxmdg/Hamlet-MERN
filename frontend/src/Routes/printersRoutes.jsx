@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import MainContainer from "../Components/General/MainContainer";
+import MainContainer from "../Components/Pages/MainContainer";
 import PrintersMainContainer from "../Components/Printers/PrintersMainContainer";
 import FormMaterial from "../Components/Formulario/FormMaterial";
 import PrintersDataForm from "../Components/Formulario/PrintersDataForm";
