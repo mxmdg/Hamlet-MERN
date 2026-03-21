@@ -90,12 +90,12 @@ const NewStackedBarChart = (props) => {
     ];
 
     setJobsForDay(
-      `jobs/urg?startDate=${formattedStartDate}&endDate=${formattedEndDate}`
+      `jobs/urg?startDate=${formattedStartDate}&endDate=${formattedEndDate}`,
     );
     setTitle(
       `${weekdays[endDate.getDay()]} ${endDate.getDate() + 1}-${
         endDate.getMonth() + 1
-      }-${endDate.getFullYear()}`
+      }-${endDate.getFullYear()}`,
     );
     handleOpen();
   };
@@ -123,7 +123,7 @@ const NewStackedBarChart = (props) => {
       {props.title && <Title title={props.title} />}
       <FormGroup>
         <Grid container spacing={4}>
-          <Grid textAlign={"right"} size={{ xs: 12, sm: 6 }}>
+          <Grid textAlign={"right"} size={props.size || { xs: 12, sm: 6 }}>
             <TextField
               type="date"
               label="Desde"
@@ -135,12 +135,12 @@ const NewStackedBarChart = (props) => {
               }}
               onChange={(e) => {
                 props.selectFrom(
-                  calculateDaysBetweenDates(e.target.value, Date())
+                  calculateDaysBetweenDates(e.target.value, Date()),
                 );
               }}
             />
           </Grid>
-          <Grid size={{ xs: 12, sm: 6 }}>
+          <Grid size={props.size || { xs: 12, sm: 6 }}>
             <TextField
               type="date"
               label="Hasta"
@@ -152,7 +152,7 @@ const NewStackedBarChart = (props) => {
               }}
               onChange={(e) => {
                 props.selectTo(
-                  calculateDaysBetweenDates(Date(), e.target.value)
+                  calculateDaysBetweenDates(Date(), e.target.value),
                 );
               }}
             />
@@ -160,7 +160,7 @@ const NewStackedBarChart = (props) => {
         </Grid>
       </FormGroup>
       <Box sx={{ width: "100%", minWidth: 0 }}>
-        <ResponsiveContainer height={300}>
+        <ResponsiveContainer height={props.H || 300}>
           <BarChart
             data={statsData}
             barCategoryGap={2}
@@ -177,40 +177,45 @@ const NewStackedBarChart = (props) => {
             <YAxis />
             <Tooltip content={<ToolTipNice />} />
 
-            <Legend
-              iconSize={10}
-              iconType={(e) => {
-                return filter === e.dataKey ? "circle" : "square";
-              }}
-              verticalAlign="bottom"
-              layout="vertical"
-              wrapperStyle={myWrapperStyle}
-              onClick={(e) => {
-                setFilter(filter !== e.dataKey ? e.dataKey : null);
-              }}
-              formatter={(value, entry) => {
-                // entry.dataKey contiene la clave real del dataset
-                const key = entry && entry.dataKey ? entry.dataKey : value;
-                if (!dataCount || !dataCount.total || !dataCount.average)
-                  return value;
-                const total =
-                  dataCount.total[key] !== undefined ? dataCount.total[key] : 0;
-                const avg =
-                  dataCount.average[key] !== undefined
-                    ? dataCount.average[key]
-                    : 0;
-                const fmt = (n) =>
-                  typeof n === "number" ? n.toLocaleString("es-ES") : n;
-                return `${value} (T: ${fmt(total)} / P: ${fmt(avg)})`;
-              }}
-            />
+            {
+              <Legend
+                iconSize={10}
+                iconType={(e) => {
+                  return filter === e.dataKey ? "circle" : "square";
+                }}
+                verticalAlign="bottom"
+                horizontalAlign="left"
+                layout="vertical"
+                wrapperStyle={myWrapperStyle}
+                onClick={(e) => {
+                  setFilter(filter !== e.dataKey ? e.dataKey : null);
+                }}
+                formatter={(value, entry) => {
+                  // entry.dataKey contiene la clave real del dataset
+                  const key = entry && entry.dataKey ? entry.dataKey : value;
+                  if (!dataCount || !dataCount.total || !dataCount.average)
+                    return value;
+                  const total =
+                    dataCount.total[key] !== undefined
+                      ? dataCount.total[key]
+                      : 0;
+                  const avg =
+                    dataCount.average[key] !== undefined
+                      ? dataCount.average[key]
+                      : 0;
+                  const fmt = (n) =>
+                    typeof n === "number" ? n.toLocaleString("es-ES") : n;
+                  return `${value} (T: ${fmt(total)} / P: ${fmt(avg)})`;
+                }}
+              />
+            }
             {props.dataKey.map((item, index) => {
               return (
                 <Bar
                   dataKey={item}
                   key={index}
                   stackId="b"
-                  fill={coloresIntermedios[index + 1]}
+                  fill={coloresIntermedios[index % coloresIntermedios.length]}
                   onClick={(e) => handleBarClick(e.payload.name)}
                 />
               );

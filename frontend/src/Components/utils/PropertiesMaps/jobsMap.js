@@ -190,3 +190,10 @@ export const QuotationProperties = [
     queryLabel: "Total",
   },
 ];
+
+export const PapyrusStatusText = {
+  ANU: "Anulado",
+  APR: "Aprobado",
+  FIN: "Finalizado",
+  PRO: "Muestra",
+};

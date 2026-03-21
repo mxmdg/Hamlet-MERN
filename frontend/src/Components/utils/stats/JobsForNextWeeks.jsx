@@ -10,7 +10,7 @@ const JobsForNextDays = (props) => {
   const [from, setFrom] = React.useState(props.from || 1);
   const [to, setTo] = React.useState(props.to || 60); // next 60 days
   const [graphTitle, setGraphTitle] = React.useState(
-    props.title || `Trabajos para los próximos ${to} días`
+    props.title || `Trabajos para los próximos ${to} días`,
   );
   const errorRef = React.useRef(false); // Bandera de control
 
@@ -29,7 +29,7 @@ const JobsForNextDays = (props) => {
     setGraphTitle(
       `Trabajos desde ${formatDateFromDict(startDate).ddmmyy} al ${
         formatDateFromDict(endDate).ddmmyy
-      }`
+      }`,
     ); // Actualiza el título del gráfico
   }, []);
 

@@ -49,12 +49,12 @@ export function getWeekNumber(d) {
 }
 /**
  * Devuelve un objeto con diferentes formatos de una fecha:
-  * - `ddmmyy`: Fecha en formato "dd/mm/yyyy".
-  * - `mmyy`: Fecha en formato "mm/yyyy".
-  * - `ww`: Número de la semana del año.
-  * @param {string|number|Date} event - Acepta un string de fecha (ISO, "2026-03-11"), 
-  * un timestamp o un objeto Date de JS.
-  * return { ddmmyy, mmyy, ww, yymmdd, mm: mm + 1, yy: yy, yyyymmdd: yyyymmdd};
+ * - `ddmmyy`: Fecha en formato "dd/mm/yyyy".
+ * - `mmyy`: Fecha en formato "mm/yyyy".
+ * - `ww`: Número de la semana del año.
+ * @param {string|number|Date} event - Acepta un string de fecha (ISO, "2026-03-11"),
+ * un timestamp o un objeto Date de JS.
+ * return { ddmmyy, mmyy, ww, yymmdd, mm: mm + 1, yy: yy, yyyymmdd: yyyymmdd};
  */
 
 export const getMyDate = (event) => {
@@ -66,12 +66,45 @@ export const getMyDate = (event) => {
   const ddmmyy = `${dd}/${mm + 1}/${yy}`;
   const mmyy = `${mm + 1}/${yy}`.toString();
   const yymmdd = `${yy}-${mm + 1}-${dd}`;
-  const yyyymmdd = `${yy}-${mm + 1}-${dd}`
+  const yyyymmdd = `${yy}-${mm + 1}-${dd}`;
 
-  return { ddmmyy, mmyy, ww, yymmdd, mm: mm + 1, yy: yy, yyyymmdd: yyyymmdd};
+  return { ddmmyy, mmyy, ww, yymmdd, mm: mm + 1, yy: yy, yyyymmdd: yyyymmdd };
 };
 
 export const todayDate = () => getMyDate(new Date());
+
+/**
+ * Convertir fecha desde 2020-01-01 a yyyy/mm/dd
+ * @param {String} date
+ * @returns dd/mm/yy
+ */
+export const getMyDateFromStr = (dateStr) => {
+  // Usamos el string directamente; al ser yyyy-mm-dd,
+  // Date lo interpreta por defecto en UTC, lo cual encaja con tus métodos .getUTC...
+  const date = new Date(dateStr);
+
+  const dd = date.getUTCDate();
+  const mm = date.getUTCMonth(); // 0-11
+  const yy = date.getUTCFullYear();
+  const ww = getWeekNumber(date); // Asumiendo que esta función existe en tu scope
+
+  // Formateo de strings (añadimos padding de ceros para que sea consistente)
+  const month = mm + 1;
+  const ddmmyy = `${dd}/${month}/${yy}`;
+  const mmyy = `${month}/${yy}`;
+  const yymmdd = `${yy}-${month}-${dd}`;
+  const yyyymmdd = `${yy}-${month}-${dd}`;
+
+  return {
+    ddmmyy,
+    mmyy,
+    ww,
+    yymmdd,
+    mm: month,
+    yy: yy,
+    yyyymmdd: yyyymmdd,
+  };
+};
 
 // Formatea una fecha en formato "dd/mm/yyyy" según la configuración regional "es-ES".
 export const handleDate = (date) => {

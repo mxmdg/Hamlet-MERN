@@ -134,7 +134,7 @@ export default function NewRadialBar(props) {
             layout="horizontal"
             align="left"
             verticalAlign="bottom"
-            wrapperStyle={myWrapperStyle}
+            wrapperStyle={myWrapperStyleRight}
           />
           <Tooltip content={<ToolTipNice />} />
         </RadialBarChart>

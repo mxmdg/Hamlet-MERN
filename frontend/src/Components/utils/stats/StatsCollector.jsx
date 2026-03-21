@@ -1,4 +1,5 @@
 import React from "react";
+import { useContext } from "react";
 import {
   getPrivateElements,
   importFromPapyrus,
@@ -6,13 +7,16 @@ import {
 import ErrorMessage from "../../ErrorMessage/ErrorMessage";
 import { CircularProgress, Grid, Paper } from "@mui/material";
 import Spinner from "../../General/Spinner";
-
-import { queryProcesosPorFecha } from "../PropertiesMaps/sqlQueries"
+import { AuthContext } from "../../context/AuthContext";
+import { queryProcesosPorFecha } from "../PropertiesMaps/sqlQueries";
 
 const StatsCollector = ({ children, route }) => {
   const [jobsList, setJobsList] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
-  const url = "http://181.104.19.45:3001/api/papyrus/extract";
+
+  const context = useContext(AuthContext);
+
+  const url = context.useSettings.extensions.papyrusExtractUrl;
 
   // Manejo de errores
   const [useError, setError] = React.useState(null);
@@ -25,7 +29,7 @@ const StatsCollector = ({ children, route }) => {
       try {
         const jobs =
           route === "papyrus"
-            ? await importFromPapyrus({sql: queryProcesosPorFecha}, url)
+            ? await importFromPapyrus({ sql: queryProcesosPorFecha }, url)
             : await getPrivateElements(route);
         //const parts = await getPrivateElements("jobs/partes");
         setJobsList(jobs);

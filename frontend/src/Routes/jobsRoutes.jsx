@@ -3,7 +3,9 @@ import JobFinder from "../Components/Jobs/JobFinder";
 import { JobProperties } from "../Components/utils/PropertiesMaps/jobsMap";
 import MainContainer from "../Components/Pages/MainContainer";
 import StatsCollector from "../Components/utils/stats/StatsCollector";
-import JobsPerDate from "../Components/utils/stats/JobsPerDate";
+import JobsForNextWeeksPapyrus from "../Components/utils/stats/JobsForNextWeeksPapyrus";
+import JobsPerClientPapyrus from "../Components/utils/stats/JobsPerClientPapyrus";
+import JobsPerSellerPapyrus from "../Components/utils/stats/JobsPerSellerPapyrus";
 import JobsPerType from "../Components/utils/stats/JobsPerType";
 import JobsPerClient from "../Components/utils/stats/JobsPerClient";
 import JobsPerSeller from "../Components/utils/stats/JobsPerSeller";
@@ -14,7 +16,7 @@ import { JobViewer } from "../Components/jobViewer/JobViewer";
 import JobsEditAndCopy from "../Components/Pages/JobsEditAndCopy";
 import JobsContainer from "../Components/Jobs/JobsContainer";
 import JobsPerPartType from "../Components/utils/stats/JobsPerPartType";
-import { queryProcesosPorFecha } from "../Components/utils/PropertiesMaps/sqlQueries"
+import { queryProcesosPorFecha } from "../Components/utils/PropertiesMaps/sqlQueries";
 
 export const jobsRoutes = ({ color, variant }) => (
   <>
@@ -40,13 +42,12 @@ export const jobsRoutes = ({ color, variant }) => (
     />
     // Una ruta poco util, solo trae las estadisticas de todos los trabajos.
     <Route
-      path="/Jobs/stats"
+      path="/Jobs/dashboard"
       element={
         <StatsCollector route="papyrus" query={queryProcesosPorFecha}>
-          <JobsPerClient rank={10} />
-          <JobsPerSeller />
-          <JobsPerType />
-          <JobsPerPartType rank={7} />
+          <JobsForNextWeeksPapyrus />
+          <JobsPerClientPapyrus rank={5} />
+          <JobsPerSellerPapyrus />
         </StatsCollector>
       }
     />
