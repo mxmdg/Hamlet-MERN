@@ -30,7 +30,7 @@ const Fetch = (props) => {
 
   const context = useContext(AuthContext);
 
-  const url = context.useSettings.extensions.papyrusExtractUrl;
+  const url = context.useSettings?.extensions?.papyrusExtractUrl;
 
   const orderObjectProperties = (obj, headers) => {
     const ordered = {};

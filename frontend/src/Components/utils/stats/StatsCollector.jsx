@@ -16,7 +16,7 @@ const StatsCollector = ({ children, route }) => {
 
   const context = useContext(AuthContext);
 
-  const url = context.useSettings.extensions.papyrusExtractUrl;
+  const url = context.useSettings?.extensions?.papyrusExtractUrl;
 
   // Manejo de errores
   const [useError, setError] = React.useState(null);

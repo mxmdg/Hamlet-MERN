@@ -2,8 +2,8 @@ import { getPrivateElements } from "../customHooks/FetchDataHook";
 import { AuthContext } from "../context/AuthContext";
 import { useContext } from "react";
 
-const PreferencesForm = ()=> {
-  const context =useContext(AuthContext)
+const PreferencesForm = () => {
+  const context = useContext(AuthContext);
   const usersList = [];
   const users = async () => {
     try {
@@ -21,9 +21,9 @@ const PreferencesForm = ()=> {
     }
   };
 
-users();
+  users();
 
-/*
+  /*
  {
       pricing: {
         gain: {
@@ -51,149 +51,124 @@ users();
       },
     },
 */
-const papyrusConnection = [
-  {
-    label: "Conexion a Papyrus",
-    type: "Divider",
-    id: "papyrus_concection_div",
-    size: 12,
-    align: "center",
-    orientation: "horizontal",
-  },{
-    inputName: "extensions.papyrusExtractUrl",
-    label: "URL Papyrus Extract Extension",
-    type: "Text",
-    id: "papyrusExtract_url",
-    required: true,
-    help: "URL de la aplicacion Papyrus Extract.",
-  },
-]
+  const papyrusConnection = [
+    {
+      label: "Conexion a Papyrus",
+      type: "Divider",
+      id: "papyrus_concection_div",
+      size: 12,
+      align: "center",
+      orientation: "horizontal",
+    },
+    {
+      inputName: "extensions.papyrusExtractUrl",
+      label: "URL Papyrus Extract Extension",
+      type: "Text",
+      id: "papyrusExtract_url",
+      required: true,
+      help: "URL de la aplicacion Papyrus Extract.",
+    },
+  ];
 
-let preferencesForm = [
-  // Pricing - Gain
-  {
-    label: "Margenes de ganancia",
-    type: "Divider",
-    id: "pricing_commission_div",
-    size: 12,
-    align: "center",
-    orientation: "horizontal",
-  },{
-    inputName: "pricing.gain.min",
-    label: "Ganancia mínima (%)",
-    type: "Number",
-    id: "pricing_gain_min",
-    required: true,
-    help: "Porcentaje mínimo de ganancia (valor por defecto 20%).",
-  },
-  {
-    inputName: "pricing.gain.max",
-    label: "Ganancia máxima (%)",
-    type: "Number",
-    id: "pricing_gain_max",
-    required: true,
-    help: "Porcentaje máximo de ganancia (valor por defecto 60%).",
-  },
-  {
-    inputName: "pricing.gain.def",
-    label: "Ganancia predeterminada (%)",
-    type: "Number",
-    id: "pricing_gain_def",
-    required: true,
-    help: "Porcentaje predeterminado de ganancia.",
-  },
+  let preferencesForm = [
+    // Pricing - Gain
+    {
+      label: "Margenes de ganancia",
+      type: "Divider",
+      id: "pricing_commission_div",
+      size: 12,
+      align: "center",
+      orientation: "horizontal",
+    },
+    {
+      inputName: "pricing.gain.min",
+      label: "Ganancia mínima (%)",
+      type: "Number",
+      id: "pricing_gain_min",
+      required: true,
+      help: "Porcentaje mínimo de ganancia (valor por defecto 20%).",
+    },
+    {
+      inputName: "pricing.gain.max",
+      label: "Ganancia máxima (%)",
+      type: "Number",
+      id: "pricing_gain_max",
+      required: true,
+      help: "Porcentaje máximo de ganancia (valor por defecto 60%).",
+    },
+    {
+      inputName: "pricing.gain.def",
+      label: "Ganancia predeterminada (%)",
+      type: "Number",
+      id: "pricing_gain_def",
+      required: true,
+      help: "Porcentaje predeterminado de ganancia.",
+    },
 
-  // Pricing - Commission
-  {
-    label: "Margenes de Comisiones",
-    type: "Divider",
-    id: "pricing_gain_div",
-    size: 12,
-    align: "center",
-    orientation: "horizontal",
-  },{
-    inputName: "pricing.commission.min",
-    label: "Comisión mínima (%)",
-    type: "Number",
-    id: "pricing_comm_min",
-    required: true,
-    help: "Porcentaje mínimo de comisión (valor por defecto 0%).",
-  },
-  {
-    inputName: "pricing.commission.max",
-    label: "Comisión máxima (%)",
-    type: "Number",
-    id: "pricing_comm_max",
-    required: true,
-    help: "Porcentaje máximo de comisión (valor por defecto 20%).",
-  },
-  {
-    inputName: "pricing.commission.def",
-    label: "Comisión predeterminada (%)",
-    type: "Number",
-    id: "pricing_comm_def",
-    required: true,
-    help: "Porcentaje predeterminado de comisión (valor por defecto 0%).",
-  },
+    // Pricing - Commission
+    {
+      label: "Margenes de Comisiones",
+      type: "Divider",
+      id: "pricing_gain_div",
+      size: 12,
+      align: "center",
+      orientation: "horizontal",
+    },
+    {
+      inputName: "pricing.commission.min",
+      label: "Comisión mínima (%)",
+      type: "Number",
+      id: "pricing_comm_min",
+      required: true,
+      help: "Porcentaje mínimo de comisión (valor por defecto 0%).",
+    },
+    {
+      inputName: "pricing.commission.max",
+      label: "Comisión máxima (%)",
+      type: "Number",
+      id: "pricing_comm_max",
+      required: true,
+      help: "Porcentaje máximo de comisión (valor por defecto 20%).",
+    },
+    {
+      inputName: "pricing.commission.def",
+      label: "Comisión predeterminada (%)",
+      type: "Number",
+      id: "pricing_comm_def",
+      required: true,
+      help: "Porcentaje predeterminado de comisión (valor por defecto 0%).",
+    },
 
-  // Mail simplificado
-  {
-    label: "Correo electronico",
-    type: "Divider",
-    id: "mail_div",
-    size: 12,
-    align: "center",
-    orientation: "horizontal",
-  },{
-    inputName: "mail.displayName", // Nuevo campo
-    label: "Nombre de la Imprenta",
-    type: "Text", 
-    id: "mail_display_name",
-    help: "Nombre que verán tus clientes al recibir el presupuesto (ej: Imprenta Dorrego).",
-  },
-  {
-    inputName: "mail.from",
-    label: "Mail de contacto (Responder a)",
-    type: "email",
-    id: "mail_from",
-    help: "Dirección donde recibirás las respuestas de tus clientes.",
-  },
+    // Mail simplificado
+    {
+      label: "Correo electronico",
+      type: "Divider",
+      id: "mail_div",
+      size: 12,
+      align: "center",
+      orientation: "horizontal",
+    },
+    {
+      inputName: "mail.displayName", // Nuevo campo
+      label: "Nombre de la Imprenta",
+      type: "Text",
+      id: "mail_display_name",
+      help: "Nombre que verán tus clientes al recibir el presupuesto (ej: Imprenta Dorrego).",
+    },
+    {
+      inputName: "mail.from",
+      label: "Mail de contacto (Responder a)",
+      type: "email",
+      id: "mail_from",
+      help: "Dirección donde recibirás las respuestas de tus clientes.",
+    },
+  ];
 
-  // Conexion a Papyrus (solo plan PRO)
+  if (context.usePlan === "pro") {
+    preferencesForm.push(papyrusConnection[0], papyrusConnection[1]);
+  }
 
-  // Locale
-  /* {
-    inputName: "locale.currency",
-    label: "Moneda por defecto",
-    type: "Select",
-    id: "locale_currency",
-    options: [
-      { text: "ARS", value: "ARS" },
-      { text: "USD", value: "USD" },
-      { text: "EUR", value: "EUR" },
-    ],
-    help: "Moneda por defecto del sistema.",
-  },
-  {
-    inputName: "locale.language",
-    label: "Idioma",
-    type: "Select",
-    id: "locale_language",
-    options: [
-      { text: "Español (es)", value: "es" },
-      { text: "Inglés (en)", value: "en" },
-    ],
-    help: "Idioma por defecto del sistema.",
-  }, */
-];
-
-if (context.usePlan === 'pro') {
-  preferencesForm.push(papyrusConnection[0],papyrusConnection[1])
-}
-
-
-return preferencesForm
-
-}
+  return preferencesForm;
+};
 
 export default PreferencesForm;

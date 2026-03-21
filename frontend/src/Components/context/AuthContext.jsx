@@ -63,7 +63,10 @@ const AuthProvider = ({ children }) => {
     setMemberships([]);
     setPlan(null);
     setSettings(null);
-    localStorage.clear(); // Limpia todo de una vez
+    localStorage.removeItem("login");
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    localStorage.removeItem("memberships");
     Navigate("/");
   };
 

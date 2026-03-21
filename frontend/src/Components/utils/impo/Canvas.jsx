@@ -27,9 +27,6 @@ const Canvas = (props) => {
     const canvas = canvasRef.current;
     const Parent = canvas.parentNode;
 
-    console.log(Parent.clientWidth, Parent.clientHeight);
-    console.log(useCanvasSize);
-
     setCanvasSize({
       x: Parent.clientHeight * 0.6,
       y: Parent.clientHeight * 0.4,
