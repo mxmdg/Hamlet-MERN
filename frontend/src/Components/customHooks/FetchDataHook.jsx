@@ -2,10 +2,10 @@ import React from "react";
 import axios from "axios";
 import { HAMLET_API, HEALTH_API } from "../Config/config";
 
+
 const token = localStorage.getItem("token");
 const memberships = JSON.parse(localStorage.getItem("memberships") || "[]");
 const tenantId = memberships[0]?.tenant?.id;
-const papyrusEndpoint = memberships;
 
 export const fechtData = async (collection, setFunction) => {
   try {
@@ -89,7 +89,7 @@ export const uploadFile = async (endpoint, data) => {
   }
 };
 
-export const importFromPapyrus = async (query, endpoint = papyrusEndpoint) => {
+export const importFromPapyrus = async (query, endpoint ) => {
   try {
     const res = await axios.post(endpoint, query);
     return res.data;

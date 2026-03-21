@@ -287,6 +287,7 @@ const JobDetail = (props) => {
               columnSpacing={2}
               alignItems={"start"}
               size={12}
+              wrap='nowrap'
             >
               <Grid size={{ xs: 12, md: 8 }}>
                 <ImpoProvider>

@@ -14,6 +14,7 @@ import { JobViewer } from "../Components/jobViewer/JobViewer";
 import JobsEditAndCopy from "../Components/Pages/JobsEditAndCopy";
 import JobsContainer from "../Components/Jobs/JobsContainer";
 import JobsPerPartType from "../Components/utils/stats/JobsPerPartType";
+import { queryProcesosPorFecha } from "../Components/utils/PropertiesMaps/sqlQueries"
 
 export const jobsRoutes = ({ color, variant }) => (
   <>
@@ -41,10 +42,8 @@ export const jobsRoutes = ({ color, variant }) => (
     <Route
       path="/Jobs/stats"
       element={
-        <StatsCollector route="jobs/complete">
-          <JobsPerDate />
-          <JobsPerType />
-          <JobsPerClient rank={5} />
+        <StatsCollector route="papyrus" query={queryProcesosPorFecha}>
+          <JobsPerClient rank={10} />
           <JobsPerSeller />
           <JobsPerType />
           <JobsPerPartType rank={7} />
