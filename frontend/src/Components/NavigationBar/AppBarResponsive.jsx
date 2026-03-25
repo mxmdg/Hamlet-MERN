@@ -214,7 +214,7 @@ function ResponsiveAppBar(props) {
                     fontSize: "0.75em",
                   }}
                 >
-                  {context.memberships[0].tenant.name}
+                  {context.memberships[0]?.tenant.name || ""}
                 </Box>
               )}
             </Typography>

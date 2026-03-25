@@ -1,6 +1,7 @@
 import provinciasArgentinas from "../utils/generalData/provinciasArgentinas";
 
-let MoldeEmpresas = [{
+let MoldeEmpresas = [
+  {
     label: "Datos del cliente",
     type: "Divider",
     id: "customerData_div",
@@ -15,6 +16,7 @@ let MoldeEmpresas = [{
   },
   {
     inputName: "email",
+    label: "Correo electronico",
     type: "email",
     id: "id_702",
   },
@@ -22,7 +24,8 @@ let MoldeEmpresas = [{
     inputName: "Telefono",
     type: "Text",
     id: "id_708",
-  },{
+  },
+  {
     label: "Direccion",
     type: "Divider",
     id: "address_div",
@@ -42,6 +45,7 @@ let MoldeEmpresas = [{
   },
   {
     inputName: "Codigo_Postal",
+    label: "C.P.",
     type: "Text",
     id: "id_705",
   },

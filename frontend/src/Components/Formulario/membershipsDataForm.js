@@ -1,6 +1,6 @@
 let membershipsDataForm = [
   {
-    inputName: "userId.email",
+    inputName: "userEmail",
     label: "Email del usuario",
     type: "email",
     id: "id_001",
@@ -8,6 +8,7 @@ let membershipsDataForm = [
   },
   {
     inputName: "role",
+    label: "Rol",
     type: "Select",
     id: "id_003",
     options: [

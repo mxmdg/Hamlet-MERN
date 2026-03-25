@@ -57,7 +57,7 @@ membershipsController.getMembershipById = async (req, res, next) => {
   try {
     const tenant = req.header("x-tenant");
     const membership = await Membership.findOne({ _id: req.params.id, tenant })
-      .populate("userId", "name email")
+      .populate("userId", "name email status")
       .populate("tenant", "key name status plan");
     if (!membership)
       return res.status(404).json({ message: "Membership no encontrada" });

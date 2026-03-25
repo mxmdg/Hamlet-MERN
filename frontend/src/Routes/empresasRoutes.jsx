@@ -13,7 +13,7 @@ export const empresasRoutes = ({ color, variant }) => (
       element={
         <Grid container columns={12}>
           <Grid columns={{ sm: 12, md: 6 }}>
-            <MainContainer entity={"empresas"} />
+            <MainContainer entity={"empresas"} form={empresasDataForm} />
           </Grid>
           <Grid columns={{ sm: 12, md: 6 }}>
             <StatsCollector route="jobs/complete">
@@ -28,7 +28,7 @@ export const empresasRoutes = ({ color, variant }) => (
       element={
         <Grid container columns={12}>
           <Grid columns={4}>
-            <MainContainer entity={"empresas/trash"} />
+            <MainContainer entity={"empresas/trash"} form={empresasDataForm} />
           </Grid>
         </Grid>
       }

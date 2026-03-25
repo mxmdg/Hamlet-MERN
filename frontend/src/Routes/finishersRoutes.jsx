@@ -7,7 +7,9 @@ export const finishersRoutes = ({ color, variant }) => (
     <Route path="/finishers" element={<MainContainer entity={"finishers"} />} />
     <Route
       path="/finishers/trash"
-      element={<MainContainer entity={"finishers/trash"} />}
+      element={
+        <MainContainer entity={"finishers/trash"} form={FinishersDataForm} />
+      }
     />
     <Route
       path="/finishers/add"

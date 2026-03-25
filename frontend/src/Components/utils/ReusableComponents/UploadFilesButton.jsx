@@ -68,7 +68,7 @@ export default function UploadFilesButton({
   const [fileInfo, setFileInfo] = useState(null);
   const [usePlan, setPlan] = useState(
     localStorage.getItem("memberships")
-      ? JSON.parse(localStorage.getItem("memberships"))[0].tenant.plan
+      ? JSON.parse(localStorage.getItem("memberships"))[0]?.tenant.plan
       : null,
   );
   const [useError, setError] = useState(false);

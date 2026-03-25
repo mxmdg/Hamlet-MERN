@@ -26,7 +26,6 @@ const Fetch = (props) => {
   const [useColumn, setColumn] = useState("Todo");
 
   const navigate = useNavigate();
-  //const url = "http://181.104.19.45:3001/api/papyrus/extract";
 
   const context = useContext(AuthContext);
 
@@ -64,11 +63,14 @@ const Fetch = (props) => {
             ? Object.getOwnPropertyNames(elements[0])
             : ["Error", "Datos inexistentes"];
           labels.map((e) => {
+            const label =
+              props.form?.find(({ inputName }) => inputName === e) || null;
+
             const obj = {
               id: e,
               numeric: false,
               disablePadding: false,
-              label: e,
+              label: label?.label || e,
             };
             // arr.push(obj)
             if (e !== "id" && e !== "__v") {

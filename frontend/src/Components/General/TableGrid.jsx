@@ -27,8 +27,8 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
 import { deleteMultiple } from "../customHooks/FetchDataHook";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
-import Fade from '@mui/material/Fade';
-import Zoom from '@mui/material/Zoom';
+import Fade from "@mui/material/Fade";
+import Zoom from "@mui/material/Zoom";
 import CustomizedTooltip from "../utils/CustomizedTooltip";
 import { styled, alpha } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
@@ -104,15 +104,18 @@ export function EnhancedTableHead(props) {
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}
             onChange={onSelectAllClick}
-            inputProps={{
-              "aria-label": "select all desserts",
-            }}
           />
         </TableCell>
         {props.headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
+            variant="head"
             align={headCell.numeric ? "right" : "left"}
+            sx={{
+              verticalAlign: "top",
+              fontWeight: 800,
+              textTransform: "uppercase",
+            }}
             padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
           >
@@ -145,17 +148,20 @@ EnhancedTableHead.propTypes = {
 };
 
 export const StyledTooltip = styled(({ className, ...props }) => (
-  <Tooltip {...props} classes={{ popper: className }} 
-            slots={{
-          transition: Zoom,
-        }}
-        slotProps={{
-          transition: { timeout: 600 },
-        }}/>
+  <Tooltip
+    {...props}
+    classes={{ popper: className }}
+    slots={{
+      transition: Zoom,
+    }}
+    slotProps={{
+      transition: { timeout: 600 },
+    }}
+  />
 ))(({ theme }) => ({
   [`& .${tooltipClasses.tooltip}`]: {
     background: "#efe",
-      //"linear-gradient(0deg,rgba(41, 125, 133, 1) 0%, rgba(89, 227, 234, 1) 100%)",
+    //"linear-gradient(0deg,rgba(41, 125, 133, 1) 0%, rgba(89, 227, 234, 1) 100%)",
     color: "#000",
     border: "2px solid #efe",
     borderRadius: 3,
@@ -170,13 +176,16 @@ export const StyledTooltip = styled(({ className, ...props }) => (
 }));
 
 export const DangerTooltip = styled(({ className, ...props }) => (
-  <Tooltip {...props} classes={{ popper: className }} 
-            slots={{
-          transition: Zoom,
-        }}
-        slotProps={{
-          transition: { timeout: 600 },
-        }}/>
+  <Tooltip
+    {...props}
+    classes={{ popper: className }}
+    slots={{
+      transition: Zoom,
+    }}
+    slotProps={{
+      transition: { timeout: 600 },
+    }}
+  />
 ))(({ theme }) => ({
   [`& .${tooltipClasses.tooltip}`]: {
     background:
@@ -205,19 +214,24 @@ const makeGradient = (color) =>
 
 export const GradientTooltip = styled(
   ({ className, color = "primary", ...props }) => (
-    <Tooltip {...props} arrow classes={{ popper: className }} slots={{
-          transition: Zoom,
-        }}
-        slotProps={{
-          transition: { timeout: 600 },
-        }} />
-  )
+    <Tooltip
+      {...props}
+      arrow
+      classes={{ popper: className }}
+      slots={{
+        transition: Zoom,
+      }}
+      slotProps={{
+        transition: { timeout: 600 },
+      }}
+    />
+  ),
 )(({ theme, color }) => {
   const paletteColor = theme.palette[color] || theme.palette.primary;
 
   return {
     [`& .${tooltipClasses.tooltip}`]: {
-      background: "#efe",//makeGradient("#efe"),
+      background: "#efe", //makeGradient("#efe"),
       color: paletteColor.dark,
       border: `1px solid ${paletteColor.main}`,
       borderRadius: 3,
@@ -284,7 +298,7 @@ export function EnhancedTableToolbar(props) {
                     navigate(
                       `/${props.collection.replace("/urg", "")}/copy/${
                         props.idSelected
-                      }`
+                      }`,
                     );
                   }}
                   sx={{ alignSelf: "right" }}
@@ -298,7 +312,7 @@ export function EnhancedTableToolbar(props) {
                     navigate(
                       `/${props.collection.replace("/urg", "")}/edit/${
                         props.idSelected
-                      }`
+                      }`,
                     );
                   }}
                   sx={{ alignSelf: "right" }}
@@ -322,7 +336,7 @@ export function EnhancedTableToolbar(props) {
                     props.deleted([props.idSelected]);
                     deleteMultiple(
                       props.idSelected,
-                      props.collection.replace("/urg", "")
+                      props.collection.replace("/urg", ""),
                     );
                     props.resetSelected([]);
                   } catch (e) {
@@ -414,7 +428,7 @@ export default function EnhancedTable(props) {
     } else if (selectedIndex > 0) {
       newSelected = newSelected.concat(
         selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
+        selected.slice(selectedIndex + 1),
       );
     }
     setSelected(newSelected);
@@ -439,7 +453,7 @@ export default function EnhancedTable(props) {
 
   // head cells visibles (sin columnas id)
   const visibleHeadCells = (props.headCells || []).filter(
-    (h) => !isIdField(h.id)
+    (h) => !isIdField(h.id),
   );
 
   // This function sums all numeric values in columns that are numbers and counts the number of items if they are strings.
@@ -476,9 +490,9 @@ export default function EnhancedTable(props) {
     () =>
       stableSort(rows, getComparator(order, orderBy)).slice(
         page * rowsPerPage,
-        page * rowsPerPage + rowsPerPage
+        page * rowsPerPage + rowsPerPage,
       ),
-    [order, orderBy, page, rowsPerPage, rows]
+    [order, orderBy, page, rowsPerPage, rows],
   );
 
   let i = 0;
@@ -526,7 +540,7 @@ export default function EnhancedTable(props) {
                   key={row._id + index}
                   onDoubleClick={() => {
                     navigate(
-                      `/${props.collection.replace("/urg", "")}/edit/${row._id}`
+                      `/${props.collection.replace("/urg", "")}/edit/${row._id}`,
                     );
                   }}
                   role="checkbox"
@@ -571,8 +585,8 @@ export default function EnhancedTable(props) {
                           {typeof element === "number"
                             ? spanishFormat(element)
                             : isoDateRegex.test(element)
-                            ? handleDate(element)
-                            : element}
+                              ? handleDate(element)
+                              : element}
                         </TableCell>
                       );
                     }

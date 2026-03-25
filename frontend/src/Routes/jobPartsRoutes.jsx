@@ -13,7 +13,7 @@ export const jobPartsRoutes = ({ color, variant }) => (
       element={
         <Grid container columns={12}>
           <Grid columns={{ sm: 12, md: 6 }}>
-            <MainContainer entity={"JobParts"} />
+            <MainContainer entity={"JobParts"} form={jobPartDataForm} />
           </Grid>
           <Grid columns={{ sm: 12, md: 3 }}>
             <StatsCollector route="jobs/complete">
@@ -25,7 +25,9 @@ export const jobPartsRoutes = ({ color, variant }) => (
     />
     <Route
       path="/JobParts/trash"
-      element={<MainContainer entity={"JobParts/trash"} />}
+      element={
+        <MainContainer entity={"JobParts/trash"} form={jobPartDataForm} />
+      }
     />
     <Route
       path="/JobParts/add"

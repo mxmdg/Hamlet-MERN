@@ -7,11 +7,13 @@ export const materialesRoutes = ({ color, variant }) => (
   <>
     <Route
       path="/materiales"
-      element={<MainContainer entity={"materiales"} />}
+      element={<MainContainer entity={"materiales"} form={StockDataForm} />}
     />
     <Route
       path="/materiales/trash"
-      element={<MainContainer entity={"materiales/trash"} />}
+      element={
+        <MainContainer entity={"materiales/trash"} form={StockDataForm} />
+      }
     />
     <Route
       path="/materiales/add"

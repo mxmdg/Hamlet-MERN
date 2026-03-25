@@ -25,7 +25,7 @@ const Router = (props) => {
 
   const [usePlan, setPlan] = useState(
     localStorage.getItem("memberships")
-      ? JSON.parse(localStorage.getItem("memberships"))[0].tenant.plan
+      ? JSON.parse(localStorage.getItem("memberships"))[0]?.tenant.plan
       : null,
   );
 

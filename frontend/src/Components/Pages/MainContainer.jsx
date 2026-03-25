@@ -5,6 +5,7 @@ const MainContainer = (props) => {
   return (
     <Container sx={{ width: "100vw" }}>
       <Fetch
+        form={props.form}
         collection={props.entity}
         {...(props.querySQL !== undefined ? { querySQL: props.querySQL } : {})}
       />

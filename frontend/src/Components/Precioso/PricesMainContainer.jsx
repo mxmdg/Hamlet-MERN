@@ -44,7 +44,7 @@ const PricesMainContainer = () => {
   const validateAdminUser = () => {
     if (
       context.useLogin === true &&
-      context.memberships[0].role.toLowerCase() === "admin"
+      context.memberships[0]?.role.toLowerCase() === "admin"
     ) {
       return true;
     } else {
@@ -63,7 +63,7 @@ const PricesMainContainer = () => {
     const fetchCotization = async (codes) => {
       try {
         const results = await Promise.all(
-          codes.map((code) => currencyCotization(code))
+          codes.map((code) => currencyCotization(code)),
         );
         if (!results || results.some((result) => result instanceof Error)) {
           setCotizationEnable(false);
@@ -117,8 +117,8 @@ const PricesMainContainer = () => {
                         `${
                           cot.results[0].detalle[0].descripcion
                         }: ${currencyFormat(
-                          cot.results[0].detalle[0].tipoCotizacion
-                        )}`
+                          cot.results[0].detalle[0].tipoCotizacion,
+                        )}`,
                     )
                     .join(", ")
                 ) : (

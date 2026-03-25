@@ -133,7 +133,6 @@ const login = async (req, res, next) => {
         // 2. NUEVO: buscar memberships activas
         const memberships = await Membership.find({
           userId: document._id,
-          status: "activo",
         }).populate("tenant", "key name status plan settings");
 
         // 3. Normalizar respuesta (no mandamos todo el modelo crudo)
@@ -144,9 +143,10 @@ const login = async (req, res, next) => {
             name: m.tenant.name,
             status: m.tenant.status,
             plan: m.tenant.plan,
-            settings: m.tenant.settings
+            settings: m.tenant.settings,
           },
           role: m.role,
+          status: m.status,
         }));
 
         // 4. Respuesta extendida (compatible)

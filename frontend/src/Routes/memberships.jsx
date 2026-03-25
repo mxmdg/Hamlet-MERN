@@ -9,11 +9,18 @@ export const membershipsRoutes = ({ color, variant }) => (
   <>
     <Route
       path="/memberships"
-      element={<MainContainer entity={"memberships"} />}
+      element={
+        <MainContainer entity={"memberships"} form={membershipsDataForm} />
+      }
     />
     <Route
       path="/memberships/trash"
-      element={<MainContainer entity={"memberships/trash"} />}
+      element={
+        <MainContainer
+          entity={"memberships/trash"}
+          form={membershipsDataForm}
+        />
+      }
     />
     <Route path="/memberships/add" element={<RegPage />} />
 

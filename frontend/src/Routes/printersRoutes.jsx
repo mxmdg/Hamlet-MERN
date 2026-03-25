@@ -9,15 +9,24 @@ export const printersRoutes = ({ color, variant }) => {
     <>
       <Route
         path="/impresoras"
-        element={<MainContainer entity={"impresoras"} />}
+        element={
+          <MainContainer entity={"impresoras"} form={PrintersDataForm} />
+        }
       />
       <Route
         path="/impresoras/trash"
-        element={<MainContainer entity={"impresoras/trash"} />}
+        element={
+          <MainContainer entity={"impresoras/trash"} form={PrintersDataForm} />
+        }
       />
       <Route
         path="/billing"
-        element={<PrintersMainContainer entity={"impresoras"} />}
+        element={
+          <PrintersMainContainer
+            entity={"impresoras"}
+            form={PrintersDataForm}
+          />
+        }
       />
       <Route
         path="/impresoras/add"

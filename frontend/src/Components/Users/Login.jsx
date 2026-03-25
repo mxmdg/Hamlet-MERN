@@ -61,11 +61,21 @@ export const Login = (props) => {
       setLoading(true);
       setError("");
       const token = await axios.post(HAMLET_API + "users/login", data);
+      console.log(token);
       if (token.data.message) {
         setError({
           message: token.data.message,
           severity: "warning",
           action: { resetError },
+        });
+        setLoading(false);
+        return;
+      } else if (token.data.memberships[0].status !== "activo") {
+        setError({
+          message:
+            "Tu usuario se encuentra inactivo, contacta al administrador.",
+          severity: "warning",
+          title: `Usuario ${token.data?.memberships[0]?.status}`,
         });
         setLoading(false);
         return;
@@ -125,7 +135,7 @@ export const Login = (props) => {
 
   const errorRender = (
     <ErrorMessage
-      title="Error"
+      title={error.title || "Error"}
       message={error.message}
       severity={error.severity}
       action={resetError}
@@ -255,7 +265,7 @@ export const Login = (props) => {
                     size={{ xs: 6, sm: 2, md: 9 }}
                   >
                     <ErrorMessage
-                      title="Credenciales inválidas"
+                      title={error.title || "Credenciales inválidas"}
                       message={error.message}
                       severity={error.severity}
                       action={resetError}

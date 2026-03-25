@@ -6,10 +6,13 @@ import FormulaEditor from "../Components/Precioso/FormulaEditor";
 
 export const preciosRoutes = ({ color, variant }) => (
   <>
-    <Route path="/precios" element={<MainContainer entity={"precios"} />} />
+    <Route
+      path="/precios"
+      element={<MainContainer entity={"precios"} form={PricesDataForm} />}
+    />
     <Route
       path="/precios/trash"
-      element={<MainContainer entity={"precios/trash"} />}
+      element={<MainContainer entity={"precios/trash"} form={PricesDataForm} />}
     />
     <Route
       path="/precios/edit/:id"
