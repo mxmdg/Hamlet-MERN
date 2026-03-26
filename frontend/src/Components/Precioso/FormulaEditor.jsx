@@ -8,6 +8,7 @@ import { ResponsiveContainer } from "recharts";
 import { productoPorUnidad, pliegoPorLongitud } from "./formulas";
 import FormMaterial from "../Formulario/FormMaterial";
 import FormulaTestForm from "../Formulario/FormulaTestForm";
+import { useUserPreferences } from "../../Hooks/useUserPreferences";
 
 const FormulaEditor = () => {
   const [loading, setLoading] = useState(false);
@@ -15,6 +16,11 @@ const FormulaEditor = () => {
   const [data, setData] = useState([]);
   const [papyrusExport, setPapyrusExport] = useState("");
   const [parameters, setParameters] = useState(null);
+
+  const { prefs, savePrefs } = useUserPreferences();
+
+  const { color, variant } =
+    prefs !== null ? prefs : { color: "primary", variant: "standard" };
 
   const formulaAnalisis = (
     formula,
@@ -25,7 +31,7 @@ const FormulaEditor = () => {
     Breakpoints = [],
     minRange,
     maxRange,
-    rangeStep = 1
+    rangeStep = 1,
   ) => {
     const datos = [];
     for (let i = minRange; i <= maxRange; i += rangeStep) {
@@ -36,7 +42,7 @@ const FormulaEditor = () => {
         Entrada,
         i,
         largoPliego,
-        Breakpoints
+        Breakpoints,
       );
       setPapyrusExport(resultado.Papyrus);
       datos.push({
@@ -71,7 +77,7 @@ const FormulaEditor = () => {
       [Number(values.firstBreakpoint), Number(values.secondBreakpoint)],
       Number(values.minRange),
       Number(values.maxRange),
-      Number(values.stepRange)
+      Number(values.stepRange),
     );
     setData(datos);
   };
@@ -122,7 +128,7 @@ const FormulaEditor = () => {
       <ResponsiveContainer height={300} width="100%">
         <SimpleAreaChart
           data={data}
-          dataKey={["Cantidad", "Total", "Valor", "Unitario"]}
+          dataKey={["Cantidad", "Valor", "Unitario"]}
         />
       </ResponsiveContainer>
 
@@ -131,6 +137,10 @@ const FormulaEditor = () => {
         action={graficar}
         collection="precios"
         task="new"
+        title="Editor de Formulas"
+        subtitle="Este editor de formulas permite evaluar el impacto de los costos fijos en el valor unitario."
+        color={color}
+        variant={variant}
       />
       {data.length > 0 && (
         <ErrorMessage

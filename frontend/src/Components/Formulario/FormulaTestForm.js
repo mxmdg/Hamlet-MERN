@@ -3,9 +3,18 @@ import { productoPorUnidad, pliegoPorLongitud } from "../Precioso/formulas";
 
 let FormulaTestForm = [
   {
+    type: "Divider",
+    label: "Formula de Proceso",
+    id: "FormTest_div",
+    size: 12,
+    align: "left",
+    orientation: "horizontal",
+  },
+  {
     inputName: "Formula",
     label: "Formula",
     type: "Select",
+    size: { sm: 12, md: 3 },
     options: [
       {
         text: "Producto por unidad",
@@ -17,11 +26,13 @@ let FormulaTestForm = [
       },
     ],
     id: "id_401",
+    help: "Seleccione el tipo de formula.",
   },
   {
     inputName: "Valor",
     label: "Valor del proceso",
     type: "Number",
+    size: { sm: 12, md: 3 },
     step: 0.0001,
     id: "id_401",
     required: true,
@@ -29,19 +40,30 @@ let FormulaTestForm = [
   {
     inputName: "Minimo",
     type: "Number",
+    size: { sm: 12, md: 3 },
     id: "id_402",
     required: true,
   },
   {
     inputName: "Entrada",
     type: "Number",
+    size: { sm: 12, md: 3 },
     id: "id_403",
     required: true,
+  },
+  {
+    type: "Divider",
+    label: "Configuracion",
+    id: "FormTest_div",
+    size: 12,
+    align: "left",
+    orientation: "horizontal",
   },
   {
     inputName: "Longitud",
     label: "Largo en mm",
     type: "Number",
+    size: { sm: 12, md: 4 },
     id: "id_404",
     required: false,
   },
@@ -49,6 +71,7 @@ let FormulaTestForm = [
     inputName: "firstBreakpoint",
     label: "Breakpoint 1",
     type: "number",
+    size: { sm: 12, md: 4 },
     step: 1,
     id: "id_405",
     required: false,
@@ -57,13 +80,23 @@ let FormulaTestForm = [
     inputName: "secondBreakpoint",
     label: "Breakpoint 2",
     type: "number",
+    size: { sm: 12, md: 4 },
     step: 1,
     id: "id_406",
     required: false,
   },
   {
+    type: "Divider",
+    label: "Ajustes del Grafico",
+    id: "FormTest_div",
+    size: 12,
+    align: "left",
+    orientation: "horizontal",
+  },
+  {
     inputName: "minRange",
     label: "Cantidad minima",
+    size: { sm: 12, md: 4 },
     type: "number",
     step: 1,
     id: "id_407",
@@ -72,6 +105,7 @@ let FormulaTestForm = [
   {
     inputName: "maxRange",
     label: "Cantidad maxima",
+    size: { sm: 12, md: 4 },
     type: "number",
     step: 1,
     id: "id_408",
@@ -80,6 +114,7 @@ let FormulaTestForm = [
   {
     inputName: "stepRange",
     label: "Pasos",
+    size: { sm: 12, md: 4 },
     type: "number",
     id: "id_409",
     required: true,

@@ -37,6 +37,8 @@ export const currencyCotization = async (code = "usd") => {
   try {
     const response = await fetch(`${HAMLET_API}apibcra`, code);
 
+    console.log(response);
+
     if (!response.ok) {
       // Es mejor lanzar el error para que el 'catch' lo atrape
       throw new Error(`Error en el servidor: ${response.status}`);

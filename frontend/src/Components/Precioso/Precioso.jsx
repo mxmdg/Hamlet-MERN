@@ -23,6 +23,10 @@ import { getPrivateElements } from "../customHooks/FetchDataHook";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import { TextField, MenuItem } from "@mui/material";
 import { orderArrayByKey } from "../utils/generalData/arrayNormalizer";
+import {
+  currencyCotization,
+  currencyCotizationPerDate,
+} from "../utils/generalData/numbersAndCurrencies";
 
 const Precioso = (props) => {
   const [priceList, setPriceList] = useState(null);
@@ -32,6 +36,7 @@ const Precioso = (props) => {
   const [loading, setLoading] = useState(true);
   const [useErrorMessage, setErrorMessage] = useState();
   const [orderer, setOrderer] = useState({ key: "Proceso", asc: true }); // Default order by "Proceso" ascending
+  const [useCotization, setCotization] = useState(null);
   const Navigate = useNavigate();
 
   const formulaCLC = (item) => {
@@ -80,6 +85,9 @@ const Precioso = (props) => {
     const fetchData = async () => {
       try {
         const prices = await getPrivateElements(props.collection);
+        const cotization = await currencyCotization();
+        console.log(cotization);
+        setCotization(cotization);
         setPriceList(orderArrayByKey(prices, orderer.key, orderer.asc));
         setEdit(false);
         setLoading(false);

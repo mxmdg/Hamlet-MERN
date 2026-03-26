@@ -31,6 +31,8 @@ import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import {
   currencyFormat,
   spanishFormat,
+  currencyCotization,
+  currencyCotizationPerDate,
 } from "../utils/generalData/numbersAndCurrencies";
 import { fillMonthlyData } from "../utils/generalData/fillMonthlyData";
 
