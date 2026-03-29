@@ -1,11 +1,8 @@
 import { useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
-import Input from "@mui/material/Input";
-import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
-import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
@@ -16,50 +13,61 @@ import {
   FormControl,
   FormControlLabel,
   Checkbox,
+  Alert,
 } from "@mui/material";
-import Select from "@mui/material/Select";
-import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import { Grid, Autocomplete } from "@mui/material";
-import { fechtData, getPrivateElements } from "../customHooks/FetchDataHook";
+import { fechtData } from "../customHooks/FetchDataHook";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import Spinner from "../General/Spinner";
 import arrayNormalizer from "../utils/generalData/arrayNormalizer";
 import { orderArrayByKey } from "../utils/generalData/arrayNormalizer";
 
+// ---------------------------------------------------------------------------
+// CAMBIO PRINCIPAL en este archivo:
+//
+// Se agregó soporte para partes marcadas con `_needsMapping: true`, que son
+// partes importadas desde Papyrus u otras fuentes externas que tienen datos
+// de texto (Name, Ancho, Alto, etc.) pero NO tienen jobParts ni partStock
+// vinculados a IDs válidos en MongoDB.
+//
+// Comportamiento nuevo:
+//  - Si editPart.part._needsMapping === true, el formulario se monta en modo
+//    "nueva parte con datos precargados": los campos de texto se rellenan con
+//    setValue() en un useEffect dedicado, pero el selector de tipo de parte y
+//    el Autocomplete de material arrancan vacíos (igual que una parte nueva).
+//  - El usuario ve un Alert informativo explicando qué tiene que hacer.
+//  - Una vez que el usuario selecciona el tipo de parte, handleChange() toma
+//    el control normal: filtra stocks, carga finishers, etc. — igual que
+//    para partes nuevas.
+//
+// Cambios menores:
+//  - filterStocks() se mueve a useEffect reactivo sobre currentPart para
+//    evitar el problema de llamarla antes de que currentPart se actualice
+//    (era un bug de closure presente en el código original).
+//  - Se simplificó la lógica del useEffect principal eliminando la rama
+//    para props.editPart con _id, que ya no aplica a partes importadas.
+// ---------------------------------------------------------------------------
+
 const JobParts = (props) => {
-  /* Props que recibe este componente>
-        jobType= El tipo de trabajo, determina los tipos de partes que se pueden utilizar en el mismo.
-        job= El trabajo que estamos editando o copiando, si el trabajo es nuevo, es nulo.
-        addParts= Funcion para agregar partes al trabajo nuevo o editado.
-        replacePart= Funcion para reemplazar partes en el trabajo nuevo o editado.
-        editPart= Parte seleccionada para edicion, debe pasar los valores al formulario.
-        setEditPart= Esta funcion se utiliza en el componente padre para modificar props.editPart, pero no funciona. 
-        useParts= Partes del tranajo nuevo o editando, se usa para pasar algunos parametros comunes a todas las partes, como el ancho y el alto.
-        parts= Partes definidas en la base de datos con sus caracteristicas.
-*/
-  const [stocks, setStocks] = useState(props.stocks);
+  const [stocks, setStocks] = useState(props.stocks || []);
   const [filteredStocks, setFilteredStocks] = useState([]);
-  const [useStock, setStock] = useState(props.editPart?.part.partStock || "");
+  const [useStock, setStock] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [partsList, setPartsList] = useState([]);
-  const [currentPart, setCurrentPart] = useState(props.editPart || null);
+  const [currentPart, setCurrentPart] = useState(null);
   const [useFinishingList, setFinishingList] = useState([]);
-  const [selectedFinishings, setSelectedFinishings] = useState(
-    arrayNormalizer(props.editPart?.part.Finishing) || [],
-  );
-
-  // Estado para inhabilitar ColoresDorso cuando el trabajo es una sola cara
+  const [selectedFinishings, setSelectedFinishings] = useState([]);
   const [useSimplex, setSimplex] = useState(false);
+  const [useError, setError] = useState(false);
+
+  // ¿Es una parte importada que necesita mapeo manual?
+  const isImportedPart = props.editPart?.part?._needsMapping === true;
 
   const getFinishers = async () =>
     await fechtData("Finishers", setFinishingList);
 
-  const [useError, setError] = useState(false);
-
-  const resetError = () => {
-    setError(false);
-  };
+  const resetError = () => setError(false);
 
   const {
     register,
@@ -68,55 +76,45 @@ const JobParts = (props) => {
     trigger,
     setValue,
     control,
-  } = useForm({
-    mode: "onBlur", // "onChange"
-  });
+  } = useForm({ mode: "onBlur" });
 
-  const filterStocks = () => {
-    const res = stocks.filter((stock) => {
-      try {
-        if (
-          //props.editPart === null ||
-          props.editPart.part.jobParts &&
-          stock.Gramaje >= currentPart.minStockWeight &&
-          stock.Gramaje <= currentPart.maxStockWeight
-        ) {
-          return stock;
-        } else if (
-          props.editPart !== null &&
-          stock.Gramaje >= props.editPart.part.jobParts[0].minStockWeight &&
-          stock.Gramaje <= props.editPart.part.jobParts[0].maxStockWeight
-        ) {
-          return stock;
-        }
-      } catch (error) {
-        return error;
-      }
-    });
+  // ---------------------------------------------------------------------------
+  // CAMBIO: filterStocks como función pura que recibe la parte como argumento.
+  // Antes se llamaba con el estado currentPart que podría estar desactualizado
+  // por el closure. Ahora recibe explícitamente la parte a usar como filtro.
+  // ---------------------------------------------------------------------------
+  const filterStocksByPart = (part) => {
+    if (!part || !stocks.length) {
+      setFilteredStocks([]);
+      return;
+    }
+    const res = stocks.filter(
+      (stock) =>
+        stock.Gramaje >= part.minStockWeight &&
+        stock.Gramaje <= part.maxStockWeight,
+    );
     setFilteredStocks(res);
   };
 
-  const isMultipleOfFour = (value) => {
-    return props.job?.JobType === "Revista" && value % 4 !== 0
+  const isMultipleOfFour = (value) =>
+    props.job?.JobType === "Revista" && value % 4 !== 0
       ? "El número de páginas debe ser un múltiplo de 4"
       : true;
-  };
 
   const handleChange = (selectedValue) => {
     const part = partsList.find((item) => item._id === selectedValue);
-    setCurrentPart(part);
-    if (part?.PrintModAllowed === "Simplex") {
-      setSimplex(true);
-    } else {
-      setSimplex(false);
-    }
-    filterStocks();
+    setCurrentPart(part || null);
+    setSimplex(part?.PrintModAllowed === "Simplex");
+    // CAMBIO: pasamos la parte directamente para evitar closure stale
+    filterStocksByPart(part);
     getFinishers();
+    // Resetear el stock seleccionado cuando cambia el tipo de parte
+    setStock(null);
+    setValue("partStock", "");
   };
 
   const changeHandler = (e, Finisher) => {
     const finisherId = Finisher._id;
-
     if (e.target.checked) {
       setSelectedFinishings((prev) => [...prev, finisherId]);
     } else {
@@ -124,45 +122,86 @@ const JobParts = (props) => {
     }
   };
 
+  // ---------------------------------------------------------------------------
+  // CAMBIO: useEffect dedicado para precargar datos de partes importadas.
+  // Si la parte tiene _needsMapping, cargamos los campos de texto con setValue
+  // pero dejamos jobParts y partStock vacíos para forzar selección manual.
+  // ---------------------------------------------------------------------------
   useEffect(() => {
-    currentPart?._id === undefined
-      ? setPartsList(orderArrayByKey(props.parts, "Type"))
-      : console.log(currentPart?._id);
-    setIsLoading(false);
-  }, [currentPart]);
+    if (!isImportedPart) return;
 
+    const part = props.editPart.part;
+    // Precargamos todos los campos que tengan datos del import
+    if (part.Name) setValue("Name", part.Name);
+    if (part.Ancho) setValue("Ancho", part.Ancho);
+    if (part.Alto) setValue("Alto", part.Alto);
+    if (part.Pages) setValue("Pages", part.Pages);
+    if (part.ColoresFrente) setValue("ColoresFrente", part.ColoresFrente);
+    if (part.ColoresDorso) setValue("ColoresDorso", part.ColoresDorso);
+    // jobParts y partStock intencionalmente NO se precargan → usuario debe elegir
+    setSelectedFinishings([]);
+    setCurrentPart(null);
+    setStock(null);
+  }, [isImportedPart, props.editPart]);
+
+  // useEffect para partes normales (MongoDB) con jobParts poblado
+  useEffect(() => {
+    if (isImportedPart) return; // ya manejado arriba
+    if (!props.editPart) return;
+
+    const partId = props.editPart?.part?.jobParts?.[0]?._id;
+    if (!partId || !props.parts?.length) return;
+
+    const found = props.parts.find((item) => item._id === partId);
+    if (found) {
+      setCurrentPart(found);
+      setSimplex(found.PrintModAllowed === "Simplex");
+    }
+  }, [props.editPart, props.parts, isImportedPart]);
+
+  // useEffect para stock preseleccionado en partes de MongoDB
+  useEffect(() => {
+    if (isImportedPart) return;
+    if (props.editPart?.part?.partStock?._id) {
+      setValue("partStock", props.editPart.part.partStock._id);
+      setStock(props.editPart.part.partStock);
+    }
+  }, [props.editPart, setValue, isImportedPart]);
+
+  // useEffect para Finishing en partes de MongoDB
+  useEffect(() => {
+    if (isImportedPart) return;
+    if (props.editPart?.part?.Finishing) {
+      const finishingIds = props.editPart.part.Finishing.map((f) =>
+        typeof f === "object" ? f._id : f,
+      ).filter(Boolean);
+      setSelectedFinishings(finishingIds);
+    } else {
+      setSelectedFinishings([]);
+    }
+  }, [props.editPart, isImportedPart]);
+
+  // Sincronizar Finishing con react-hook-form
+  useEffect(() => {
+    setValue("Finishing", selectedFinishings);
+  }, [selectedFinishings, setValue]);
+
+  // CAMBIO: filtrar stocks reactivamente cuando cambia currentPart o stocks
+  useEffect(() => {
+    filterStocksByPart(currentPart);
+  }, [currentPart, stocks]);
+
+  // useEffect principal: cargar lista de partes filtradas por tipo de trabajo
   useEffect(() => {
     const updateStocks = async () => {
       await fechtData("materiales", setStocks);
-      filterStocks();
     };
 
     const filteredParts = props.parts.filter((part) =>
-      part.jobTypesAllowed.includes(props.jobType.name),
+      part.jobTypesAllowed?.includes(props.jobType?.name),
     );
 
-    if (props.editPart) {
-      const partId = props.editPart?.part?.jobParts?.[0]?._id;
-
-      if (!partId || !props.parts?.length) return;
-
-      const found = props.parts.find((item) => item._id === partId);
-      if (found) setCurrentPart(found);
-    } /*else if (props.job?.Partes?.length) {
-      const arr = [];
-
-       props.job.Partes.forEach((p) => {
-        if (Array.isArray(p.Finishing)) {
-          arr.push(...p.Finishing);
-        }
-      });
-
-      const Finishers = arrayNormalizer(arr);
-      setSelectedFinishings(Finishers); 
-    }*/
-
     try {
-      //console.table(filteredParts);
       setPartsList(orderArrayByKey(filteredParts, "Type"));
       getFinishers();
       updateStocks();
@@ -171,41 +210,13 @@ const JobParts = (props) => {
       setIsLoading(false);
       setError(e);
     }
-  }, [
-    setFilteredStocks,
-    setPartsList,
-    currentPart,
-    setSimplex,
-    setFinishingList,
-  ]);
+  }, [props.parts, props.jobType]);
 
-  useEffect(() => {
-    if (props.editPart !== null && props.editPart.part?.partStock?._id) {
-      setValue("partStock", props.editPart.part.partStock._id);
-    }
-  }, [props.editPart, setValue]);
-
-  useEffect(() => {
-    if (props.editPart?.part?.Finishing) {
-      // Normalizar: si es objeto, extraer _id; si ya es string ID, dejarlo
-      const finishingIds = props.editPart.part.Finishing.map((f) =>
-        typeof f === "object" ? f._id : f,
-      ).filter((id) => id); // Filtrar valores nulos/undefined
-      setSelectedFinishings(finishingIds);
-    } else {
-      setSelectedFinishings([]);
-    }
-  }, [props.editPart]);
-
-  useEffect(() => {
-    setValue("Finishing", selectedFinishings);
-  }, [selectedFinishings, setValue]);
-
-  //____________________________________RENDERS___________________________
+  // ------- RENDERS -------
 
   const failed = (
     <ErrorMessage
-      title={"Error de JobsParts"}
+      title="Error de JobsParts"
       message={useError}
       action={resetError}
     />
@@ -222,17 +233,27 @@ const JobParts = (props) => {
       <CardHeader
         title={`${props.editPart === null ? "Agregar" : "Editar"} partes del trabajo`}
         subheader={
-          props.editPart?.part?.Name +
-            " en " +
-            props.editPart?.part?.partStock ||
-          "Completar las partes del trabajo"
+          isImportedPart
+            ? `Revisando parte importada: ${props.editPart.part?.Name || ""}`
+            : props.editPart?.part?.Name
+              ? `${props.editPart.part.Name} — editando`
+              : "Completar las partes del trabajo"
         }
       />
       <CardContent>
+        {/* CAMBIO: Alert informativo para partes importadas */}
+        {isImportedPart && (
+          <Alert severity="warning" sx={{ mb: 2 }}>
+            Esta parte fue importada desde Papyrus. Los datos de texto están
+            precargados.{" "}
+            <strong>Seleccioná el tipo de parte y el material</strong> para que
+            el sistema aplique los filtros correctos.
+          </Alert>
+        )}
+
         <form
           name="form2"
           onSubmit={handleSubmit(
-            //props.editPart === null ?
             props.editPart === null ? props.addParts : props.replacePart,
           )}
         >
@@ -241,42 +262,19 @@ const JobParts = (props) => {
             spacing={{ xs: 2, sm: 3 }}
             columns={{ xs: 1, sm: 4, md: 8 }}
           >
+            {/* Selector de tipo de parte */}
             {partsList !== null && (
               <Grid size={{ xs: 1, sm: 2, md: 4 }}>
-                {/* <TextField
-                  select
-                  value={
-                    props.editPart !== null
-                      ? props.editPart.part.jobParts[0]._id
-                      : currentPart?._id || ""
-                  }
-                  id="jobParts"
-                  inputProps={{
-                    name: "jobParts",
-                    id: "jobParts",
-                  }}
-                  variant="outlined"
-                  color="primary"
-                  label="Partes"
-                  name="jobParts"
-                  fullWidth
-                  {...register("jobParts", { required: true })}
-                  onChange={(e) => {
-                    handleChange(e.target.value); // Llamamos a nuestra función handleChange
-                    //field.onChange(e); // Importante llamar esto para que react-hook-form actualice los valores internamente
-                  }}
-                >
-                  {partsList.map((part) => (
-                    <MenuItem value={part._id} key={part._id}>
-                      Parte: {part.Type}
-                    </MenuItem>
-                  ))}
-                </TextField> */}
                 <Controller
                   name="jobParts"
                   control={control}
                   rules={{ required: "Seleccione el tipo de parte" }}
-                  defaultValue={props.editPart?.part?.jobParts?.[0]?._id || ""}
+                  // CAMBIO: partes importadas arrancan sin selección (string vacío)
+                  defaultValue={
+                    isImportedPart
+                      ? ""
+                      : props.editPart?.part?.jobParts?.[0]?._id || ""
+                  }
                   render={({ field }) => (
                     <TextField
                       select
@@ -284,7 +282,7 @@ const JobParts = (props) => {
                       id="jobParts"
                       variant="outlined"
                       color="primary"
-                      label="Partes"
+                      label="Tipo de parte"
                       fullWidth
                       onChange={(e) => {
                         field.onChange(e.target.value);
@@ -299,46 +297,54 @@ const JobParts = (props) => {
                     </TextField>
                   )}
                 />
-
-                {errors.jobParts?.type === "required" && (
-                  <FormHelperText>Seleccione el tipo de parte</FormHelperText>
+                {errors.jobParts && (
+                  <FormHelperText error>
+                    {errors.jobParts.message}
+                  </FormHelperText>
                 )}
               </Grid>
             )}
+
+            {/* Nombre de la parte */}
             <Grid size={{ xs: 1, sm: 2, md: 4 }}>
               <TextField
                 variant="outlined"
                 type="text"
                 name="Name"
                 id="Name"
-                defaultValue={
-                  props.editPart === null ? "" : props.editPart.part?.Name
-                }
                 label="Nombre de la parte"
                 color="info"
                 required
+                // CAMBIO: para importadas, defaultValue queda vacío pero
+                // useEffect carga el valor con setValue
+                defaultValue={
+                  isImportedPart
+                    ? ""
+                    : props.editPart === null
+                      ? ""
+                      : props.editPart.part?.Name
+                }
                 {...register("Name", {
                   required: true,
                   maxLength: 140,
                   minLength: 3,
                 })}
-                onBlur={() => {
-                  trigger("Name");
-                }}
+                onBlur={() => trigger("Name")}
               />
               {errors.Name?.type === "required" && (
                 <FormHelperText>
-                  Agregue una descripcion o titulo a la parte
+                  Agregue una descripción a la parte
                 </FormHelperText>
               )}
               {errors.Name?.type === "maxLength" && (
-                <FormHelperText>Maximo 140 caracteres</FormHelperText>
+                <FormHelperText>Máximo 140 caracteres</FormHelperText>
               )}
               {errors.Name?.type === "minLength" && (
-                <FormHelperText>Minimo 3 caracteres</FormHelperText>
+                <FormHelperText>Mínimo 3 caracteres</FormHelperText>
               )}
             </Grid>
 
+            {/* Ancho */}
             <Grid size={{ xs: 1, sm: 2, md: 4 }}>
               <TextField
                 variant="outlined"
@@ -348,35 +354,35 @@ const JobParts = (props) => {
                 label="Ancho"
                 color="secondary"
                 defaultValue={
-                  props.editPart === null
-                    ? props.useParts[0]?.Ancho
-                    : props.editPart.part?.Ancho
+                  isImportedPart
+                    ? ""
+                    : props.editPart === null
+                      ? props.useParts[0]?.Ancho
+                      : props.editPart.part?.Ancho
                 }
                 {...register("Ancho", {
                   required: true,
                   min: currentPart?.minWidth,
                   max: currentPart?.maxWidth,
                 })}
-                onBlur={() => {
-                  trigger("Ancho");
-                }}
+                onBlur={() => trigger("Ancho")}
               />
               {errors.Ancho?.type === "required" && (
-                <FormHelperText>
-                  Ingrese la medida horizontal del producto
-                </FormHelperText>
+                <FormHelperText>Ingrese el ancho del producto</FormHelperText>
               )}
               {errors.Ancho?.type === "min" && (
                 <FormHelperText>
-                  El ancho minimo debe ser mayor a {currentPart?.minWidth}mm
+                  Ancho mínimo: {currentPart?.minWidth}mm
                 </FormHelperText>
               )}
               {errors.Ancho?.type === "max" && (
                 <FormHelperText>
-                  El ancho máximo debe ser menor a {currentPart?.maxWidth}mm
+                  Ancho máximo: {currentPart?.maxWidth}mm
                 </FormHelperText>
               )}
             </Grid>
+
+            {/* Alto */}
             <Grid size={{ xs: 1, sm: 2, md: 4 }}>
               <TextField
                 variant="outlined"
@@ -384,12 +390,14 @@ const JobParts = (props) => {
                 name="Alto"
                 id="Alto"
                 label="Alto"
-                defaultValue={
-                  props.editPart === null
-                    ? props.useParts[0]?.Alto
-                    : props.editPart.part?.Alto
-                }
                 color="secondary"
+                defaultValue={
+                  isImportedPart
+                    ? ""
+                    : props.editPart === null
+                      ? props.useParts[0]?.Alto
+                      : props.editPart.part?.Alto
+                }
                 {...register("Alto", {
                   required: true,
                   min: currentPart?.minHeight,
@@ -397,34 +405,39 @@ const JobParts = (props) => {
                 })}
               />
               {errors.Alto?.type === "required" && (
-                <FormHelperText>
-                  Ingrese la medida horizontal del producto
-                </FormHelperText>
+                <FormHelperText>Ingrese el alto del producto</FormHelperText>
               )}
               {errors.Alto?.type === "min" && (
                 <FormHelperText>
-                  El ancho minimo debe ser mayor a {currentPart?.minHeight}mm
+                  Alto mínimo: {currentPart?.minHeight}mm
                 </FormHelperText>
               )}
               {errors.Alto?.type === "max" && (
                 <FormHelperText>
-                  El ancho máximo debe ser menor a {currentPart?.maxHeight}mm
+                  Alto máximo: {currentPart?.maxHeight}mm
                 </FormHelperText>
               )}
             </Grid>
+
+            {/* Páginas */}
             <Grid size={{ xs: 1, sm: 2, md: 4 }}>
               <TextField
                 id="Pages"
                 type="number"
-                label="Paginas"
+                label="Páginas"
                 variant="outlined"
                 name="Pages"
                 color="warning"
                 defaultValue={
-                  props.editPart === null ? "" : props.editPart.part?.Pages
+                  isImportedPart
+                    ? ""
+                    : props.editPart === null
+                      ? ""
+                      : props.editPart.part?.Pages
                 }
                 {...register("Pages", {
                   required: true,
+                  validate: isMultipleOfFour,
                   min:
                     currentPart !== null
                       ? currentPart?.minPages
@@ -435,29 +448,35 @@ const JobParts = (props) => {
                       : props.job?.JobType?.pagMax,
                 })}
                 onBlur={(e) => {
-                  e.target.value < 2 ||
-                  currentPart.PrintModAllowed === "Simplex"
-                    ? setSimplex(true)
-                    : setSimplex(false);
+                  if (
+                    e.target.value < 2 ||
+                    currentPart?.PrintModAllowed === "Simplex"
+                  ) {
+                    setSimplex(true);
+                  } else {
+                    setSimplex(false);
+                  }
                   trigger("Pages");
                 }}
               />
               {errors.Pages?.type === "required" && (
-                <FormHelperText>Ingrese la cantidad de paginas</FormHelperText>
+                <FormHelperText>Ingrese la cantidad de páginas</FormHelperText>
               )}
               {errors.Pages?.type === "min" && (
                 <FormHelperText>
-                  Cantidad minima de paginas{" "}
-                  {currentPart?.minPages || props.job.JobType.pagMin}
+                  Mínimo {currentPart?.minPages || props.job?.JobType?.pagMin}{" "}
+                  páginas
                 </FormHelperText>
               )}
               {errors.Pages?.type === "max" && (
                 <FormHelperText>
-                  Cantidad maxima de paginas{" "}
-                  {currentPart?.maxPages || props.job.JobType.pagMax}
+                  Máximo {currentPart?.maxPages || props.job?.JobType?.pagMax}{" "}
+                  páginas
                 </FormHelperText>
               )}
             </Grid>
+
+            {/* Material (Autocomplete) */}
             <Grid size={{ xs: 1, sm: 2, md: 4 }}>
               <Autocomplete
                 id="partStock"
@@ -466,28 +485,25 @@ const JobParts = (props) => {
                   `${option.Nombre_Material} - ${option.Marca} (${option.Ancho_Resma}x${option.Alto_Resma})`
                 }
                 isOptionEqualToValue={(option, value) => {
-                  // Si value es un objeto, compara por _id
-                  if (value && typeof value === "object") {
+                  if (value && typeof value === "object")
                     return option._id === value._id;
-                  }
-                  // Si value es un string (ID), compara con option._id
                   return option._id === value;
                 }}
-                value={useStock !== "" ? useStock : ""}
-                //{...register("partStock", { required: true })}
+                value={useStock || null}
+                noOptionsText={
+                  currentPart
+                    ? "Sin materiales para este gramaje"
+                    : "Seleccioná primero el tipo de parte"
+                }
                 {...register("partStock", { required: true })}
-                onBlur={() => {
-                  trigger("partStock");
-                }}
+                onBlur={() => trigger("partStock")}
                 onChange={(event, newValue) => {
-                  const currenValue = event;
                   if (newValue) {
-                    // Actualiza el valor del campo Company con el _id seleccionado
                     setValue("partStock", newValue._id);
                     setStock(newValue);
                   } else {
-                    // Si el valor es nulo, elimina el valor del campo Company
                     setValue("partStock", "");
+                    setStock(null);
                   }
                 }}
                 renderInput={(params) => (
@@ -500,12 +516,16 @@ const JobParts = (props) => {
                     helperText={
                       errors.partStock
                         ? "Seleccione tipo y gramaje de papel"
-                        : ""
+                        : !currentPart
+                          ? "Primero seleccioná el tipo de parte"
+                          : ""
                     }
                   />
                 )}
               />
             </Grid>
+
+            {/* Colores Frente */}
             <Grid size={{ xs: 1, sm: 2, md: 4 }}>
               <TextField
                 variant="outlined"
@@ -514,9 +534,11 @@ const JobParts = (props) => {
                 id="ColoresFrente"
                 label="Colores Frente"
                 defaultValue={
-                  props.editPart === null
+                  isImportedPart
                     ? ""
-                    : props.editPart.part?.ColoresFrente
+                    : props.editPart === null
+                      ? ""
+                      : props.editPart.part?.ColoresFrente
                 }
                 color="secondary"
                 {...register("ColoresFrente", {
@@ -526,21 +548,17 @@ const JobParts = (props) => {
                 })}
               />
               {errors.ColoresFrente?.type === "required" && (
-                <FormHelperText>
-                  Ingrese el numero de tintas para la impresión
-                </FormHelperText>
+                <FormHelperText>Ingrese el número de tintas</FormHelperText>
               )}
               {errors.ColoresFrente?.type === "min" && (
-                <FormHelperText>
-                  Como mínimo puede utilizarse 1 tinta
-                </FormHelperText>
+                <FormHelperText>Mínimo 1 tinta</FormHelperText>
               )}
               {errors.ColoresFrente?.type === "max" && (
-                <FormHelperText>
-                  Como maximo podemos utilizar 6 tintas
-                </FormHelperText>
+                <FormHelperText>Máximo 6 tintas</FormHelperText>
               )}
             </Grid>
+
+            {/* Colores Dorso */}
             <Grid size={{ xs: 1, sm: 2, md: 4 }}>
               <TextField
                 variant="outlined"
@@ -551,11 +569,13 @@ const JobParts = (props) => {
                 color="secondary"
                 disabled={useSimplex}
                 defaultValue={
-                  props.editPart === null
-                    ? useSimplex
-                      ? 0
-                      : ""
-                    : props.editPart.part?.ColoresDorso
+                  isImportedPart
+                    ? ""
+                    : props.editPart === null
+                      ? useSimplex
+                        ? 0
+                        : ""
+                      : props.editPart.part?.ColoresDorso
                 }
                 {...register("ColoresDorso", {
                   required: false,
@@ -564,69 +584,66 @@ const JobParts = (props) => {
                 })}
               />
               {errors.ColoresDorso?.type === "max" && (
-                <FormHelperText>
-                  Como maximo podemos utilizar 6 tintas
-                </FormHelperText>
+                <FormHelperText>Máximo 6 tintas</FormHelperText>
               )}
             </Grid>
+
+            {/* Terminaciones */}
             <Grid size={{ xs: 12, sm: 12, md: 12 }}>
-              {
-                <FormGroup
-                  id="Finishing"
-                  sx={{ display: "flex", flexDirection: "row", ml: 1 }}
-                >
-                  {useFinishingList
-                    .sort((a, b) => {
-                      const nameA = a.Proceso.toUpperCase();
-                      const nameB = b.Proceso.toUpperCase();
-                      if (nameA < nameB) return -1;
-                      if (nameA > nameB) return 1;
-                      return 0;
-                    })
-                    .map((Finisher) => {
-                      if (
-                        Finisher.partTypesAllowed &&
-                        Finisher.partTypesAllowed.includes(
-                          currentPart?.Type || "",
-                        )
-                      ) {
-                        return (
-                          <FormControlLabel
-                            key={Finisher._id}
-                            control={
-                              <Checkbox
-                                color="secondary"
-                                checked={
-                                  selectedFinishings.includes(Finisher._id) ||
-                                  false
-                                }
-                                onChange={(e) => changeHandler(e, Finisher)}
-                              />
-                            }
-                            label={`${Finisher.Proceso} ${Finisher.Modelo}`}
-                          />
-                        );
-                      }
-                      return null;
-                    })}
-                </FormGroup>
-              }
+              <FormGroup
+                id="Finishing"
+                sx={{ display: "flex", flexDirection: "row", ml: 1 }}
+              >
+                {useFinishingList
+                  .sort((a, b) =>
+                    a.Proceso.toUpperCase() < b.Proceso.toUpperCase() ? -1 : 1,
+                  )
+                  .map((Finisher) => {
+                    if (
+                      Finisher.partTypesAllowed &&
+                      Finisher.partTypesAllowed.includes(
+                        currentPart?.Type || "",
+                      )
+                    ) {
+                      return (
+                        <FormControlLabel
+                          key={Finisher._id}
+                          control={
+                            <Checkbox
+                              color="secondary"
+                              checked={selectedFinishings.includes(
+                                Finisher._id,
+                              )}
+                              onChange={(e) => changeHandler(e, Finisher)}
+                            />
+                          }
+                          label={`${Finisher.Proceso} ${Finisher.Modelo}`}
+                        />
+                      );
+                    }
+                    return null;
+                  })}
+              </FormGroup>
               <input
                 type="hidden"
                 {...register("Finishing", { required: true })}
               />
             </Grid>
+
+            {/* Botón submit */}
             <Grid size={{ xs: 1, sm: 2, md: 4 }}>
               <FormControl sx={{ width: "85%" }}>
                 <Button
                   type="submit"
                   size="large"
                   variant="contained"
-                  color="primary"
+                  color={isImportedPart ? "warning" : "primary"}
                 >
                   {props.editPart === null
                     ? "Agregar Parte"
-                    : "Guardar cambios"}
+                    : isImportedPart
+                      ? "Guardar parte importada"
+                      : "Guardar cambios"}
                 </Button>
               </FormControl>
             </Grid>
