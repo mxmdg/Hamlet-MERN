@@ -234,9 +234,17 @@ const JobParts = (props) => {
         title={`${props.editPart === null ? "Agregar" : "Editar"} partes del trabajo`}
         subheader={
           isImportedPart
-            ? `Revisando parte importada: ${props.editPart.part?.Name || ""}`
+            ? `Revisando parte importada: ${
+                props.editPart.part?.Name +
+                  " en " +
+                  props.editPart?.part?.partStock || ""
+              }`
             : props.editPart?.part?.Name
-              ? `${props.editPart.part.Name} — editando`
+              ? `${
+                  props.editPart.part.Name +
+                  " en " +
+                  props.editPart?.part?.partStock
+                } — editando`
               : "Completar las partes del trabajo"
         }
       />

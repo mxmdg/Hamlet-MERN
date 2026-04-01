@@ -200,20 +200,23 @@ SELECT
     part.des_tbj AS Parte,
     part.duc_tbj AS Pags,
     ent.descripcion AS Cliente,
-    ven.des_ven AS Vendedor, -- Aquí usamos el vendedor ya unido
+    ven.des_ven AS Vendedor,
     ote.fecha AS Entrega,
     SUM(ote.cantidad) AS Cantidad 
 FROM ot_entregas ote
 INNER JOIN ot ON ote.ot = ot.ot
 INNER JOIN sys_entidades ent ON (ot.cliente = ent.entidad AND ot.suc_cliente = ent.suc_entidad)
-INNER JOIN otr_presup op ON ot.cod_pre = op.cod_pre
-INNER JOIN otr_productos otp ON op.producto = otp.producto
--- UNIÓN DEL VENDEDOR:
-INNER JOIN trve00 ven ON ot.vendedor = ven.cod_ven
--- UNIÓN DE PARTES:
-INNER JOIN trlp00 part ON (ot.cod_pre = part.cod_pre AND ot.ext_pre = part.ext_pre AND part.num_tbj = op.num_tbj)
+-- 1. Unimos con la cabecera para identificar la versión OK
+INNER JOIN trcp00 presup ON (ot.cod_pre = presup.cod_pre AND ot.ext_pre = presup.ext_pre)
+-- 2. Filtramos otr_presup usando la extensión (ext_pre) de la versión OK
+INNER JOIN otr_presup op ON (presup.cod_pre = op.cod_pre AND presup.ext_pre = op.ext_pre)
+INNER JOIN otr_productos otp ON (op.producto = otp.producto)
+INNER JOIN trve00 ven ON (ot.vendedor = ven.cod_ven)
+-- 3. Filtramos las partes también por la extensión correcta
+INNER JOIN trlp00 part ON (presup.cod_pre = part.cod_pre AND presup.ext_pre = part.ext_pre AND part.num_tbj = op.num_tbj)
 WHERE ote.fecha BETWEEN '${hoy}' AND '2099-12-31'
   AND ent.tipo_entidad = 'CL'
+  AND presup.cod_con = 'OK' 
 GROUP BY 
     _id, 
     Proceso, 
@@ -227,4 +230,4 @@ GROUP BY
     Entrega, 
     otp.producto, 
     part.num_tbj
-ORDER BY Entrega ASC`;
+ORDER BY Orden DESC`;
