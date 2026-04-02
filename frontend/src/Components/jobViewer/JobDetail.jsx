@@ -249,6 +249,16 @@ const JobDetail = (props) => {
       props.cot,
     ]);
 
+    useEffect(() => {
+      if (
+        Object.keys(productionPlan).length === job.Partes.length &&
+        usePartFinishingData.length === job.Partes.length
+      ) {
+        setProductionPlanAvaible(true);
+        setExpanded("pp-" + productionPlan.id);
+      }
+    }, [productionPlan, usePartFinishingData]);
+
     const loading = <Spinner title="Cargando informacion del trabajo" />;
 
     const failure = (
@@ -287,7 +297,7 @@ const JobDetail = (props) => {
               columnSpacing={2}
               alignItems={"start"}
               size={12}
-              wrap='nowrap'
+              wrap="nowrap"
             >
               <Grid size={{ xs: 12, md: 8 }}>
                 <ImpoProvider>
@@ -610,34 +620,37 @@ const JobDetail = (props) => {
             </Item>
           )}
 
-          {productionPlanAvaible && (
-            <Accordion
-              key={"pp-" + productionPlan.id}
-              id={"pp-" + productionPlan.id}
-              expanded={expanded === "pp-" + productionPlan.id}
-              onChange={handleChange("pp-" + productionPlan.id)}
+          <Accordion
+            key={"pp-" + productionPlan.id}
+            id={"pp-" + productionPlan.id}
+            expanded={expanded === "pp-" + productionPlan.id}
+            onChange={handleChange("pp-" + productionPlan.id)}
+            disabled={!productionPlanAvaible}
+          >
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1bh-content"
+              id="panel1bh-header"
             >
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel1bh-content"
-                id="panel1bh-header"
-              >
-                <Typography color={"primary"}>Costo:</Typography>
-              </AccordionSummary>
-              <ProductionPlan
-                impositionData={productionPlan}
-                job={job}
-                finishingData={useJobFinishingData}
-                partFinishingData={usePartFinishingData}
-                totalFinishingCosts={
-                  useJobFinishingData + sumTotalPartsFinishingCosts()
-                }
-                {...(props.cot
-                  ? { quoteOptions: props.cot.quoteSettings }
-                  : null)}
-              />
-            </Accordion>
-          )}
+              <Typography color={"warning"}>
+                {productionPlanAvaible
+                  ? "Detalle de costos"
+                  : "Realizar la imposicon de todas las partes"}
+              </Typography>
+            </AccordionSummary>
+            <ProductionPlan
+              impositionData={productionPlan}
+              job={job}
+              finishingData={useJobFinishingData}
+              partFinishingData={usePartFinishingData}
+              totalFinishingCosts={
+                useJobFinishingData + sumTotalPartsFinishingCosts()
+              }
+              {...(props.cot
+                ? { quoteOptions: props.cot.quoteSettings }
+                : null)}
+            />
+          </Accordion>
         </CardContent>
         <Divider />
         <CardActions>
@@ -652,7 +665,7 @@ const JobDetail = (props) => {
           >
             Volver
           </Button>
-          <Button
+          {/* <Button
             //icon={ArrowBackIcon}
             onClick={() => {
               showProductionPlan();
@@ -661,7 +674,7 @@ const JobDetail = (props) => {
             color="success"
           >
             Plan de producción
-          </Button>
+          </Button> */}
         </CardActions>
       </Card>
     </Container>

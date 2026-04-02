@@ -1,6 +1,6 @@
 const { Schema, model, isValidObjectId } = require("mongoose");
 const mongoose = require("../dbConnection");
-const timeAgo = require("node-time-ago");
+const timeAgo = require("../middlewares/timeAgoTranslator");
 
 function orientation(x, y) {
   const formato = `${x} x ${y}`;
@@ -112,11 +112,11 @@ jobSchema.path("Finishing").get(function (finishing) {
 
   return Array.isArray(finishing)
     ? finishing.map((item) =>
-        typeof item === "object" && item._id ? item._id : item
+        typeof item === "object" && item._id ? item._id : item,
       )
     : typeof finishing === "object" && finishing._id
-    ? [finishing._id]
-    : [finishing];
+      ? [finishing._id]
+      : [finishing];
 });
 
 jobSchema.virtual("Emision").get(function () {
