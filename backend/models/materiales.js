@@ -5,8 +5,14 @@ const materialSchema = new Schema({
   Marca: { type: String, required: true },
   Gramaje: { type: Number, required: true },
   Tipo: { type: String, required: true },
-  Ancho_Resma: { type: Number, required: true },
-  Alto_Resma: { type: Number, required: true },
+  Presentacion: {
+    type: String,
+    required: true,
+    enum: ["bobina", "resma"],
+    default: "resma",
+  },
+  Ancho_Resma: { type: Number, required: true }, //Ancho bobina, para bobinas.
+  Alto_Resma: { type: Number, required: true }, // Largo bobina, para bobinas.
   Espesor_Resma: { type: Number, required: true },
   Fibra: { type: Number, required: true },
   Precio_x_Kilo: {

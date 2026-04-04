@@ -36,6 +36,7 @@ materialControl.addMaterial = async (req, res, next) => {
         Marca,
         Gramaje,
         Tipo,
+        Presentacion,
         Ancho_Resma,
         Alto_Resma,
         Espesor_Resma,
@@ -49,6 +50,7 @@ materialControl.addMaterial = async (req, res, next) => {
         Marca,
         Gramaje,
         Tipo,
+        Presentacion,
         Ancho_Resma,
         Alto_Resma,
         Espesor_Resma,
@@ -96,6 +98,7 @@ materialControl.updateMaterial = async (req, res) => {
       Marca,
       Gramaje,
       Tipo,
+      Presentacion,
       Ancho_Resma,
       Alto_Resma,
       Espesor_Resma,
@@ -111,6 +114,7 @@ materialControl.updateMaterial = async (req, res) => {
         Marca,
         Gramaje,
         Tipo,
+        Presentacion,
         Ancho_Resma,
         Alto_Resma,
         Espesor_Resma,
@@ -118,7 +122,7 @@ materialControl.updateMaterial = async (req, res) => {
         Precio_x_Kilo,
         Color,
       },
-      { new: true }
+      { new: true },
     );
     if (!material)
       return res.status(404).json({ message: "Material no encontrado" });
@@ -135,7 +139,7 @@ materialControl.deleteMaterial = async (req, res, next) => {
     const material = await materials.esquema.findOneAndUpdate(
       { _id: req.params.id, tenant },
       { status: "inactivo" },
-      { new: true }
+      { new: true },
     );
     if (!material)
       return res.status(404).json({ message: "Material no encontrado" });

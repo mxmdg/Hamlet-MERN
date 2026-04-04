@@ -44,7 +44,8 @@ const FinishersDataForm = (props) => {
           setError({ message: "Error cargando lista de precios" });
         }
 
-        setFinishersDataForm([{
+        setFinishersDataForm([
+          {
             label: "Equipo",
             type: "Divider",
             id: "device_div",
@@ -56,16 +57,17 @@ const FinishersDataForm = (props) => {
             inputName: "Modelo",
             type: "Text",
             id: "id_001",
-            size: {xs:12, sm:6},
+            size: { xs: 12, sm: 6 },
             required: true,
           },
           {
             inputName: "Fabricante",
             type: "Text",
             id: "id_002",
-            size: {xs:12, sm:6},
+            size: { xs: 12, sm: 6 },
             required: true,
-          },{
+          },
+          {
             label: "Proceso de terminacion",
             type: "Divider",
             id: "device_div",
@@ -77,48 +79,53 @@ const FinishersDataForm = (props) => {
             inputName: "Proceso",
             type: "Text",
             id: "id_003",
-            size: {xs:12, sm:6},
+            size: { xs: 12, sm: 6 },
             required: true,
           },
           {
             inputName: "X_Minimo",
             label: "Largo Minimo",
-            type: "Number",
+            type: "SmartMeasure",
+            subtype: "length",
             id: "id_004",
-            size: {xs:12, sm:3},
+            size: { xs: 12, sm: 3 },
             required: true,
           },
           {
             inputName: "X_Maximo",
             label: "Largo Maximo",
-            type: "Number",
+            type: "SmartMeasure",
+            subtype: "length",
             id: "id_005",
-            size: {xs:12, sm:3},
+            size: { xs: 12, sm: 3 },
             required: true,
           },
           {
             inputName: "Y_Minimo",
             label: "Ancho Minimo",
-            type: "Number",
+            type: "SmartMeasure",
+            subtype: "length",
             id: "id_006",
-            size: {xs:12, sm:3},
+            size: { xs: 12, sm: 3 },
             required: true,
           },
           {
             inputName: "Y_Maximo",
             label: "Ancho Maximo",
-            type: "Number",
+            type: "SmartMeasure",
+            subtype: "length",
             id: "id_007",
-            size: {xs:12, sm:3},
+            size: { xs: 12, sm: 3 },
             required: true,
           },
           {
             inputName: "Velocidad",
             type: "Number",
             id: "id_008",
-            size: {xs:12, sm:3},
+            size: { xs: 12, sm: 3 },
             required: true,
-          },{
+          },
+          {
             label: "Facturacion",
             type: "Divider",
             id: "billing_div",
@@ -131,7 +138,7 @@ const FinishersDataForm = (props) => {
             type: "Select",
             id: "id_009",
             options: costsList,
-            size: {xs:12, sm:6},
+            size: { xs: 12, sm: 6 },
             required: true,
           },
           {
@@ -139,7 +146,7 @@ const FinishersDataForm = (props) => {
             label: "Unidad de medida",
             type: "Select",
             id: "id_010",
-            size: {xs:12, sm:6},
+            size: { xs: 12, sm: 6 },
             options: [
               { text: "Unidades", value: "un" },
               { text: "Originales", value: "or" },
@@ -151,7 +158,8 @@ const FinishersDataForm = (props) => {
               { text: "Porcentaje", value: "PerCent" },
             ],
             required: true,
-          },{
+          },
+          {
             type: "Divider",
             id: "jobTypesAllowed_div",
             size: 12,
@@ -165,7 +173,8 @@ const FinishersDataForm = (props) => {
             size: 12,
             id: "id_012",
             options: JobTypes.map((jt) => jt.name),
-          },{
+          },
+          {
             type: "Divider",
             id: "partTypesAllowed_div",
             size: 12,

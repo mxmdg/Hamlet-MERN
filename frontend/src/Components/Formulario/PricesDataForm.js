@@ -23,20 +23,20 @@ let MoldePrecios = [
   },
   {
     inputName: "Valor",
-    type: "text",
+    type: "SmartMeasure",
     step: 0.0001,
     id: "id_402",
     required: true,
   },
   {
     inputName: "Minimo",
-    type: "Number",
+    type: "SmartMeasure",
     id: "id_403",
     required: true,
   },
   {
     inputName: "Entrada",
-    type: "Number",
+    type: "SmartMeasure",
     id: "id_404",
     required: true,
   },

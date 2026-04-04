@@ -1,7 +1,7 @@
 // React Imports
 import React from "react";
 import { useState, useEffect, useContext } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 
 import FormHelperText from "@mui/material/FormHelperText";
 import FormControl from "@mui/material/FormControl";
@@ -22,6 +22,7 @@ import {
 import { getPrivateElements } from "../../customHooks/FetchDataHook";
 import { ImpoContext } from "./ImpoContext";
 import ErrorMessage from "../../ErrorMessage/ErrorMessage";
+import SmartMeasureInput from "../../Formulario/SmartMeasureInput";
 
 export const ImpositionForm = (props) => {
   const context = useContext(ImpoContext);
@@ -41,8 +42,8 @@ export const ImpositionForm = (props) => {
           impresora.Colores >=
           Math.max(
             props.part?.ColoresFrente || 0,
-            props.part?.ColoresDorso || 0
-          )
+            props.part?.ColoresDorso || 0,
+          ),
       );
       setLoading(false);
       return filteredPrinters;
@@ -61,18 +62,18 @@ export const ImpositionForm = (props) => {
       Math.max(f.Ancho, f.Alto) <=
         Math.max(
           useSelectedPrinter.X_Maximo || 0,
-          useSelectedPrinter.Y_Maximo || 0
+          useSelectedPrinter.Y_Maximo || 0,
         ) &&
       Math.min(f.Ancho, f.Alto) <=
         Math.min(
           useSelectedPrinter.X_Maximo || 0,
-          useSelectedPrinter.Y_Maximo || 0
+          useSelectedPrinter.Y_Maximo || 0,
         ) &&
       Math.min(f.Ancho, f.Alto) >=
         Math.min(
           useSelectedPrinter.X_Minimo || 0,
-          useSelectedPrinter.Y_Minimo || 0
-        )
+          useSelectedPrinter.Y_Minimo || 0,
+        ),
   );
 
   const {
@@ -82,6 +83,7 @@ export const ImpositionForm = (props) => {
     handleSubmit,
     formState: { errors },
     trigger,
+    control,
   } = useForm({
     mode: "onBlur",
   });
@@ -130,13 +132,13 @@ export const ImpositionForm = (props) => {
     if (props.impositionSettings) {
       setValue(
         "printerSelector",
-        props.impositionSettings?.printerSelector?._id
+        props.impositionSettings?.printerSelector?._id,
       );
       setValue("widthPage", props.part?.Ancho || "");
       setValue("heightPage", props.part?.Alto || "");
       setValue(
         "formatSelector",
-        props.impositionSettings?.formatSelector?._id || ""
+        props.impositionSettings?.formatSelector?._id || "",
       );
       // Si es personalizado, seteamos los valores originales
       if (props.impositionSettings?.formatSelector === "Personalizado") {
@@ -144,11 +146,11 @@ export const ImpositionForm = (props) => {
       }
       setValue(
         "widthSheet",
-        props.impositionSettings?.sheetOriginalSize?.width || ""
+        props.impositionSettings?.sheetOriginalSize?.width || "",
       );
       setValue(
         "heightSheet",
-        props.impositionSettings?.sheetOriginalSize?.height || ""
+        props.impositionSettings?.sheetOriginalSize?.height || "",
       );
     }
   }, []);
@@ -179,7 +181,7 @@ export const ImpositionForm = (props) => {
                 onChange={(e) => {
                   const selectedId = e.target.value;
                   const selectedPrinter = usePrinters.find(
-                    (p) => p._id === selectedId
+                    (p) => p._id === selectedId,
                   );
                   setSelectedPrinter(selectedPrinter || {});
                   setValue("printerSelector", selectedId);
@@ -211,10 +213,10 @@ export const ImpositionForm = (props) => {
                           {Printer.Colores > 4
                             ? "(cmyk + spot)"
                             : Printer.Colores === 4
-                            ? "(cmyk)"
-                            : Printer.Colores === 1
-                            ? "(k)"
-                            : "Error"}{" "}
+                              ? "(cmyk)"
+                              : Printer.Colores === 1
+                                ? "(k)"
+                                : "Error"}{" "}
                         </b>
                       </Typography>
                     </MenuItem>
@@ -227,88 +229,104 @@ export const ImpositionForm = (props) => {
               <FormHelperText>Seleccione una impresora</FormHelperText>
             )}
           </Grid>
+          {/* Ancho Pagina */}
           <Grid size={{ xs: 12, md: 3 }}>
-            <FormControl>
-              <TextField
-                type="number"
-                label="Ancho Pagina"
-                variant="outlined"
-                name="widthPage"
-                defaultValue={props.part?.Ancho || ""}
-                {...register("widthPage", {
-                  required: true,
-                })}
-                onBlur={() => {
-                  trigger("widthPage");
-                }}
-                size="small"
-                margin="dense"
-              />
-              {errors.widthPage?.type === "required" && (
-                <FormHelperText>Este campo es requerido</FormHelperText>
+            <Controller
+              name="widthPage"
+              control={control}
+              defaultValue={props.part?.Ancho || ""}
+              rules={{ required: "Este campo es requerido" }}
+              render={({
+                field: { onChange, value },
+                fieldState: { error },
+              }) => (
+                <SmartMeasureInput
+                  label="Ancho Pagina"
+                  value={value}
+                  subtype="length"
+                  onChange={(val) => {
+                    onChange(val);
+                    trigger("widthPage");
+                  }}
+                  error={!!error}
+                  helperText={error?.message}
+                  size="small"
+                  margin="dense"
+                />
               )}
-            </FormControl>
+            />
           </Grid>
-          <Grid size={{ xs: 12, md: 3 }}>
-            <FormControl>
-              <TextField
-                type="number"
-                label="Alto Pagina"
-                variant="outlined"
-                name="heightPage"
-                defaultValue={props.part?.Alto || ""}
-                {...register("heightPage", {
-                  required: true,
-                })}
-                onBlur={() => {
-                  trigger("heightPage");
-                }}
-                size="small"
-                margin="dense"
-              />
-            </FormControl>
 
-            {errors.heightPage?.type === "required" && (
-              <FormHelperText>Este campo es requerido</FormHelperText>
-            )}
-          </Grid>
+          {/* Alto Pagina */}
           <Grid size={{ xs: 12, md: 3 }}>
-            <FormControl>
-              <TextField
-                type="number"
-                label="Calle"
-                variant="outlined"
-                name="Calle"
-                defaultValue={props.impositionSettings?.Calle || 0}
-                {...register("Calle", {
-                  required: false,
-                })}
-                onBlur={() => {
-                  trigger("Calle");
-                }}
-                size="small"
-                margin="dense"
-              />
-            </FormControl>
+            <Controller
+              name="heightPage"
+              control={control}
+              defaultValue={props.part?.Alto || ""}
+              rules={{ required: "Este campo es requerido" }}
+              render={({
+                field: { onChange, value },
+                fieldState: { error },
+              }) => (
+                <SmartMeasureInput
+                  label="Alto Pagina"
+                  value={value}
+                  subtype="length"
+                  onChange={(val) => {
+                    onChange(val);
+                    trigger("heightPage");
+                  }}
+                  error={!!error}
+                  helperText={error?.message}
+                  size="small"
+                  margin="dense"
+                />
+              )}
+            />
           </Grid>
+
+          {/* Calle */}
           <Grid size={{ xs: 12, md: 3 }}>
-            <FormControl>
-              <TextField
-                type="number"
-                label="Margenes"
-                variant="outlined"
-                name="margenes"
-                defaultValue={props.impositionSettings?.margenes || 0}
-                {...register("margenes", {
-                  required: false,
-                })}
-                onBlur={() => {
-                  trigger("margenes");
-                }}
-                size="small"
-                margin="dense"
-              />
-            </FormControl>
+            <Controller
+              name="Calle"
+              control={control}
+              defaultValue={props.impositionSettings?.Calle || 0}
+              render={({ field: { onChange, value } }) => (
+                <SmartMeasureInput
+                  label="Calle"
+                  value={value}
+                  subtype="length"
+                  onChange={(val) => {
+                    onChange(val);
+                    trigger("Calle");
+                  }}
+                  size="small"
+                  margin="dense"
+                />
+              )}
+            />
+          </Grid>
+
+          {/* Margenes */}
+          <Grid size={{ xs: 12, md: 3 }}>
+            <Controller
+              name="margenes"
+              control={control}
+              defaultValue={props.impositionSettings?.margenes || 0}
+              render={({ field: { onChange, value } }) => (
+                <SmartMeasureInput
+                  label="Margenes"
+                  value={value}
+                  subtype="length"
+                  onChange={(val) => {
+                    onChange(val);
+                    trigger("margenes");
+                  }}
+                  size="small"
+                  margin="dense"
+                />
+              )}
+            />
           </Grid>
           <Grid size={{ xs: 12, md: 6 }}>
             <FormControl fullWidth>
@@ -333,16 +351,16 @@ export const ImpositionForm = (props) => {
                     // Si hay valores originales, los ponemos
                     setValue(
                       "widthSheet",
-                      props.impositionSettings?.sheetOriginalSize?.width || ""
+                      props.impositionSettings?.sheetOriginalSize?.width || "",
                     );
                     setValue(
                       "heightSheet",
-                      props.impositionSettings?.sheetOriginalSize?.height || ""
+                      props.impositionSettings?.sheetOriginalSize?.height || "",
                     );
                   } else {
                     setCustomFormat(false);
                     const formatObj = useFormatsFiltered.find(
-                      (f) => f._id === value
+                      (f) => f._id === value,
                     );
                     setSelectedFormat(formatObj || "");
                     setValue("formatSelector", formatObj);
@@ -388,63 +406,70 @@ export const ImpositionForm = (props) => {
               <FormHelperText>Seleccione un formato</FormHelperText>
             )}
           </Grid>
+          {/* Ancho Pliego */}
           <Grid size={{ xs: 12, md: 3 }}>
-            <FormControl>
-              <TextField
-                type="number"
-                label={customFormat ? "Ancho Pliego" : ""}
-                disabled={!customFormat}
-                variant="outlined"
-                name="widthSheet"
-                defaultValue={
-                  props.impositionSettings?.sheetOriginalSize?.width || ""
-                }
-                onChange={() => {
-                  setCustomFormat(true);
-                  setValue("formatSelector", "Personalizado");
-                }}
-                {...register("widthSheet", {
-                  required: customFormat,
-                })}
-                onBlur={() => {
-                  setCustomFormat(true);
-                  setValue("formatSelector", "Personalizado");
-                  trigger("widthSheet");
-                }}
-                size="small"
-                margin="dense"
-              />
-            </FormControl>
-            {errors.widthSheet?.type === "required" && customFormat && (
-              <FormHelperText>Este campo es requerido</FormHelperText>
-            )}
-          </Grid>
-          <Grid size={{ xs: 12, md: 3 }}>
-            <FormControl>
-              <TextField
-                type="number"
-                label={customFormat ? "Alto Pliego" : ""}
-                disabled={!customFormat}
-                variant="outlined"
-                name="heightSheet"
-                defaultValue={
-                  props.impositionSettings?.sheetOriginalSize?.height || ""
-                }
-                onChange={() => setCustomFormat(true)}
-                {...register("heightSheet", {
-                  required: customFormat,
-                })}
-                onBlur={() => {
-                  setCustomFormat(true);
-                  trigger("heightSheet");
-                }}
-                size="small"
-                margin="dense"
-              />
-              {errors.heightSheet?.type === "required" && customFormat && (
-                <FormHelperText>Este campo es requerido</FormHelperText>
+            <Controller
+              name="widthSheet"
+              control={control}
+              defaultValue={
+                props.impositionSettings?.sheetOriginalSize?.width || ""
+              }
+              rules={{ required: customFormat }}
+              render={({
+                field: { onChange, value },
+                fieldState: { error },
+              }) => (
+                <SmartMeasureInput
+                  label={customFormat ? "Ancho Pliego" : "Ancho (Auto)"}
+                  disabled={!customFormat}
+                  value={value}
+                  subtype="length"
+                  onChange={(val) => {
+                    onChange(val);
+                    setCustomFormat(true);
+                    setValue("formatSelector", "Personalizado");
+                    trigger("widthSheet");
+                  }}
+                  error={!!error}
+                  helperText={error?.message}
+                  size="small"
+                  margin="dense"
+                />
               )}
-            </FormControl>
+            />
+          </Grid>
+
+          {/* Alto Pliego */}
+          <Grid size={{ xs: 12, md: 3 }}>
+            <Controller
+              name="heightSheet"
+              control={control}
+              defaultValue={
+                props.impositionSettings?.sheetOriginalSize?.height || ""
+              }
+              rules={{ required: customFormat }}
+              render={({
+                field: { onChange, value },
+                fieldState: { error },
+              }) => (
+                <SmartMeasureInput
+                  label={customFormat ? "Alto Pliego" : "Alto (Auto)"}
+                  disabled={!customFormat}
+                  value={value}
+                  subtype="length"
+                  onChange={(val) => {
+                    onChange(val);
+                    setCustomFormat(true);
+                    setValue("formatSelector", "Personalizado");
+                    trigger("heightSheet");
+                  }}
+                  error={!!error}
+                  helperText={error?.message}
+                  size="small"
+                  margin="dense"
+                />
+              )}
+            />
           </Grid>
           <Grid size={{ xs: 12, md: 12 }}>
             <FormControl>

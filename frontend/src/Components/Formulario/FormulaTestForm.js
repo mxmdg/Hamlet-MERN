@@ -61,8 +61,9 @@ let FormulaTestForm = [
   },
   {
     inputName: "Longitud",
-    label: "Largo en mm",
-    type: "Number",
+    label: "Largo",
+    type: "SmartMeasure",
+    subtype: "length",
     size: { sm: 12, md: 4 },
     id: "id_404",
     required: false,
@@ -70,7 +71,8 @@ let FormulaTestForm = [
   {
     inputName: "firstBreakpoint",
     label: "Breakpoint 1",
-    type: "number",
+    type: "SmartMeasure",
+    subtype: "length",
     size: { sm: 12, md: 4 },
     step: 1,
     id: "id_405",
@@ -79,7 +81,8 @@ let FormulaTestForm = [
   {
     inputName: "secondBreakpoint",
     label: "Breakpoint 2",
-    type: "number",
+    type: "SmartMeasure",
+    subtype: "length",
     size: { sm: 12, md: 4 },
     step: 1,
     id: "id_406",

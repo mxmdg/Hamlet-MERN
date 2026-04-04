@@ -21,6 +21,7 @@ import { fechtData } from "../customHooks/FetchDataHook";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import Spinner from "../General/Spinner";
 import arrayNormalizer from "../utils/generalData/arrayNormalizer";
+import SmartMeasureInput from "../Formulario/SmartMeasureInput";
 import { orderArrayByKey } from "../utils/generalData/arrayNormalizer";
 
 // ---------------------------------------------------------------------------
@@ -354,13 +355,9 @@ const JobParts = (props) => {
 
             {/* Ancho */}
             <Grid size={{ xs: 1, sm: 2, md: 4 }}>
-              <TextField
-                variant="outlined"
-                type="number"
+              <Controller
                 name="Ancho"
-                id="Ancho"
-                label="Ancho"
-                color="secondary"
+                control={control} // Asegúrate de haber extraído 'control' de useForm()
                 defaultValue={
                   isImportedPart
                     ? ""
@@ -368,37 +365,44 @@ const JobParts = (props) => {
                       ? props.useParts[0]?.Ancho
                       : props.editPart.part?.Ancho
                 }
-                {...register("Ancho", {
-                  required: true,
-                  min: currentPart?.minWidth,
-                  max: currentPart?.maxWidth,
-                })}
-                onBlur={() => trigger("Ancho")}
+                rules={{
+                  required: "Ingrese el ancho del producto",
+                  min: {
+                    value: currentPart?.minWidth,
+                    message: `Ancho mínimo: ${currentPart?.minWidth}mm`,
+                  },
+                  max: {
+                    value: currentPart?.maxWidth,
+                    message: `Ancho máximo: ${currentPart?.maxWidth}mm`,
+                  },
+                }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <SmartMeasureInput
+                    label="Ancho"
+                    color="secondary"
+                    variant="outlined"
+                    fullWidth
+                    subtype="length" // Para que use mm por defecto y muestre el adorno mm
+                    value={value}
+                    onChange={(val) => {
+                      onChange(val);
+                      trigger("Ancho"); // Validamos al cambiar
+                    }}
+                    error={!!error}
+                    helperText={error ? error.message : ""}
+                  />
+                )}
               />
-              {errors.Ancho?.type === "required" && (
-                <FormHelperText>Ingrese el ancho del producto</FormHelperText>
-              )}
-              {errors.Ancho?.type === "min" && (
-                <FormHelperText>
-                  Ancho mínimo: {currentPart?.minWidth}mm
-                </FormHelperText>
-              )}
-              {errors.Ancho?.type === "max" && (
-                <FormHelperText>
-                  Ancho máximo: {currentPart?.maxWidth}mm
-                </FormHelperText>
-              )}
             </Grid>
 
             {/* Alto */}
             <Grid size={{ xs: 1, sm: 2, md: 4 }}>
-              <TextField
-                variant="outlined"
-                type="number"
+              <Controller
                 name="Alto"
-                id="Alto"
-                label="Alto"
-                color="secondary"
+                control={control}
                 defaultValue={
                   isImportedPart
                     ? ""
@@ -406,25 +410,37 @@ const JobParts = (props) => {
                       ? props.useParts[0]?.Alto
                       : props.editPart.part?.Alto
                 }
-                {...register("Alto", {
-                  required: true,
-                  min: currentPart?.minHeight,
-                  max: currentPart?.maxHeight,
-                })}
+                rules={{
+                  required: "Ingrese el alto del producto",
+                  min: {
+                    value: currentPart?.minHeight,
+                    message: `Alto mínimo: ${currentPart?.minHeight}mm`,
+                  },
+                  max: {
+                    value: currentPart?.maxHeight,
+                    message: `Alto máximo: ${currentPart?.maxHeight}mm`,
+                  },
+                }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <SmartMeasureInput
+                    label="Alto"
+                    color="secondary"
+                    variant="outlined"
+                    fullWidth
+                    subtype="length"
+                    value={value}
+                    onChange={(val) => {
+                      onChange(val);
+                      trigger("Alto"); // Dispara la validación de min/max al cambiar
+                    }}
+                    error={!!error}
+                    helperText={error ? error.message : ""}
+                  />
+                )}
               />
-              {errors.Alto?.type === "required" && (
-                <FormHelperText>Ingrese el alto del producto</FormHelperText>
-              )}
-              {errors.Alto?.type === "min" && (
-                <FormHelperText>
-                  Alto mínimo: {currentPart?.minHeight}mm
-                </FormHelperText>
-              )}
-              {errors.Alto?.type === "max" && (
-                <FormHelperText>
-                  Alto máximo: {currentPart?.maxHeight}mm
-                </FormHelperText>
-              )}
             </Grid>
 
             {/* Páginas */}

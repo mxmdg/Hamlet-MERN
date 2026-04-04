@@ -19,6 +19,7 @@ import ErrorMessage from "../ErrorMessage/ErrorMessage";
 // Hamlet Components Imports
 
 import Spinner from "../General/Spinner";
+import SmartMeasureInput from "./SmartMeasureInput";
 
 //MUI Material Imports
 
@@ -104,6 +105,7 @@ const FormMaterial = (props) => {
     formState: { errors },
     trigger,
     setValue,
+    control,
   } = useForm({
     mode: "onChange", //"onBlur",
     defaultValues: useItem,
@@ -259,15 +261,8 @@ const FormMaterial = (props) => {
               }
               autoComplete={inp.inputName}
               name={inp.inputName}
+              {...(inp.onChange ? { onChange: inp.onChange } : {})}
               {...register(inp.inputName)}
-              InputLabelProps={{
-                shrink: true,
-              }}
-              InputProps={{
-                inputProps: {
-                  placeholder: "",
-                },
-              }}
             >
               {inp.options.map((u, index) => {
                 return (
@@ -395,7 +390,10 @@ const FormMaterial = (props) => {
                   <Grid container columns={12}>
                     {inp.options.sort().map((opt, index) => {
                       return (
-                        <Grid key={index + inp.inputName} size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
+                        <Grid
+                          key={index + inp.inputName}
+                          size={{ xs: 12, sm: 6, md: 4, lg: 3 }}
+                        >
                           <FormControlLabel
                             key={inp.inputName + index}
                             control={
@@ -434,14 +432,46 @@ const FormMaterial = (props) => {
         </Grid>
       );
     } else if (inp.type === "Divider") {
-      return <Grid size={inp.size || 12} >
-            <Divider color={color} textAlign={inp.align || "center"} orientation={inp.orientation || "horizontal"} sx={{margin: "15px 0 10px 0"}}>
-              {inp.label && <Typography variant={"button"} color={color}>
+      return (
+        <Grid size={inp.size || 12}>
+          <Divider
+            color={color}
+            textAlign={inp.align || "center"}
+            orientation={inp.orientation || "horizontal"}
+            sx={{ margin: "15px 0 10px 0" }}
+          >
+            {inp.label && (
+              <Typography variant={"button"} color={color}>
                 {inp.label || ""}
-              </Typography>}
-            </Divider>
+              </Typography>
+            )}
+          </Divider>
         </Grid>
-
+      );
+    } else if (inp.type === "SmartMeasure") {
+      return (
+        <Grid size={inp.size || { xs: 4, sm: 4, md: 6 }} key={inp.inputName}>
+          <Controller
+            name={inp.inputName}
+            control={control} // Asegúrate de que 'control' esté disponible en FormMaterial
+            defaultValue={
+              useItem !== "new" ? useItem[inp.inputName] : (inp.default ?? "") // Evitamos el undefined con ?? ""
+            }
+            render={({ field: { onChange, value, onBlur } }) => (
+              <SmartMeasureInput
+                id={inp.id}
+                subtype={inp.subtype}
+                label={inp.label || inp.inputName}
+                value={value ?? ""} // Forzamos que siempre sea al menos un string vacío
+                onChange={onChange}
+                onBlur={onBlur} // Esto soluciona el error de 'reading name' en el blur
+                error={!!errors[inp.inputName]}
+                helperText={errors[inp.inputName]?.message}
+              />
+            )}
+          />
+        </Grid>
+      );
     } else {
       return (
         <Grid size={inp.size || { xs: 4, sm: 4, md: 6 }}>

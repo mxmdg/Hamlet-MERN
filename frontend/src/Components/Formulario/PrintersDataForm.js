@@ -111,7 +111,8 @@ let PrintersDataForm = [
   {
     inputName: "X_Minimo",
     label: "Largo Minimo",
-    type: "Number",
+    type: "SmartMeasure",
+    subtype: "length",
     id: "id_004",
     required: true,
     help: "Consulte el manual de la impresora para verificar el largo minimo que admite su equipo.",
@@ -119,7 +120,8 @@ let PrintersDataForm = [
   {
     inputName: "X_Maximo",
     label: "Largo Maximo",
-    type: "Number",
+    type: "SmartMeasure",
+    subtype: "length",
     id: "id_005",
     required: true,
     help: "Consulte el manual de la impresora para verificar el largo maximo que admite su equipo.",
@@ -127,7 +129,8 @@ let PrintersDataForm = [
   {
     inputName: "Y_Minimo",
     label: "Ancho Minimo",
-    type: "Number",
+    type: "SmartMeasure",
+    subtype: "length",
     id: "id_006",
     required: true,
     help: "Consulte el manual de la impresora para verificar el ancho minimo que admite su equipo.",
@@ -135,7 +138,8 @@ let PrintersDataForm = [
   {
     inputName: "Y_Maximo",
     label: "Ancho Maximo",
-    type: "Number",
+    type: "SmartMeasure",
+    subtype: "length",
     id: "id_007",
     required: true,
     help: "Consulte el manual de la impresora para verificar el ancho maximo que admite su equipo.",
@@ -143,7 +147,7 @@ let PrintersDataForm = [
   {
     inputName: "Paginas_por_minuto",
     label: "Paginas por minuto",
-    type: "Number",
+    type: "SmartMeasure",
     id: "id_008",
     required: true,
     help: "Consulte el manual de la impresora para corroborar la cantidad de paginas por minuto que puede imprimir.",
@@ -169,7 +173,7 @@ let PrintersDataForm = [
   {
     inputName: "TotalPrints",
     label: "Impresiones totales",
-    type: "Number",
+    type: "SmartMeasure",
     id: "id_010",
     required: true,
     help: "Consulte el manual de la impresora para corroborar la cantidad de impresiones.",
@@ -177,7 +181,7 @@ let PrintersDataForm = [
   {
     inputName: "ColorPrints",
     label: "Impresiones Color",
-    type: "Number",
+    type: "SmartMeasure",
     id: "id_010",
     required: true,
     help: "Consulte el manual de la impresora para corroborar la cantidad de impresiones.",
@@ -185,7 +189,7 @@ let PrintersDataForm = [
   {
     inputName: "BlackPrints",
     label: "Impresiones blanco y negro",
-    type: "Number",
+    type: "SmartMeasure",
     id: "id_010",
     required: true,
     help: "Consulte el manual de la impresora para corroborar la cantidad de impresiones.",
@@ -193,7 +197,7 @@ let PrintersDataForm = [
   {
     inputName: "LargePrints",
     label: "Impresiones grandes",
-    type: "Number",
+    type: "SmartMeasure",
     id: "id_010",
     required: true,
     help: "Consulte el manual de la impresora para corroborar la cantidad de impresiones.",
@@ -201,7 +205,7 @@ let PrintersDataForm = [
   {
     inputName: "SmallPrints",
     label: "Impresiones chicas",
-    type: "Number",
+    type: "SmartMeasure",
     id: "id_010",
     required: true,
     help: "Consulte el manual de la impresora para corroborar la cantidad de impresiones.",
