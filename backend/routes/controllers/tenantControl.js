@@ -55,7 +55,7 @@ tenantsControl.addTenant = async (req, res, next) => {
       status: "activo",
     });
 
-    console.log("Membership admin creado para el nuevo tenant");
+    //console.log("Membership admin creado para el nuevo tenant");
 
     res.status(201).json({
       message: `Tenant ${newTenant.name} creado correctamente`,
@@ -101,7 +101,7 @@ tenantsControl.getSettings = async (req, res, next) => {
 
     const flattenLevel2 = flattenNestedItems(settingsFlattened);
 
-    console.log(flattenLevel2);
+    //console.log(flattenLevel2);
 
     res.json(flattenLevel2);
   } catch (e) {
