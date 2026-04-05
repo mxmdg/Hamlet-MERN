@@ -162,6 +162,40 @@ const PreferencesForm = () => {
       id: "mail_from",
       help: "Dirección donde recibirás las respuestas de tus clientes.",
     },
+    {
+      label: "Unidades",
+      type: "Divider",
+      id: "mail_div",
+      size: 12,
+      align: "center",
+      orientation: "horizontal",
+    },
+    {
+      inputName: "units.weight",
+      label: "Unidad de medida para peso",
+      type: "Select",
+      size: { xs: 12, md: 6 },
+      options: [
+        { text: "Gramos (g)", value: "g" },
+        { text: "Kilogramos (kg)", value: "kg" },
+        { text: "Libras (lb)", value: "lb" },
+      ],
+      id: "unit_weight",
+    },
+    {
+      inputName: "units.size",
+      label: "Unidad de medida para dimensiones",
+      type: "Select",
+      size: { xs: 12, md: 6 },
+      options: [
+        { text: "Milímetros (mm)", value: "mm" },
+        { text: "Centímetros (cm)", value: "cm" },
+        { text: "Metros (m)", value: "m" },
+        { text: "Pulgadas (in)", value: "in" },
+        { text: "Puntos (pt)", value: "pt" },
+      ],
+      id: "unit_length",
+    },
   ];
 
   if (context.usePlan === "pro") {

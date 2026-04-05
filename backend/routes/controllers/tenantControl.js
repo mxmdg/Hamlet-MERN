@@ -43,7 +43,7 @@ tenantsControl.addTenant = async (req, res, next) => {
       plan,
     });
 
-    console.log(newTenant);
+    //console.log(newTenant);
 
     await newTenant.save();
 
@@ -98,10 +98,10 @@ tenantsControl.getSettings = async (req, res, next) => {
     const tenantData = await tenant.esquema.findById(req.params.id);
     const settingsFlattened = flattenNestedItems(tenantData.settings);
     settingsFlattened.extensions = flattenNestedItems(tenantData.extensions);
-    
+
     const flattenLevel2 = flattenNestedItems(settingsFlattened);
 
-    console.log(flattenLevel2)
+    console.log(flattenLevel2);
 
     res.json(flattenLevel2);
   } catch (e) {
