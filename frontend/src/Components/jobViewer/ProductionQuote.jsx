@@ -61,7 +61,7 @@ const ProductionQuote = (props) => {
   const [isIvaEnabled, setIsIvaEnabled] = useState(
     props.quoteOptions && props.quoteOptions.isIvaEnabled !== undefined
       ? props.quoteOptions.isIvaEnabled
-      : true
+      : true,
   );
 
   const [useError, setUseError] = useState(null);
@@ -126,6 +126,8 @@ const ProductionQuote = (props) => {
     };
   };
 
+  const quote = calculateQuote();
+
   useEffect(() => {
     if (typeof props.quoteSettings === "function") {
       props.quoteSettings({
@@ -152,7 +154,7 @@ const ProductionQuote = (props) => {
       });
     }
     // eslint-disable-next-line
-  }, [gainPercentage, salesCommission, ivaPercentage, isIvaEnabled]);
+  }, [gainPercentage, salesCommission, ivaPercentage, isIvaEnabled, quote]);
 
   useEffect(() => {
     const fetchSettings = async () => {
@@ -160,7 +162,7 @@ const ProductionQuote = (props) => {
         setUseLoading(true);
         const settings = await getPrivateElementByID(
           "tenants/settings",
-          context.memberships[0].tenant.id
+          context.memberships[0].tenant.id,
         );
         setSettings(settings);
         props.pricingSettings(settings);
@@ -198,8 +200,6 @@ const ProductionQuote = (props) => {
       }
     }
   }, [useSettings, props.quoteOptions, setValue]);
-
-  const quote = calculateQuote();
 
   const failure = (
     <ErrorMessage
@@ -318,7 +318,7 @@ const ProductionQuote = (props) => {
                   <Grid size={{ xs: 12, md: 12 }}>
                     <ListItemNumbers
                       primary={currencyFormat(
-                        roundInteger(quote.salesCommission)
+                        roundInteger(quote.salesCommission),
                       )}
                       secondary={"Comisión"}
                     />
