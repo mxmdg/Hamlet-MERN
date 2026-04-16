@@ -460,6 +460,8 @@ const FormMaterial = (props) => {
             render={({ field: { onChange, value, onBlur } }) => (
               <SmartMeasureInput
                 id={inp.id}
+                variant={variant}
+                color={color}
                 subtype={inp.subtype}
                 label={inp.label || inp.inputName}
                 value={value ?? ""} // Forzamos que siempre sea al menos un string vacío

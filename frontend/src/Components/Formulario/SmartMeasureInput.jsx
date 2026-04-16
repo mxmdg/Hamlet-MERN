@@ -8,12 +8,7 @@ import {
   formatMeasure,
 } from "../utils/generalData/unitConverter";
 
-const SmartMeasureInput = ({
-  value,
-  onChange,
-  subtype = "length",
-  ...props
-}) => {
+const SmartMeasureInput = ({ value, onChange, subtype = "", ...props }) => {
   const auth = useContext(AuthContext);
 
   // LOG PARA CAZAR EL ERROR
@@ -27,10 +22,19 @@ const SmartMeasureInput = ({
 
   //console.log("Unidades encontradas:", tenantUnits);
 
+  // Si el input no tiene subtype, no mostramos unidad. Si tiene, mostramos la unidad según el tipo (length o weight) y las preferencias del tenant, o el default si no están configuradas.
   const defaultUnit =
-    subtype === "length"
-      ? tenantUnits?.size || "mm"
-      : tenantUnits?.weight || "g";
+    subtype === undefined || subtype === ""
+      ? ""
+      : subtype === "length"
+        ? tenantUnits?.size || "mm"
+        : subtype === "weight"
+          ? tenantUnits?.weight || "g"
+          : subtype === "percentage"
+            ? tenantUnits?.currency || "%"
+            : subtype === "currency"
+              ? tenantUnits?.currency || "$"
+              : "";
 
   // console.log("Unidad final aplicada:", defaultUnit);
   // console.log("---------------------");
@@ -88,11 +92,13 @@ const SmartMeasureInput = ({
     <TextField
       {...props}
       value={localValue}
+      variant={props.variant}
+      color={props.color}
       onChange={handleChange}
       onBlur={handleBlur}
       InputProps={{
         endAdornment: (
-          <InputAdornment position="end">{defaultUnit}</InputAdornment>
+          <InputAdornment position="start">{defaultUnit}</InputAdornment>
         ),
       }}
     />

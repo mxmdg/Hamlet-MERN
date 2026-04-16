@@ -3,6 +3,7 @@
 const factors = {
   length: { mm: 1, cm: 10, m: 1000, in: 25.4, pt: 0.3527, "": 1 },
   weight: { g: 1, kg: 1000, lb: 453.59, "": 1 },
+  currency: { ARS: 1, USD: 1400 },
 };
 
 /**
@@ -82,7 +83,8 @@ export const formatMeasure = (
   if (
     !targetUnit ||
     (type === "length" && targetUnit === "mm") ||
-    (type === "weight" && targetUnit === "g")
+    (type === "weight" && targetUnit === "g") ||
+    (type === "currency" && targetUnit === "$")
   ) {
     return valor;
   }

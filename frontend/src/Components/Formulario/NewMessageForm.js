@@ -83,7 +83,8 @@ const PreferencesForm = () => {
     {
       inputName: "pricing.gain.min",
       label: "Ganancia mínima (%)",
-      type: "Number",
+      type: "SmartMeasure",
+      subtype: "percentage",
       id: "pricing_gain_min",
       required: true,
       help: "Porcentaje mínimo de ganancia (valor por defecto 20%).",
@@ -91,7 +92,8 @@ const PreferencesForm = () => {
     {
       inputName: "pricing.gain.max",
       label: "Ganancia máxima (%)",
-      type: "Number",
+      type: "SmartMeasure",
+      subtype: "percentage",
       id: "pricing_gain_max",
       required: true,
       help: "Porcentaje máximo de ganancia (valor por defecto 60%).",
@@ -99,7 +101,8 @@ const PreferencesForm = () => {
     {
       inputName: "pricing.gain.def",
       label: "Ganancia predeterminada (%)",
-      type: "Number",
+      type: "SmartMeasure",
+      subtype: "percentage",
       id: "pricing_gain_def",
       required: true,
       help: "Porcentaje predeterminado de ganancia.",
@@ -117,7 +120,8 @@ const PreferencesForm = () => {
     {
       inputName: "pricing.commission.min",
       label: "Comisión mínima (%)",
-      type: "Number",
+      type: "SmartMeasure",
+      subtype: "percentage",
       id: "pricing_comm_min",
       required: true,
       help: "Porcentaje mínimo de comisión (valor por defecto 0%).",
@@ -125,7 +129,8 @@ const PreferencesForm = () => {
     {
       inputName: "pricing.commission.max",
       label: "Comisión máxima (%)",
-      type: "Number",
+      type: "SmartMeasure",
+      subtype: "percentage",
       id: "pricing_comm_max",
       required: true,
       help: "Porcentaje máximo de comisión (valor por defecto 20%).",
@@ -133,7 +138,8 @@ const PreferencesForm = () => {
     {
       inputName: "pricing.commission.def",
       label: "Comisión predeterminada (%)",
-      type: "Number",
+      type: "SmartMeasure",
+      subtype: "percentage",
       id: "pricing_comm_def",
       required: true,
       help: "Porcentaje predeterminado de comisión (valor por defecto 0%).",

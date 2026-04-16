@@ -24,6 +24,7 @@ let MoldePrecios = [
   {
     inputName: "Valor",
     type: "SmartMeasure",
+    subtype: "currency",
     step: 0.0001,
     id: "id_402",
     required: true,
@@ -31,12 +32,14 @@ let MoldePrecios = [
   {
     inputName: "Minimo",
     type: "SmartMeasure",
+    subtype: "currency",
     id: "id_403",
     required: true,
   },
   {
     inputName: "Entrada",
     type: "SmartMeasure",
+    subtype: "currency",
     id: "id_404",
     required: true,
   },

@@ -55,7 +55,7 @@ let MoldeJobParts = [
   {
     inputName: "minPages",
     label: "Cantidad minima de paginas",
-    type: "number",
+    type: "SmartMeasure",
     size: { sm: 12, md: 3 },
     step: 1,
     id: "id_406",
@@ -63,7 +63,7 @@ let MoldeJobParts = [
   {
     inputName: "maxPages",
     label: "Cantidad máxima de paginas",
-    type: "number",
+    type: "SmartMeasure",
     size: { sm: 12, md: 3 },
     step: 1,
     id: "id_407",
