@@ -24,5 +24,6 @@ export const papyrusRoutes = ({ color, variant }) => (
       }
     />
     <Route path="/papyrus/copy/:id" element={<PapyrusCopy />} />
+    <Route path="/papyrus/edit/:id" element={<PapyrusCopy />} />
   </>
 );

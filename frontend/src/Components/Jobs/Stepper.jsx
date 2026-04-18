@@ -333,8 +333,9 @@ export default function MyStepper(props) {
     <>
       {useError !== null && (
         <ErrorMessage
+          title="Error al cargar datos"
           message={useError.response.data.message || useError.message}
-          color="success"
+          //color="success"
           action={resetError}
           buttonTxt="Reintentar"
         />

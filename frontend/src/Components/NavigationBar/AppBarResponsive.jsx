@@ -1,340 +1,330 @@
 import * as React from "react";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import Menu from "@mui/material/Menu";
+import { useContext, useState, useRef } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import {
+  AppBar,
+  Toolbar,
+  Box,
+  IconButton,
+  Typography,
+  Menu,
+  MenuItem,
+  Button,
+  Avatar,
+  FormControlLabel,
+  Switch,
+  Divider,
+} from "@mui/material";
+
 import MenuIcon from "@mui/icons-material/Menu";
-import Container from "@mui/material/Container";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import Tooltip from "@mui/material/Tooltip";
-import CustomizedTooltip from "../utils/CustomizedTooltip";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+
 import { StyledTooltip } from "../General/TableGrid";
-import MenuItem from "@mui/material/MenuItem";
-import AdbIcon from "@mui/icons-material/Adb";
-import LocalLibraryIcon from "@mui/icons-material/LocalLibrary";
-import DropdownMenu from "./DropdownMenu";
 import { AuthContext } from "../context/AuthContext";
-import { useContext } from "react";
-import { useNavigate } from "react-router-dom";
-import { serverURL, HAMLET_API } from "../Config/config";
-import { ListItemButton, Paper } from "@mui/material";
-import SessionTimer from "../Users/SessionTimer";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Switch from "@mui/material/Switch";
-import LightModeIcon from "@mui/icons-material/LightMode";
 import { ReactComponent as Logo } from "../../img/Logo/logo ok-06.svg";
 
 export const pages = [
-  { text: "Pedidos", path: "jobs" },
-  { text: "Cotizaciones", path: "quotations" },
-  { text: "Costos", path: "configuracion" },
-  { text: "Formatos", path: "formatos" },
-  { text: "Impresoras", path: "impresoras" },
-  { text: "Partes de trabajo", path: "JobParts" },
-  { text: "Materiales", path: "materiales" },
-  { text: "Clientes", path: "empresas" },
-  //{ text: "Usuarios", path: "users" },
-  { text: "Membresias", path: "memberships" },
-  { text: "Terminacion", path: "finishers" },
+  {
+    text: "Trabajos",
+    drop: [
+      { text: "Trabajo Nuevo", path: "jobs/add" },
+      { text: "Pedidos", path: "jobs" },
+      { text: "Cotizaciones", path: "quotations" },
+    ],
+  },
+  {
+    text: "Configuración",
+    drop: [
+      { text: "Costos", path: "configuracion" },
+      { text: "Contadores", path: "billing" },
+      { text: "Editor de fórmulas", path: "precios/formula" },
+    ],
+  },
+  {
+    text: "Recursos",
+    drop: [
+      { text: "Formatos", path: "formatos" },
+      { text: "Impresoras", path: "impresoras" },
+      { text: "Materiales", path: "materiales" },
+      { text: "Partes de trabajo", path: "JobParts" },
+      { text: "Terminaciones", path: "finishers" },
+    ],
+  },
+  {
+    text: "Administración",
+    drop: [
+      { text: "Clientes", path: "empresas" },
+      { text: "Membresías", path: "memberships" },
+    ],
+  },
+  {
+    text: "Papyrus",
+    pro: true,
+    drop: [
+      { text: "Conexión Papyrus", path: "papyrus" },
+      { text: "Estadísticas Papyrus", path: "jobs/dashboard" },
+    ],
+  },
 ];
 
 function ResponsiveAppBar(props) {
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
-  const [switchChecked, setSwitchChecked] = React.useState(
-    props.mode === "dark" ? true : false,
-  );
   const context = useContext(AuthContext);
-
   const navigate = useNavigate();
+  const location = useLocation();
 
-  // Menu del usuario logeado y sin loguear
-  // {Texto: "texto a mostrar", path: "ruta a donde me lleva"}
-  const settings = [
-    { text: "Ingresar", path: "login" },
-    { text: "Registrarse", path: "register" },
-    //{ text: "usuarios", path: "users" },
-  ];
-  const userMenu = [
-    { text: "Perfil", path: "users/profile" },
-    { text: "Cambiar Contraseña", path: "users/ChangePassword" },
-    { text: "Trabajo Nuevo", path: "jobs/add" },
-    { text: "Contadores", path: "billing" },
-    { text: "Editor de fórmulas", path: "precios/formula" },
-    {
-      text: "Conexión a Papyrus",
-      path: "papyrus",
-      disabled: context.usePlan !== "pro" ? true : false,
-    },
-    {
-      text: "Estadisticas Papyrus",
-      path: "jobs/dashboard",
-      disabled: context.usePlan !== "pro" ? true : false,
-    },
-    { text: "Mensajes", path: "messages" },
-  ];
+  const [mobileAnchor, setMobileAnchor] = useState(null);
+  const [userAnchor, setUserAnchor] = useState(null);
+  const [menuAnchor, setMenuAnchor] = useState(null);
+  const [currentMenu, setCurrentMenu] = useState(null);
 
-  const handleOpenNavMenu = (event) => {
-    setAnchorElNav(event.currentTarget);
-  };
-  const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget);
+  const closeTimer = useRef(null);
+
+  const isLogged = context.useLogin;
+  const isPro = context.usePlan === "pro";
+
+  const userMenu = isLogged
+    ? [
+        { text: "Perfil", path: "users/profile" },
+        { text: "Cambiar Contraseña", path: "users/ChangePassword" },
+        { text: "Mensajes", path: "messages" },
+      ]
+    : [
+        { text: "Ingresar", path: "login" },
+        { text: "Registrarse", path: "register" },
+      ];
+
+  const go = (path) => {
+    navigate("/" + path);
+    closeAll();
   };
 
-  const handleCloseNavMenu = (goTo) => {
-    if (!goTo) {
-      setAnchorElNav(null);
-      return;
-    }
+  const closeAll = () => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
 
-    navigate("/" + goTo);
-    setAnchorElNav(null);
+    setMobileAnchor(null);
+    setUserAnchor(null);
+    setMenuAnchor(null);
+    setCurrentMenu(null);
   };
 
-  const handleCloseUserMenu = (goTo) => {
-    if (!goTo) {
-      setAnchorElUser(null);
-      return;
-    }
+  const openDesktopMenu = (event, page) => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
 
-    navigate("/" + goTo);
-    setAnchorElUser(null);
+    setMenuAnchor(event.currentTarget);
+    setCurrentMenu(page);
   };
 
-  const handleLogOut = () => {
-    try {
-      if (window.confirm("Quiere cerrar la sesión?")) {
-        context.handleLogout();
-      }
-      handleCloseUserMenu("/");
-    } catch (error) {
-      return error;
-    }
+  const scheduleCloseDesktopMenu = () => {
+    closeTimer.current = setTimeout(() => {
+      setMenuAnchor(null);
+      setCurrentMenu(null);
+    }, 180);
   };
 
-  const dropMenu = context.useLogin ? userMenu : settings;
+  const cancelCloseDesktopMenu = () => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+  };
 
-  const colorList = [
-    "primary",
-    "secondary",
-    "success",
-    "info",
-    "warning",
-    "error",
-  ];
-
-  const Navigate = useNavigate();
+  const isActive = (path) => location.pathname.startsWith("/" + path);
 
   return (
     <AppBar
-      color="primary" //{colorList[Math.round(Math.random() * 5)]}
-      enableColorOnDark={false}
       position="relative"
-      sx={{ "@media print": { display: "none" } }}
+      sx={{
+        "@media print": { display: "none" },
+      }}
     >
       <Toolbar>
-        <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+        {/* MOBILE MENU BUTTON */}
+        <Box sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}>
           <IconButton
-            size={"large"}
-            aria-label="account of current user"
-            aria-controls="menu-appbar"
-            aria-haspopup="true"
-            onClick={handleOpenNavMenu}
-            color="success"
-            //disabled={context.useLogin}
+            color="inherit"
+            onClick={(e) => setMobileAnchor(e.currentTarget)}
           >
             <MenuIcon />
           </IconButton>
-          <Menu
-            id="menu-appbar"
-            anchorEl={anchorElNav}
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "left",
-            }}
-            keepMounted
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "left",
-            }}
-            open={Boolean(anchorElNav)}
-            onClose={() => handleCloseNavMenu()}
-            color="secondary"
-            sx={{
-              display: { xs: "block", md: "none" },
-            }}
-          >
-            {pages.map((page) => (
-              <MenuItem
-                key={page.path}
-                onClick={() => {
-                  handleCloseNavMenu(page.path);
-                }}
-                {...(context.useLogin ? "" : { disabled: true })}
-              >
-                <Typography textAlign="center">{page.text}</Typography>
-              </MenuItem>
-            ))}
-          </Menu>
         </Box>
-        <Box
+
+        {/* LOGO */}
+        <Button
+          color="inherit"
+          onClick={() => navigate("/")}
           sx={{
-            flexGrow: 2,
-            display: { xs: "flex", md: "flex" },
+            mr: 2,
+            textTransform: "none",
+            minWidth: "auto",
           }}
         >
-          {/* SVG imported as ReactComponent must be used with an uppercase name */}
-          <Button
-            onClick={() => Navigate("/")}
-            color="primary"
-            variant="contained"
-            padding={{ sx: "2px 2px 2px 0", md: "5px 5px 5px 0" }}
-          >
-            <Logo
-              role="img"
-              aria-label="Hamlet logo"
-              margin={{ sx: "2px 2px 2px 0", md: "5px 5px 5px 0" }}
-              style={{
-                width: "25px",
-                height: "25px",
-                display: "block",
-              }}
-            />
-            <Typography variant="button" align="left" marginLeft={3}>
-              HAMLET
-              {context.useLogin && (
-                <Box
-                  component="span"
-                  sx={{
-                    display: { xs: "block", sm: "inline" },
-                    ml: { sm: 1 },
-                    fontSize: "0.75em",
-                  }}
-                >
-                  {context.memberships[0]?.tenant.name || ""}
-                </Box>
-              )}
-            </Typography>
-          </Button>
-
-          {/* <Button
-              startIcon={<LocalLibraryIcon />}
-              variant="h5"
-              color="primary"
-              onClick={() => Navigate("/")}
-               sx={{
-                    mr: 2,
-                    display: { xs: "flex", md: "none" },
-                    flexGrow: 1,
-                    fontFamily: "monospace",
-                    fontWeight: 700,
-                    letterSpacing: ".3rem",
-                    textDecoration: "none",
-                  }} 
-            >
-              HAMLET
-            </Button> */}
-        </Box>
-
-        <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-          {pages.map((page) => (
-            <Button
-              variant="standard"
-              key={page.path}
-              color="primary"
-              onClick={() => {
-                handleCloseNavMenu(page.path);
-              }}
-              sx={{ my: 2, display: "block" }}
-              {...(context.useLogin ? "" : { disabled: true })}
-            >
-              {page.text}
-            </Button>
-          ))}
-        </Box>
-
-        <Box sx={{ flexGrow: 0 }}>
-          <FormControlLabel
-            control={
-              <Switch
-                color="success"
-                onChange={(e) => {
-                  setSwitchChecked(e.target.checked);
-                  props.toogle();
-                }}
-                defaultChecked={props.mode === "dark"}
-                size="small"
-              ></Switch>
-            }
-            label="Dark Mode"
-            labelPlacement="end"
+          <Logo
+            style={{
+              width: 26,
+              height: 26,
+              marginRight: 8,
+            }}
           />
 
-          <StyledTooltip
-            title={
-              context.userLogged !== null
-                ? context.userLogged.Name
-                : "Registrarse"
-            }
-          >
-            <IconButton
-              onClick={handleOpenUserMenu}
-              sx={{ p: 0 }}
-              size="snall"
-              disabled={false}
-            >
-              <Avatar alt={"Nada"} />
-            </IconButton>
-          </StyledTooltip>
-          <Menu
-            sx={{ mt: "45px" }}
-            id="menu-appbar"
-            anchorEl={anchorElUser}
-            anchorOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
-            keepMounted
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
-            open={Boolean(anchorElUser)}
-            onClose={() => handleCloseUserMenu()}
-          >
-            {context.userLogged && (
-              <MenuItem>
-                <Typography textAlign="left" color={"primary"}>
-                  {context.userLogged.Name} {context.userLogged.LastName}{" "}
-                </Typography>
-              </MenuItem>
-            )}
+          <Typography fontWeight={700}>HAMLET</Typography>
 
-            {dropMenu.map((setting) => (
-              <MenuItem
-                key={setting.text}
-                disabled={setting.disabled}
-                onClick={() => handleCloseUserMenu(setting.path)}
+          {isLogged && (
+            <Typography
+              sx={{
+                ml: 1,
+                opacity: 0.8,
+                display: { xs: "none", sm: "block" },
+              }}
+            >
+              {context.memberships[0]?.tenant.name || ""}
+            </Typography>
+          )}
+        </Button>
+
+        {/* DESKTOP MENUS */}
+        <Box
+          sx={{
+            flexGrow: 1,
+            display: { xs: "none", md: "flex" },
+          }}
+        >
+          {pages.map((page) => {
+            if (page.pro && !isPro) return null;
+
+            return (
+              <Button
+                key={page.text}
+                color="inherit"
+                disabled={!isLogged}
+                endIcon={<KeyboardArrowDownIcon />}
+                onMouseEnter={(e) => openDesktopMenu(e, page)}
+                onClick={(e) => openDesktopMenu(e, page)}
+                sx={{
+                  textTransform: "none",
+                  borderRadius: 2,
+                  px: 1.5,
+                  mx: 0.3,
+                  "&:hover": {
+                    backgroundColor: "rgba(255,255,255,0.08)",
+                  },
+                }}
               >
-                <Typography textAlign="right">{setting.text}</Typography>
-              </MenuItem>
-            ))}
-            <MenuItem>
-              <ListItemButton
-                {...(context.useLogin ? "" : { disabled: true })}
-                key="logout"
-                onClick={handleLogOut}
-              >
-                Cerrar Sesion
-              </ListItemButton>
-            </MenuItem>
-          </Menu>
+                {page.text}
+              </Button>
+            );
+          })}
         </Box>
+
+        {/* DARK MODE */}
+        <FormControlLabel
+          sx={{
+            mr: 1,
+            display: { xs: "none", sm: "flex" },
+          }}
+          control={
+            <Switch
+              size="small"
+              checked={props.mode === "dark"}
+              onChange={props.toogle}
+            />
+          }
+          label="Dark"
+        />
+
+        {/* USER MENU */}
+        <StyledTooltip title={context.userLogged?.Name || "Cuenta"}>
+          <IconButton onClick={(e) => setUserAnchor(e.currentTarget)}>
+            <Avatar />
+          </IconButton>
+        </StyledTooltip>
+
+        {/* DESKTOP DROPDOWN */}
+        <Menu
+          anchorEl={menuAnchor}
+          open={Boolean(menuAnchor)}
+          onClose={scheduleCloseDesktopMenu}
+          transitionDuration={120}
+          MenuListProps={{
+            onMouseEnter: cancelCloseDesktopMenu,
+            onMouseLeave: scheduleCloseDesktopMenu,
+          }}
+          PaperProps={{
+            onMouseEnter: cancelCloseDesktopMenu,
+            onMouseLeave: scheduleCloseDesktopMenu,
+          }}
+        >
+          {currentMenu?.drop?.map((item) => (
+            <MenuItem
+              key={item.path}
+              selected={isActive(item.path)}
+              onClick={() => go(item.path)}
+            >
+              {item.text}
+            </MenuItem>
+          ))}
+        </Menu>
+
+        {/* MOBILE MENU */}
+        <Menu
+          anchorEl={mobileAnchor}
+          open={Boolean(mobileAnchor)}
+          onClose={closeAll}
+        >
+          {pages.map((group) => (
+            <Box key={group.text}>
+              {(!group.pro || isPro) && (
+                <>
+                  <MenuItem disabled>{group.text}</MenuItem>
+
+                  {group.drop.map((item) => (
+                    <MenuItem
+                      key={item.path}
+                      disabled={!isLogged}
+                      onClick={() => go(item.path)}
+                      sx={{ pl: 4 }}
+                    >
+                      {item.text}
+                    </MenuItem>
+                  ))}
+
+                  <Divider />
+                </>
+              )}
+            </Box>
+          ))}
+        </Menu>
+
+        {/* USER DROPDOWN */}
+        <Menu
+          anchorEl={userAnchor}
+          open={Boolean(userAnchor)}
+          onClose={closeAll}
+        >
+          {context.userLogged && (
+            <MenuItem disabled>
+              {context.userLogged.Name} {context.userLogged.LastName}
+            </MenuItem>
+          )}
+
+          {userMenu.map((item) => (
+            <MenuItem key={item.text} onClick={() => go(item.path)}>
+              {item.text}
+            </MenuItem>
+          ))}
+
+          {isLogged && <Divider />}
+
+          {isLogged && (
+            <MenuItem
+              onClick={() => {
+                context.handleLogout();
+                closeAll();
+              }}
+            >
+              Cerrar sesión
+            </MenuItem>
+          )}
+        </Menu>
       </Toolbar>
     </AppBar>
   );
 }
+
 export default ResponsiveAppBar;

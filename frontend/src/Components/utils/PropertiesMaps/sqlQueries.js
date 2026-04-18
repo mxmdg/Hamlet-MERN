@@ -76,7 +76,7 @@ export const queryDetalleOT = (nroOt) => `
         lp.clf_tbj AS colores_frente,
         lp.cld_tbj AS colores_dorso,
         -- Procesos en un solo string
-        (SELECT STRING(des_tbt, ' | ') FROM trlt00 WHERE trlt00.cod_pre = lp.cod_pre AND trlt00.num_tbt = lp.num_tbj) AS procesos,
+        (SELECT LIST(des_tbt, ' | ') FROM trlt00 WHERE trlt00.cod_pre = lp.cod_pre AND trlt00.num_tbt = lp.num_tbj) AS procesos,
         -- Entregas: Aquí es donde se duplica, ojo
         ote.fecha AS entrega_fecha,
         ote.cantidad AS entrega_cantidad
@@ -95,14 +95,13 @@ export const queryDetalleOT = (nroOt) => `
 export const finalQuery = ` 
     SELECT 
     -- 1. IDENTIFICACION Y ESTADO
-    (STRING (ot.ot)+ot.cod_pre) AS key,
+    (STRING (ot.ot) + '-' + STRING(lp.num_tbj)) AS key, -- Key única por OT-Parte
     ot.ot AS nro_ot,
     ot.cod_pre AS presupuesto,
     ot.fecha AS fecha_ot,
-    ot.fecha_Entrega AS ot_entregas,
     ot.estado AS estado_ot,
     ent.descripcion AS cliente,
-    (SELECT des_ven FROM trve00 WHERE trve00.cod_ven = ot.vendedor) AS vendedor,
+    (SELECT FIRST des_ven FROM trve00 WHERE trve00.cod_ven = ot.vendedor) AS vendedor,
     ot.orden_compra,
 
     -- 2. ESPECIFICACIONES DE LA PARTE (PLIEGO)
@@ -112,47 +111,41 @@ export const finalQuery = `
     (cp.mil_pre * 1000) AS tirada_total,
     
     -- 3. PAPEL Y MAQUINA
-    (SELECT des_pap FROM trtm00 WHERE cod_pap = lp.cod_pap) AS papel_nombre,
+    (SELECT FIRST des_pap FROM trtm00 WHERE cod_pap = lp.cod_pap) AS papel_nombre,
     lp.gra_med AS papel_gramaje,
-    (SELECT des_maq FROM trmq00 WHERE cod_maq = lp.cod_maq) AS maquina_nombre,
+    (SELECT FIRST des_maq FROM trmq00 WHERE cod_maq = lp.cod_maq) AS maquina_nombre,
     lp.la1_med AS papel_largo,
     lp.la2_med AS papel_ancho,
 
-    -- 4. TINTAS DETALLADAS (FRENTE Y DORSO)
+    -- 4. TINTAS (Con LIST o FIRST para evitar el error -186 si hubiera duplicados)
     lp.clf_tbj AS cant_colores_frente,
-    (SELECT des_tin FROM trti00 WHERE lp.t1f_tbj = cod_tin) AS color_f1,
-    (SELECT des_tin FROM trti00 WHERE lp.t2f_tbj = cod_tin) AS color_f2,
-    (SELECT des_tin FROM trti00 WHERE lp.t3f_tbj = cod_tin) AS color_f3,
-    (SELECT des_tin FROM trti00 WHERE lp.t4f_tbj = cod_tin) AS color_f4,
+    (SELECT FIRST des_tin FROM trti00 WHERE lp.t1f_tbj = cod_tin) AS color_f1,
+    (SELECT FIRST des_tin FROM trti00 WHERE lp.t2f_tbj = cod_tin) AS color_f2,
     
     lp.cld_tbj AS cant_colores_dorso,
-    (SELECT des_tin FROM trti00 WHERE lp.t1d_tbj = cod_tin) AS color_d1,
-    (SELECT des_tin FROM trti00 WHERE lp.t2d_tbj = cod_tin) AS color_d2,
-    (SELECT des_tin FROM trti00 WHERE lp.t3d_tbj = cod_tin) AS color_d3,
-    (SELECT des_tin FROM trti00 WHERE lp.t4d_tbj = cod_tin) AS color_d4,
+    (SELECT FIRST des_tin FROM trti00 WHERE lp.t1d_tbj = cod_tin) AS color_d1,
+    (SELECT FIRST des_tin FROM trti00 WHERE lp.t2d_tbj = cod_tin) AS color_d2,
 
-    -- 5. OBSERVACIONES CRÍTICAS
+    -- 5. OBSERVACIONES
     ot.observacion AS obs_produccion,
     ot.obs_adicional AS obs_logistica,
 
-    -- 6. PROCESOS DE TERMINACION (RESUMIDOS)
-    (SELECT STRING(des_tbt, ' | ') FROM trlt00 WHERE trlt00.cod_pre = lp.cod_pre) AS procesos_lista,
+    -- 6. PROCESOS DE TERMINACION (USANDO LIST PARA EVITAR ERROR -186)
+    (SELECT LIST(des_tbt, ' | ') 
+     FROM trlt00 
+     WHERE trlt00.cod_pre = lp.cod_pre 
+     AND trlt00.num_tbj = lp.num_tbj) AS procesos_lista,
 
-    -- 7. AGREGAMOS LOS CAMPOS CRUDOS DE ENTREGAS:
-    ot_entregas.fecha AS entrega_fecha,
-    ot_entregas.cantidad AS entrega_cantidad
+    -- 7. ENTREGAS (Si quieres evitar duplicados, agrupa las entregas en un string o trae la suma)
+    (SELECT LIST(STRING(fecha, ': ', cantidad), ' // ') FROM ot_entregas WHERE ot_entregas.ot = ot.ot) AS historial_entregas
 
 FROM ot
--- Usamos alias 'ent', 'cp', 'lp', 'tp' para que sea más corto y claro
 INNER JOIN sys_entidades ent ON (ot.cliente = ent.entidad AND ot.suc_cliente = ent.suc_entidad)
 INNER JOIN trcp00 cp ON (ot.cod_pre = cp.cod_pre AND ot.ext_pre = cp.ext_pre)
 INNER JOIN trlp00 lp ON (cp.cod_pre = lp.cod_pre AND cp.ext_pre = lp.ext_pre)
 INNER JOIN trtp00 tp ON (cp.cod_tpp = tp.cod_tpp)
 
--- ACA ESTA EL ARREGLO:
-LEFT JOIN ot_entregas ON (ot_entregas.ot = ot.ot)
-
-WHERE ot.ot = 27703  -- El parámetro que pasamos desde Node.js
+WHERE ot.ot = 27703 
   AND ent.tipo_entidad = 'CL'
 `;
 

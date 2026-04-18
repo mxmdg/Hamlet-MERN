@@ -81,7 +81,7 @@ const AuthProvider = ({ children }) => {
     if (useToken !== null) {
       validateToken();
     }
-  }, [useLogin, useToken]);
+  }, [useLogin, useToken, userLogged]);
 
   return (
     <AuthContext.Provider

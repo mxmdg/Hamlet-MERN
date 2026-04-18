@@ -53,6 +53,7 @@ const PapyrusCopy = () => {
   if (error)
     return (
       <ErrorMessage
+        title="Error al importar desde Papyrus"
         message={error.message}
         action={() => window.history.back()}
       />
