@@ -1,10 +1,11 @@
 import Menu from "./Menu";
 import AppBarResponsive from "./AppBarResponsive";
+import MenuBarComponent from "./MenuBar";
 
 const Header = (props) => {
   return (
     <header>
-      <AppBarResponsive toogle={props.toogleMode} mode={props.mode} />
+      <MenuBarComponent toogle={props.toogleMode} mode={props.mode} />
     </header>
   );
 };

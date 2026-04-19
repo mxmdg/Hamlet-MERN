@@ -134,7 +134,7 @@ function ResponsiveAppBar(props) {
         "@media print": { display: "none" },
       }}
     >
-      <Toolbar>
+      <Toolbar sx={{ display: "flex", justifyContent: "space-between"}}>
         {/* MOBILE MENU BUTTON */}
         <Box sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}>
           <IconButton
@@ -147,13 +147,9 @@ function ResponsiveAppBar(props) {
 
         {/* LOGO */}
         <Button
-          color="inherit"
+          color="primary"
+          variant="contained"
           onClick={() => navigate("/")}
-          sx={{
-            mr: 2,
-            textTransform: "none",
-            minWidth: "auto",
-          }}
         >
           <Logo
             style={{
@@ -170,7 +166,7 @@ function ResponsiveAppBar(props) {
               sx={{
                 ml: 1,
                 opacity: 0.8,
-                display: { xs: "none", sm: "block" },
+                display: "block",
               }}
             >
               {context.memberships[0]?.tenant.name || ""}
@@ -179,12 +175,7 @@ function ResponsiveAppBar(props) {
         </Button>
 
         {/* DESKTOP MENUS */}
-        <Box
-          sx={{
-            flexGrow: 1,
-            display: { xs: "none", md: "flex" },
-          }}
-        >
+        <Box sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}>
           {pages.map((page) => {
             if (page.pro && !isPro) return null;
 
@@ -213,27 +204,27 @@ function ResponsiveAppBar(props) {
         </Box>
 
         {/* DARK MODE */}
-        <FormControlLabel
-          sx={{
-            mr: 1,
-            display: { xs: "none", sm: "flex" },
-          }}
-          control={
-            <Switch
-              size="small"
-              checked={props.mode === "dark"}
-              onChange={props.toogle}
-            />
-          }
-          label="Dark"
-        />
+        <Box sx={{ display: "flex", flexDirection: "row", mr: 1, justifyContent: "flex-end", alignItems: "flex-end" }}>
+          <FormControlLabel
+            control={
+              <Switch
+                size="small"
+                checked={props.mode === "dark"}
+                onChange={props.toogle}
+              />
+            }
+            label="Dark Mode"
+            labelPlacement="bottom"
+          />
 
-        {/* USER MENU */}
-        <StyledTooltip title={context.userLogged?.Name || "Cuenta"}>
-          <IconButton onClick={(e) => setUserAnchor(e.currentTarget)}>
-            <Avatar />
-          </IconButton>
-        </StyledTooltip>
+          {/* USER MENU */}
+          <StyledTooltip title={context.userLogged?.Name || "Cuenta"}>
+            <IconButton onClick={(e) => setUserAnchor(e.currentTarget)}>
+              <Avatar />
+            </IconButton>
+          </StyledTooltip>
+        </Box >
+        
 
         {/* DESKTOP DROPDOWN */}
         <Menu

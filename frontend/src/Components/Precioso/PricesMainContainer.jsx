@@ -99,7 +99,7 @@ const PricesMainContainer = () => {
   const loadingComponent = <Spinner />;
 
   const success = (
-    <Box sx={{ width: "100%" }}>
+    <Container >
       {
         //validateAdminUser() &&
         <Card>
@@ -183,7 +183,7 @@ const PricesMainContainer = () => {
           </CardActions>
         </Card>
       }
-    </Box>
+    </Container>
   );
 
   return loading ? loadingComponent : error !== null ? failure : success;

@@ -34,9 +34,9 @@
 
 .App h1 {
   /* background: #cdcbcb; */
-  color:#012631;
+  color: #012631;
   font-size: 1.2em;
-  margin:0;
+  margin: 0;
   padding: 15px;
   text-align: left;
 }
@@ -49,14 +49,21 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
 }
 
-html, body, #root {
+body {
+  overflow-y: scroll !important;
+}
+
+html,
+body,
+#root {
   width: 100%;
   margin: 0;
-  padding: 0;
+  padding: 0 !important;
   overflow-x: hidden;
 }

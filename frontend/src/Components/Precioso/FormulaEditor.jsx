@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Box, Typography, Button } from "@mui/material";
+import { Box, Container, Typography, Button } from "@mui/material";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import Spinner from "../General/Spinner";
 import SimpleAreaChart from "../utils/stats/SimpleAreaChart";
@@ -114,12 +114,13 @@ const FormulaEditor = () => {
   }
 
   return (
-    <Box
+    <Container
       sx={{
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        height: "100vh",
+        minHeight: "100vh",
+        overflowY: "scroll",
       }}
     >
       <Typography variant="h4" component="h1" gutterBottom>
@@ -149,7 +150,7 @@ const FormulaEditor = () => {
           title="Exportación Papyrus"
         />
       )}
-    </Box>
+    </Container>
   );
 };
 
