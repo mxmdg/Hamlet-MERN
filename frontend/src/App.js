@@ -9,7 +9,7 @@ import AuthProvider from "./Components/context/AuthContext";
 import { BrowserRouter } from "react-router-dom";
 import Router from "./router";
 //import { themeOptions } from "./Components/Config/theme";
-import { createMxmTheme } from "./Components/Config/theme";
+import { createMxmTheme, createThemeOptions } from "./Components/Config/theme";
 /*import {
   themeIndependiente,
   themeBocaJuniors,
@@ -65,8 +65,9 @@ function App() {
     localStorage.setItem("appTheme", nextMode);
   };
 
-  const themeInUse = useMemo(() => createMxmTheme(useMode), [useMode]);
+  //const themeInUse = useMemo(() => createMxmTheme(useMode), [useMode]);
   //const themeInUse = createThemeOptions(useMode);
+  const themeInUse = useMemo(() => createMxmTheme(useMode), [useMode]);
 
   const success = (
     <ThemeProv theme={themeInUse} mode={useMode}>

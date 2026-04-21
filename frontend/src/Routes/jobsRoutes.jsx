@@ -70,6 +70,7 @@ export const jobsRoutes = ({ color, variant }) => (
         </JobProvider>
       }
     />
+    <Route path="/Jobs/trash" element={<JobsContainer entity={"Jobs/trash"} />} />
     // Ruta para ver la lista completa de trabajos sin partes, carga mas rapida.
     <Route path="/Jobs/fullList" element={<JobsContainer entity={"Jobs"} />} />
   </>

@@ -8,6 +8,7 @@ const jobControl = {};
 
 jobControl.getJobs = async (req, res, next) => {
   try {
+    console.log("Obteniendo trabajos eliminados para tenant:", req.header("x-tenant"));
     const queryText = req.query.Q || "";
     const jobList = await jobs.esquema
       .find({
@@ -25,13 +26,9 @@ jobControl.getJobs = async (req, res, next) => {
 
 jobControl.getDeletedJobs = async (req, res, next) => {
   try {
-    const queryText = req.query.Q || "";
+    const tenant = req.header("x-tenant");
     const jobList = await jobs.esquema
-      .find({
-        tenant: req.header("x-tenant"),
-        Nombre: { $regex: queryText, $options: "i" },
-        status: { $eq: "inactivo" },
-      })
+      .find({ tenant, status: { $eq: "inactivo" } })
       .select("Nombre Cantidad Fecha Entrega Emision Deadline Owner")
       .sort({ Fecha: -1 });
     res.json(jobList);
@@ -106,6 +103,7 @@ jobControl.getCompleteJobs = async (req, res) => {
       }
 
       query.tenant = req.header("x-tenant");
+      query.status = { $ne: "inactivo" };
 
       const jobList = await jobs.esquema
         .find(query)
@@ -184,7 +182,8 @@ jobControl.getUrgentJobs = async (req, res) => {
       const jobList = await jobs.esquema
         .find({
           tenant: req.header("x-tenant"),
-          Entrega: { $gte: startDate, $lt: endDate },
+          Entrega: { $gte: startDate, $lt: endDate }, 
+          status: { $ne: "inactivo" }
         })
         .populate({
           path: "Owner",
@@ -227,6 +226,7 @@ jobControl.getOwnerJobs = async (req, res) => {
         .find({
           tenant: req.header("x-tenant"),
           Owner: { $eq: currentUserId },
+          status: { $ne: "inactivo" }
         })
         .select(
           "-Finishing.Costo.Historial  -Finishing.jobTypesAllowed -Finishing.partTypesAllowed"
@@ -263,6 +263,7 @@ jobControl.getCompanyJobs = async (req, res) => {
         .find({
           tenant: req.header("x-tenant"),
           Company: { $eq: currentUserId },
+          status: { $ne: "inactivo" }
         })
         .populate({
           path: "Owner",
