@@ -142,11 +142,11 @@ export const drawSimpleCutting = (
   let izq = x3;
   let top = y3;
 
-  ctx.strokeStyle = "rgba(253, 49, 161, 1)";
+  ctx.strokeStyle = "rgba(12, 239, 235, 0.25)";
 
   ctx.strokeRect(izq, top, x1, y1);
 
-  ctx.strokeStyle = "rgba(255, 0, 170, 1)";
+  ctx.strokeStyle = "#0086fbed";
 
   if (n1 >= n2 && n1 > 0) {
     top = top - y2 - calle / 2;
@@ -236,14 +236,15 @@ export const drawOptimusCutting = (
   // console.log("izq: " + izq);
   // console.log("top: " + top);
 
-  ctx.strokeStyle = "rgba(1, 140, 117, 1)";
-  ctx.strokeWidth = "1";
+  ctx.strokeStyle = "rgb(7, 162, 159)";
+  ctx.strokeWidth = "2";
   ctx.strokeRect(izq, top, x1, y1);
-  ctx.strokeStyle = "rgba(1, 140, 117, 1)";
+  ctx.strokeStyle = "rgba(12, 239, 235, 0.25)";
+  ctx.strokeWidth = "1";
   ctx.strokeRect(izq + margen, top + margen, printAreaX, printAreaY);
 
-  ctx.strokeStyle = "#f700ffed";
-  ctx.fillStyle = "#f387ffff";
+  ctx.strokeStyle = "#0086fbed";
+  ctx.fillStyle = "#0086fbed";
 
   izq = izq + margen;
   let izq2 = izq;

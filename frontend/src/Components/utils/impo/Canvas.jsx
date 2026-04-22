@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef, useContext } from "react";
 import { drawOptimusCutting } from "./ImpositionService";
+import { createSvgDrawingContext } from "./SvgDrawingContext";
 
 import { ImpositionForm } from "./ImpositionForm";
 import { ImpoContext } from "./ImpoContext";
@@ -17,25 +18,27 @@ import {
 
 const Canvas = (props) => {
   const context = useContext(ImpoContext);
-  const canvasRef = useRef(null);
+  const svgRef = useRef(null);
+  const [useSvgShapes, setSvgShapes] = useState([]);
   const [useCanvasSize, setCanvasSize] = useState({
-    x: 300,
-    y: 200,
+    x: 800,
+    y: 450,
   });
 
   const handleResize = () => {
-    const canvas = canvasRef.current;
-    const Parent = canvas.parentNode;
+    const svg = svgRef.current;
+    if (!svg) return;
+    const Parent = svg.parentNode;
 
     setCanvasSize({
-      x: Parent.clientHeight * 0.6,
-      y: Parent.clientHeight * 0.4,
+      x: Parent.clientWidth,
+      y: Parent.clientHeight * 0.9,
     });
   };
 
   const handleImpoClick = (data) => {
-    if (canvasRef.current) {
-      const newContext = canvasRef.current.getContext("2d");
+    if (svgRef.current) {
+      const { context: svgContext, getShapes } = createSvgDrawingContext();
       const canvasWidth = useCanvasSize.x;
       const canvasHeight = useCanvasSize.y;
       const sheet = {
@@ -71,10 +74,11 @@ const Canvas = (props) => {
         parseInt(data.heightPage),
         parseInt(data.margenes),
         parseInt(data.Calle),
-        newContext,
+        svgContext,
         useCanvasSize.x,
         useCanvasSize.y,
       );
+      setSvgShapes(getShapes());
 
       //console.log("Total Poses: " + totalPoses.tPoses);
 
@@ -128,10 +132,12 @@ const Canvas = (props) => {
 
           <Divider />
           <Grid size={{ xs: 12, sm: 12 }}>
-            <canvas
-              ref={canvasRef}
+            <svg
+              ref={svgRef}
               width={useCanvasSize.x}
               height={useCanvasSize.y}
+              viewBox={`0 0 ${useCanvasSize.x} ${useCanvasSize.y}`}
+              xmlns="http://www.w3.org/2000/svg"
               style={{
                 padding: "20px",
                 border: "#666 1px solid",
@@ -139,7 +145,23 @@ const Canvas = (props) => {
                 marginTop: "20px",
                 width: "93%",
               }}
-            ></canvas>
+            >
+              {useSvgShapes.map((shape, index) => (
+                <rect
+                  key={`impo-shape-${index}`}
+                  x={shape.x}
+                  y={shape.y}
+                  rx={2}
+                  ry={2}
+                  width={shape.width}
+                  height={shape.height}
+                  fill={shape.fill}
+                  stroke={shape.stroke}
+                  strokeWidth={shape.strokeWidth}
+                  style={{ transition: 'all 0.5s ease-out', cursor: 'pointer' }}
+                />
+              ))}
+            </svg>
           </Grid>
         </Grid>
       </CardContent>

@@ -14,6 +14,7 @@ import SaveIcon from "@mui/icons-material/Save";
 import ImpoProvider from "../utils/impo/ImpoContext";
 import Canvas from "../utils/impo/Canvas";
 import ImpositionDraw from "../utils/impo/ImpositionDraw";
+import ImpositionVector from "../utils/impo/ImpositionVector";
 import { calculateStock } from "../utils/impo/ImpositionService";
 import DarkWoodCard from "../utils/DarkWoodCard";
 import CopyToClipboardWrapper from "../General/CopyToClipboardWrapper";
@@ -167,7 +168,7 @@ const PartDetail = ({
                           title="Corte de plana"
                           titleTypographyProps={{ variant: "caption" }}
                         />
-                        <ImpositionDraw data={useData} />
+                        <ImpositionVector data={useData} />
                       </Card>
                     </ImpoProvider>
                   </Container>
