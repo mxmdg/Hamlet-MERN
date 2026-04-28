@@ -34,7 +34,7 @@ const QuickSpinCalc = (props) => {
   const calculateSpin = (pages, stock) => {
     if (pages && stock?.Espesor_Resma) {
       const spin = Math.ceil(
-        Math.ceil(pages / 2) * (stock.Espesor_Resma / 500)
+        Math.ceil(pages / 2) * (stock.Espesor_Resma / 500),
       );
       setSpin(spin);
     } else {
@@ -104,8 +104,8 @@ const QuickSpinCalc = (props) => {
               <Autocomplete
                 color={useColor}
                 options={stocks}
-                getOptionLabel={(option) =>
-                  `${option.Nombre_Material} - ${option.Marca}`
+                getOptionLabel={(item) =>
+                  `${item.Nombre_Material} (${item.Marca} ${item.Tipo} ${item.Gramaje}`
                 }
                 onChange={handleMaterialChange}
                 renderInput={(params) => (

@@ -394,10 +394,10 @@ export const ImpositionForm = (props) => {
                   dense={true}
                 >
                   <Chip
-                    variant="outlined"
+                    variant="contained"
                     size="small"
                     label="Personalizado"
-                    color="secondary"
+                    color="info"
                   />
                 </MenuItem>
               </TextField>

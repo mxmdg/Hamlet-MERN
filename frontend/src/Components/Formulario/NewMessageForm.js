@@ -70,6 +70,25 @@ const PreferencesForm = () => {
     },
   ];
 
+  const pdfValidator = [
+    {
+      label: "Revision de archivos PDF",
+      type: "Divider",
+      id: "pdf_validator_div",
+      size: 12,
+      align: "center",
+      orientation: "horizontal",
+    },
+    {
+      inputName: "extensions.pdfValidatorUrl",
+      label: "URL PDF Revision",
+      type: "Text",
+      id: "pdf_validator_url",
+      required: true,
+      help: "URL de la aplicacion PDF Revision.",
+    },
+  ];
+
   let preferencesForm = [
     // Pricing - Gain
     {
@@ -206,6 +225,7 @@ const PreferencesForm = () => {
 
   if (context.usePlan === "pro") {
     preferencesForm.push(papyrusConnection[0], papyrusConnection[1]);
+    preferencesForm.push(pdfValidator[0], pdfValidator[1]);
   }
 
   return preferencesForm;

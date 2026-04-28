@@ -1,3 +1,5 @@
+export const swachtes = ["#20aca0"];
+
 export const bestCut = (x1, y1, x2, y2) => {
   let xPoses1 = Math.floor(x1 / parseInt(x2));
   let yPoses1 = Math.floor(y1 / parseInt(y2));
@@ -106,8 +108,8 @@ export const drawCutting = (
     }
   } else if (n1 === 0 && n2 === 0) {
     ctx.clearRect(0, 0, xCtx, yCtx);
-    ctx.strokeStyle = "#F00";
-    ctx.strokeWidth = "5";
+    ctx.strokeStyle = swachtes[3];
+    ctx.strokeWidth = "1";
     ctx.strokeRect(izq, top, x1, y1);
   }
 
@@ -142,11 +144,11 @@ export const drawSimpleCutting = (
   let izq = x3;
   let top = y3;
 
-  ctx.strokeStyle = "rgba(12, 239, 235, 0.25)";
+  ctx.strokeStyle = "rgba(10, 142, 140, 0.25)";
 
-  ctx.strokeRect(izq, top, x1, y1);
+  //ctx.strokeRect(izq, top, x1, y1);
 
-  ctx.strokeStyle = "#0086fbed";
+  ctx.strokeStyle = swachtes[Math.floor((Math.random() * swachtes.length) / 2)];
 
   if (n1 >= n2 && n1 > 0) {
     top = top - y2 - calle / 2;
@@ -236,15 +238,15 @@ export const drawOptimusCutting = (
   // console.log("izq: " + izq);
   // console.log("top: " + top);
 
-  ctx.strokeStyle = "rgb(7, 162, 159)";
+  ctx.strokeStyle = swachtes[Math.floor(Math.random() * swachtes.length)];
   ctx.strokeWidth = "2";
   ctx.strokeRect(izq, top, x1, y1);
-  ctx.strokeStyle = "rgba(12, 239, 235, 0.25)";
+  ctx.strokeStyle = swachtes[Math.floor(Math.random() * swachtes.length)];
   ctx.strokeWidth = "1";
   ctx.strokeRect(izq + margen, top + margen, printAreaX, printAreaY);
 
-  ctx.strokeStyle = "#0086fbed";
-  ctx.fillStyle = "#0086fbed";
+  ctx.strokeStyle = swachtes[Math.floor(Math.random() * swachtes.length)];
+  ctx.fillStyle = swachtes[Math.floor(Math.random() * swachtes.length)];
 
   izq = izq + margen;
   let izq2 = izq;

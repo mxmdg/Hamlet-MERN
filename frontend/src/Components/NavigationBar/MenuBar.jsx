@@ -53,6 +53,7 @@ export const pages = [
       { text: "Materiales", path: "materiales" },
       { text: "Partes de trabajo", path: "JobParts" },
       { text: "Terminaciones", path: "finishers" },
+      { text: "Troubleshooting", path: "troubles" },
     ],
   },
   {
@@ -105,9 +106,8 @@ function MenuBarComponent(props) {
   return (
     <AppBar position="relative" sx={{ "@media print": { display: "none" } }}>
       <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
-
         {/* 1. IZQUIERDA: BOTÓN MOBILE + LOGO */}
-        <Box sx={{ display: "flex", alignItems: "center"}}>
+        <Box sx={{ display: "flex", alignItems: "center" }}>
           <Box sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}>
             <IconButton
               color="inherit"
@@ -133,8 +133,15 @@ function MenuBarComponent(props) {
         </Box>
 
         {/* 2. CENTRO: MENUBAR DE BASE UI (solo Desktop) */}
-        <Box sx={{ display: { xs: "none", md: "flex" }, flexGrow: 1, ml: 2, justifyContent: "center" }}>
-          <Menubar style={{ display: "flex", padding: 0, margin: 0, gap: 4  }}>
+        <Box
+          sx={{
+            display: { xs: "none", md: "flex" },
+            flexGrow: 1,
+            ml: 2,
+            justifyContent: "center",
+          }}
+        >
+          <Menubar style={{ display: "flex", padding: 0, margin: 0, gap: 4 }}>
             {pages.map((page) => {
               if (page.pro && !isPro) return null;
 
@@ -267,7 +274,6 @@ function MenuBarComponent(props) {
             </MuiMenuItem>
           )}
         </MuiMenu>
-
       </Toolbar>
     </AppBar>
   );

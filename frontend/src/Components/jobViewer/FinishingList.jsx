@@ -13,6 +13,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
+import AuthContext from "../context/AuthContext";
 
 import { ListItemTypographyProps } from "../MaterialCustomStyles/MaterialCustomStyles";
 
@@ -47,6 +48,21 @@ const FinishingList = (props) => {
       fontSize: 12,
     },
   }));
+
+  const context = React.useContext(AuthContext);
+  
+    const validateAdminUser = () => {
+      if (
+        context.useLogin === true &&
+        context.memberships[0]?.role.toLowerCase() === "admin"
+      ) {
+        return true;
+      } else {
+        //setError({ message: "Acceso denegado: Contacte al administrador" });
+        //setLoading(false);
+        return false;
+      }
+    };
 
   const StyledTableRow = styled(TableRow)(({ theme }) => ({
     "&:nth-of-type(odd)": {
@@ -269,12 +285,17 @@ const FinishingList = (props) => {
                 <StyledTableCell component="th" scope="row">
                   {item.Finisher.Proceso}
                 </StyledTableCell>
-                <StyledTableCell align="right">
+                {
+                  validateAdminUser() && (
+                    <>
+                  <StyledTableCell align="right">
                   {currencyFormat(item.Cost.Unitario)}
                 </StyledTableCell>
                 <StyledTableCell align="right">
                   {currencyFormat(item.Cost.Total)}
                 </StyledTableCell>
+                </>)
+                } 
               </StyledTableRow>
             ))
           ) : (

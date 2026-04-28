@@ -19,6 +19,7 @@ import { VALIDATE_PDF } from "../../Config/config";
 import { StyledTooltip } from "../../General/TableGrid";
 import ErrorMessage from "../../ErrorMessage/ErrorMessage";
 import Spinner from "../../General/Spinner";
+import { AuthContext } from "../../context/AuthContext";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -34,7 +35,7 @@ const VisuallyHiddenInput = styled("input")({
 
 export const handleUploadSuccess = (data) => {
   alert(
-    `Uploaded PDF with ${data.pages.length} pages and size ${data.size} KB.`,
+    {title: "Cargando archivo...", message: `Uploaded PDF with ${data.pages.length} pages and size ${data.size} KB.`, severity: "success"},
   );
 };
 
@@ -60,7 +61,7 @@ const calculateMostCommonSize = (pages) => {
 };
 
 export default function UploadFilesButton({
-  uploadUrl = "http://192.168.1.46:8000/upload",
+  uploadUrl,
   onUploadSuccess,
   expectedPageCount,
   expectedSize,
@@ -73,6 +74,9 @@ export default function UploadFilesButton({
   );
   const [useError, setError] = useState(false);
   const [useLoading, setLoading] = useState(false);
+
+  console.log("Upload URL:", uploadUrl);
+
   const handleFileUpload = async (files) => {
     setLoading(true);
     if (files.length === 0) {

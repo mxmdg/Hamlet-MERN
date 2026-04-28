@@ -93,7 +93,7 @@ const Home = (props) => {
             spacing={{ xs: 0, sm: 1, md: 3 }}
           >
             <Grid size={12}>
-              <UploadFilesButton />
+              <UploadFilesButton uploadUrl={context?.useSettings?.extensions?.pdfValidatorUrl} />
               <MyStepper />
             </Grid>
             <Grid size={12}>

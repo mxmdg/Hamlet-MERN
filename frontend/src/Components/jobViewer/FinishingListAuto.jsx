@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useContext } from "react";
 import {
   Table,
   TableBody,
@@ -22,14 +22,34 @@ import {
   costoFijo,
 } from "../Precioso/formulas";
 import { currencyFormat } from "../utils/generalData/numbersAndCurrencies";
+import {AuthContext} from "../context/AuthContext";
+
 
 const FinishingListAuto = (props) => {
+  
   const [useFinishingCosts, setFinishingCosts] = useState(null);
   const [useLoading, setLoading] = useState(true);
   const [useError, setError] = useState(null);
 
   // Ref para evitar bucles infinitos comparando el último total enviado
   const lastSentTotal = useRef(null);
+
+  const context = useContext(AuthContext);
+
+  
+  const validateAdminUser = () => {
+    if (
+      context?.useLogin === true &&
+      context?.memberships[0]?.role.toLowerCase() === "admin" ||
+      context?.memberships[0]?.role.toLowerCase() === "manager"
+    ) {
+      return true;
+    } else {
+      //setError({ message: "Acceso denegado: Contacte al administrador" });
+      //setLoading(false);
+      return false;
+    }
+  };
 
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -165,8 +185,12 @@ const FinishingListAuto = (props) => {
         <TableHead>
           <StyledTableRow>
             <StyledTableCell>Proceso</StyledTableCell>
-            <StyledTableCell align="right">Unitario</StyledTableCell>
-            <StyledTableCell align="right">Total</StyledTableCell>
+            {validateAdminUser() && (
+              <StyledTableCell align="right">Unitario</StyledTableCell>
+            )}
+            {validateAdminUser() && (
+              <StyledTableCell align="right">Total</StyledTableCell>
+            )}
           </StyledTableRow>
         </TableHead>
         <TableBody>
@@ -174,12 +198,17 @@ const FinishingListAuto = (props) => {
             useFinishingCosts.map((item, index) => (
               <StyledTableRow key={index}>
                 <StyledTableCell>{item.Finisher?.Proceso}</StyledTableCell>
-                <StyledTableCell align="right">
-                  {currencyFormat(item.Cost?.Unitario)}
-                </StyledTableCell>
-                <StyledTableCell align="right">
-                  {currencyFormat(item.Cost?.Total)}
-                </StyledTableCell>
+                {validateAdminUser() && (
+                  <StyledTableCell align="right">
+                    {currencyFormat(item.Cost?.Unitario)}
+                  </StyledTableCell>
+                )}
+
+                {validateAdminUser() && (
+                  <StyledTableCell align="right">
+                    {currencyFormat(item.Cost?.Total)}
+                  </StyledTableCell>
+                )}
               </StyledTableRow>
             ))
           ) : (
@@ -189,7 +218,7 @@ const FinishingListAuto = (props) => {
               </StyledTableCell>
             </StyledTableRow>
           )}
-          {useFinishingCosts?.length > 0 && (
+          {useFinishingCosts?.length > 0 && validateAdminUser() && (
             <StyledTableRow>
               <StyledTableCell sx={{ fontWeight: "bold" }}>
                 Total Terminación

@@ -313,6 +313,17 @@ app.use(
 );
 
 app.use(
+  "/Hamlet/troubles",
+  requireRoleByMethod({
+    get: "public", // todos pueden hacer GET
+    post: ["admin", "manager", "operator"], // todos pueden hacer GET
+    put: ["admin", "manager", "operator"], // todos pueden hacer GET
+    delete: ["admin", "manager", "operator"], // todos pueden hacer GET
+  }),
+  require("./routes/troubles"),
+);
+
+app.use(
   "/apibcra",
   requireRoleByMethod({
     get: "public", // todos pueden hacer GET

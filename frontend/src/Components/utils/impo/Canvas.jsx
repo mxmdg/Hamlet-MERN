@@ -1,6 +1,9 @@
 import { useEffect, useState, useRef, useContext } from "react";
 import { drawOptimusCutting } from "./ImpositionService";
 import { createSvgDrawingContext } from "./SvgDrawingContext";
+import { ToolTipNice } from "../stats/ToolTipNice";
+import { StyledTooltip } from "../../General/TableGrid";
+import { swachtes } from "./ImpositionService";
 
 import { ImpositionForm } from "./ImpositionForm";
 import { ImpoContext } from "./ImpoContext";
@@ -20,6 +23,7 @@ const Canvas = (props) => {
   const context = useContext(ImpoContext);
   const svgRef = useRef(null);
   const [useSvgShapes, setSvgShapes] = useState([]);
+  const [useScale, setScale] = useState(1);
   const [useCanvasSize, setCanvasSize] = useState({
     x: 800,
     y: 450,
@@ -55,6 +59,7 @@ const Canvas = (props) => {
         const scaleWidth = canvasWidth / parseInt(data.widthSheet);
         const scaleHeight = canvasHeight / parseInt(data.heightSheet);
         const scale = Math.min(scaleWidth, scaleHeight);
+        setScale(scale);
 
         // Escala todas las medidas en consecuencia
         data.widthSheet = Math.floor(parseInt(data.widthSheet) * scale);
@@ -147,19 +152,60 @@ const Canvas = (props) => {
               }}
             >
               {useSvgShapes.map((shape, index) => (
-                <rect
-                  key={`impo-shape-${index}`}
-                  x={shape.x}
-                  y={shape.y}
-                  rx={2}
-                  ry={2}
-                  width={shape.width}
-                  height={shape.height}
-                  fill={shape.fill}
-                  stroke={shape.stroke}
-                  strokeWidth={shape.strokeWidth}
-                  style={{ transition: 'all 0.5s ease-out', cursor: 'pointer' }}
-                />
+                <g key={`group-shape-${index}`}>
+                  <StyledTooltip
+                    title={
+                      index === 0
+                        ? `Pliego: ${Math.ceil(shape.width / useScale)} x ${Math.ceil(shape.height / useScale)} mm`
+                        : index === 1
+                          ? `Área de impresión: ${Math.ceil(shape.width / useScale)} x ${Math.ceil(shape.height / useScale)} mm`
+                          : `#${index - 1} | ${Math.round(shape.width / useScale)} x ${Math.round(shape.height / useScale)} mm`
+                    }
+                  >
+                    <rect
+                      x={shape.x}
+                      y={shape.y}
+                      width={shape.width}
+                      height={shape.height}
+                      fill={index === 0 ? "none" : "rgba(33, 150, 243, 0.1)"}
+                      stroke={index === 0 ? "#666" : swachtes[0]}
+                      strokeWidth={index === 0 ? 2 : 1}
+                      // Efecto visual al pasar el mouse
+                      style={{
+                        cursor: index > 0 ? "crosshair" : "default",
+                        transition: "all 0.5s ease-in",
+                        cursor: "pointer",
+                      }}
+                      // Clase para hover opcional en CSS
+                      className="pose-rect"
+                    />
+                  </StyledTooltip>
+
+                  {/* EL HELPER (Tooltip Nativo) */}
+
+                  {/* <title  style={{ 
+                      transition: 'all 0.5s ease-in', cursor: 'pointer',
+                    }}>
+                    {index === 0 
+                      ? `Pliego: ${shape.width}x${shape.height}mm` 
+                      : `Pose #${index - 1}\nCoord: X:${Math.round(shape.x)} Y:${Math.round(shape.y)}\nTamaño: ${Math.round(shape.width)}x${Math.round(shape.height)}mm`
+                    }
+                  </title> */}
+
+                  {index > 1 && (
+                    <text
+                      x={shape.x + shape.width / 2}
+                      y={shape.y + shape.height / 2}
+                      textAnchor="middle"
+                      dominantBaseline="middle"
+                      fill="#83a1cc"
+                      fontSize={Math.min(shape.width, shape.height) / 3}
+                      style={{ pointerEvents: "none", userSelect: "none" }}
+                    >
+                      {index - 1}
+                    </text>
+                  )}
+                </g>
               ))}
             </svg>
           </Grid>
