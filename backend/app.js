@@ -300,7 +300,7 @@ app.use(
 app.use(
   "/Hamlet/tenants",
   requireRoleByMethod({
-    get: "master", // todos pueden hacer GET
+    get: "public", // todos pueden hacer GET
     post: "public", // todos pueden hacer GET
     put: "master", // todos pueden hacer GET
     delete: "master", // todos pueden hacer GET

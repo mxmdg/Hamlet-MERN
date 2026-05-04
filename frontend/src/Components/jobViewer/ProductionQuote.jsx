@@ -161,7 +161,7 @@ const ProductionQuote = (props) => {
       try {
         setUseLoading(true);
         const settings = await getPrivateElementByID(
-          "tenants/settings",
+          "settings",
           context.memberships[0].tenant.id,
         );
         setSettings(settings);
