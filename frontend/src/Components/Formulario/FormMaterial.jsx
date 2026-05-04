@@ -126,7 +126,7 @@ const FormMaterial = (props) => {
             id,
           );
           setItem(itemToEdit);
-
+          //console.log(itemToEdit);
           itemToEdit === undefined && setErrorMessage("Item no encontrado");
 
           // Recorremos el dataForm y si hay un checkbox, cargamos el array en el estado, a ver si anda... Anduvo!

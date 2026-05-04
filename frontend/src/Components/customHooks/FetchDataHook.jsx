@@ -62,7 +62,8 @@ export const getPrivateElementByID = async (collection, id) => {
       "X-Tenant": tenantId,
     },
   });
-
+  // console.log(`${HAMLET_API}${collection}/${id}`);
+  // console.log(elements.data);
   return elements.data;
 };
 

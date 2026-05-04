@@ -96,36 +96,23 @@ function requireRoleByMethod(rolesByMethod) {
       
       jwt.verify(token, req.app.get("secretKey"), async (error, payload) => {
         if (error) return res.status(403).json({ message: "Token inválido" });
+
         const globalRole = getGlobalRoleFromPayload(payload);
         const allowed = Array.isArray(allowedRoles)
           ? allowedRoles.map((r) => r.toLowerCase())
           : [allowedRoles.toLowerCase()];
 
-        // 👑 CHEQUEO DE MASTER (Bypass total)
-        // Si el usuario es Master a nivel global, no le pedimos membresía
+        // 👑 1. SI ES MASTER: Bypass total (No necesita membresía ni chequear tenant)
         if (globalRole === "master") {
           req.user = payload;
           req.role = "master";
-          // Creamos una membresía ficticia o dejamos req.membership en null
-          // para que el resto de la app sepa que es un superusuario
-          req.membership = {
-            role: "master",
-            status: "activo",
-            tenant: req.header("x-tenant"),
-          };
+          req.membership = { role: "master", status: "activo", tenant: req.header("x-tenant") };
           return next();
         }
 
-        // Si la ruta exige master, cualquier otro rol queda bloqueado.
-        if (allowed.includes("master")) {
-          return res
-            .status(403)
-            .json({ message: "Acceso denegado" });
-        }
-
-        // 🏢 LÓGICA NORMAL PARA MORTALES (Membresías)
+        // 🏢 2. VALIDACIÓN PARA MORTALES (Admin, Manager, etc.)
         if (!req.tenant) {
-          return res.status(400).json({ message: "Tenant no resuelto." });
+          return res.status(400).json({ message: "Tenant no resuelto (Falta x-tenant header)." });
         }
 
         const membership = await Membership.findOne({
@@ -135,22 +122,24 @@ function requireRoleByMethod(rolesByMethod) {
         }).populate("tenant");
 
         if (!membership) {
-          return res.status(403).json({ message: "Tu membresía no esta activa para esta imprenta" });
+          return res.status(403).json({ message: "No tienes una membresía activa en esta imprenta." });
         }
 
-        // 3. BLOQUEO POR IMPRENTA INACTIVA 🚫
-        if (membership.tenant.status === "inactivo") {
-            return res.status(402).json({ // 402 es "Payment Required", queda muy profesional
-                message: "El acceso a esta imprenta está suspendido. Contacte al administrador de Hamlet." 
+        // 3. BLOQUEO POR IMPRENTA INACTIVA
+        if (membership.tenant && membership.tenant.status === "inactivo") {
+            return res.status(402).json({ 
+                message: "El acceso a esta imprenta está suspendido por falta de pago." 
             });
         }
 
         const userRole = membership.role.toLowerCase();
 
+        // 4. VERIFICAR SI EL ROL DE LA MEMBRESÍA ESTÁ PERMITIDO
         if (!allowed.includes(userRole)) {
-          return res.status(403).json({ message: "Tu rol no te permite realizar esta acción" });
+          return res.status(403).json({ message: "Tu rol no te permite realizar esta acción." });
         }
 
+        // Éxito: Seteamos el contexto
         req.user = payload;
         req.membership = membership;
         req.role = userRole;
@@ -240,8 +229,8 @@ app.use(
   "/Hamlet/formatos",
   requireRoleByMethod({
     get: "public", // todos pueden hacer GET
-    post: ["admin", "manager", "vendedor"],
-    put: ["admin", "manager", "vendedor"],
+    post: ["admin", "manager"],
+    put: ["admin", "manager"],
     delete: ["admin", "manager"],
   }),
   require("./routes/formatos"),
@@ -250,9 +239,9 @@ app.use(
   "/Hamlet/empresas",
   requireRoleByMethod({
     get: "public", // todos pueden hacer GET
-    post: ["admin", "manager", "vendedor"],
-    put: ["admin", "manager", "vendedor"],
-    delete: ["admin", "manager", "vendedor"],
+    post: ["admin", "manager"],
+    put: ["admin", "manager"],
+    delete: ["admin", "manager"],
   }),
   require("./routes/empresas"),
 );
@@ -260,7 +249,7 @@ app.use(
   "/Hamlet/precios",
   //(req, res, next) => req.app.verifyToken(req, res, next),
   requireRoleByMethod({
-    get: ["admin", "manager", "vendedor", "customer"], // todos pueden hacer GET
+    get: ["admin", "manager", "customer"], // todos pueden hacer GET
     post: ["admin", "manager"],
     put: ["admin", "manager"],
     delete: ["admin", "manager"],
@@ -300,21 +289,21 @@ app.use(
 );
 
 app.use(
+  "/Hamlet/settings",
+  requireRoleByMethod({
+    get: "public", // todos pueden hacer GET
+    put: "admin", // solo admin puede hacer PUT
+  }),
+  require("./routes/settings"),
+);
+
+app.use(
   "/Hamlet/tenants",
   requireRoleByMethod({
     get: "master", // todos pueden hacer GET
     post: "public", // todos pueden hacer GET
     put: "master", // todos pueden hacer GET
     delete: "master", // todos pueden hacer GET
-  }),
-  require("./routes/tenants"),
-);
-
-app.use(
-  "/Hamlet/tenants/settings",
-  requireRoleByMethod({
-    get: "public", // todos pueden hacer GET
-    put: "admin", // solo admin puede hacer PUT
   }),
   require("./routes/tenants"),
 );

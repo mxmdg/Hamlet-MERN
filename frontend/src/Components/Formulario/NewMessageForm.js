@@ -8,7 +8,6 @@ const PreferencesForm = () => {
   const users = async () => {
     try {
       const res = await getPrivateElements("memberships");
-      //console.log(res);
       res.map((item) => {
         usersList.push({
           text: item.userId.Name + " " + item.userId.LastName,

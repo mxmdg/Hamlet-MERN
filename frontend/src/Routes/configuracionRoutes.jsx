@@ -20,7 +20,7 @@ export const configuracionRoutes = ({ color, variant }) => (
       element={
         <FormMaterial
           form={PreferencesForm()}
-          collection="tenants/settings"
+          collection="settings"
           task="edit"
           title={"Ajustes del sistema"}
           variant={variant}
