@@ -130,13 +130,21 @@ const login = async (req, res, next) => {
 
         const expirationTime = Date.now() + expireTime;
 
-        // 2. NUEVO: buscar memberships activas
+        // 1. Buscamos las membresías del usuario
         const memberships = await Membership.find({
           userId: document._id,
-        }).populate("tenant", "key name status plan settings");
+          status: "activo" // Solo membresías que no han sido dadas de baja
+        }).populate({
+          path: "tenant",
+          select: "key name status plan settings",
+          match: { status: "activo" } // Solo tenants que estén al día (no inactivos)
+        });
+
+        // 2. NUEVO: Filtrar el array para quitar aquellas donde el tenant no coincidió (quedó en null)
+        const activeMemberships = memberships.filter(m => m.tenant !== null);
 
         // 3. Normalizar respuesta (no mandamos todo el modelo crudo)
-        const formattedMemberships = memberships.map((m) => ({
+        const formattedMemberships = activeMemberships.map((m) => ({
           tenant: {
             id: m.tenant._id,
             key: m.tenant.key,

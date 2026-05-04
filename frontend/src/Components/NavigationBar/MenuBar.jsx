@@ -23,7 +23,7 @@ import { Menu } from "@base-ui/react/menu";
 
 import MenuIcon from "@mui/icons-material/Menu";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-
+import { isAllowed } from "../utils/ReusableComponents/allowed";
 import { StyledTooltip } from "../General/TableGrid";
 import { AuthContext } from "../context/AuthContext";
 import { ReactComponent as Logo } from "../../img/Logo/logo ok-06.svg";
@@ -32,17 +32,17 @@ export const pages = [
   {
     text: "Trabajos",
     drop: [
-      { text: "Trabajo Nuevo", path: "jobs/add" },
-      { text: "Pedidos", path: "jobs" },
-      { text: "Cotizaciones", path: "quotations" },
+      { text: "Trabajo Nuevo", path: "jobs/add", allowed: ["all"] },
+      { text: "Pedidos", path: "jobs" , allowed: ["all"]},
+      { text: "Cotizaciones", path: "quotations", allowed: ["admin", "manager"] },
     ],
   },
   {
     text: "Configuración",
     drop: [
-      { text: "Costos", path: "configuracion" },
-      { text: "Contadores", path: "billing" },
-      { text: "Editor de fórmulas", path: "precios/formula" },
+      { text: "Costos", path: "configuracion", allowed: ["admin"] },
+      { text: "Contadores", path: "billing", allowed: ["admin", "manager"] },
+      { text: "Editor de fórmulas", path: "precios/formula", allowed: ["admin"] },
     ],
   },
   {
@@ -60,7 +60,7 @@ export const pages = [
     text: "Administración",
     drop: [
       { text: "Clientes", path: "empresas" },
-      { text: "Membresías", path: "memberships" },
+      { text: "Membresías", path: "memberships", allowed: ["admin"] },
     ],
   },
   {
@@ -68,7 +68,7 @@ export const pages = [
     pro: true,
     drop: [
       { text: "Conexión Papyrus", path: "papyrus" },
-      { text: "Estadísticas Papyrus", path: "jobs/dashboard" },
+      { text: "Estadísticas Papyrus", path: "jobs/dashboard" , allowed: ["admin", "manager"]},
     ],
   },
 ];
@@ -84,11 +84,14 @@ function MenuBarComponent(props) {
   const isLogged = context.useLogin;
   const isPro = context.usePlan === "pro";
 
+ const userRole = context.memberships[0]?.role;
+
   const userMenu = isLogged
     ? [
         { text: "Perfil", path: "users/profile" },
         { text: "Cambiar Contraseña", path: "users/ChangePassword" },
-        { text: "Mensajes", path: "messages" },
+        { text: "Mensajes", path: "messages" , allowed: ["none"]},
+        { text: "Ajustes del sistema", path: ("tenant/settings/" + context.memberships[0]?.tenant.id), allowed: ["admin"] },
       ]
     : [
         { text: "Ingresar", path: "login" },
@@ -183,7 +186,7 @@ function MenuBarComponent(props) {
                             key={item.path}
                             onClick={() => go(item.path)}
                             render={
-                              <MuiMenuItem selected={isActive(item.path)} />
+                              <MuiMenuItem selected={isActive(item.path)} disabled={!isAllowed(userRole, item.allowed)}/>
                             }
                           >
                             {item.text}
@@ -258,7 +261,7 @@ function MenuBarComponent(props) {
             </MuiMenuItem>
           )}
           {userMenu.map((item) => (
-            <MuiMenuItem key={item.text} onClick={() => go(item.path)}>
+            <MuiMenuItem key={item.text} disabled={!isAllowed(userRole, item.allowed)} onClick={() => go(item.path)}>
               {item.text}
             </MuiMenuItem>
           ))}

@@ -6,6 +6,8 @@ import { Register } from "../Components/Users/Register";
 import ResetPassword from "../Components/Users/RecoverPassword";
 import FormMaterial from "../Components/Formulario/FormMaterial";
 import tenantsDataForm from "../Components/Formulario/tenantsDataForm";
+import tenantsEditDataForm from "../Components/Formulario/tenantsEditDataForm";
+import Tenants from "../Components/tenants/Tenants";
 import { Container } from "@mui/material";
 
 export const publicRoutes = ({ color, variant }) => {
@@ -35,6 +37,30 @@ export const publicRoutes = ({ color, variant }) => {
               title="Registrar imprenta"
               subtitle="Crea tu cuenta y comienza a gestionar tu imprenta hoy mismo"
               submitText={"Registrar Imprenta"}
+              variant={variant}
+              color={color}
+            />
+          </Container>
+        }
+      />
+      <Route
+        path="/master"
+        element={<Tenants  />}
+      /><Route
+        path="/master/edit/:id"
+        element={
+          <Container
+            height="100vh"
+            maxWidth="sm"
+            sx={{ padding: "auto", margin: "auto", alignItems: "center" }}
+          >
+            <FormMaterial
+              form={tenantsEditDataForm}
+              collection="tenants"
+              task="edit"
+              title="Modificar imprenta"
+              subtitle="Controlar y editar clientes de Hamlet"
+              submitText={"Actualizar Imprenta"}
               variant={variant}
               color={color}
             />

@@ -97,9 +97,10 @@ export const Login = (props) => {
         return;
       }
     } catch (e) {
+      console.log(e);
       setLoading(false);
       setError({
-        message: "Fallo el login: " + e,
+        message: "Fallo el login: " + e.response?.data?.message,
         action: { resetError },
         severity: "error",
       });

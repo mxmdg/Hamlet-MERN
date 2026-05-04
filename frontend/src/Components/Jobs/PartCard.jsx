@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useContext } from "react";
 
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
@@ -28,6 +28,7 @@ import Spinner from "../General/Spinner";
 import DialogModal from "./DialogModal";
 import UploadFilesButton from "../utils/ReusableComponents/UploadFilesButton";
 import { handleUploadSuccess } from "../utils/ReusableComponents/UploadFilesButton";
+import AuthContext from "../context/AuthContext";
 
 const DeletePartMessage = "Estas seguro de eliminar esta parte?";
 
@@ -52,6 +53,10 @@ const PartCard = (props) => {
       setLoading(false);
     }
   };
+
+  const context = useContext(AuthContext);
+  const uploadUrl = context?.useSettings?.extensions?.pdfValidatorUrl;
+  
 
   const StyledCard = styled(Paper)(({ theme }) => ({
     height: "100%",
@@ -104,7 +109,7 @@ const PartCard = (props) => {
           )}
         </Typography>
         <UploadFilesButton
-          uploadUrl={process.env.VALIDATE_PDF}
+          uploadUrl={props.uploadSubDir}
           onUploadSuccess={handleUploadSuccess}
           expectedPageCount={props.part.Pages}
           expectedSize={`${props.part.Ancho}x${props.part.Alto}`}

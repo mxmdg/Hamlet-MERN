@@ -44,6 +44,12 @@ const verifyToken = (req, res, next) => {
 
 app.verifyToken = verifyToken;
 
+const normalizeRole = (roleValue) =>
+  typeof roleValue === "string" ? roleValue.toLowerCase() : "";
+
+const getGlobalRoleFromPayload = (payload) =>
+  normalizeRole(payload?.Role || payload?.role);
+
 // Middleware para filtrar por rol
 function requireRole(role) {
   return function (req, res, next) {
@@ -57,7 +63,7 @@ function requireRole(role) {
         return res.status(403).json({ message: "Token inválido" });
       }
       // Normalizar a minúsculas para comparar
-      const userRole = (payload.role || "").toLowerCase();
+      const userRole = getGlobalRoleFromPayload(payload);
       if (
         !userRole ||
         (Array.isArray(role)
@@ -81,65 +87,77 @@ function requireRoleByMethod(rolesByMethod) {
       const method = req.method.toLowerCase();
       const allowedRoles = rolesByMethod[method];
 
-      // Método no protegido
-      if (!allowedRoles || allowedRoles === "public") {
-        return next();
-      }
+      if (!allowedRoles || allowedRoles === "public") return next();
 
       const authHeader = req.headers["authorization"];
-      if (!authHeader) {
-        return res.status(401).json({ message: "Token requerido" });
-      }
+      if (!authHeader) return res.status(401).json({ message: "Token requerido" });
 
       const token = authHeader.split(" ")[1];
-      if (!token) {
-        return res.status(401).json({ message: "Token inválido" });
-      }
-
+      
       jwt.verify(token, req.app.get("secretKey"), async (error, payload) => {
-        if (error) {
-          return res.status(403).json({ message: "Token inválido" });
+        if (error) return res.status(403).json({ message: "Token inválido" });
+        const globalRole = getGlobalRoleFromPayload(payload);
+        const allowed = Array.isArray(allowedRoles)
+          ? allowedRoles.map((r) => r.toLowerCase())
+          : [allowedRoles.toLowerCase()];
+
+        // 👑 CHEQUEO DE MASTER (Bypass total)
+        // Si el usuario es Master a nivel global, no le pedimos membresía
+        if (globalRole === "master") {
+          req.user = payload;
+          req.role = "master";
+          // Creamos una membresía ficticia o dejamos req.membership en null
+          // para que el resto de la app sepa que es un superusuario
+          req.membership = {
+            role: "master",
+            status: "activo",
+            tenant: req.header("x-tenant"),
+          };
+          return next();
         }
 
-        // ⛔ tenant DEBE venir de resolveTenant
+        // Si la ruta exige master, cualquier otro rol queda bloqueado.
+        if (allowed.includes("master")) {
+          return res
+            .status(403)
+            .json({ message: "Acceso denegado" });
+        }
+
+        // 🏢 LÓGICA NORMAL PARA MORTALES (Membresías)
         if (!req.tenant) {
-          return res.status(400).json({
-            message: "Tenant no resuelto. Falta middleware resolveTenant",
-          });
+          return res.status(400).json({ message: "Tenant no resuelto." });
         }
 
         const membership = await Membership.findOne({
           userId: payload.userId,
           tenant: req.tenant._id,
           status: "activo",
-        });
+        }).populate("tenant");
 
         if (!membership) {
-          return res.status(403).json({
-            message: "Tu membresía no esta activa para esta imprenta",
-          });
+          return res.status(403).json({ message: "Tu membresía no esta activa para esta imprenta" });
+        }
+
+        // 3. BLOQUEO POR IMPRENTA INACTIVA 🚫
+        if (membership.tenant.status === "inactivo") {
+            return res.status(402).json({ // 402 es "Payment Required", queda muy profesional
+                message: "El acceso a esta imprenta está suspendido. Contacte al administrador de Hamlet." 
+            });
         }
 
         const userRole = membership.role.toLowerCase();
-        const allowed = Array.isArray(allowedRoles)
-          ? allowedRoles.map((r) => r.toLowerCase())
-          : [allowedRoles.toLowerCase()];
 
         if (!allowed.includes(userRole)) {
-          return res.status(403).json({
-            message: "Tu rol no te permite realizar esta acción",
-          });
+          return res.status(403).json({ message: "Tu rol no te permite realizar esta acción" });
         }
 
-        // ✅ contexto consistente en toda la app
-        req.user = payload; // { userId, exp, iat, ... }
-        req.membership = membership; // rol + tenant
-        req.role = userRole; // shortcut útil
+        req.user = payload;
+        req.membership = membership;
+        req.role = userRole;
 
         next();
       });
     } catch (e) {
-      console.log(e);
       next(e);
     }
   };
@@ -284,10 +302,10 @@ app.use(
 app.use(
   "/Hamlet/tenants",
   requireRoleByMethod({
-    get: "public", // todos pueden hacer GET
+    get: "master", // todos pueden hacer GET
     post: "public", // todos pueden hacer GET
-    put: "public", // todos pueden hacer GET
-    delete: "admin", // todos pueden hacer GET
+    put: "master", // todos pueden hacer GET
+    delete: "master", // todos pueden hacer GET
   }),
   require("./routes/tenants"),
 );

@@ -27,45 +27,47 @@ export const pages = [
   {
     text: "Trabajos",
     drop: [
-      { text: "Trabajo Nuevo", path: "jobs/add" },
-      { text: "Pedidos", path: "jobs" },
-      { text: "Cotizaciones", path: "quotations" },
+      { text: "Trabajo Nuevo", path: "jobs/add", permission: ["all"] },
+      { text: "Pedidos", path: "jobs", permission: ["all"] },
+      { text: "Cotizaciones", path: "quotations", permission: ["admin", "manager"] },
     ],
   },
   {
     text: "Configuración",
     drop: [
-      { text: "Costos", path: "configuracion" },
-      { text: "Contadores", path: "billing" },
-      { text: "Editor de fórmulas", path: "precios/formula" },
+      { text: "Costos", path: "configuracion", permission: ["admin"] },
+      { text: "Contadores", path: "billing", permission: ["admin", "manager"] },
+      { text: "Editor de fórmulas", path: "precios/formula", permission: ["admin"] },
     ],
   },
   {
     text: "Recursos",
     drop: [
-      { text: "Formatos", path: "formatos" },
-      { text: "Impresoras", path: "impresoras" },
-      { text: "Materiales", path: "materiales" },
-      { text: "Partes de trabajo", path: "JobParts" },
-      { text: "Terminaciones", path: "finishers" },
+      { text: "Formatos", path: "formatos", permission: ["all"] },
+      { text: "Impresoras", path: "impresoras", permission: ["all"] },
+      { text: "Materiales", path: "materiales", permission: ["all"] },
+      { text: "Partes de trabajo", path: "JobParts", permission: ["all"] },
+      { text: "Terminaciones", path: "finishers", permission: ["all"] },
     ],
   },
   {
     text: "Administración",
     drop: [
-      { text: "Clientes", path: "empresas" },
-      { text: "Membresías", path: "memberships" },
+      { text: "Clientes", path: "empresas", permission: ["admin", "manager", "operator"] },
+      { text: "Membresías", path: "memberships", permission: ["admin"] },
     ],
   },
   {
     text: "Papyrus",
     pro: true,
     drop: [
-      { text: "Conexión Papyrus", path: "papyrus" },
-      { text: "Estadísticas Papyrus", path: "jobs/dashboard" },
+      { text: "Conexión Papyrus", path: "papyrus", permission: ["admin", "manager"] },
+      { text: "Estadísticas Papyrus", path: "jobs/dashboard", permission: ["admin", "manager"] },
     ],
   },
 ];
+
+
 
 function ResponsiveAppBar(props) {
   const context = useContext(AuthContext);
@@ -81,6 +83,8 @@ function ResponsiveAppBar(props) {
 
   const isLogged = context.useLogin;
   const isPro = context.usePlan === "pro";
+
+  console.log(context.memberships[0]?.tenant.name)
 
   const userMenu = isLogged
     ? [

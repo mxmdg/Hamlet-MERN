@@ -492,6 +492,7 @@ export default function MyStepper(props) {
                           setActiveStep={setActiveStep}
                           removePart={removePart}
                           step={activeStep}
+                          uploadSubDir={context?.useSettings?.extensions?.pdfValidatorUrl + "/" + `${useJob?.Company?.Nombre}/${useJob?.Nombre}/${index + 1}-${part.Name}`} // Subdirectorio específico para esta parte
                         />
                       </Grid>
                     );
