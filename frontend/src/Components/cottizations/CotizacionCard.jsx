@@ -28,6 +28,7 @@ import ProductionPlan from "../jobViewer/ProductionPlan";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import Spinner from "../General/Spinner";
 import { CotizationMail } from "./CotizationMail";
+import { mmToPt } from "../utils/generalData/unitConverter";
 
 /**
  * Renderiza los datos principales de una cotización.
@@ -121,6 +122,56 @@ const CotizacionCard = ({ cotizacion, job }) => {
       return null;
     }
   };
+
+  const sendXML = async (jobToSend, cot) => {
+    console.log(jobToSend)
+    setLoading(true);
+    setWaitingFor("Generando archivo JDF...");
+    const data = {orden: "APO_" + cot.index, 
+                  nombre: jobToSend.Nombre, 
+                  ancho: mmToPt(jobToSend.Partes[0].Ancho), 
+                  alto: mmToPt(jobToSend.Partes[0].Alto), 
+                  paginas: parseInt(jobToSend.Partes[0].Pages), 
+                  cliente: jobToSend.Company.Nombre, 
+                  contactoClienteNombre: jobToSend.Owner?.Name || "Juan", 
+                  contactoClienteApellido: jobToSend.Owner?.LastName || "Pérez",
+                  contactoClienteEmail: jobToSend.Owner?.Email || "jp@gmail.com",
+                  cantidad: parseInt(jobToSend.Cantidad),
+                  gramaje: parseInt(jobToSend.Partes[0].partStock.Gramaje),
+                  materialTipo: jobToSend.Partes[0].partStock.Tipo,
+                  anchoResma: mmToPt(jobToSend.Partes[0].partStock.Ancho_Resma),
+                  altoResma: mmToPt(jobToSend.Partes[0].partStock.Alto_Resma),
+                  jobId: jobToSend._id,
+                }
+
+    console.log(data)
+    
+    try {
+      const res = await addPrivateElement(`SendToApogee`, data);
+      const xmlData = new Blob([res.data], {
+            type: "application/vnd.cip4-jdf+xml",
+        });
+      const xmlURL = URL.createObjectURL(xmlData);
+      const link = document.createElement("a");
+      link.href = xmlURL;
+      link.download = `${data.orden + "_" + data.nombre}.jdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      setLoading(false);
+      setError({
+        title: "Archivo JDF generado",
+        severity: "success",
+        message: "Archivo JDF generado exitosamente.",
+      });
+      setWaitingFor(null);
+    } catch (error) {
+      setLoading(false);
+      setWaitingFor(null);
+    }
+  };
+
 
   const failure = (
     <ErrorMessage
@@ -307,6 +358,14 @@ const CotizacionCard = ({ cotizacion, job }) => {
               {localStatus === "Enviado"
                 ? "Reenviar Presupuesto"
                 : "Enviar Presupuesto"}
+            </Button>
+            <Button
+              key={"sendApogee"}
+              onClick={() => sendXML(job, cotizacion)}
+              variant="contained"
+              color={localStatus === "Enviado" ? "success" : "primary"}
+            >
+              Exportar JDF
             </Button>
           </CardActions>
         </Card>

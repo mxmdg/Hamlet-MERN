@@ -6,6 +6,7 @@ const nodemailer = require("nodemailer");
 const uuid = require("uuid");
 const Membership = require("./models/memberships");
 const apiBCRA = require("./services/api_bcra");
+const ApoXMLExporter = require("./middlewares/flatWorkApoXMLExporter");
 
 //settings
 app.set("port", process.env.PORT || 5000);
@@ -174,6 +175,7 @@ app.get("/health", async (req, res) => {
 app.get("/", (rej, res) => {
   res.send("Welcome to node.js server");
 });
+app.post("/Hamlet/SendToApogee", ApoXMLExporter);
 app.use(
   "/Hamlet/jobs",
   requireRoleByMethod({

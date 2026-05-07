@@ -93,3 +93,7 @@ export const formatMeasure = (
   // Dividimos por el factor para volver hacia atrás (ej: 215.9 mm / 25.4 = 8.5 in)
   return Math.round((valor / factor) * 100) / 100;
 };
+
+export const mmToPt = (mm) => {
+  return (((mm / 25.4) * 72 * 100) / 100); // 1 inch = 25.4 mm, 1 inch = 72 pt
+}
