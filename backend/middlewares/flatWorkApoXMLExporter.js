@@ -3,7 +3,9 @@ const template = require("../ApoXML/BusinessCard_intent_template")
 const flatWorkApoXMLExporter = async (req, res, next) => {
     try {
         const { orden, 
-                nombre, 
+                nombre,
+                nombreParte,
+                tipoParte,  
                 ancho, 
                 alto, 
                 paginas, 
@@ -20,6 +22,8 @@ const flatWorkApoXMLExporter = async (req, res, next) => {
              } = req.body;
         const xml = template(orden, 
                             nombre, 
+                            nombreParte,
+                            tipoParte, 
                             ancho, 
                             alto, 
                             paginas, 

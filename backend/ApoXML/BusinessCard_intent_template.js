@@ -1,6 +1,8 @@
 const template = (
 	orden, 
-	nombre, 
+	nombre,
+	nombreParte,
+	tipoParte,
 	ancho, 
 	alto, 
 	paginas, 
@@ -16,11 +18,21 @@ const template = (
 	jobId,
 ) => {
 
+const escapeXML = (str) => {
+if (!str) return "";
+return str.toString()
+	.replace(/&/g, "&amp;")
+	.replace(/</g, "&lt;")
+	.replace(/>/g, "&gt;")
+	.replace(/"/g, "&quot;")
+	.replace(/'/g, "&apos;");
+};
+
 return `<?xml version="1.0" encoding="UTF-8"?>
 <JDF 
 	JobID="ApoXML-${orden}" 
 	Activation="Active" 
-	DescriptiveName="${nombre}" 
+	DescriptiveName="${(escapeXML(nombre))}" 
 	JobPartID="ID_24_ApoXML-BusinessCard_BusinessCard" 
 	ID="ApoXMLJob"  
 	Status="Waiting" 
@@ -35,10 +47,10 @@ return `<?xml version="1.0" encoding="UTF-8"?>
 	<!--Created using Convertor v1.2.7 and stylesheet: v1.3.3 for Prepress v110-->
 	<!--Creator of original ApoXML was "ApoXML SDK" with Version: "1.1"-->
 	<!--General Job Comment-->
-	<Comment Name="${nombre}" AgentName="ApoXML Convertor" AgentVersion="1.3.3">www.hamlet.com.ar/jobs/edit/${jobId}</Comment>
+	<Comment Name="${escapeXML(nombre)}" AgentName="ApoXML Convertor" AgentVersion="1.3.3">www.hamlet.com.ar/jobs/edit/${jobId}</Comment>
 	<ResourcePool>
 		<!--@FinalProduct 85 x 55 mm-->
-		<Component ID="ID_Component_FinalProduct" Class="Quantity" Status="Unavailable" ComponentType="FinalProduct" DescriptiveName="${nombre}" ProductType="Flatwork" Dimensions="${ancho} ${alto}">
+		<Component ID="ID_Component_FinalProduct" Class="Quantity" Status="Unavailable" ComponentType="FinalProduct" DescriptiveName="${escapeXML(nombreParte)}" ProductType="Flatwork" Dimensions="${ancho} ${alto}">
 			<!--@ProductType is one of: 'Flatwork', 'Folded', 'Brochure' or 'Other;. 'Flatwork' is the only ProductType allowed for Asanti. Note that another spelling is FlatWork as used in JDF1.6. 'Folded' is a folded unbound leaflet, content delivered as a spread. Other is for non-prepress products. -->
 		</Component>
 		<!--@ColorPool-->
@@ -74,7 +86,7 @@ return `<?xml version="1.0" encoding="UTF-8"?>
 			<ColorStandard DataType="NameSpan" Actual="Monochrome"/>
 		</ColorIntent>
 		<!--PartialProduct is used to create a Product Part (like cover/body/insert). For simplicity, it is also used even if there is only one part. In ganging jobs, each Product Part could be a separate Product.-->
-		<Component ID="ID_Component_0" Class="Quantity" Status="Unavailable" ProductType="Body" ComponentType="PartialProduct" DescriptiveName="${nombre}" ReaderPageCount="${paginas}"/>
+		<Component ID="ID_Component_0" Class="Quantity" Status="Unavailable" ProductType="Body" ComponentType="PartialProduct" DescriptiveName="${escapeXML(nombreParte)}" ReaderPageCount="${paginas}"/>
 		<!--@BindingOrder is one from: 'None' (Flatwork or Folded), 'Collecting' (=Apogee 'Nested', saddle stitched), 'Gathering' (=Apogee 'Gathered' like Perfect Bound). More details are in BindingType if not Flatwork.-->
 		<BindingIntent ID="ID_BindingIntent" Class="Intent" BindingOrder="None" Status="Available"/>
 		<!--@CustomerInfo-->
@@ -85,10 +97,10 @@ return `<?xml version="1.0" encoding="UTF-8"?>
 		<!--Main Customer Contact-->
 		<!--@Contact for Customer-->
 		<Contact ID="ID_Contact_Main" Class="Parameter" Status="Available" ContactTypes="Customer Administrator">
-			<Company OrganizationName="${cliente}" ProductID="PI_CompApoXML"/>
-			<Person FamilyName="${contactoClienteApellido}" DescriptiveName="${contactoClienteNombre}_${contactoClienteApellido}" FirstName="${contactoClienteNombre}" ProductID="PI_Pers_apoxmlNV">
+			<Company OrganizationName="${escapeXML(cliente)}" ProductID="PI_CompApoXML"/>
+			<Person FamilyName="${escapeXML(contactoClienteApellido)}" DescriptiveName="${escapeXML(contactoClienteNombre)}_${escapeXML(contactoClienteApellido)}" FirstName="${escapeXML(contactoClienteNombre)}" ProductID="PI_Pers_apoxmlNV">
 				<ComChannel ChannelType="Phone" ChannelTypeDetails="LandLine" Locator="12345"/>
-				<ComChannel ChannelType="Email" Locator="${contactoClienteEmail}"/>
+				<ComChannel ChannelType="Email" Locator="${escapeXML(contactoClienteEmail)}"/>
 			</Person>
 		</Contact>
 		<NodeInfo Class="Parameter" ID="ID_NodeInfo_Root" NodeStatus="Waiting" Status="Available"/>
@@ -106,7 +118,7 @@ return `<?xml version="1.0" encoding="UTF-8"?>
 	</AuditPool>
 	<!--@ProductPart-->
 	<!--A Product Part describes either one part of a multipart job (Cover/Body) or the single part (Self-Cover) or one Product of a gang job-->
-	<JDF ID="ID_ProdPart_0" Type="Product" Status="Waiting" xsi:type="Product" JobPartID="ID_24_ApoXML-BusinessCard_BusinessCard_0" DescriptiveName="${nombre}">
+	<JDF ID="ID_ProdPart_0" Type="Product" Status="Waiting" xsi:type="Product" JobPartID="ID_24_ApoXML-BusinessCard_BusinessCard_0" DescriptiveName="${escapeXML(nombre)}">
 		<AuditPool>
 			<Created ID="crea_0_ID" AgentName="ApoXML Convertor" TimeStamp="2018-09-03T23:54:12+02:00" AgentVersion="1.3.3"/>
 		</AuditPool>
@@ -142,7 +154,7 @@ return `<?xml version="1.0" encoding="UTF-8"?>
 				<!--Apogee Prepress will create a Paper Stock for this StockBrand if it was not existing yet. 
 						 For Prepress: StockBrand must NOT contain Weight or Thickness
 						 StockBrand must contain a reference to the Grade/ISOPaperSubstrate/Coating if the brand is available in multiple grades/coatings-->
-				<StockBrand DataType="StringSpan" Actual="${materialTipo}"/>
+				<StockBrand DataType="StringSpan" Actual="${escapeXML(materialTipo)}"/>
 				<!--Grade: 1=glossy 2=matt 3=glossy-web 4=uncoated-white 5=uncoated-yellowish-->
 				<Grade DataType="IntegerSpan" Actual="1"/>
 				<!--Thickness in um-->

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Alert from "@mui/material/Alert";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -55,6 +56,7 @@ const ErrorMessage = (props) => {
   // Determine raw input (support props.error, props.message, props.children)
   const raw = props.error ?? props.message ?? props.children;
   const message = normalizeError(raw);
+  const navigate= useNavigate()
 
   // Si no hay mensaje válido, no renderizar nada
   if (!message) return null;
@@ -72,6 +74,11 @@ const ErrorMessage = (props) => {
     }
     setOpen(false);
   };
+
+  const cancelAction = () => {
+    navigate(-1)
+    handleClose()
+  }
 
   // Optional action button for the alert, triggers props.action if provided
   const actionButton = (
@@ -132,11 +139,18 @@ const ErrorMessage = (props) => {
       <DialogActions>
         <Button
           variant="contained"
-          color={props.severity || "primary"}
+          color={props.cancelAction ? "success" : props.severity || "primary"}
           onClick={handleCloseAndDelete}
         >
           {props.buttonTxt || "ok"}
         </Button>
+        {props.cancelAction && (
+          <Button
+            variant="contained"
+            color={props.severity || "primary"}
+            onClick={props.cancelAction || handleCloseAndDelete}
+            >{props.buttonCancel || "Cancelar"}  </Button>
+        )}
       </DialogActions>
     </Dialog>
   );

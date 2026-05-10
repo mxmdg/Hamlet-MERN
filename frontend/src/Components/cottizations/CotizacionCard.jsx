@@ -128,7 +128,9 @@ const CotizacionCard = ({ cotizacion, job }) => {
     setLoading(true);
     setWaitingFor("Generando archivo JDF...");
     const data = {orden: "APO_" + cot.index, 
-                  nombre: jobToSend.Nombre, 
+                  nombre: jobToSend.Nombre,
+                  nombreParte: jobToSend.Partes[0].Name,
+                  tipoParte: jobToSend.Partes[0].jobParts[0].Type, 
                   ancho: mmToPt(jobToSend.Partes[0].Ancho), 
                   alto: mmToPt(jobToSend.Partes[0].Alto), 
                   paginas: parseInt(jobToSend.Partes[0].Pages), 

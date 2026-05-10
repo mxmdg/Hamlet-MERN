@@ -37,6 +37,7 @@ const PartCard = (props) => {
   const [useFinishers, setFinishers] = React.useState([]);
   const [useLoading, setLoading] = React.useState(false);
   const [useError, setError] = React.useState(false);
+  const [usePartFiles, setPartFiles ] = [];
 
   const getFinishers = async (ids = []) => {
     try {
@@ -110,6 +111,7 @@ const PartCard = (props) => {
         </Typography>
         <UploadFilesButton
           uploadUrl={props.uploadSubDir}
+          setPartFiles
           onUploadSuccess={handleUploadSuccess}
           expectedPageCount={props.part.Pages}
           expectedSize={`${props.part.Ancho}x${props.part.Alto}`}
