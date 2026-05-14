@@ -7,7 +7,8 @@ const flatWorkApoXMLExporter = async (req, res, next) => {
                 nombreParte,
                 tipoParte,  
                 ancho, 
-                alto, 
+                alto,
+                colores, 
                 paginas, 
                 cliente, 
                 contactoClienteNombre , 
@@ -18,6 +19,7 @@ const flatWorkApoXMLExporter = async (req, res, next) => {
                 materialTipo,
                 anchoResma,
                 altoResma,
+                impresora,
                 jobId,
              } = req.body;
         const xml = template(orden, 
@@ -25,7 +27,8 @@ const flatWorkApoXMLExporter = async (req, res, next) => {
                             nombreParte,
                             tipoParte, 
                             ancho, 
-                            alto, 
+                            alto,
+                            colores, 
                             paginas, 
                             cliente, 
                             contactoClienteNombre , 
@@ -36,6 +39,7 @@ const flatWorkApoXMLExporter = async (req, res, next) => {
                             materialTipo,
                             anchoResma,
                             altoResma,
+                            impresora,
                             jobId,);
         res.setHeader("Content-Type", "application/xml");
         res.send(xml);

@@ -127,12 +127,13 @@ const CotizacionCard = ({ cotizacion, job }) => {
     console.log(jobToSend)
     setLoading(true);
     setWaitingFor("Generando archivo JDF...");
-    const data = {orden: "APO_" + cot.index, 
+    const data = {orden: "H-" + cot.index, 
                   nombre: jobToSend.Nombre,
                   nombreParte: jobToSend.Partes[0].Name,
                   tipoParte: jobToSend.Partes[0].jobParts[0].Type, 
                   ancho: mmToPt(jobToSend.Partes[0].Ancho), 
-                  alto: mmToPt(jobToSend.Partes[0].Alto), 
+                  alto: mmToPt(jobToSend.Partes[0].Alto),
+                  colores: {frente: jobToSend.Partes[0].ColoresFrente, dorso: jobToSend.Partes[0].ColoresDorso}, 
                   paginas: parseInt(jobToSend.Partes[0].Pages), 
                   cliente: jobToSend.Company.Nombre, 
                   contactoClienteNombre: jobToSend.Owner?.Name || "Juan", 
@@ -141,8 +142,9 @@ const CotizacionCard = ({ cotizacion, job }) => {
                   cantidad: parseInt(jobToSend.Cantidad),
                   gramaje: parseInt(jobToSend.Partes[0].partStock.Gramaje),
                   materialTipo: jobToSend.Partes[0].partStock.Tipo,
-                  anchoResma: mmToPt(jobToSend.Partes[0].partStock.Ancho_Resma),
-                  altoResma: mmToPt(jobToSend.Partes[0].partStock.Alto_Resma),
+                  anchoResma: mmToPt(cot.data.impositionData[jobToSend.Partes[0]._id].impositionData.sheetOriginalSize.width),
+                  altoResma: mmToPt(cot.data.impositionData[jobToSend.Partes[0]._id].impositionData.sheetOriginalSize.height),
+                  impresora: cot.data.impositionData[jobToSend.Partes[0]._id].impositionData.printerSelector.Modelo,
                   jobId: jobToSend._id,
                 }
 

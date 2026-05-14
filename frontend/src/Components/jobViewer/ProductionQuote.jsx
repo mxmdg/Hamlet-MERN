@@ -1,7 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useWatch } from "react-hook-form";
 
 //Mui Material Imports
 import {
@@ -59,7 +58,7 @@ const ProductionQuote = (props) => {
   });
 
   const [isIvaEnabled, setIsIvaEnabled] = useState(
-    props.quoteOptions && props.quoteOptions.isIvaEnabled !== undefined
+    props.quoteOptions?.isIvaEnabled !== undefined
       ? props.quoteOptions.isIvaEnabled
       : true,
   );
@@ -67,11 +66,11 @@ const ProductionQuote = (props) => {
   const [useError, setUseError] = useState(null);
   const [useLoading, setUseLoading] = useState(false);
   const [useSettings, setSettings] = useState(null);
-  const gainPercentage = watch("gainPercentage", 45); // Default value
-  const salesCommission = watch("salesCommission", 0); // Default value
-  const ivaPercentage = isIvaEnabled ? 21 : 0; // IVA is 0 if disabled
 
-  // Create safe derived pricing settings object
+  const gainPercentage = watch("gainPercentage", 45);
+  const salesCommission = watch("salesCommission", 0);
+  const ivaPercentage = isIvaEnabled ? 21 : 0;
+
   const pricingSettings = useSettings
     ? {
         gainMin: useSettings["pricing.gain.min"],
@@ -83,12 +82,17 @@ const ProductionQuote = (props) => {
       }
     : null;
 
+  // ✅ FIX: Fetch product type solo una vez. Solo cambia isIvaEnabled
+  // si NO hay quoteOptions previas (cotización nueva).
   useEffect(() => {
     const fetchProductType = async () => {
       try {
         const product = await getPrivateElementByID("jobs", props.job);
         if (product.Tipo[0].name === "Libro") {
-          setIsIvaEnabled(false); // Disable IVA for books
+          // Solo pisar si es cotización nueva (sin quoteOptions)
+          if (props.quoteOptions?.isIvaEnabled === undefined) {
+            setIsIvaEnabled(false);
+          }
         }
       } catch (error) {
         setUseError(error);
@@ -96,11 +100,59 @@ const ProductionQuote = (props) => {
     };
 
     fetchProductType();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.job]);
 
+  // ✅ FIX: Fetch settings solo una vez al montar.
+  // props.pricingSettings es una prop-función: no va en deps para evitar
+  // re-runs si el padre no la memoiza.
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        setUseLoading(true);
+        const settings = await getPrivateElementByID(
+          "settings",
+          context.memberships[0].tenant.id,
+        );
+        setSettings(settings);
+        props.pricingSettings(settings);
+        setUseError(null);
+      } catch (error) {
+        setUseError(error);
+      } finally {
+        setUseLoading(false);
+      }
+    };
+
+    fetchSettings();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // ✅ FIX: Setear valores por defecto solo cuando llegan los settings
+  // y solo si es cotización nueva.
+  useEffect(() => {
+    if (!useSettings) return;
+    if (props.quoteOptions) return; // cotización existente: no pisar
+
+    const gainDef = useSettings["pricing.gain.def"];
+    const commissionDef = useSettings["pricing.commission.def"];
+
+    if (gainDef !== undefined) {
+      setValue("gainPercentage", gainDef, {
+        shouldValidate: true,
+        shouldDirty: false,
+      });
+    }
+    if (commissionDef !== undefined) {
+      setValue("salesCommission", commissionDef, {
+        shouldValidate: true,
+        shouldDirty: false,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [useSettings]);
+
   const calculateQuote = () => {
-    // Sumamos los costos de impresión, terminación y material con la condicion de
-    // si el IVA no esta habilitado, se lo cargamos al material.
     const costResume =
       props.costResume.Print +
       props.costResume.Finishing +
@@ -128,117 +180,78 @@ const ProductionQuote = (props) => {
 
   const quote = calculateQuote();
 
-  useEffect(() => {
-    if (typeof props.quoteSettings === "function") {
-      props.quoteSettings({
-        gainPercentage:
-          props.quoteOptions !== undefined &&
-          props.quoteOptions.gainPercentage !== undefined
-            ? parseFloat(props.quoteOptions.gainPercentage)
-            : gainPercentage,
-        salesCommission:
-          props.quoteOptions !== undefined
-            ? props.quoteOptions.salesCommission
-            : salesCommission,
-        ivaPercentage:
-          props.quoteOptions !== undefined &&
-          props.quoteOptions.ivaPercentage !== undefined
-            ? props.quoteOptions.ivaPercentage
-            : ivaPercentage,
-        isIvaEnabled:
-          props.quoteOptions !== undefined &&
-          props.quoteOptions.isIvaEnabled !== undefined
-            ? props.quoteOptions.isIvaEnabled
-            : isIvaEnabled,
-        quote: quote,
-      });
-    }
-    // eslint-disable-next-line
-  }, [gainPercentage, salesCommission, ivaPercentage, isIvaEnabled, quote]);
+  // ✅ FIX PRINCIPAL: Usar ref para comparar el quote anterior y evitar
+  // llamar props.quoteSettings si los valores no cambiaron realmente.
+  // Esto corta el loop infinito: quote es un objeto nuevo cada render,
+  // pero solo notificamos al padre cuando los VALORES son distintos.
+  const prevQuoteRef = useRef(null);
 
   useEffect(() => {
-    const fetchSettings = async () => {
-      try {
-        setUseLoading(true);
-        const settings = await getPrivateElementByID(
-          "settings",
-          context.memberships[0].tenant.id,
-        );
-        setSettings(settings);
-        props.pricingSettings(settings);
-        setUseError(null);
-      } catch (error) {
-        setUseError(error);
-      } finally {
-        setUseLoading(false);
-      }
-    };
+    if (typeof props.quoteSettings !== "function") return;
 
-    fetchSettings();
-  }, []);
+    const quoteChanged =
+      !prevQuoteRef.current ||
+      prevQuoteRef.current.gain !== quote.gain ||
+      prevQuoteRef.current.total !== quote.total ||
+      prevQuoteRef.current.iva !== quote.iva ||
+      prevQuoteRef.current.salesCommission !== quote.salesCommission ||
+      prevQuoteRef.current.utilityPercentage !== quote.utilityPercentage;
 
-  useEffect(() => {
-    if (!useSettings) return;
+    if (!quoteChanged) return;
 
-    // 👉 SOLO para cotización nueva
-    if (!props.quoteOptions) {
-      const gainDef = useSettings["pricing.gain.def"];
-      const commissionDef = useSettings["pricing.commission.def"];
+    prevQuoteRef.current = quote;
 
-      if (gainDef !== undefined) {
-        setValue("gainPercentage", gainDef, {
-          shouldValidate: true,
-          shouldDirty: false,
-        });
-      }
+    props.quoteSettings({
+      gainPercentage:
+        props.quoteOptions?.gainPercentage !== undefined
+          ? parseFloat(props.quoteOptions.gainPercentage)
+          : gainPercentage,
+      salesCommission:
+        props.quoteOptions?.salesCommission !== undefined
+          ? props.quoteOptions.salesCommission
+          : salesCommission,
+      ivaPercentage:
+        props.quoteOptions?.ivaPercentage !== undefined
+          ? props.quoteOptions.ivaPercentage
+          : ivaPercentage,
+      isIvaEnabled:
+        props.quoteOptions?.isIvaEnabled !== undefined
+          ? props.quoteOptions.isIvaEnabled
+          : isIvaEnabled,
+      quote,
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gainPercentage, salesCommission, ivaPercentage, isIvaEnabled, quote.gain, quote.total, quote.iva, quote.salesCommission, quote.utilityPercentage]);
 
-      if (commissionDef !== undefined) {
-        setValue("salesCommission", commissionDef, {
-          shouldValidate: true,
-          shouldDirty: false,
-        });
-      }
-    }
-  }, [useSettings, props.quoteOptions, setValue]);
+  // --- UI ---
 
-  const failure = (
-    <ErrorMessage
-      message={useError}
-      title="Error"
-      action={() => {
-        setUseError(null);
-      }}
-    />
-  );
-
-  const loading = (
-    <Box
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
-      }}
-    >
-      <Spinner />
-    </Box>
-  );
-
-  // Block rendering until settings are loaded
   if (useLoading) {
-    return loading;
+    return (
+      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+        <Spinner />
+      </Box>
+    );
   }
 
   if (useError !== null) {
-    return failure;
+    return (
+      <ErrorMessage
+        message={useError}
+        title="Error"
+        action={() => setUseError(null)}
+      />
+    );
   }
 
-  // Don't render main content until pricingSettings is available
   if (!pricingSettings) {
-    return loading;
+    return (
+      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+        <Spinner />
+      </Box>
+    );
   }
 
-  const success = (
+  return (
     <Container maxWidth="lg" sx={{ padding: "2rem" }}>
       <Grid container spacing={2}>
         <Grid size={{ xs: 12 }}>
@@ -263,12 +276,8 @@ const ProductionQuote = (props) => {
                         },
                       })}
                       type="number"
-                      inputProps={{
-                        step: "0.01", // Allow two decimal places
-                      }}
-                      InputProps={{
-                        endAdornment: <span>%</span>,
-                      }}
+                      inputProps={{ step: "0.01" }}
+                      InputProps={{ endAdornment: <span>%</span> }}
                       fullWidth
                     />
                     {errors.gainPercentage && (
@@ -301,12 +310,8 @@ const ProductionQuote = (props) => {
                         },
                       })}
                       type="number"
-                      inputProps={{
-                        step: "0.01", // Allow two decimal places
-                      }}
-                      InputProps={{
-                        endAdornment: <span>%</span>,
-                      }}
+                      inputProps={{ step: "0.01" }}
+                      InputProps={{ endAdornment: <span>%</span> }}
                       fullWidth
                     />
                     {errors.salesCommission && (
@@ -317,9 +322,7 @@ const ProductionQuote = (props) => {
                   </Grid>
                   <Grid size={{ xs: 12, md: 12 }}>
                     <ListItemNumbers
-                      primary={currencyFormat(
-                        roundInteger(quote.salesCommission),
-                      )}
+                      primary={currencyFormat(roundInteger(quote.salesCommission))}
                       secondary={"Comisión"}
                     />
                   </Grid>
@@ -342,9 +345,7 @@ const ProductionQuote = (props) => {
                       value={ivaPercentage}
                       type="number"
                       disabled
-                      InputProps={{
-                        endAdornment: <span>%</span>,
-                      }}
+                      InputProps={{ endAdornment: <span>%</span> }}
                       fullWidth
                     />
                   </Grid>
@@ -369,8 +370,6 @@ const ProductionQuote = (props) => {
       </Grid>
     </Container>
   );
-
-  return success;
 };
 
 export default ProductionQuote;

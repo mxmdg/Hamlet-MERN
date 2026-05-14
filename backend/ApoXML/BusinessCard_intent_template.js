@@ -4,7 +4,8 @@ const template = (
 	nombreParte,
 	tipoParte,
 	ancho, 
-	alto, 
+	alto,
+	colores, 
 	paginas, 
 	cliente, 
 	contactoClienteNombre = "Nombre", 
@@ -15,6 +16,7 @@ const template = (
 	materialTipo,
 	anchoResma = 210,
 	altoResma = 297,
+	impresora = "Generic Press",
 	jobId,
 ) => {
 
@@ -27,6 +29,9 @@ return str.toString()
 	.replace(/"/g, "&quot;")
 	.replace(/'/g, "&apos;");
 };
+
+const layoutIntentSides = colores?.dorso > 0 ? "TwoSidedHeadToHead" : "single";
+const colorIntentLink = colores.frente > 1 || colores?.dorso > 1 ? "ID_ColorIntent_CMYK" : "ID_ColorIntent_Gray";
 
 return `<?xml version="1.0" encoding="UTF-8"?>
 <JDF 
@@ -114,7 +119,7 @@ return `<?xml version="1.0" encoding="UTF-8"?>
 	</ResourceLinkPool>
 	<!--@AuditPool-->
 	<AuditPool>
-		<Created ID="crea_root_ID" AgentName="ApoXML Convertor" TimeStamp="2018-09-03T23:54:12+02:00" AgentVersion="1.3.3"/>
+		<Created ID="crea_root_ID" AgentName="Hamlet Convertor" TimeStamp="2018-09-03T23:54:12+02:00" AgentVersion="1.3.3"/>
 	</AuditPool>
 	<!--@ProductPart-->
 	<!--A Product Part describes either one part of a multipart job (Cover/Body) or the single part (Self-Cover) or one Product of a gang job-->
@@ -139,7 +144,7 @@ return `<?xml version="1.0" encoding="UTF-8"?>
 			<!--@LayoutIntent-->
 			<!--LayoutIntent contains various info that is related to both Page and Imposition.
 				@Sides is used to distinguish between single and double sided printing (Unbound)-->
-			<LayoutIntent ID="ID_LayoutIntent_0" Class="Intent" Sides="TwoSidedHeadToHead" Status="Available">
+			<LayoutIntent ID="ID_LayoutIntent_0" Class="Intent" Sides="${layoutIntentSides}" Status="Available">
 				<!--Finished Dimensions = Closed dimensions = usually page size. For Flatwork they are the same.85 x 55mm-->
 				<FinishedDimensions DataType="ShapeSpan" Actual="${ancho} ${alto} 0"/>
 				<!--According the JDF spec, Pages are the physical sides in the product. So simplex and duplex printing makes no differences: single sided poster would still set Pages to 2-->
@@ -165,7 +170,7 @@ return `<?xml version="1.0" encoding="UTF-8"?>
 			<!--Specifying a Press is not really a ProductIntent.
 					But some systems can provide already Press information so Apogee supports it.
 					The @DeviceID must contain the same value as defined in Apogee.-->
-			<Device Class="Implementation" DeviceID="Large Press" DeviceType="Press" ID="ID_Device_Press_0" Status="Available"/>
+			<Device Class="Implementation" DeviceID="${impresora}" DeviceType="Press" ID="ID_Device_Press_0" Status="Available"/>
 			<!--@ArtDeliveryIntent-->
 			<!--ArtDelivery is used to allow specifying the PDF Content location-->
 			<ArtDeliveryIntent ID="ID_ArtDeliveryIntent_0" Class="Intent" Status="Available">
@@ -178,7 +183,7 @@ return `<?xml version="1.0" encoding="UTF-8"?>
 			<!--@RunList Creation: No versioning, Specific URL per part-->
 			<RunList ID="ID_Run_0" Class="Parameter" NPage="2" Pages="0 ~ 1" Status="Available">
 				<LayoutElement>
-					<FileSpec MimeType="application/pdf" URL="file://be.local/dfs/data/be/GS/RD/EQAP_Testfiles/JDFtank/Content/BusinessCardCMYK_DS.pdf"/>
+					<FileSpec MimeType="application/pdf" URL="/${cliente}/${nombre}/1-${nombreParte}/${nombre}_1-${nombreParte}.pdf"/>
 				</LayoutElement>
 			</RunList>
 		</ResourcePool>
