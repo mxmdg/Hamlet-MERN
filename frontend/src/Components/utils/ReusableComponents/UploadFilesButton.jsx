@@ -62,7 +62,7 @@ const calculateMostCommonSize = (pages) => {
 
 export default function UploadFilesButton({
   uploadUrl,
-  setPartFiles,
+
   onUploadSuccess,
   expectedPageCount,
   expectedSize,
@@ -132,7 +132,7 @@ export default function UploadFilesButton({
 
       if (mismatchedPages.length > 0) {
         alert(
-          `Atencion: Las siguientes páginas tienen diferente tamaño al resto del archivo. (${mostCommonSize}):\n` +
+          `Warning: The following pages have sizes that do not match the most common size (${mostCommonSize}):\n` +
             mismatchedPages
               .map(
                 (page) =>
@@ -145,7 +145,7 @@ export default function UploadFilesButton({
       }
 
       if (
-        data.page_count - expectedPageCount !== 0 ||
+        data.page_count !== expectedPageCount ||
         mostCommonSize !== expectedSize
       ) {
         setLoading(false);
@@ -153,14 +153,14 @@ export default function UploadFilesButton({
           message: `Diferencias detectadas:\nPaginas esperadas: ${expectedPageCount}, paginas recibidas: ${data.page_count}\nTamaño esperado: ${expectedSize}, tamaño mas común: ${mostCommonSize}`,
           title:
             "El archivo PDF no coincide con las especificaciones esperadas",
-          severity: "warning",
-          
+          severity: "info",
+
         });
         return;
       }
 
       if (onUploadSuccess) {
-        setPartFiles([...(uploadUrl + "/" + files.file_name)])
+
         setLoading(false);
         onUploadSuccess(data);
       }
@@ -277,7 +277,7 @@ export default function UploadFilesButton({
         title={useError.title}
         message={useError.message}
         severity={useError.severity || "error"}
-        cancelAction={()=>{setError(null)}}
+        action={() => setError(null)}
       />
     );
   }
