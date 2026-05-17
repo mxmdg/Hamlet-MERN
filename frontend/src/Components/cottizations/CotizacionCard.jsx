@@ -129,24 +129,34 @@ const CotizacionCard = ({ cotizacion, job }) => {
     setWaitingFor("Generando archivo JDF...");
     const data = {orden: "H-" + cot.index, 
                   nombre: jobToSend.Nombre,
-                  nombreParte: jobToSend.Partes[0].Name,
-                  tipoParte: jobToSend.Partes[0].jobParts[0].Type, 
-                  ancho: mmToPt(jobToSend.Partes[0].Ancho), 
-                  alto: mmToPt(jobToSend.Partes[0].Alto),
-                  colores: {frente: jobToSend.Partes[0].ColoresFrente, dorso: jobToSend.Partes[0].ColoresDorso}, 
-                  paginas: parseInt(jobToSend.Partes[0].Pages), 
+                  tipoTrabajo: jobToSend.Tipo[0].name,
+                 
                   cliente: jobToSend.Company.Nombre, 
                   contactoClienteNombre: jobToSend.Owner?.Name || "Juan", 
                   contactoClienteApellido: jobToSend.Owner?.LastName || "Pérez",
                   contactoClienteEmail: jobToSend.Owner?.Email || "jp@gmail.com",
                   cantidad: parseInt(jobToSend.Cantidad),
-                  gramaje: parseInt(jobToSend.Partes[0].partStock.Gramaje),
-                  materialTipo: jobToSend.Partes[0].partStock.Tipo,
-                  anchoResma: mmToPt(cot.data.impositionData[jobToSend.Partes[0]._id].impositionData.sheetOriginalSize.width),
-                  altoResma: mmToPt(cot.data.impositionData[jobToSend.Partes[0]._id].impositionData.sheetOriginalSize.height),
-                  impresora: cot.data.impositionData[jobToSend.Partes[0]._id].impositionData.printerSelector.Modelo,
+                  
                   jobId: jobToSend._id,
                 }
+
+    const partsData = jobToSend.Partes.map((part)=> {
+      return {
+          nombreParte: part.Name,
+          tipoParte: part.jobParts[0].Type,
+          ancho: part.Ancho, 
+          alto: part.Alto,
+          colores: {frente: part.ColoresFrente, dorso: part.ColoresDorso}, 
+          paginas: parseInt(part.Pages),
+          gramaje: parseInt(part.partStock.Gramaje),
+          materialTipo: part.partStock.Tipo,
+          anchoResma: mmToPt(cot.data.impositionData[part._id].impositionData.sheetOriginalSize.width),
+          altoResma: mmToPt(cot.data.impositionData[part._id].impositionData.sheetOriginalSize.height),
+          impresora: cot.data.impositionData[part._id].impositionData.printerSelector.Modelo, 
+      }
+    })
+    
+    data.partes = partsData
 
     console.log(data)
     

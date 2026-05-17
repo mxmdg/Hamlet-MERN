@@ -1,22 +1,12 @@
 const template = (
 	orden, 
 	nombre,
-	nombreParte,
-	tipoParte,
-	ancho, 
-	alto,
-	colores, 
-	paginas, 
+	partes,
 	cliente, 
 	contactoClienteNombre = "Nombre", 
 	contactoClienteApellido = "Apellido",
 	contactoClienteEmail = "Email",
 	cantidad = 1,
-	gramaje = 100,
-	materialTipo,
-	anchoResma = 210,
-	altoResma = 297,
-	impresora = "Generic Press",
 	jobId,
 ) => {
 
