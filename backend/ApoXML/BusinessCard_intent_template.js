@@ -1,185 +1,251 @@
-const template = (
-	orden, 
-	nombre,
-	partes,
-	cliente, 
-	contactoClienteNombre = "Nombre", 
-	contactoClienteApellido = "Apellido",
-	contactoClienteEmail = "Email",
-	cantidad = 1,
-	jobId,
-) => {
-
-const escapeXML = (str) => {
-if (!str) return "";
-return str.toString()
-	.replace(/&/g, "&amp;")
-	.replace(/</g, "&lt;")
-	.replace(/>/g, "&gt;")
-	.replace(/"/g, "&quot;")
-	.replace(/'/g, "&apos;");
+const escapeXML = (value) => {
+  if (value === null || value === undefined) return "";
+  return value
+    .toString()
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&apos;");
 };
 
-const layoutIntentSides = colores?.dorso > 0 ? "TwoSidedHeadToHead" : "single";
-const colorIntentLink = colores.frente > 1 || colores?.dorso > 1 ? "ID_ColorIntent_CMYK" : "ID_ColorIntent_Gray";
+const toNumber = (value, fallback = 0) => {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : fallback;
+};
 
-return `<?xml version="1.0" encoding="UTF-8"?>
+const asPositiveInt = (value, fallback = 1) => {
+  const parsed = Math.trunc(toNumber(value, fallback));
+  return parsed > 0 ? parsed : fallback;
+};
+
+const slugForPath = (value, fallback = "item") => {
+  const raw = value === null || value === undefined ? "" : value.toString().trim();
+  if (!raw) return fallback;
+  return raw
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^\w.-]+/g, "_");
+};
+
+const getSides = (colores = {}) =>
+  toNumber(colores?.dorso, 0) > 0 ? "TwoSidedHeadToHead" : "OneSidedFront";
+
+const getColorIntentRef = (colores = {}) =>
+  toNumber(colores?.frente, 0) > 1 || toNumber(colores?.dorso, 0) > 1
+    ? "ID_ColorIntent_CMYK"
+    : "ID_ColorIntent_Gray";
+
+const buildPartialComponent = (part, index) => {
+  const productType = "Body";
+  const displayName = `${part?.tipoParte || "Parte"}_${part?.nombreParte || `Parte_${index + 1}`}`;
+  const readerPageCount = asPositiveInt(part?.paginas, 1);
+
+  return `\t\t<Component ID="ID_Component_${index}" Class="Quantity" Status="Unavailable" ProductType="${productType}" ComponentType="PartialProduct" DescriptiveName="${escapeXML(displayName)}" ReaderPageCount="${readerPageCount}"/>`;
+};
+
+const buildRootPartLink = (_part, index) =>
+  `\t\t<ComponentLink rRef="ID_Component_${index}" Usage="Input"/>`;
+
+const buildChildJDF = (part, index, context) => {
+  const { rootJobPartId, nombre, cliente, nowIso } = context;
+
+  const nombreParte = part?.nombreParte || `Parte_${index + 1}`;
+  const paginas = asPositiveInt(part?.paginas, 1);
+  const ancho = toNumber(part?.ancho, 0);
+  const alto = toNumber(part?.alto, 0);
+  const gramaje = asPositiveInt(part?.gramaje, 0);
+  const materialTipo = part?.materialTipo || "Papel";
+  const anchoResma = toNumber(part?.anchoResma, 0);
+  const altoResma = toNumber(part?.altoResma, 0);
+  const impresora = part?.impresora || "Large Press";
+  const colorIntentRef = getColorIntentRef(part?.colores);
+  const sides = getSides(part?.colores);
+  const partPath = `${index + 1}-${slugForPath(nombreParte, `parte_${index + 1}`)}`;
+  const safeCliente = slugForPath(cliente, "Cliente");
+  const safeNombre = slugForPath(nombre, "Trabajo");
+  const url = `/${safeCliente}/${safeNombre}/${partPath}/${safeNombre}_${partPath}.pdf`;
+
+  return `\t<JDF ID="ID_ProdPart_${index}" Type="Product" Status="Waiting" xsi:type="Product" JobPartID="${escapeXML(
+    `${rootJobPartId}_${index}`,
+  )}" DescriptiveName="${escapeXML(nombreParte)}">
+\t\t<AuditPool>
+\t\t\t<Created ID="crea_${index}_ID" AgentName="Hamlet Convertor" TimeStamp="${nowIso}" AgentVersion="1.3.3"/>
+\t\t</AuditPool>
+\t\t<Comment Name="Instruction" AgentName="Hamlet Convertor" AgentVersion="1.3.3">${escapeXML(
+      part?.tipoParte || nombreParte,
+    )}</Comment>
+\t\t<ResourceLinkPool>
+\t\t\t<ArtDeliveryIntentLink rRef="ID_ArtDeliveryIntent_${index}" Usage="Input"/>
+\t\t\t<DeviceLink rRef="ID_Device_Press_${index}" Usage="Input"/>
+\t\t\t<ComponentLink rRef="ID_Component_${index}" Usage="Output"/>
+\t\t\t<ColorIntentLink rRef="${colorIntentRef}" Usage="Input"/>
+\t\t\t<LayoutIntentLink rRef="ID_LayoutIntent_${index}" Usage="Input"/>
+\t\t\t<MediaIntentLink rRef="ID_MediaIntent_${index}" Usage="Input"/>
+\t\t</ResourceLinkPool>
+\t\t<ResourcePool>
+\t\t\t<LayoutIntent ID="ID_LayoutIntent_${index}" Class="Intent" Sides="${sides}" Status="Available">
+\t\t\t\t<FinishedDimensions DataType="ShapeSpan" Actual="${ancho} ${alto} 0"/>
+\t\t\t\t<Pages DataType="IntegerSpan" Actual="${paginas}"/>
+\t\t\t</LayoutIntent>
+\t\t\t<MediaIntent ID="ID_MediaIntent_${index}" Class="Intent" Status="Available" DescriptiveName="${escapeXML(
+      `${materialTipo}-1`,
+    )}">
+\t\t\t\t<MediaType DataType="EnumerationSpan" Actual="Paper"/>
+\t\t\t\t<Weight DataType="NumberSpan" Actual="${gramaje}"/>
+\t\t\t\t<StockBrand DataType="StringSpan" Actual="${escapeXML(materialTipo)}"/>
+\t\t\t\t<Grade DataType="IntegerSpan" Actual="1"/>
+\t\t\t\t<Thickness DataType="NumberSpan" Actual="200"/>
+\t\t\t\t<Dimensions DataType="XYPairSpan" Actual="${anchoResma} ${altoResma}"/>
+\t\t\t</MediaIntent>
+\t\t\t<Device Class="Implementation" DeviceID="${escapeXML(
+      impresora,
+    )}" DeviceType="Press" ID="ID_Device_Press_${index}" Status="Available"/>
+\t\t\t<ArtDeliveryIntent ID="ID_ArtDeliveryIntent_${index}" Class="Intent" Status="Available">
+\t\t\t\t<ArtDelivery ArtDeliveryType="DigitalFile">
+\t\t\t\t\t<RunListRef rRef="ID_Run_${index}"/>
+\t\t\t\t</ArtDelivery>
+\t\t\t</ArtDeliveryIntent>
+\t\t\t<RunList ID="ID_Run_${index}" Class="Parameter" NPage="${paginas}" Pages="0 ~ ${Math.max(
+      paginas - 1,
+      0,
+    )}" Status="Available">
+\t\t\t\t<LayoutElement>
+\t\t\t\t\t<FileSpec MimeType="application/pdf" URL="${escapeXML(url)}"/>
+\t\t\t\t</LayoutElement>
+\t\t\t</RunList>
+\t\t</ResourcePool>
+\t</JDF>`;
+};
+
+const template = (
+  orden,
+  nombre,
+  partes,
+  cliente,
+  contactoClienteNombre = "Nombre",
+  contactoClienteApellido = "Apellido",
+  contactoClienteEmail = "Email",
+  cantidad = 1,
+  jobId,
+) => {
+  const safeOrden = orden || "SinOrden";
+  const safeNombre = nombre || "Trabajo";
+  const safePartes = Array.isArray(partes) && partes.length > 0 ? partes : [{}];
+  const totalParts = safePartes.length;
+  const nowIso = new Date().toISOString();
+
+  const firstPart = safePartes[0] || {};
+  const finalWidth = toNumber(firstPart.ancho, 0);
+  const finalHeight = toNumber(firstPart.alto, 0);
+  const finalProductType = totalParts > 1 ? "Brochure" : "Flatwork";
+  const bindingOrder = totalParts > 1 ? "Collecting" : "None";
+  const rootJobPartId = `ID_24_ApoXML-${slugForPath(safeOrden, "SinOrden")}_${slugForPath(
+    safeNombre,
+    "Trabajo",
+  )}`;
+
+  const partialComponents = safePartes
+    .map((part, index) => buildPartialComponent(part, index))
+    .join("\n");
+
+  const rootPartLinks = safePartes
+    .map((part, index) => buildRootPartLink(part, index))
+    .join("\n");
+
+  const childJdfs = safePartes
+    .map((part, index) =>
+      buildChildJDF(part, index, {
+        rootJobPartId,
+        nombre: safeNombre,
+        cliente,
+        nowIso,
+      }),
+    )
+    .join("\n");
+
+  return `<?xml version="1.0" encoding="UTF-8"?>
 <JDF 
-	JobID="ApoXML-${orden}" 
-	Activation="Active" 
-	DescriptiveName="${(escapeXML(nombre))}" 
-	JobPartID="ID_24_ApoXML-BusinessCard_BusinessCard" 
-	ID="ApoXMLJob"  
-	Status="Waiting" 
-	Type="Product" 
-	Version="1.4" 
-	MaxVersion="1.4" 
-	ICSVersions="Base_L1-1.4" 
-	xsi:type="Product" 
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	xmlns="http://www.CIP4.org/JDFSchema_1_1" 
-	xmlns:agfa="http://www.agfa.com/w3c/gs/jdf/agfaextensions.xsd">
-	<!--Created using Convertor v1.2.7 and stylesheet: v1.3.3 for Prepress v110-->
-	<!--Creator of original ApoXML was "ApoXML SDK" with Version: "1.1"-->
-	<!--General Job Comment-->
-	<Comment Name="${escapeXML(nombre)}" AgentName="ApoXML Convertor" AgentVersion="1.3.3">www.hamlet.com.ar/jobs/edit/${jobId}</Comment>
-	<ResourcePool>
-		<!--@FinalProduct 85 x 55 mm-->
-		<Component ID="ID_Component_FinalProduct" Class="Quantity" Status="Unavailable" ComponentType="FinalProduct" DescriptiveName="${escapeXML(nombreParte)}" ProductType="Flatwork" Dimensions="${ancho} ${alto}">
-			<!--@ProductType is one of: 'Flatwork', 'Folded', 'Brochure' or 'Other;. 'Flatwork' is the only ProductType allowed for Asanti. Note that another spelling is FlatWork as used in JDF1.6. 'Folded' is a folded unbound leaflet, content delivered as a spread. Other is for non-prepress products. -->
-		</Component>
-		<!--@ColorPool-->
-		<ColorPool ID="ID_ColorPool_CMYK" Class="Parameter" Status="Available">
-			<Color Name="Cyan" CMYK="1 0 0 0" ColorType="Normal"/>
-			<Color Name="Magenta" CMYK="0 1 0 0" ColorType="Normal"/>
-			<Color Name="Yellow" CMYK="0 0 1 0" ColorType="Normal"/>
-			<Color Name="Black" CMYK="0 0 0 1" ColorType="Normal"/>
-		</ColorPool>
-		<!--@ColorIntent-->
-		<ColorIntent ID="ID_ColorIntent_CMYK" Class="Intent" Status="Available">
-			<ColorPoolRef rRef="ID_ColorPool_CMYK"/>
-			<!--ColorsUsed is a list of the Colors used in this part.-->
-			<ColorsUsed>
-				<SeparationSpec Name="Cyan"/>
-				<SeparationSpec Name="Magenta"/>
-				<SeparationSpec Name="Yellow"/>
-				<SeparationSpec Name="Black"/>
-			</ColorsUsed>
-			<ColorStandard DataType="NameSpan" Actual="CMYK"/>
-		</ColorIntent>
-		<!--@ColorPool-->
-		<ColorPool ID="ID_ColorPool_Gray" Class="Parameter" Status="Available">
-			<Color Name="Black" CMYK="0 0 0 1" ColorType="Normal"/>
-		</ColorPool>
-		<!--@ColorIntent-->
-		<ColorIntent ID="ID_ColorIntent_Gray" Class="Intent" Status="Available">
-			<ColorPoolRef rRef="ID_ColorPool_Gray"/>
-			<!--ColorsUsed is a list of the Colors used in this part.-->
-			<ColorsUsed>
-				<SeparationSpec Name="Black"/>
-			</ColorsUsed>
-			<ColorStandard DataType="NameSpan" Actual="Monochrome"/>
-		</ColorIntent>
-		<!--PartialProduct is used to create a Product Part (like cover/body/insert). For simplicity, it is also used even if there is only one part. In ganging jobs, each Product Part could be a separate Product.-->
-		<Component ID="ID_Component_0" Class="Quantity" Status="Unavailable" ProductType="Body" ComponentType="PartialProduct" DescriptiveName="${escapeXML(nombreParte)}" ReaderPageCount="${paginas}"/>
-		<!--@BindingOrder is one from: 'None' (Flatwork or Folded), 'Collecting' (=Apogee 'Nested', saddle stitched), 'Gathering' (=Apogee 'Gathered' like Perfect Bound). More details are in BindingType if not Flatwork.-->
-		<BindingIntent ID="ID_BindingIntent" Class="Intent" BindingOrder="None" Status="Available"/>
-		<!--@CustomerInfo-->
-		<CustomerInfo ID="ID_CustomerInfo_Main" Class="Parameter" Status="Available" CustomerID="PI_CompApoXML">
-			<!--Main Customer Contact-->
-			<ContactRef rRef="ID_Contact_Main"/>
-		</CustomerInfo>
-		<!--Main Customer Contact-->
-		<!--@Contact for Customer-->
-		<Contact ID="ID_Contact_Main" Class="Parameter" Status="Available" ContactTypes="Customer Administrator">
-			<Company OrganizationName="${escapeXML(cliente)}" ProductID="PI_CompApoXML"/>
-			<Person FamilyName="${escapeXML(contactoClienteApellido)}" DescriptiveName="${escapeXML(contactoClienteNombre)}_${escapeXML(contactoClienteApellido)}" FirstName="${escapeXML(contactoClienteNombre)}" ProductID="PI_Pers_apoxmlNV">
-				<ComChannel ChannelType="Phone" ChannelTypeDetails="LandLine" Locator="12345"/>
-				<ComChannel ChannelType="Email" Locator="${escapeXML(contactoClienteEmail)}"/>
-			</Person>
-		</Contact>
-		<NodeInfo Class="Parameter" ID="ID_NodeInfo_Root" NodeStatus="Waiting" Status="Available"/>
-	</ResourcePool>
-	<ResourceLinkPool>
-		<NodeInfoLink rRef="ID_NodeInfo_Root" Usage="Input"/>
-		<CustomerInfoLink rRef="ID_CustomerInfo_Main" Usage="Input"/>
-		<ComponentLink rRef="ID_Component_FinalProduct" Usage="Output" Amount="${cantidad}"/>
-		<BindingIntentLink rRef="ID_BindingIntent" Usage="Input"/>
-		<ComponentLink rRef="ID_Component_0" Usage="Input"/>
-	</ResourceLinkPool>
-	<!--@AuditPool-->
-	<AuditPool>
-		<Created ID="crea_root_ID" AgentName="Hamlet Convertor" TimeStamp="2018-09-03T23:54:12+02:00" AgentVersion="1.3.3"/>
-	</AuditPool>
-	<!--@ProductPart-->
-	<!--A Product Part describes either one part of a multipart job (Cover/Body) or the single part (Self-Cover) or one Product of a gang job-->
-	<JDF ID="ID_ProdPart_0" Type="Product" Status="Waiting" xsi:type="Product" JobPartID="ID_24_ApoXML-BusinessCard_BusinessCard_0" DescriptiveName="${escapeXML(nombre)}">
-		<AuditPool>
-			<Created ID="crea_0_ID" AgentName="ApoXML Convertor" TimeStamp="2018-09-03T23:54:12+02:00" AgentVersion="1.3.3"/>
-		</AuditPool>
-		<Comment Name="Instruction" AgentName="ApoXML Convertor" AgentVersion="1.3.3">business cards</Comment>
-		<ResourceLinkPool>
-			<!--Reference to the content pages for this part. Note that this is usually the same PDF but a different page range.-->
-			<ArtDeliveryIntentLink rRef="ID_ArtDeliveryIntent_0" Usage="Input"/>
-			<!--Specifying a Press is not really a ProductIntent and not part of the JDF spec. 
-				But some systems can provide already Press information so Apogee supports it. ProcessUsage=Paper indicates it is a press.
-				A different press also needs a different platesetter, plate size and output settings.-->
-			<DeviceLink rRef="ID_Device_Press_0" Usage="Input"/>
-			<ComponentLink rRef="ID_Component_0" Usage="Output"/>
-			<ColorIntentLink rRef="ID_ColorIntent_CMYK" Usage="Input"/>
-			<LayoutIntentLink rRef="ID_LayoutIntent_0" Usage="Input"/>
-			<MediaIntentLink rRef="ID_MediaIntent_0" Usage="Input"/>
-		</ResourceLinkPool>
-		<ResourcePool>
-			<!--@LayoutIntent-->
-			<!--LayoutIntent contains various info that is related to both Page and Imposition.
-				@Sides is used to distinguish between single and double sided printing (Unbound)-->
-			<LayoutIntent ID="ID_LayoutIntent_0" Class="Intent" Sides="${layoutIntentSides}" Status="Available">
-				<!--Finished Dimensions = Closed dimensions = usually page size. For Flatwork they are the same.85 x 55mm-->
-				<FinishedDimensions DataType="ShapeSpan" Actual="${ancho} ${alto} 0"/>
-				<!--According the JDF spec, Pages are the physical sides in the product. So simplex and duplex printing makes no differences: single sided poster would still set Pages to 2-->
-				<Pages DataType="IntegerSpan" Actual="${paginas}"/>
-			</LayoutIntent>
-			<!--@MediaIntent-->
-			<!--MediaIntent specified the media for conventional printing (paper stock), digital printing (paper catalog) and sign and display (media substrate).-->
-			<MediaIntent ID="ID_MediaIntent_0" Class="Intent" Status="Available" DescriptiveName="Businesscards-1">
-				<MediaType DataType="EnumerationSpan" Actual="Paper"/>
-				<!--Paper Weight in gsm-->
-				<Weight DataType="NumberSpan" Actual="${gramaje}"/>
-				<!--Apogee Prepress will create a Paper Stock for this StockBrand if it was not existing yet. 
-						 For Prepress: StockBrand must NOT contain Weight or Thickness
-						 StockBrand must contain a reference to the Grade/ISOPaperSubstrate/Coating if the brand is available in multiple grades/coatings-->
-				<StockBrand DataType="StringSpan" Actual="${escapeXML(materialTipo)}"/>
-				<!--Grade: 1=glossy 2=matt 3=glossy-web 4=uncoated-white 5=uncoated-yellowish-->
-				<Grade DataType="IntegerSpan" Actual="1"/>
-				<!--Thickness in um-->
-				<Thickness DataType="NumberSpan" Actual="200"/>
-				<!--707 x 500mm-->
-				<Dimensions DataType="XYPairSpan" Actual="${anchoResma} ${altoResma}"/>
-			</MediaIntent>
-			<!--Specifying a Press is not really a ProductIntent.
-					But some systems can provide already Press information so Apogee supports it.
-					The @DeviceID must contain the same value as defined in Apogee.-->
-			<Device Class="Implementation" DeviceID="${impresora}" DeviceType="Press" ID="ID_Device_Press_0" Status="Available"/>
-			<!--@ArtDeliveryIntent-->
-			<!--ArtDelivery is used to allow specifying the PDF Content location-->
-			<ArtDeliveryIntent ID="ID_ArtDeliveryIntent_0" Class="Intent" Status="Available">
-				<ArtDelivery ArtDeliveryType="DigitalFile">
-					<RunListRef rRef="ID_Run_0"/>
-				</ArtDelivery>
-			</ArtDeliveryIntent>
-			<!--@RunList-->
-			<!--RunList is used in case the location of the PDF content files is already known or for versioning.-->
-			<!--@RunList Creation: No versioning, Specific URL per part-->
-			<RunList ID="ID_Run_0" Class="Parameter" NPage="2" Pages="0 ~ 1" Status="Available">
-				<LayoutElement>
-					<FileSpec MimeType="application/pdf" URL="/${cliente}/${nombre}/1-${nombreParte}/${nombre}_1-${nombreParte}.pdf"/>
-				</LayoutElement>
-			</RunList>
-		</ResourcePool>
-	</JDF>
+\tJobID="ApoXML-${escapeXML(safeOrden)}" 
+\tActivation="Active" 
+\tDescriptiveName="${escapeXML(safeNombre)}" 
+\tJobPartID="${escapeXML(rootJobPartId)}" 
+\tID="ApoXMLJob"  
+\tStatus="Waiting" 
+\tType="Product" 
+\tVersion="1.4" 
+\tMaxVersion="1.4" 
+\tICSVersions="Base_L1-1.4" 
+\txsi:type="Product" 
+\txmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+\txmlns="http://www.CIP4.org/JDFSchema_1_1" 
+\txmlns:agfa="http://www.agfa.com/w3c/gs/jdf/agfaextensions.xsd">
+\t<!--Created using Convertor v1.2.7 and stylesheet: v1.3.3 for Prepress v110-->
+\t<!--General Job Comment-->
+\t<Comment Name="${escapeXML(safeNombre)}" AgentName="Hamlet Convertor" AgentVersion="1.3.3">www.hamlet.com.ar/jobs/edit/${escapeXML(
+    jobId || "",
+  )}</Comment>
+\t<ResourcePool>
+\t\t<Component ID="ID_Component_FinalProduct" Class="Quantity" Status="Unavailable" ComponentType="FinalProduct" DescriptiveName="${escapeXML(
+      safeNombre,
+    )}" ProductType="${finalProductType}" Dimensions="${finalWidth} ${finalHeight} 0">
+\t\t\t<!--@ProductType is one of: 'Flatwork', 'Folded', 'Brochure' or 'Other;. 'Flatwork' is the only ProductType allowed for Asanti. -->
+\t\t</Component>
+\t\t<ColorPool ID="ID_ColorPool_CMYK" Class="Parameter" Status="Available">
+\t\t\t<Color Name="Cyan" CMYK="1 0 0 0" ColorType="Normal"/>
+\t\t\t<Color Name="Magenta" CMYK="0 1 0 0" ColorType="Normal"/>
+\t\t\t<Color Name="Yellow" CMYK="0 0 1 0" ColorType="Normal"/>
+\t\t\t<Color Name="Black" CMYK="0 0 0 1" ColorType="Normal"/>
+\t\t</ColorPool>
+\t\t<ColorIntent ID="ID_ColorIntent_CMYK" Class="Intent" Status="Available">
+\t\t\t<ColorPoolRef rRef="ID_ColorPool_CMYK"/>
+\t\t\t<ColorsUsed>
+\t\t\t\t<SeparationSpec Name="Cyan"/>
+\t\t\t\t<SeparationSpec Name="Magenta"/>
+\t\t\t\t<SeparationSpec Name="Yellow"/>
+\t\t\t\t<SeparationSpec Name="Black"/>
+\t\t\t</ColorsUsed>
+\t\t\t<ColorStandard DataType="NameSpan" Actual="CMYK"/>
+\t\t</ColorIntent>
+\t\t<ColorPool ID="ID_ColorPool_Gray" Class="Parameter" Status="Available">
+\t\t\t<Color Name="Black" CMYK="0 0 0 1" ColorType="Normal"/>
+\t\t</ColorPool>
+\t\t<ColorIntent ID="ID_ColorIntent_Gray" Class="Intent" Status="Available">
+\t\t\t<ColorPoolRef rRef="ID_ColorPool_Gray"/>
+\t\t\t<ColorsUsed>
+\t\t\t\t<SeparationSpec Name="Black"/>
+\t\t\t</ColorsUsed>
+\t\t\t<ColorStandard DataType="NameSpan" Actual="Monochrome"/>
+\t\t</ColorIntent>
+${partialComponents}
+\t\t<BindingIntent ID="ID_BindingIntent" Class="Intent" BindingOrder="${bindingOrder}" Status="Available"/>
+\t\t<CustomerInfo ID="ID_CustomerInfo_Main" Class="Parameter" Status="Available" CustomerID="PI_CompApoXML">
+\t\t\t<ContactRef rRef="ID_Contact_Main"/>
+\t\t</CustomerInfo>
+\t\t<Contact ID="ID_Contact_Main" Class="Parameter" Status="Available" ContactTypes="Customer Administrator">
+\t\t\t<Company OrganizationName="${escapeXML(cliente)}" ProductID="PI_CompApoXML"/>
+\t\t\t<Person FamilyName="${escapeXML(contactoClienteApellido)}" DescriptiveName="${escapeXML(
+      `${contactoClienteNombre}_${contactoClienteApellido}`,
+    )}" FirstName="${escapeXML(contactoClienteNombre)}" ProductID="PI_Pers_apoxmlNV">
+\t\t\t\t<ComChannel ChannelType="Phone" ChannelTypeDetails="LandLine" Locator="12345"/>
+\t\t\t\t<ComChannel ChannelType="Email" Locator="${escapeXML(contactoClienteEmail)}"/>
+\t\t\t</Person>
+\t\t</Contact>
+\t\t<NodeInfo Class="Parameter" ID="ID_NodeInfo_Root" NodeStatus="Waiting" Status="Available"/>
+\t</ResourcePool>
+\t<ResourceLinkPool>
+\t\t<NodeInfoLink rRef="ID_NodeInfo_Root" Usage="Input"/>
+\t\t<CustomerInfoLink rRef="ID_CustomerInfo_Main" Usage="Input"/>
+\t\t<ComponentLink rRef="ID_Component_FinalProduct" Usage="Output" Amount="${asPositiveInt(cantidad, 1)}"/>
+\t\t<BindingIntentLink rRef="ID_BindingIntent" Usage="Input"/>
+${rootPartLinks}
+\t</ResourceLinkPool>
+\t<AuditPool>
+\t\t<Created ID="crea_root_ID" AgentName="Hamlet Convertor" TimeStamp="${nowIso}" AgentVersion="1.3.3"/>
+\t</AuditPool>
+${childJdfs}
 </JDF>
-`
-}
+`;
+};
 
 module.exports = template;
