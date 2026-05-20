@@ -144,8 +144,8 @@ const CotizacionCard = ({ cotizacion, job }) => {
       return {
           nombreParte: part.Name,
           tipoParte: part.jobParts[0].Type,
-          ancho: part.Ancho, 
-          alto: part.Alto,
+          ancho: mmToPt(part.Ancho), 
+          alto:mmToPt(part.Alto),
           colores: {frente: part.ColoresFrente, dorso: part.ColoresDorso}, 
           paginas: parseInt(part.Pages),
           gramaje: parseInt(part.partStock.Gramaje),

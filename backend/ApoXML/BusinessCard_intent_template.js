@@ -36,6 +36,24 @@ const decodePathValue = (value) => {
   }
 };
 
+const binding = {
+	"Libro": "Gathering",
+	"Revista": "Collecting",
+	"Sin Encuadernacion": "None",
+	"Multipagina": "None",
+	"Cosido a Hilo": "Collecting",
+	"Anillado": "Gathering",
+}
+
+const jobTypeFinal = {
+	"Libro": "Brochure",
+	"Revista": "Brochure",
+	"Sin Encuadernacion": "Flatwork",
+	"Multipagina": "Flatwork",
+	"Cosido a Hilo": "Brochure",
+	"Anillado": "Brochure",
+}
+
 const sanitizeFolderName = (value, fallback = "item") => {
   const raw = value === null || value === undefined ? "" : value.toString();
   if (!raw.trim()) return fallback;
@@ -135,16 +153,19 @@ const buildChildJDF = (part, index, context) => {
 };
 
 const template = (
-  orden,
-  nombre,
-  partes,
-  cliente,
-  contactoClienteNombre = "Nombre",
-  contactoClienteApellido = "Apellido",
-  contactoClienteEmail = "Email",
-  cantidad = 1,
-  jobId,
+  data
 ) => {
+  const orden = data.orden
+  const nombre = data.nombre
+  const tipoTrabajo = data.tipoTrabajo
+  const partes = data.partes
+  const cliente = data.cliente
+  const contactoClienteNombre = data.contactoClienteNombre || "Nombre"
+  const contactoClienteApellido = data.contactoClienteApellido || "Apellido"
+  const contactoClienteEmail = data.contactoClienteEmail 
+  const cantidad = data.cantidad || 1
+  const jobId = data.jobId
+   
   const safeOrden = orden || "SinOrden";
   const safeNombre = nombre || "Trabajo";
   const safePartes = Array.isArray(partes) && partes.length > 0 ? partes : [{}];
@@ -204,7 +225,7 @@ const template = (
 \t<ResourcePool>
 \t\t<Component ID="ID_Component_FinalProduct" Class="Quantity" Status="Unavailable" ComponentType="FinalProduct" DescriptiveName="${escapeXML(
       safeNombre,
-    )}" ProductType="${finalProductType}" Dimensions="${finalWidth} ${finalHeight} 0">
+    )}" ProductType="${jobTypeFinal[tipoTrabajo]}" Dimensions="${finalWidth} ${finalHeight} 0">
 \t\t\t<!--@ProductType is one of: 'Flatwork', 'Folded', 'Brochure' or 'Other;. 'Flatwork' is the only ProductType allowed for Asanti. -->
 \t\t</Component>
 \t\t<ColorPool ID="ID_ColorPool_CMYK" Class="Parameter" Status="Available">
@@ -234,7 +255,7 @@ const template = (
 \t\t\t<ColorStandard DataType="NameSpan" Actual="Monochrome"/>
 \t\t</ColorIntent>
 ${partialComponents}
-\t\t<BindingIntent ID="ID_BindingIntent" Class="Intent" BindingOrder="${bindingOrder}" Status="Available"/>
+\t\t<BindingIntent ID="ID_BindingIntent" Class="Intent" BindingOrder="${binding[tipoTrabajo]}" Status="Available"/>
 \t\t<CustomerInfo ID="ID_CustomerInfo_Main" Class="Parameter" Status="Available" CustomerID="PI_CompApoXML">
 \t\t\t<ContactRef rRef="ID_Contact_Main"/>
 \t\t</CustomerInfo>
