@@ -55,6 +55,14 @@ import {
 } from "../utils/generalData/arrayNormalizer";
 import { use } from "react";
 
+const encodePathSegment = (value) =>
+  encodeURIComponent(value === null || value === undefined ? "" : value.toString());
+
+const buildPdfUploadUrl = (baseUrl, cliente, trabajo, parte) => {
+  const safeBase = (baseUrl || "").replace(/\/+$/, "");
+  return `${safeBase}/${encodePathSegment(cliente)}/${encodePathSegment(trabajo)}/${encodePathSegment(parte)}`;
+};
+
 export default function MyStepper(props) {
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set());
@@ -492,7 +500,12 @@ export default function MyStepper(props) {
                           setActiveStep={setActiveStep}
                           removePart={removePart}
                           step={activeStep}
-                          uploadSubDir={context?.useSettings?.extensions?.pdfValidatorUrl + "/" + `${useJob?.Company?.Nombre}/${useJob?.Nombre}/${index + 1}-${part.Name}`} // Subdirectorio específico para esta parte
+                          uploadSubDir={buildPdfUploadUrl(
+                            context?.useSettings?.extensions?.pdfValidatorUrl,
+                            useJob?.Company?.Nombre,
+                            useJob?.Nombre,
+                            `${index + 1}-${part.Name}`,
+                          )} // Subdirectorio específico para esta parte
                         />
                       </Grid>
                     );

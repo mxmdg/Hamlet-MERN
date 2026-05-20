@@ -28,6 +28,22 @@ const slugForPath = (value, fallback = "item") => {
     .replace(/[^\w.-]+/g, "_");
 };
 
+const decodePathValue = (value) => {
+  try {
+    return decodeURIComponent(value);
+  } catch (_error) {
+    return value;
+  }
+};
+
+const sanitizeFolderName = (value, fallback = "item") => {
+  const raw = value === null || value === undefined ? "" : value.toString();
+  if (!raw.trim()) return fallback;
+  const decoded = decodePathValue(raw);
+  const cleaned = decoded.replace(/[\/<>:"\\|?*]+/g, "").trim();
+  return cleaned || fallback;
+};
+
 const getSides = (colores = {}) =>
   toNumber(colores?.dorso, 0) > 0 ? "TwoSidedHeadToHead" : "OneSidedFront";
 
@@ -61,9 +77,9 @@ const buildChildJDF = (part, index, context) => {
   const impresora = part?.impresora || "Large Press";
   const colorIntentRef = getColorIntentRef(part?.colores);
   const sides = getSides(part?.colores);
-  const partPath = `${index + 1}-${slugForPath(nombreParte, `parte_${index + 1}`)}`;
-  const safeCliente = slugForPath(cliente, "Cliente");
-  const safeNombre = slugForPath(nombre, "Trabajo");
+  const partPath = `${index + 1}-${sanitizeFolderName(nombreParte, `Parte_${index + 1}`)}`;
+  const safeCliente = sanitizeFolderName(cliente, "Cliente");
+  const safeNombre = sanitizeFolderName(nombre, "Trabajo");
   const url = `/${safeCliente}/${safeNombre}/${partPath}/${safeNombre}_${partPath}.pdf`;
 
   return `\t<JDF ID="ID_ProdPart_${index}" Type="Product" Status="Waiting" xsi:type="Product" JobPartID="${escapeXML(
