@@ -12,9 +12,21 @@ let MoldeJobParts = [
   {
     inputName: "Type",
     label: "Tipo de parte",
-    size: 12,
+    size: 6,
     type: "Text",
     id: "id_401",
+  },
+  {
+    inputName: "jdfType",
+    label: "Definicion para JDF",
+    size: 6,
+    type: "Select",
+    id: "id_4011",
+    options: [
+      { text: "Cover", value: "Cover" },
+      { text: "Insert", value: "Insert" },
+      { text: "Body", value: "Body" },
+    ],
   },
   {
     inputName: "minWidth",

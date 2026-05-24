@@ -29,6 +29,7 @@ const jobPartSchema = new Schema({
     required: false,
     index: true,
   },
+  jdfType: { type: String, required: true, enum: ["Cover", "Insert", "Body"], default: "Body" },
   Fecha: { type: Date, default: Date.now },
 });
 

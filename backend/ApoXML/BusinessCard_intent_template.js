@@ -1,3 +1,5 @@
+const jobParts = require("../models/jobParts");
+
 const escapeXML = (value) => {
   if (value === null || value === undefined) return "";
   return value
@@ -52,12 +54,24 @@ const getColorIntentRef = (colores = {}) =>
     ? "ID_ColorIntent_CMYK"
     : "ID_ColorIntent_Gray";
 
-const buildPartialComponent = (part, index) => {
-  const productType = "Body";
+const buildPartialComponent = async (part, index, tenant) => {
+  const partId = part?._id || part?.tipoParteId || part?.jobParts?.[0]?._id;
+  let productDoc = null;
+  if (partId) {
+    try {
+      productDoc = await jobParts.esquema.findOne({ _id: partId, tenant }).select("jdfType").lean();
+    } catch (err) {
+      console.error(`Error fetching jobPart ${partId}:`, err.message || err);
+      productDoc = null;
+    }
+  }
+  const productType = productDoc?.jdfType || "body";
   const displayName = `${part?.tipoParte || "Parte"}_${part?.nombreParte || `Parte_${index + 1}`}`;
   const readerPageCount = asPositiveInt(part?.paginas, 1);
 
-  return `\t\t<Component ID="ID_Component_${index}" Class="Quantity" Status="Unavailable" ProductType="${productType}" ComponentType="PartialProduct" DescriptiveName="${escapeXML(displayName)}" ReaderPageCount="${readerPageCount}"/>`;
+  const agfa = productType === "Cover" ? `agfa:CoverType="Spread"` : "";
+
+  return `\t\t<Component ID="ID_Component_${index}" Class="Quantity" Status="Unavailable" ProductType="${productType}" ${agfa} ComponentType="PartialProduct" DescriptiveName="${escapeXML(displayName)}" ReaderPageCount="${readerPageCount}"/>`;
 };
 
 const buildRootPartLink = (_part, index) =>
@@ -134,7 +148,7 @@ const buildChildJDF = (part, index, context) => {
 \t</JDF>`;
 };
 
-const template = (
+const template = async (
   orden,
   nombre,
   partes,
@@ -144,6 +158,7 @@ const template = (
   contactoClienteEmail = "Email",
   cantidad = 1,
   jobId,
+  tenant,
 ) => {
   const safeOrden = orden || "SinOrden";
   const safeNombre = nombre || "Trabajo";
@@ -161,9 +176,11 @@ const template = (
     "Trabajo",
   )}`;
 
-  const partialComponents = safePartes
-    .map((part, index) => buildPartialComponent(part, index))
-    .join("\n");
+  const partialComponents = (
+    await Promise.all(
+      safePartes.map((part, index) => buildPartialComponent(part, index, tenant)),
+    )
+  ).join("\n");
 
   const rootPartLinks = safePartes
     .map((part, index) => buildRootPartLink(part, index))

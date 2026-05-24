@@ -142,17 +142,19 @@ const CotizacionCard = ({ cotizacion, job }) => {
 
     const partsData = jobToSend.Partes.map((part)=> {
       return {
+          _id: part.jobParts?.[0]?._id,
           nombreParte: part.Name,
-          tipoParte: part.jobParts[0].Type,
-          ancho: part.Ancho, 
-          alto: part.Alto,
+          tipoParte: part.jobParts?.[0]?.Type,
+          ancho: mmToPt(part.Ancho), 
+          alto: mmToPt(part.Alto),
           colores: {frente: part.ColoresFrente, dorso: part.ColoresDorso}, 
           paginas: parseInt(part.Pages),
           gramaje: parseInt(part.partStock.Gramaje),
           materialTipo: part.partStock.Tipo,
           anchoResma: mmToPt(cot.data.impositionData[part._id].impositionData.sheetOriginalSize.width),
           altoResma: mmToPt(cot.data.impositionData[part._id].impositionData.sheetOriginalSize.height),
-          impresora: cot.data.impositionData[part._id].impositionData.printerSelector.Modelo, 
+          impresora: cot.data.impositionData[part._id].impositionData.printerSelector.Modelo,
+          tipoParteId: part.jobParts?.[0]?._id,
       }
     })
     

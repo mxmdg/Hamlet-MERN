@@ -40,6 +40,7 @@ jobPartsControl.addJobPart = async (req, res) => {
       minStockWeight,
       maxStockWeight,
       jobTypesAllowed,
+      jdfType,
     } = req.body;
     const tenant = req.header("x-tenant");
     const newJobPart = new jobParts.esquema({
@@ -54,6 +55,7 @@ jobPartsControl.addJobPart = async (req, res) => {
       minStockWeight,
       maxStockWeight,
       jobTypesAllowed,
+      jdfType,
       tenant,
     });
     await newJobPart.save();
@@ -83,6 +85,24 @@ jobPartsControl.getJobPart = async (req, res) => {
   }
 };
 
+jobPartsControl.getJDFPart = async (req, res) => {
+  try {
+    const tenant = req.header("x-tenant");
+    const jobPart = await jobParts.esquema.findOne({
+      _id: req.params.id,
+      tenant,
+    }).select("Type jdfType");
+    if (jobPart) {
+      res.json(jobPart);
+    } else {
+      res.status(404).json({ message: "jobPart no encontrado" });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error al obtener el jobPart" });
+  }
+};
+
 jobPartsControl.updateJobPart = async (req, res) => {
   try {
     const {
@@ -97,6 +117,7 @@ jobPartsControl.updateJobPart = async (req, res) => {
       minStockWeight,
       maxStockWeight,
       jobTypesAllowed,
+      jdfType,
     } = req.body;
     const tenant = req.header("x-tenant");
     const JobPart = await jobParts.esquema.findOneAndUpdate(
@@ -113,6 +134,7 @@ jobPartsControl.updateJobPart = async (req, res) => {
         minStockWeight,
         maxStockWeight,
         jobTypesAllowed,
+        jdfType,
       },
       { new: true }
     );
