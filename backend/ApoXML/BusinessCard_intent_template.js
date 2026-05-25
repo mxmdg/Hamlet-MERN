@@ -46,6 +46,24 @@ const sanitizeFolderName = (value, fallback = "item") => {
   return cleaned || fallback;
 };
 
+const binding = {
+	"Libro": "Gathering",
+	"Revista": "Collecting",
+	"Sin Encuadernacion": "None",
+	"Multipagina": "None",
+	"Cosido a Hilo": "Collecting",
+	"Anillado": "Gathering",
+}
+
+const jobTypeFinal = {
+	"Libro": "Brochure",
+	"Revista": "Brochure",
+	"Sin Encuadernacion": "Flatwork",
+	"Multipagina": "Flatwork",
+	"Cosido a Hilo": "Brochure",
+	"Anillado": "Brochure",
+}
+
 const getSides = (colores = {}) =>
   toNumber(colores?.dorso, 0) > 0 ? "TwoSidedHeadToHead" : "OneSidedFront";
 
@@ -151,6 +169,7 @@ const buildChildJDF = (part, index, context) => {
 const template = async (
   orden,
   nombre,
+  tipoTrabajo,
   partes,
   cliente,
   contactoClienteNombre = "Nombre",
@@ -169,8 +188,8 @@ const template = async (
   const firstPart = safePartes[0] || {};
   const finalWidth = toNumber(firstPart.ancho, 0);
   const finalHeight = toNumber(firstPart.alto, 0);
-  const finalProductType = totalParts > 1 ? "Brochure" : "Flatwork";
-  const bindingOrder = totalParts > 1 ? "Collecting" : "None";
+  const finalProductType = jobTypeFinal[tipoTrabajo] || "Other";
+  const bindingOrder = binding[tipoTrabajo] || "None";
   const rootJobPartId = `ID_24_ApoXML-${slugForPath(safeOrden, "SinOrden")}_${slugForPath(
     safeNombre,
     "Trabajo",

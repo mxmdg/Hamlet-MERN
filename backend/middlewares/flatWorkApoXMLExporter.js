@@ -5,6 +5,7 @@ const flatWorkApoXMLExporter = async (req, res, next) => {
         const tenant = req.header("x-tenant");
         const { orden, 
                 nombre,
+                tipoTrabajo,
                 partes,
                 cliente, 
                 contactoClienteNombre , 
@@ -16,6 +17,7 @@ const flatWorkApoXMLExporter = async (req, res, next) => {
         const xml = await template(
                             orden,
                             nombre,
+                            tipoTrabajo,
                             partes,
                             cliente,
                             contactoClienteNombre,
