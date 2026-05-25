@@ -51,7 +51,7 @@ const binding = {
 	"Revista": "Collecting",
 	"Sin Encuadernacion": "None",
 	"Multipagina": "None",
-	"Cosido a Hilo": "Collecting",
+	"Cosido a Hilo": "Gathering",
 	"Anillado": "Gathering",
 }
 
