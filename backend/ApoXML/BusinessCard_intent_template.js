@@ -65,7 +65,7 @@ const jobTypeFinal = {
 }
 
 const getSides = (colores = {}) =>
-  toNumber(colores?.dorso, 0) > 0 ? "TwoSidedHeadToHead" : "OneSidedFront";
+  toNumber(colores?.dorso, 0) > 0 ? "TwoSidedHeadToHead" : "OneSided";
 
 const getColorIntentRef = (colores = {}) =>
   toNumber(colores?.frente, 0) > 1 || toNumber(colores?.dorso, 0) > 1
