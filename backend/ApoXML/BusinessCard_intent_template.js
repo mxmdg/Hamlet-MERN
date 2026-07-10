@@ -55,6 +55,13 @@ const binding = {
 	"Anillado": "Gathering",
 }
 
+const foldingSchemeSelection = {
+  "Libro": "F2-1",
+  "Revista": "F4-2",
+  "Anillado":"FS2-1",
+	"Cosido a Hilo": "F8-7",
+}
+
 const jobTypeFinal = {
 	"Libro": "Brochure",
 	"Revista": "Brochure",
@@ -96,7 +103,7 @@ const buildRootPartLink = (_part, index) =>
   `\t\t<ComponentLink rRef="ID_Component_${index}" Usage="Input"/>`;
 
 const buildChildJDF = (part, index, context) => {
-  const { rootJobPartId, nombre, cliente, nowIso } = context;
+  const { rootJobPartId, tipoTrabajo, nombre, cliente, nowIso } = context;
 
   const nombreParte = part?.nombreParte || `Parte_${index + 1}`;
   const paginas = asPositiveInt(part?.paginas, 1);
@@ -113,6 +120,7 @@ const buildChildJDF = (part, index, context) => {
   const safeCliente = sanitizeFolderName(cliente, "Cliente");
   const safeNombre = sanitizeFolderName(nombre, "Trabajo");
   const url = `/${safeCliente}/${safeNombre}/${partPath}/${safeNombre}_${partPath}.pdf`;
+  const FoldingScheme = foldingSchemeSelection[tipoTrabajo] ? `agfa:FoldingSchemeSelection="${foldingSchemeSelection[tipoTrabajo]}"` : ""
 
   return `\t<JDF ID="ID_ProdPart_${index}" Type="Product" Status="Waiting" xsi:type="Product" JobPartID="${escapeXML(
     `${rootJobPartId}_${index}`,
@@ -132,7 +140,7 @@ const buildChildJDF = (part, index, context) => {
 \t\t\t<MediaIntentLink rRef="ID_MediaIntent_${index}" Usage="Input"/>
 \t\t</ResourceLinkPool>
 \t\t<ResourcePool>
-\t\t\t<LayoutIntent ID="ID_LayoutIntent_${index}" Class="Intent" Sides="${sides}" Status="Available">
+\t\t\t<LayoutIntent ID="ID_LayoutIntent_${index}" Class="Intent" Sides="${sides}" Status="Available" ${FoldingScheme}>
 \t\t\t\t<FinishedDimensions DataType="ShapeSpan" Actual="${ancho} ${alto} 0"/>
 \t\t\t\t<Pages DataType="IntegerSpan" Actual="${paginas}"/>
 \t\t\t</LayoutIntent>
@@ -171,7 +179,7 @@ const template = async (
   nombre,
   tipoTrabajo,
   partes,
-  cliente,
+  cliente = "Imprenta Dorrego",
   contactoClienteNombre = "Nombre",
   contactoClienteApellido = "Apellido",
   contactoClienteEmail = "Email",
@@ -209,6 +217,7 @@ const template = async (
     .map((part, index) =>
       buildChildJDF(part, index, {
         rootJobPartId,
+        tipoTrabajo,
         nombre: safeNombre,
         cliente,
         nowIso,
