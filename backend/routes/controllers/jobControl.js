@@ -3,6 +3,7 @@ const users = require("../../models/usersSchema");
 const companies = require("../../models/empresas");
 const stocks = require("../../models/materiales");
 const finishers = require("../../models/finishers");
+const quotationsController = require("./quotationsControl");
 
 const jobControl = {};
 
@@ -380,6 +381,21 @@ jobControl.getJob = async (req, res) => {
         model: stocks.esquema,
       })
       .lean(); // 👈 importante
+
+      
+    try {
+        const impositionData = await quotationsController.getImpositionDataByJobID({
+          params: { id: req.params.id },
+          header: () => tenant,
+        });
+
+        if (impositionData !== null) {
+          job.ImpositionData = impositionData;
+        }
+
+    } catch (error) {
+        return res.status(500).json({ message: "Error fetching imposition data:", error });
+    }
 
     // ❌ Trabajo inexistente
     if (!job) {

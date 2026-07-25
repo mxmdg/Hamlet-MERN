@@ -100,7 +100,6 @@ const transformSqlToHamlet = (rows) => {
     }, []),
   };
 
-  console.log(otDetail);
   return otDetail;
 };
 

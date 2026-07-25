@@ -103,6 +103,25 @@ quotationsControl.getQuotation = async (req, res) => {
   }
 };
 
+// Obtener una impositionData por JobID
+quotationsControl.getImpositionDataByJobID = async (req, res) => {
+  try {
+    const tenant = req.header("x-tenant");
+    const impositionData = await quotations.esquema.findOne({
+      jobId: req.params.id,
+      tenant,
+    });
+
+    if (impositionData?.data?.impositionData) {
+      return impositionData.data.impositionData; // Retornar los datos de imposición encontrados
+    } else {
+      return null; // Retornar null si no se encontraron datos de imposición
+    }
+  } catch (error) {
+    return null; // Retornar null en caso de error
+  }
+};
+
 // Crear una nueva cotización
 quotationsControl.addQuotation = async (req, res) => {
   try {

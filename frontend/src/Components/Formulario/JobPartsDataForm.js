@@ -18,7 +18,7 @@ let MoldeJobParts = [
   },
   {
     inputName: "jdfType",
-    label: "Definicion para JDF",
+    label: "Definicion JDF",
     size: 6,
     type: "Select",
     id: "id_4011",

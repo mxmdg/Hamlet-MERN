@@ -17,8 +17,31 @@ import JobsEditAndCopy from "../Components/Pages/JobsEditAndCopy";
 import JobsContainer from "../Components/Jobs/JobsContainer";
 import JobsPerPartType from "../Components/utils/stats/JobsPerPartType";
 import { queryProcesosPorFecha } from "../Components/utils/PropertiesMaps/sqlQueries";
+import JobView from "../Components/jobViewerV2/JobView";
+import { useContext } from "react";
+import {AuthContext} from "../Components/context/AuthContext";
 
-export const jobsRoutes = ({ color, variant }) => (
+
+
+export const JobsRoutes = ({ color, variant }) => {
+  const context = useContext(AuthContext);
+
+  
+  const validateAdminUser = () => {
+    if (
+      context?.useLogin === true &&
+      context?.memberships[0]?.role.toLowerCase() === "admin" ||
+      context?.memberships[0]?.role.toLowerCase() === "manager"
+    ) {
+      return true;
+    } else {
+      //setError({ message: "Acceso denegado: Contacte al administrador" });
+      //setLoading(false);
+      return false;
+    }
+  };
+  
+  return (
   <>
     //Rutas en uso, para buscar, ver, editar, copiar, agregar trabajos.
     <Route
@@ -32,7 +55,7 @@ export const jobsRoutes = ({ color, variant }) => (
         />
       }
     />
-    <Route path="/Jobs/edit/:id" element={<JobViewer entity={"Jobs"} />} />
+    <Route path="/Jobs/edit/:id" element={validateAdminUser() ? <JobViewer entity={"Jobs"} /> : <JobView entity={"Jobs"} />} />
     <Route path="/Jobs/copy/:id" element={<JobsEditAndCopy />} />
     // Esta ruta solo trae las partes de trabajo, pero no se pueden editar ni
     saber a que trabajo pertencen.
@@ -74,4 +97,4 @@ export const jobsRoutes = ({ color, variant }) => (
     // Ruta para ver la lista completa de trabajos sin partes, carga mas rapida.
     <Route path="/Jobs/fullList" element={<JobsContainer entity={"Jobs"} />} />
   </>
-);
+)};

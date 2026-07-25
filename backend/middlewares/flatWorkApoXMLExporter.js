@@ -12,6 +12,7 @@ const flatWorkApoXMLExporter = async (req, res, next) => {
                 contactoClienteApellido,
                 contactoClienteEmail,
                 cantidad,
+                entrega,
                 jobId,
              } = req.body;
         const xml = await template(
@@ -25,6 +26,7 @@ const flatWorkApoXMLExporter = async (req, res, next) => {
                             contactoClienteEmail,
                             cantidad,
                             jobId,
+                            entrega,
                             tenant,
                         );
         res.setHeader("Content-Type", "application/xml");

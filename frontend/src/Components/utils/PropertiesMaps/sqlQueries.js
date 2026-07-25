@@ -1,7 +1,6 @@
 import { todayDate } from "../generalData/fechaDiccionario";
 
 const hoy = todayDate().yyyymmdd;
-console.log(hoy);
 
 export const MyQuery = `
 SELECT 

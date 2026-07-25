@@ -305,8 +305,8 @@ export const calculateStock = (
   job,
   poses,
 ) => {
-  /* 
-  //console.log(
+   
+  /* console.log(
     "Parametros recibidos ",
     signnatureWidth,
     signatureHeight,
@@ -315,18 +315,18 @@ export const calculateStock = (
     part,
     job,
     poses
-  ); */
+  );  */
 
   const straightCut = cutOptimizer(
-    sheetWidth, //part.partStock.Ancho_Resma,
-    sheetHeight, //part.partStock.Alto_Resma,
+    parseInt(sheetWidth), //part.partStock.Ancho_Resma,
+    parseInt(sheetHeight), //part.partStock.Alto_Resma,
     parseInt(signnatureWidth), //useImpoData.width,
     parseInt(signatureHeight), //useImpoData.height
   );
 
   const rotatedtCut = cutOptimizer(
-    sheetWidth, //part.partStock.Ancho_Resma,
-    sheetHeight, //part.partStock.Alto_Resma,
+    parseInt(sheetWidth), //part.partStock.Ancho_Resma,
+    parseInt(sheetHeight), //part.partStock.Alto_Resma,
     parseInt(signatureHeight), //useImpoData.height,
     parseInt(signnatureWidth), //useImpoData.width
   );
@@ -338,28 +338,32 @@ export const calculateStock = (
     parseInt(rotatedtCut.totalPoses),
   );
 
+  const tirada = Math.ceil(job.Cantidad /parseInt(poses));
+
   const cantidadDePliegos =
     job.Cantidad <= 1
       ? Math.ceil(part.Pages / (part.ColoresDorso > 0 ? 2 : 1) / poses)
       : Math.ceil(part.Pages / (part.ColoresDorso > 0 ? 2 : 1)) *
-        Math.ceil(job.Cantidad / poses);
+        tirada;
 
-  /*console.log(
+  const impresiones = Math.ceil(cantidadDePliegos * (part.ColoresDorso > 0 ? 2 : 1));
+
+  /* console.log(
     "Cantidad de pliegos calculada: ",
     cantidadDePliegos,
     "Pliegos por hoja: ",
     pliegosPorHoja,
-  );*/
+  ); */
   const totalHojas = Math.ceil(cantidadDePliegos / pliegosPorHoja);
 
-  /*console.log(
+  /* console.log(
     "Pliegos por hoja: ",
     pliegosPorHoja,
     "Cantidad de pliegos: ",
     cantidadDePliegos,
     "Total de hojas: ",
     totalHojas,
-  );*/
+  ); */
 
-  return { pliegosPorHoja, cantidadDePliegos, totalHojas };
+  return { pliegosPorHoja, cantidadDePliegos, totalHojas, tirada, impresiones };
 };

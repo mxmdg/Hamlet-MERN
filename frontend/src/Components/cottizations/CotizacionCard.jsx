@@ -20,6 +20,7 @@ import {
 } from "../utils/generalData/numbersAndCurrencies";
 import { HAMLET_API } from "../Config/config";
 import { JobViewer } from "../jobViewer/JobViewer";
+import JobView from "../jobViewerV2/JobView"
 import {
   patchPrivateElement,
   addPrivateElement,
@@ -130,13 +131,13 @@ const CotizacionCard = ({ cotizacion, job }) => {
     const data = {orden: "H-" + cot.index, 
                   nombre: jobToSend.Nombre,
                   tipoTrabajo: jobToSend.Tipo[0].name,
-                 
-                  cliente: jobToSend.Company.Nombre, 
-                  contactoClienteNombre: jobToSend.Owner?.Name || "Juan", 
-                  contactoClienteApellido: jobToSend.Owner?.LastName || "Pérez",
-                  contactoClienteEmail: jobToSend.Owner?.Email || "jp@gmail.com",
+                  // Suspendemos el envío de datos de cliente real a Apogee por ahora, evitamos conflictos con los clientes existentes en webapproval.                 
+                  cliente: "Imprenta Dorrego", //jobToSend.Company.Nombre, 
+                  contactoClienteNombre: "Maxi", //jobToSend.Owner?.Name || "Juan", 
+                  contactoClienteApellido: "Maro", // jobToSend.Owner?.LastName || "Pérez",
+                  contactoClienteEmail: "maximaro@imprentadorrego.com.ar", // jobToSend.Owner?.Email || "jp@gmail.com",
                   cantidad: parseInt(jobToSend.Cantidad),
-                  
+                  entrega: jobToSend.Entrega,
                   jobId: jobToSend._id,
                 }
 

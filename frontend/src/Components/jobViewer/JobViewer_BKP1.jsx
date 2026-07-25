@@ -20,10 +20,6 @@ export const JobViewer = (props) => {
   const [useCurrentJob, setCurrentJob] = useState(props.job);
   const [useLoading, setLoading] = useState(props.job ? false : true);
   const [useError, setError] = useState(null);
-  // Cotización previa (solo para contexto B, jobs/edit). En contexto A no se usa.
-  const [cotPrevia, setCotPrevia] = useState(null);
-  // Si props.cot ya vino (contexto A), no hay nada que chequear: listo de entrada.
-  const [cotChecked, setCotChecked] = useState(!!props.cot);
   const navigate = useNavigate();
   const params = useParams();
   const { id } = params;
@@ -50,37 +46,6 @@ export const JobViewer = (props) => {
     }
   }, [setCurrentJob, props.job, props.entity, id]);
 
-  // Contexto B (jobs/edit): si NO vino props.cot, buscamos la última cotización
-  // previa del job y la usamos como cot. Si vino props.cot (contexto A), este
-  // effect no hace nada. Pase lo que pase, marcamos cotChecked para destrabar
-  // el render. Si no hay cotización previa, cot queda null y JobDetail muestra
-  // el flujo de imposición a mano (vacío), tal como se acordó.
-  useEffect(() => {
-    if (props.cot) return; // contexto A: nada que hacer
-    if (!useCurrentJob?._id) return; // todavía no tenemos el job
-
-    const fetchCotPrevia = async () => {
-      try {
-        const cotizaciones = await getPrivateElements(
-          `quotations/?P=jobId&Q=${useCurrentJob._id}`,
-        );
-        const ultima =
-          Array.isArray(cotizaciones) && cotizaciones.length > 0
-            ? cotizaciones[0]
-            : null;
-        
-        setCotPrevia(ultima ? ultima.data : null);
-      } catch (error) {
-        console.error("Error fetching cotización previa:", error);
-        setCotPrevia({data: {impositionData: props.job.ImpositionData}});
-      } finally {
-        setCotChecked(true);
-      }
-    };
-
-    fetchCotPrevia();
-  }, [props.cot, useCurrentJob]);
-
   const preloader = (
     <>
       <Spinner />
@@ -88,12 +53,11 @@ export const JobViewer = (props) => {
   );
 
   const output = () => {
-    if (useLoading === false && useCurrentJob !== null && cotChecked) {
-      const cotFinal = props.cot || cotPrevia;
+    if (useLoading === false && useCurrentJob !== null) {
       return (
         <JobDetail
           job={useCurrentJob}
-          cot={cotFinal}
+          cot={props.cot}
           key={`JobDetail_${id}`}
         />
       );

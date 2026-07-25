@@ -13,7 +13,7 @@ import { formatosRoutes } from "./Routes/formatosRoutes";
 import { empresasRoutes } from "./Routes/empresasRoutes";
 import { jobPartsRoutes } from "./Routes/jobPartsRoutes";
 import { usersRoutes } from "./Routes/usersRoutes";
-import { jobsRoutes } from "./Routes/jobsRoutes";
+import { JobsRoutes } from "./Routes/jobsRoutes";
 import { preciosRoutes } from "./Routes/preciosRoutes";
 import { quotationsRoutes } from "./Routes/quotationsRoutes";
 import { configuracionRoutes } from "./Routes/configuracionRoutes";
@@ -51,7 +51,7 @@ const Router = (props) => {
           {empresasRoutes({ color, variant })}
           {jobPartsRoutes({ color, variant })}
           {usersRoutes({ color, variant })}
-          {jobsRoutes({ color, variant })}
+          {JobsRoutes({ color, variant })}
           {preciosRoutes({ color, variant })}
           {quotationsRoutes({ color, variant })}
           {configuracionRoutes({ color, variant })}

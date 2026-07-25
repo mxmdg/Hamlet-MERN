@@ -179,9 +179,9 @@ app.post("/Hamlet/SendToApogee", ApoXMLExporter);
 app.use(
   "/Hamlet/jobs",
   requireRoleByMethod({
-    get: "public", // todos pueden hacer GET
-    post: "public",
-    put: "public",
+    get: ["admin", "manager", "operator"], // todos pueden hacer GET
+    post: ["admin", "manager"],
+    put:["admin", "manager"],
     delete: ["admin", "manager", "vendedor"],
   }),
   require("./routes/jobs"),
@@ -189,10 +189,10 @@ app.use(
 app.use(
   "/Hamlet/jobs/urg",
   requireRoleByMethod({
-    get: "public", // todos pueden hacer GET
-    post: ["admin", "manager", "vendedor", "customer"],
-    put: ["admin", "manager", "vendedor"],
-    delete: ["admin", "manager", "vendedor"],
+    get: ["admin", "manager", "operator"], // todos pueden hacer GET
+    post: ["admin", "manager"],
+    put: ["admin", "manager"],
+    delete: ["admin", "manager"],
   }),
   require("./routes/jobs"),
 );
@@ -251,7 +251,7 @@ app.use(
   "/Hamlet/precios",
   //(req, res, next) => req.app.verifyToken(req, res, next),
   requireRoleByMethod({
-    get: ["admin", "manager", "customer"], // todos pueden hacer GET
+    get: ["admin", "manager"], // todos pueden hacer GET
     post: ["admin", "manager"],
     put: ["admin", "manager"],
     delete: ["admin", "manager"],
@@ -282,7 +282,7 @@ app.use(
 app.use(
   "/Hamlet/quotations",
   requireRoleByMethod({
-    get: ["admin", "manager", "operador"],
+    get: ["admin", "manager"],
     post: ["admin", "manager"],
     put: ["admin", "manager"],
     delete: ["admin", "manager"],
