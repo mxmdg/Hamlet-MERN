@@ -7,7 +7,9 @@ const MainContainer = (props) => {
       <Fetch
         form={props.form}
         collection={props.entity}
-        {...(props.querySQL !== undefined ? { querySQL: props.querySQL } : {})}
+        {...(props.queryName !== undefined
+          ? { queryName: props.queryName, queryParams: props.queryParams }
+          : {})}
       />
     </Container>
   );

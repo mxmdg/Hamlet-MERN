@@ -90,7 +90,7 @@ export const uploadFile = async (endpoint, data) => {
   }
 };
 
-export const importFromPapyrus = async (query, endpoint ) => {
+/* export const importFromPapyrus = async (query, endpoint ) => {
   try {
     const res = await axios.post(endpoint, query);
     return res.data;
@@ -98,7 +98,7 @@ export const importFromPapyrus = async (query, endpoint ) => {
     console.log(error);
     throw error;
   }
-};
+}; */
 
 export const putPrivateElement = async (itemURL, formData) => {
   try {
@@ -160,4 +160,36 @@ export const deleteMultiple = (ids, collection) => {
   items.forEach((item) => {
     deleteClickHandler(item, collection);
   });
+};
+
+// ===========================================================================
+// En FetchDataHook.jsx
+// ===========================================================================
+//
+// REEMPLAZA a importFromPapyrus. En vez de mandar SQL crudo al bridge,
+// le pide al backend de Hamlet una query POR NOMBRE, con params opcionales.
+// El backend valida, arma el SQL y habla con el bridge.
+//
+//   runPapyrusQuery("detalleOT", { ot: 27703 })
+//   runPapyrusQuery("clientes")                  // sin params
+//
+// Podés BORRAR importFromPapyrus una vez migrados los dos usos.
+
+export const runPapyrusQuery = async (queryName, params = {}) => {
+  if (!tenantId) {
+    throw new Error("Imprenta activa no encontrada");
+  }
+
+  const res = await axios.post(
+    `${HAMLET_API}papyrus/query`,
+    { query: queryName, params },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "X-Tenant": tenantId,
+      },
+    }
+  );
+
+  return res.data;
 };

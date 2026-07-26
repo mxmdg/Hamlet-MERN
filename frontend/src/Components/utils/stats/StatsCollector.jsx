@@ -2,21 +2,18 @@ import React from "react";
 import { useContext } from "react";
 import {
   getPrivateElements,
-  importFromPapyrus,
+  runPapyrusQuery,
 } from "../../customHooks/FetchDataHook";
 import ErrorMessage from "../../ErrorMessage/ErrorMessage";
 import { CircularProgress, Grid, Paper } from "@mui/material";
 import Spinner from "../../General/Spinner";
 import { AuthContext } from "../../context/AuthContext";
-import { queryProcesosPorFecha } from "../PropertiesMaps/sqlQueries";
 
 const StatsCollector = ({ children, route }) => {
   const [jobsList, setJobsList] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
 
   const context = useContext(AuthContext);
-
-  const url = context.useSettings?.extensions?.papyrusExtractUrl;
 
   // Manejo de errores
   const [useError, setError] = React.useState(null);
@@ -27,16 +24,17 @@ const StatsCollector = ({ children, route }) => {
   React.useEffect(() => {
     const fetchData = async () => {
       try {
+        // La fecha "desde" para la grilla es hoy (YYYY-MM-DD, con guiones,
+        // que es lo que valida el backend).
+        const hoyISO = new Date().toISOString().split("T")[0];
+
         const jobs =
           route === "papyrus"
-            ? await importFromPapyrus({ sql: queryProcesosPorFecha }, url)
+            ? await runPapyrusQuery("procesosPorFecha", { desde: hoyISO })
             : await getPrivateElements(route);
-        //const parts = await getPrivateElements("jobs/partes");
         setJobsList(jobs);
-        //setPartsList(parts);
         setLoading(false);
       } catch (e) {
-        console.log(e);
         setError(e);
         setLoading(false);
       }
@@ -76,7 +74,6 @@ const StatsCollector = ({ children, route }) => {
                   jobs: jobsList,
                   route: route,
                   setError: setError,
-                  //parts: partsList,
                 })}
               </Paper>
             </Grid>

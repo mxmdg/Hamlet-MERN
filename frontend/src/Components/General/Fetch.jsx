@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 import {
   fechtData,
   getPrivateElements,
-  importFromPapyrus,
+  runPapyrusQuery,
 } from "../customHooks/FetchDataHook";
 import flattenArrayOfObjects from "../utils/flattener/flatenDicts";
 
@@ -29,7 +29,7 @@ const Fetch = (props) => {
 
   const context = useContext(AuthContext);
 
-  const url = context.useSettings?.extensions?.papyrusExtractUrl;
+  //const url = context.useSettings?.extensions?.papyrusExtractUrl;
 
   const orderObjectProperties = (obj, headers) => {
     const ordered = {};
@@ -45,8 +45,8 @@ const Fetch = (props) => {
     let elements;
 
     if (props.collection === "papyrus") {
-      elements = await importFromPapyrus(props.querySQL, url);
-    } else {
+  elements = await runPapyrusQuery(props.queryName, props.queryParams);
+      } else {  
       elements = await getPrivateElements(
         props.collection + (props.subdir ? `/${props.subdir}` : ""),
       );

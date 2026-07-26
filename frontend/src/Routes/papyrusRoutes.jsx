@@ -1,16 +1,10 @@
 import { Route } from "react-router-dom";
 import MainContainer from "../Components/Pages/MainContainer";
 import PapyrusCopy from "../Components/Pages/PapyrusCopy";
-import {
-  MyQuery,
-  queryOT,
-  queryProcesos,
-  queryEntrega,
-  queryProcesosPorFecha,
-  queryProximasEntregas,
-  queryTrabajosTerceros,
-  finalQuery,
-} from "../Components/utils/PropertiesMaps/sqlQueries";
+
+// La fecha "desde" para la grilla la calcula el frontend (hoy, con guiones:
+// formato YYYY-MM-DD que el backend valida). Ya no se importa SQL.
+const hoyISO = new Date().toISOString().split("T")[0];
 
 export const papyrusRoutes = ({ color, variant }) => (
   <>
@@ -19,7 +13,8 @@ export const papyrusRoutes = ({ color, variant }) => (
       element={
         <MainContainer
           entity={"papyrus"}
-          querySQL={{ sql: queryProcesosPorFecha }}
+          queryName={"procesosPorFecha"}
+          queryParams={{ desde: hoyISO }}
         />
       }
     />

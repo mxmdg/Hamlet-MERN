@@ -16,7 +16,6 @@ import { JobViewer } from "../Components/jobViewer/JobViewer";
 import JobsEditAndCopy from "../Components/Pages/JobsEditAndCopy";
 import JobsContainer from "../Components/Jobs/JobsContainer";
 import JobsPerPartType from "../Components/utils/stats/JobsPerPartType";
-import { queryProcesosPorFecha } from "../Components/utils/PropertiesMaps/sqlQueries";
 import JobView from "../Components/jobViewerV2/JobView";
 import { useContext } from "react";
 import {AuthContext} from "../Components/context/AuthContext";
@@ -43,7 +42,7 @@ export const JobsRoutes = ({ color, variant }) => {
   
   return (
   <>
-    //Rutas en uso, para buscar, ver, editar, copiar, agregar trabajos.
+    {/* Rutas en uso, para buscar, ver, editar, copiar, agregar trabajos. */}
     <Route
       path="/Jobs"
       element={
@@ -57,17 +56,17 @@ export const JobsRoutes = ({ color, variant }) => {
     />
     <Route path="/Jobs/edit/:id" element={validateAdminUser() ? <JobViewer entity={"Jobs"} /> : <JobView entity={"Jobs"} />} />
     <Route path="/Jobs/copy/:id" element={<JobsEditAndCopy />} />
-    // Esta ruta solo trae las partes de trabajo, pero no se pueden editar ni
-    saber a que trabajo pertencen.
+    {/* Esta ruta solo trae las partes de trabajo, pero no se pueden editar ni*/}
+    {/* saber a que trabajo pertencen. */}
     <Route
       path="/Jobs/partes"
       element={<MainContainer entity={"jobs/partes"} />}
     />
-    // Una ruta poco util, solo trae las estadisticas de todos los trabajos.
+    {/* Una ruta poco util, solo trae las estadisticas de todos los trabajos. */}
     <Route
       path="/Jobs/dashboard"
       element={
-        <StatsCollector route="papyrus" query={queryProcesosPorFecha}>
+        <StatsCollector route="papyrus">
           <JobsForNextWeeksPapyrus />
           <JobsPerClientPapyrus rank={5} />
           <JobsPerSellerPapyrus />
@@ -75,8 +74,8 @@ export const JobsRoutes = ({ color, variant }) => {
       }
     />
     <Route path="/Jobs/add" element={<MyStepper />} />
-    // Falta desarrollar JobProvider para mejorar la carga de trabajos, estas
-    rutas no estan listas todavia.
+    {/* Falta desarrollar JobProvider para mejorar la carga de trabajos, estas
+    rutas no estan listas todavia. */}
     <Route
       path="Jobs/Context/:id"
       element={
@@ -94,7 +93,7 @@ export const JobsRoutes = ({ color, variant }) => {
       }
     />
     <Route path="/Jobs/trash" element={<JobsContainer entity={"Jobs/trash"} />} />
-    // Ruta para ver la lista completa de trabajos sin partes, carga mas rapida.
+    {/* Ruta para ver la lista completa de trabajos sin partes, carga mas rapida. */}
     <Route path="/Jobs/fullList" element={<JobsContainer entity={"Jobs"} />} />
   </>
 )};
