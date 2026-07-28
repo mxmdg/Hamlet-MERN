@@ -25,8 +25,8 @@ const flatWorkApoXMLExporter = async (req, res, next) => {
                             contactoClienteApellido,
                             contactoClienteEmail,
                             cantidad,
-                            jobId,
                             entrega,
+                            jobId,
                             tenant,
                         );
         res.setHeader("Content-Type", "application/xml");

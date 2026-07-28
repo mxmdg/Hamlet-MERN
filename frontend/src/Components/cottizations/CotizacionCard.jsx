@@ -30,6 +30,7 @@ import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import Spinner from "../General/Spinner";
 import { CotizationMail } from "./CotizationMail";
 import { mmToPt } from "../utils/generalData/unitConverter";
+import { sendXML } from "../utils/Extensions/ApogeeSendXML";
 
 /**
  * Renderiza los datos principales de una cotización.
@@ -124,7 +125,28 @@ const CotizacionCard = ({ cotizacion, job }) => {
     }
   };
 
-  const sendXML = async (jobToSend, cot) => {
+ const xmlHandler = async (jobToSend, cot) => {
+    try {
+      setLoading(true);
+      setWaitingFor("Generando archivo JDF...");
+      await sendXML(jobToSend, cot);
+      setLoading(false);
+      setWaitingFor(null);
+      setError({
+        title: "Archivo JDF generado",
+        severity: "success",
+        message: "Archivo JDF generado exitosamente.",
+      });
+    } catch (error) {
+      setError({
+        title: "Error al generar el archivo JDF",
+        severity: "error",
+        message: error.message || "Error al generar el archivo JDF",
+      });
+    }
+  }
+
+  /* const sendXML = async (jobToSend, cot) => {
     console.log(jobToSend)
     setLoading(true);
     setWaitingFor("Generando archivo JDF...");
@@ -188,7 +210,7 @@ const CotizacionCard = ({ cotizacion, job }) => {
       setWaitingFor(null);
     }
   };
-
+ */
 
   const failure = (
     <ErrorMessage
@@ -378,7 +400,7 @@ const CotizacionCard = ({ cotizacion, job }) => {
             </Button>
             <Button
               key={"sendApogee"}
-              onClick={() => sendXML(job, cotizacion)}
+              onClick={() => xmlHandler(job, cotizacion)}
               variant="contained"
               color={localStatus === "Enviado" ? "success" : "primary"}
             >

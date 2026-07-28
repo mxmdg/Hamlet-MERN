@@ -184,6 +184,7 @@ const template = async (
   contactoClienteApellido = "Apellido",
   contactoClienteEmail = "Email",
   cantidad = 1,
+  entrega,
   jobId,
   tenant,
 ) => {
