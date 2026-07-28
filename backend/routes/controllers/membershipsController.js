@@ -6,7 +6,7 @@ const membershipsController = {};
 
 membershipsController.getMemberships = async (req, res, next) => {
   try {
-    console.log("Fetching memberships for tenant:", req.header("x-tenant"));
+    
     const tenant = req.header("x-tenant");
     const memberships = await Membership.find({
       tenant,
@@ -17,21 +17,19 @@ membershipsController.getMemberships = async (req, res, next) => {
       .select("role status");
     res.json(memberships);
   } catch (e) {
-    console.log("Error getting memberships:", e);
     next(e);
+
   }
 };
 
 membershipsController.getAllMemberships = async (req, res, next) => {
   try {
-    console.log("Fetching all memberships for master");
     const memberships = await Membership.find()
       .populate("userId", "Name LastName email")
       .populate("tenant", "key name plan status")
       .select("role status");
     res.json(memberships);
   } catch (e) {
-    console.log("Error getting all memberships for master:", e);
     next(e);
   }
 };
@@ -149,7 +147,6 @@ membershipsController.createMembership = async (req, res, next) => {
       role,
       status,
     });
-    console.log(newMembership);
     const membership = await newMembership.save();
     res.status(201).json({
       message: `${user.Name} ${user.LastName} ha sido agregado como ${newMembership.role} a ${activeTenant.name}`,
