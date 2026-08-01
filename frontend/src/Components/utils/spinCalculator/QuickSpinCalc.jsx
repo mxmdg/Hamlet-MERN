@@ -74,7 +74,7 @@ const QuickSpinCalc = (props) => {
   }, []);
 
   return (
-    <Card elevation={10}>
+    <Card elevation={0}>
       <CardHeader
         title="Calculadora de lomo"
         titleTypographyProps={{ color: useColor, fontWeight: "600" }}

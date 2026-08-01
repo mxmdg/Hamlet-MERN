@@ -46,7 +46,7 @@ const NumberGenerator = (props) => {
   };
 
   return (
-    <Card elevation={10}>
+    <Card elevation={0}>
      
       <CardHeader title="Numerador" titleTypographyProps={{color: useColor, fontWeight: "600"}}></CardHeader>
       <Divider />

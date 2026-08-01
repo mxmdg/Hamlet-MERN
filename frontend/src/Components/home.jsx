@@ -7,6 +7,7 @@ import ImpoProvider from "./utils/impo/ImpoContext";
 import { ImpoContext } from "./utils/impo/ImpoContext";
 import Fetch from "./General/Fetch";
 import QuickSpinCalc from "./utils/spinCalculator/QuickSpinCalc";
+import {ScaleCalculator} from "./utils/spinCalculator/ScaleCalculator";
 import DarkWoodCard from "./utils/DarkWoodCard";
 import PrintersMainContainer from "./Printers/PrintersMainContainer";
 import ToggleColorMode from "./Config/Theme/ToggleMode";
@@ -30,6 +31,12 @@ import { Container, Box } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import UploadFilesButton from "./utils/ReusableComponents/UploadFilesButton";
 import JobsPerPartType from "./utils/stats/JobsPerPartType";
+import {FloatingWindow, WindowCanvas, WindowManagerProvider, WindowDock} from "./windowManager";
+import LaunchIcon from '@mui/icons-material/Launch';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
+import ContactPageIcon from '@mui/icons-material/ContactPage';
+import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
+import StraightenIcon from '@mui/icons-material/Straighten';
 
 const Home = (props) => {
   const [useRoute, setUseRoute] = useState(props.route || "jobs/urg");
@@ -97,13 +104,26 @@ const Home = (props) => {
               <MyStepper />
             </Grid>
             <Grid size={12}>
-              <QuickSpinCalc color="primary" />
+              <FloatingWindow id="calculadora" title="Calculadora de lomo" icon={<StraightenIcon />}>
+                <QuickSpinCalc color="primary" />
+              </FloatingWindow>
             </Grid>
             <Grid size={12}>
-              <NumberGenerator color="primary" />
+              <FloatingWindow id="scale" title="Escalar Formato" icon={<LaunchIcon />}>
+                <ScaleCalculator color="primary" variant="outlined" />
+              </FloatingWindow>
             </Grid>
             <Grid size={12}>
+              <FloatingWindow id="numberGenerator" title="Generador de números" icon={<FormatListNumberedIcon />}>
+                <NumberGenerator color="primary" />
+              </FloatingWindow>
+            </Grid>
+            <Grid size={12}>
+              <FloatingWindow id="colorSheetRangeGenerator" title="Páginas color" icon={<MenuBookIcon />}>
               <ColorSheetRangeGenerator color="primary" />
+              </FloatingWindow>
+            </Grid>
+            <Grid size={12}>
             </Grid>
             <Grid size={12}>
               <ImpoProvider>

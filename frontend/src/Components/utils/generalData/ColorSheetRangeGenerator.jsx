@@ -56,7 +56,7 @@ const ColorSheetRangeGenerator = () => {
   };
 
   return (
-    <Card elevation={10}>
+    <Card elevation={0} >
       <CardHeader
         title="Generador de Rangos de Hojas de Color"
         titleTypographyProps={{ color: "primary", fontWeight: "600" }}

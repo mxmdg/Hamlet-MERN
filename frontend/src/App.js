@@ -28,6 +28,10 @@ import myIMG_0626 from "./img/IMG_0626.jpeg";
 import paperBackground from "./img/paperBackground.jpg";
 import { useBackendStatus } from "./Hooks/useBackendStatus";
 import { useUserPreferences } from "./Hooks/useUserPreferences";
+import {
+  WindowManagerProvider,
+  WindowCanvas,
+} from './Components/windowManager';
 
 function App() {
   // Verificar si el tema está almacenado en localStorage
@@ -71,61 +75,77 @@ function App() {
 
   const success = (
     <ThemeProv theme={themeInUse} mode={useMode}>
-      <Box
-        sx={{
-          width: "100%",
-          minHeight: "100vh",
-          display: "flex",
-          flexDirection: "column",
-          overflow: "hidden",
-        }}
-      >
-        <ErrorBoundary
-          fallback={
-            <ErrorMessage
-              title="Error inesperado"
-              message="Ha ocurrido un error inesperado. Por favor, intente recargar la página."
-            />
-          }
+      {/*
+        WindowManagerProvider va acá, adentro del ThemeProv (para heredar el
+        tema de MUI en las paletas) y afuera de todo lo demás, así cualquier
+        ruta/página puede abrir una ventana flotante con useWindowManager().
+      */}
+      <WindowManagerProvider>
+        <Box
+          sx={{
+            width: "100%",
+            minHeight: "100vh",
+            display: "flex",
+            flexDirection: "column",
+            overflow: "hidden",
+          }}
         >
-          <BrowserRouter>
-            <AuthProvider>
-              <Box
-                sx={{
-                  width: "100%",
-                  "@media print": { display: "none" },
-                }}
-              >
-                <Header toogleMode={toogleMode} mode={useMode} />
-              </Box>
-              <Box
-                sx={{
-                  flex: 1,
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "stretch",
-                  width: "100%",
-                  background: localStorage.getItem("login")
-                    ? themeInUse.palette.background.default
-                    : `url(${cordoba})`,
-                  backgroundRepeat: "no-repeat",
-                  backgroundSize: "cover",
-                  backgroundPositionY: "30%",
-                }}
-              >
-                <Router
-                  prefs={
-                    prefs !== null
-                      ? prefs
-                      : { color: "info", variant: "outlined" }
-                  }
-                  setLog={setLogin}
-                />
-              </Box>
-            </AuthProvider>
-          </BrowserRouter>
-        </ErrorBoundary>
-      </Box>
+          <ErrorBoundary
+            fallback={
+              <ErrorMessage
+                title="Error inesperado"
+                message="Ha ocurrido un error inesperado. Por favor, intente recargar la página."
+              />
+            }
+          >
+            <BrowserRouter>
+              <AuthProvider>
+                <Box
+                  sx={{
+                    width: "100%",
+                    "@media print": { display: "none" },
+                  }}
+                >
+                  <Header toogleMode={toogleMode} mode={useMode} />
+                </Box>
+
+                {/*
+                  WindowCanvas reemplaza el Box de contenido que tenías.
+                  Le pasamos exactamente el mismo sx que tenía antes (flex,
+                  centrado, fondo), y por dentro sigue renderizando <Router />
+                  normal. La diferencia es que ahora este Box es el área
+                  donde flotan las ventanas: quedan clippeadas acá abajo,
+                  sin poder taparte el Header de arriba.
+                */}
+                <WindowCanvas
+                  sx={{
+                    flex: 1,
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "stretch",
+                    width: "100%",
+                    background: localStorage.getItem("login")
+                      ? themeInUse.palette.background.default
+                      : `url(${cordoba})`,
+                    backgroundRepeat: "no-repeat",
+                    backgroundSize: "cover",
+                    backgroundPositionY: "30%",
+                  }}
+                >
+                  <Router
+                    prefs={
+                      prefs !== null
+                        ? prefs
+                        : { color: "info", variant: "outlined" }
+                    }
+                    setLog={setLogin}
+                  />
+                </WindowCanvas>
+              </AuthProvider>
+            </BrowserRouter>
+          </ErrorBoundary>
+        </Box>
+      </WindowManagerProvider>
     </ThemeProv>
   );
 

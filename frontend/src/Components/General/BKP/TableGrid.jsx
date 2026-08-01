@@ -36,9 +36,6 @@ import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import { pages } from "../NavigationBar/AppBarResponsive";
 import DownloadCSV from "../utils/DownloadCSV/DownloadCSV";
 import DownloadJSON from "../utils/DownloadCSV/DownloadJSON";
-import PrintIcon from "@mui/icons-material/Print";
-import Button from "@mui/material/Button";
-import { printTable } from "./printTable";
 import {
   spanishFormat,
   roundCents,
@@ -502,15 +499,15 @@ export default function EnhancedTable(props) {
 
   const failure = <ErrorMessage message={error} />;
 
-  const tableTitle =
-    pages.find((pg) => pg.path === props.collection.replace("/urg", ""))
-      ?.text || props.collection;
-
   const success = (
     <>
       <EnhancedTableToolbar
         collection={props.collection.replace("/urg", "")}
-        title={tableTitle}
+        title={pages.map((pg) => {
+          if (pg.path === props.collection.replace("/urg", "")) {
+            return pg.text || props.collection;
+          }
+        })}
         numSelected={selected.length}
         idSelected={selected}
         deleted={props.deleted}
@@ -627,20 +624,6 @@ export default function EnhancedTable(props) {
           fileName={`${props.collection}`}
         />
         <DownloadJSON data={props.rows} fileName={`${props.collection}`} />
-        <StyledTooltip title="Imprimir" arrow>
-        <IconButton
-          color="primary"
-          onClick={() =>
-            printTable({
-              rows,
-              headCells: visibleHeadCells,
-              title: tableTitle,
-            })
-          }
-        >
-          <PrintIcon />
-        </IconButton>
-      </StyledTooltip>
       </ButtonGroup>
 
       <FormControlLabel

@@ -1,0 +1,102 @@
+/* Estilos de impresion.
+   Filosofia:
+   1) Solo se imprime lo que este dentro de ".print-area" (la tabla).
+      Todo lo demas se oculta, este o no dentro de Fetch (navbar, sidebar, etc).
+   2) El diseño de pantalla NO se toca. Estas reglas solo aplican en @media print,
+      y reescriben el look de la tabla para que se vea tipo planilla de calculo:
+      fuente chica, lineas de grilla, sin colores de fondo ni sombras. */
+
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 12mm 10mm;
+  }
+
+  /* --- 1) Aislar la tabla: ocultar todo lo demas de la pagina --- */
+  body * {
+    visibility: visible;
+  }
+
+  .print-area,
+  .print-area * {
+    visibility: visible;
+  }
+
+  .print-area {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    box-shadow: none !important;
+    background: #fff !important;
+  }
+
+  /* Por las dudas, elementos marcados explicitamente como no-print
+     (checkboxes, filtros, paginado, botones) se ocultan igual */
+  .no-print {
+    display: none !important;
+  }
+
+  html,
+  body {
+    background: #999 !important;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* --- 2) Look tipo planilla de calculo --- */
+  .print-area table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    table-layout: auto;
+    font-family: Arial, Helvetica, sans-serif !important;
+    font-size: 8.5pt !important;
+    color: #000 !important;
+  }
+
+  /* Repetir el encabezado en cada pagina impresa */
+  .print-area thead {
+    display: table-header-group;
+  }
+
+  /* Evitar que una fila se corte entre dos paginas */
+  .print-area tr {
+    page-break-inside: avoid;
+  }
+
+  .print-area .MuiTableCell-root {
+    border: 1px solid #999 !important;
+    padding: 2px 6px !important;
+    line-height: 1.25 !important;
+    font-size: 8.5pt !important;
+    color: #000 !important;
+    background: #fff !important;
+    box-shadow: none !important;
+  }
+
+  .print-area .MuiTableCell-head {
+    background: #ececec !important;
+    font-weight: 700 !important;
+    font-size: 8pt !important;
+    text-transform: uppercase !important;
+  }
+
+  /* Sacar el color alternado (zebra) de las filas, para que quede
+     prolijo y liviano de tinta, como una grilla de Excel */
+  .print-area .MuiTableRow-root {
+    background: #fff !important;
+  }
+
+  .print-area .MuiPaper-root,
+  .print-area .MuiTableContainer-root {
+    box-shadow: none !important;
+    overflow: visible !important;
+    background: transparent !important;
+  }
+
+  .print-area .MuiTypography-h6 {
+    font-size: 12pt !important;
+  }
+}

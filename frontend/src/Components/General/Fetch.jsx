@@ -1,8 +1,17 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useMemo } from "react";
 import { AuthContext } from "../context/AuthContext";
 import "../../Styles/hamlet.css";
 import "../Stocks/Stocks.css";
-import { Paper, Container, TextField, MenuItem, Stack } from "@mui/material";
+import {
+  Paper,
+  Container,
+  TextField,
+  MenuItem,
+  Stack,
+  Typography,
+  Chip,
+  Button,
+} from "@mui/material";
 import EnhancedTable from "./TableGrid";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import Spinner from "./Spinner";
@@ -15,15 +24,25 @@ import {
 } from "../customHooks/FetchDataHook";
 import flattenArrayOfObjects from "../utils/flattener/flatenDicts";
 
+// Convierte cualquier valor a string de forma segura para poder buscarlo,
+// sin explotar si el dato es null, undefined, numero, booleano, objeto, etc.
+const safeToString = (value) =>
+  value === null || value === undefined ? "" : String(value);
+
 const Fetch = (props) => {
   const [useList, setList] = useState([]);
-  const [useFilteredList, setFilteredList] = useState([]);
+  // null = no hay filtro activo (se muestra useList completa)
+  const [useFilteredList, setFilteredList] = useState(null);
   const [useSelected, setSelected] = useState([]);
   const [useLoading, setLoading] = useState(true);
   const [useHeaders, setHeaders] = useState([]);
   const [useDeleted, setDeleted] = useState([]);
   const [useErrMessage, setErrMessage] = useState(null);
-  const [useColumn, setColumn] = useState("Todo");
+  const [useColumnDraft, setColumnDraft] = useState("Todo");
+  const [useQueryDraft, setQueryDraft] = useState("");
+  // Filtros activos. Cada uno es { id, column, query }.
+  // Un item solo se muestra si CUMPLE TODOS los filtros (AND entre columnas).
+  const [useFilters, setFilters] = useState([]);
 
   const navigate = useNavigate();
 
@@ -92,56 +111,55 @@ const Fetch = (props) => {
     return elements;
   };
 
-  const filterList = (query, column) => {
-    //Inicializar o reiniciar variables
-    setFilteredList([]);
-    const keys = Object.keys(useList[0]);
-    const results = [];
+  // Mapa id -> label, para mostrar los nombres "lindos" en el selector de columnas
+  const headerLabelById = useMemo(
+    () => Object.fromEntries(useHeaders.map((h) => [h.id, h.label])),
+    [useHeaders],
+  );
 
-    query = query.toLowerCase();
-
-    const findByColumn = (col) => {
-      for (let item of useList) {
-        try {
-          const cellToString = item[col].toString().toLowerCase();
-          if (cellToString.includes(query.toString())) {
-            results.push(item);
-          }
-        } catch (error) {
-          setErrMessage("Error en la busqueda: " + error.message);
-        }
-      }
-    };
-
-    const findAll = () => {
-      for (let item of useList) {
-        for (let key of keys) {
-          try {
-            const cellToString = item[key].toString().toLowerCase();
-            if (cellToString.includes(query.toString())) {
-              results.push(item);
-              break; // Evitar duplicados al encontrar coincidencia en cualquier columna
-            }
-          } catch (error) {
-            setErrMessage("Error en la busqueda: " + error.message);
-          }
-        }
-      }
-    };
-
-    column === "Todo" ? findAll() : findByColumn(column);
-    setFilteredList(results);
-
-    if (query.length > 0 && results.length < 1) {
-      setFilteredList([,]);
+  // Aplica todos los filtros activos con AND: un item pasa solo si matchea
+  // CADA filtro (cada uno puede apuntar a una columna distinta, o a "Todo").
+  // Usa safeToString para que un dato null/undefined/numero/objeto no rompa la busqueda.
+  useEffect(() => {
+    if (useFilters.length === 0 || useList.length === 0) {
+      setFilteredList(null); // sin filtro activo -> se muestra la lista completa
+      return;
     }
+
+    const allKeys = Object.keys(useList[0]);
+
+    const results = useList.filter((item) =>
+      useFilters.every((filter) => {
+        const query = filter.query.toLowerCase();
+        const cols = filter.column === "Todo" ? allKeys : [filter.column];
+        return cols.some((col) =>
+          safeToString(item[col]).toLowerCase().includes(query),
+        );
+      }),
+    );
+
+    setFilteredList(results);
+  }, [useFilters, useList]);
+
+  const addFilter = () => {
+    const query = useQueryDraft.trim();
+    if (!query) return;
+    setFilters((prev) => [
+      ...prev,
+      { id: `${Date.now()}-${Math.random()}`, column: useColumnDraft, query },
+    ]);
+    setQueryDraft("");
+  };
+
+  const removeFilter = (id) => {
+    setFilters((prev) => prev.filter((f) => f.id !== id));
   };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         await getElements();
-        setFilteredList([]);
+        setFilters([]);
         setLoading(false);
       } catch (err) {
         setErrMessage(err.response?.data?.message || err.message);
@@ -165,57 +183,117 @@ const Fetch = (props) => {
     />
   );
 
+  const rowsToShow = useFilteredList !== null ? useFilteredList : useList;
+  const sinResultados =
+    useFilteredList !== null && useFilteredList.length === 0;
+
   const TableLoaded = (
     <>
-      {/* <Filter
-        headers={useHeaders}
-        data={useList}
-        setFilteredList={setFilteredList}
-      /> */}
       <DarkWoodCard>
-        <Stack direction="row" spacing={4}>
+        <Stack
+          direction="row"
+          spacing={2}
+          alignItems="center"
+          flexWrap="wrap"
+          useFlexGap
+        >
           <TextField
             select
-            defaultValue={"Todo"}
-            onChange={(e) => setColumn(e.target.value)}
+            label="Columna"
+            value={useColumnDraft}
+            onChange={(e) => setColumnDraft(e.target.value)}
             variant="filled"
             color="success"
             size="small"
+            sx={{ minWidth: 160 }}
           >
-            {useHeaders.map((item) => {
-              return (
-                <MenuItem value={item.label} key={item.id}>
-                  {item.label}
-                </MenuItem>
-              );
-            })}
-            <MenuItem value={"Todo"} key="opt0">
-              Todo
-            </MenuItem>
+            <MenuItem value="Todo">Todo</MenuItem>
+            {useHeaders.map((item) => (
+              <MenuItem value={item.id} key={item.id}>
+                {item.label}
+              </MenuItem>
+            ))}
           </TextField>
           <TextField
             variant="filled"
             type="search"
-            onChange={(e) => {
-              filterList(e.target.value, useColumn);
+            value={useQueryDraft}
+            onChange={(e) => setQueryDraft(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                addFilter();
+              }
             }}
             placeholder="Buscar"
             color="success"
             size="small"
           ></TextField>
+          <Button
+            variant="contained"
+            color="success"
+            size="small"
+            onClick={addFilter}
+            disabled={!useQueryDraft.trim()}
+          >
+            Agregar filtro
+          </Button>
+          {useFilters.length > 0 && (
+            <Button
+              variant="text"
+              color="inherit"
+              size="small"
+              onClick={() => setFilters([])}
+            >
+              Limpiar filtros
+            </Button>
+          )}
         </Stack>
+
+        {useFilters.length > 0 && (
+          <Stack
+            direction="row"
+            spacing={1}
+            flexWrap="wrap"
+            useFlexGap
+            sx={{ mt: 1.5 }}
+          >
+            {useFilters.map((filter) => (
+              <Chip
+                key={filter.id}
+                label={`${
+                  filter.column === "Todo"
+                    ? "Todo"
+                    : headerLabelById[filter.column] || filter.column
+                }: "${filter.query}"`}
+                onDelete={() => removeFilter(filter.id)}
+                color="success"
+                variant="outlined"
+                size="small"
+              />
+            ))}
+          </Stack>
+        )}
       </DarkWoodCard>
 
-      <DarkWoodCard>
-        <EnhancedTable
-          rows={useFilteredList.length > 0 ? useFilteredList : useList}
-          headCells={useHeaders}
-          collection={props.collection}
-          editor={setSelected}
-          selected={useSelected}
-          deleted={setDeleted}
-        />
-      </DarkWoodCard>
+      {sinResultados ? (
+        <DarkWoodCard>
+          <Typography variant="body2" sx={{ p: 1 }}>
+            No se encontraron resultados con los filtros aplicados.
+          </Typography>
+        </DarkWoodCard>
+      ) : (
+        <DarkWoodCard>
+          <EnhancedTable
+            rows={rowsToShow}
+            headCells={useHeaders}
+            collection={props.collection}
+            editor={setSelected}
+            selected={useSelected}
+            deleted={setDeleted}
+          />
+        </DarkWoodCard>
+      )}
     </>
   );
 
