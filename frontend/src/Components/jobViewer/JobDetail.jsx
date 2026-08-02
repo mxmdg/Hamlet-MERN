@@ -21,7 +21,7 @@ import {
   Select,
 } from "@mui/material";
 
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, useMemo } from "react";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import SaveIcon from "@mui/icons-material/Save";
@@ -95,16 +95,33 @@ const JobDetail = (props) => {
   const [useLoading, setLoading] = useState(false);
   const [useError, setError] = useState(null);
 
-  const [productionPlan, setProductionPlan] = useState(
-    props.cot ? props.cot.impositionData : {},
+  const currentPartIds = useMemo(
+  () => new Set(job.Partes.map((p) => p._id)),
+  [job.Partes],
+);
+
+const [productionPlan, setProductionPlan] = useState(() => {
+  if (!props.cot) return {};
+  return Object.fromEntries(
+    Object.entries(props.cot.impositionData).filter(([partId]) =>
+      currentPartIds.has(partId),
+    ),
   );
+});
+
+  const [usePartFinishingData, setPartFinishingData] = useState(() => {
+    if (!props.cot) return [];
+    return props.cot.partsFinishing.filter((item) =>
+      currentPartIds.has(item.partId),
+    );
+  });
   const [productionPlanAvaible, setProductionPlanAvaible] = useState(false);
   const [useJobFinishingData, setJobFinishingData] = useState(
     props.cot ? props.cot.finishing : null,
   );
-  const [usePartFinishingData, setPartFinishingData] = useState(
+  /* const [usePartFinishingData, setPartFinishingData] = useState(
     props.cot ? props.cot.partsFinishing : [],
-  );
+  ); */
   const [previousCotizations, setPreviousCotizations] = useState([]);
 
   const handleChange = (panel) => (event, isExpanded) => {

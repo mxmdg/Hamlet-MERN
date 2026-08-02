@@ -2,79 +2,41 @@
 import "./App.css";
 import "./Styles/hamlet.css";
 import Header from "./Components/NavigationBar/Header";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Box } from "@mui/material";
-import ThemeProv from "./Components/Config/theme";
+import ThemeProv, { createAppTheme } from "./Components/Config/theme";
 import AuthProvider from "./Components/context/AuthContext";
 import { BrowserRouter } from "react-router-dom";
 import Router from "./router";
-//import { themeOptions } from "./Components/Config/theme";
-import { createMxmTheme, createThemeOptions } from "./Components/Config/theme";
-/*import {
-  themeIndependiente,
-  themeBocaJuniors,
-} from "./Components/Config/TemasAFA";
-*/
 import Spinner from "./Components/General/Spinner";
 import ErrorMessage from "./Components/ErrorMessage/ErrorMessage";
 import ErrorBoundary from "./Components/ErrorMessage/ErrorBoundary";
 import cordoba from "./img/cordoba.webp";
-import rio from "./img/rio.jpg";
-import roble from "./img/roble.jpg";
-import pinar from "./img/pinar.jpg";
-import Mateo from "./img/Mateo.jpeg";
-import sky from "./img/Sky.jpg";
-import myIMG_0626 from "./img/IMG_0626.jpeg";
-import paperBackground from "./img/paperBackground.jpg";
 import { useBackendStatus } from "./Hooks/useBackendStatus";
-import { useUserPreferences } from "./Hooks/useUserPreferences";
 import {
-  WindowManagerProvider,
-  WindowCanvas,
-} from './Components/windowManager';
+  UserPreferencesProvider,
+  useUserPreferences,
+} from "./Hooks/useUserPreferences";
+import { WindowManagerProvider, WindowCanvas } from "./Components/windowManager";
 
-function App() {
-  // Verificar si el tema está almacenado en localStorage
-  const storedTheme = localStorage.getItem("appTheme");
-  const initialMode = storedTheme ? storedTheme : "light"; // Valor por defecto si no hay nada en localStorage
-  const [useMode, setMode] = useState(initialMode);
+// ---------------------------------------------------------------------------
+// AppShell vive ADENTRO de <UserPreferencesProvider>, así puede leer "prefs"
+// (mode + themeVariant) del context — es la ÚNICA fuente de verdad del theme.
+// Ya no hay useState local de modo ni localStorage("appTheme") por separado:
+// savePrefs() (desde acá, desde el Header, o desde Profile) actualiza esto
+// mismo y se refleja al instante en todos lados, sin recargar la página.
+// ---------------------------------------------------------------------------
+function AppShell() {
   const [useLogin, setLogin] = useState(localStorage.getItem("login"));
+  const { prefs } = useUserPreferences();
 
-  const backendStatus = useBackendStatus();
-  const { prefs, savePrefs } = useUserPreferences();
-
-  useEffect(() => {}, [backendStatus, prefs]);
-
-  const checking = <Spinner title="Verificando estado del servidor..." />;
-
-  const failure = (
-    <ErrorMessage
-      title="Servidor no disponible"
-      message="No se puede conectar con el backend. Intente más tarde."
-    />
+  const themeInUse = useMemo(
+    () => createAppTheme(prefs.themeVariant, prefs.mode),
+    [prefs.themeVariant, prefs.mode],
   );
 
-  const toogleMode = () => {
-    const stored = localStorage.getItem("userSettings");
-    const currentSettings = stored ? JSON.parse(stored) : {};
-    const nextMode = useMode === "light" ? "dark" : "light";
-
-    const nextSettings = {
-      ...currentSettings,
-      mode: nextMode,
-    };
-
-    setMode(nextMode);
-    localStorage.setItem("userSettings", JSON.stringify(nextSettings));
-    localStorage.setItem("appTheme", nextMode);
-  };
-
-  //const themeInUse = useMemo(() => createMxmTheme(useMode), [useMode]);
-  //const themeInUse = createThemeOptions(useMode);
-  const themeInUse = useMemo(() => createMxmTheme(useMode), [useMode]);
-
-  const success = (
-    <ThemeProv theme={themeInUse} mode={useMode}>
+  return (
+    <ThemeProv theme={themeInUse} mode={prefs.mode}>
       {/*
         WindowManagerProvider va acá, adentro del ThemeProv (para heredar el
         tema de MUI en las paletas) y afuera de todo lo demás, así cualquier
@@ -106,7 +68,14 @@ function App() {
                     "@media print": { display: "none" },
                   }}
                 >
-                  <Header toogleMode={toogleMode} mode={useMode} />
+                  {/*
+                    Ya no le pasamos mode/toogleMode: AppBarResponsive lee
+                    prefs y savePrefs directo de useUserPreferences(). Si tu
+                    Header.jsx todavía reenvía esas props, ya no hacen falta
+                    (podés sacarlas de ahí también, pero no rompen nada si
+                    quedan sin usar).
+                  */}
+                  <Header />
                 </Box>
 
                 {/*
@@ -132,14 +101,10 @@ function App() {
                     backgroundPositionY: "30%",
                   }}
                 >
-                  <Router
-                    prefs={
-                      prefs !== null
-                        ? prefs
-                        : { color: "info", variant: "outlined" }
-                    }
-                    setLog={setLogin}
-                  />
+                  {/* prefs ya nunca es null (el context arranca con
+                      DEFAULT_PREFS), así que se lo pasamos directo, sin
+                      el ternario de fallback que tenías antes. */}
+                  <Router prefs={prefs} setLog={setLogin} />
                 </WindowCanvas>
               </AuthProvider>
             </BrowserRouter>
@@ -148,12 +113,28 @@ function App() {
       </WindowManagerProvider>
     </ThemeProv>
   );
+}
 
-  return backendStatus === "checking"
-    ? checking
-    : backendStatus === "down"
-      ? failure
-      : success;
+function App() {
+  const backendStatus = useBackendStatus();
+
+  const checking = <Spinner title="Verificando estado del servidor..." />;
+
+  const failure = (
+    <ErrorMessage
+      title="Servidor no disponible"
+      message="No se puede conectar con el backend. Intente más tarde."
+    />
+  );
+
+  if (backendStatus === "checking") return checking;
+  if (backendStatus === "down") return failure;
+
+  return (
+    <UserPreferencesProvider>
+      <AppShell />
+    </UserPreferencesProvider>
+  );
 }
 
 export default App;

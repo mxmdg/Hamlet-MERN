@@ -15,6 +15,7 @@ import FullJobsRender from "../Pages/FullJobsRender";
 import SessionTimer from "./SessionTimer";
 import FormMaterial from "../Formulario/FormMaterial";
 import { useUserPreferences } from "../../Hooks/useUserPreferences";
+import { THEME_VARIANTS, VARIANT_INFO } from "../Config/theme";
 
 export const Profile = () => {
   //User Profile
@@ -30,6 +31,24 @@ export const Profile = () => {
   const userSettingsFormData = [
     //Apariencia
     {
+    label: "Paleta de colores",
+    type: "Divider",
+    id: "colorPallete_div",
+    size: 12,
+    align: "left",
+    orientation: "horizontal",
+  },
+    {
+      inputName: "themeVariant",
+      label: "Paleta de colores",
+      type: "Select",
+      id: "formThemeVariant",
+      options: THEME_VARIANTS.map((key) => ({
+        text: VARIANT_INFO[key]?.label || key,
+        value: key,
+      })),
+    },
+    {
       inputName: "mode",
       label: "Modo Claro/Oscuro",
       type: "Select",
@@ -39,6 +58,15 @@ export const Profile = () => {
         { text: "Oscuro", value: "dark" },
       ],
     },
+    {
+    label: "Apariencia de formularios",
+    type: "Divider",
+    id: "form_div",
+    size: 12,
+    align: "left",
+    orientation: "horizontal",
+  },
+    
     {
       inputName: "variant",
       label: "Estilo de formulario",
@@ -121,7 +149,7 @@ export const Profile = () => {
                 form={userSettingsFormData}
                 task="local"
                 title="Preferencias"
-                subtitle="Apariencia de los formularios"
+                subtitle=" "
                 submitText="Guardar"
                 action={savePrefs}
                 variant={prefs?.variant || "outlined"}

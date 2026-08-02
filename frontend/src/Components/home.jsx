@@ -104,6 +104,13 @@ const Home = (props) => {
               <MyStepper />
             </Grid>
             <Grid size={12}>
+              <ImpoProvider>
+                <DarkWoodCard>
+                  <Canvas />
+                </DarkWoodCard>
+              </ImpoProvider>
+            </Grid>
+            <Grid size={12}>
               <FloatingWindow id="calculadora" title="Calculadora de lomo" icon={<StraightenIcon />}>
                 <QuickSpinCalc color="primary" />
               </FloatingWindow>
@@ -124,13 +131,6 @@ const Home = (props) => {
               </FloatingWindow>
             </Grid>
             <Grid size={12}>
-            </Grid>
-            <Grid size={12}>
-              <ImpoProvider>
-                <DarkWoodCard>
-                  <Canvas />
-                </DarkWoodCard>
-              </ImpoProvider>
             </Grid>
           </Grid>
         </Grid>

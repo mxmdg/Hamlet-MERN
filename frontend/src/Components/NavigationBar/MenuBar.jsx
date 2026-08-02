@@ -26,6 +26,7 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { isAllowed } from "../utils/ReusableComponents/allowed";
 import { StyledTooltip } from "../General/TableGrid";
 import { AuthContext } from "../context/AuthContext";
+import { useUserPreferences } from "../../Hooks/useUserPreferences";
 import { ReactComponent as Logo } from "../../img/Logo/logo ok-06.svg";
 
 export const pages = [
@@ -77,6 +78,11 @@ function MenuBarComponent(props) {
   const context = useContext(AuthContext);
   const navigate = useNavigate();
   const location = useLocation();
+  // Fuente de verdad para modo/paleta: el context compartido, no
+  // props.mode/props.toogle (esas props ni siquiera llegan más desde
+  // App.js — este era justo el componente que se había quedado colgado
+  // del sistema viejo).
+  const { prefs, savePrefs } = useUserPreferences();
 
   const [mobileAnchor, setMobileAnchor] = useState(null);
   const [userAnchor, setUserAnchor] = useState(null);
@@ -208,8 +214,10 @@ function MenuBarComponent(props) {
             control={
               <Switch
                 size="small"
-                checked={props.mode === "dark"}
-                onChange={props.toogle}
+                checked={prefs.mode === "dark"}
+                onChange={() =>
+                  savePrefs({ mode: prefs.mode === "dark" ? "light" : "dark" })
+                }
               />
             }
             label="Dark"

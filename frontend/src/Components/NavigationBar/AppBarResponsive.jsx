@@ -21,6 +21,7 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
 import { StyledTooltip } from "../General/TableGrid";
 import { AuthContext } from "../context/AuthContext";
+import { useUserPreferences } from "../../Hooks/useUserPreferences";
 import { ReactComponent as Logo } from "../../img/Logo/logo ok-06.svg";
 
 export const pages = [
@@ -73,6 +74,10 @@ function ResponsiveAppBar(props) {
   const context = useContext(AuthContext);
   const navigate = useNavigate();
   const location = useLocation();
+  // Fuente de verdad para el modo claro/oscuro: el context compartido, no
+  // props.mode/props.toogle (eso era lo que exigía recargar la página para
+  // que un cambio hecho en Profile se viera reflejado acá).
+  const { prefs, savePrefs } = useUserPreferences();
 
   const [mobileAnchor, setMobileAnchor] = useState(null);
   const [userAnchor, setUserAnchor] = useState(null);
@@ -213,8 +218,12 @@ function ResponsiveAppBar(props) {
             control={
               <Switch
                 size="small"
-                checked={props.mode === "dark"}
-                onChange={props.toogle}
+                checked={prefs.mode === "dark"}
+                onChange={() =>{
+                  console.log("cambiando modo oscuro");
+                  savePrefs({ mode: prefs.mode === "dark" ? "light" : "dark" })
+                }
+                }
               />
             }
             label="Dark Mode"

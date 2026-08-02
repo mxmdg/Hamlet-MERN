@@ -39,7 +39,7 @@ export function WindowDock() {
           key={w.id}
           icon={w.icon || OpenInBrowserIcon}
           label={w.title}
-          variant="outlined"
+          variant="filled"
           color="primary"
           size="large"
           onClick={() => {
@@ -49,10 +49,8 @@ export function WindowDock() {
           sx={{
             pointerEvents: 'auto',
             borderRadius: 2,
-            bgcolor: '#00000066',
-            backDropFilter: 'blur(10px)',
             boxShadow: 10,
-            '&:hover': { bgcolor: 'action.hover' },
+            '&:hover': { bgcolor: 'primary.dark' },
           }}
         />
       ))}
