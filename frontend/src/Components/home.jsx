@@ -110,26 +110,6 @@ const Home = (props) => {
                 </DarkWoodCard>
               </ImpoProvider>
             </Grid>
-            <Grid size={12}>
-              <FloatingWindow id="calculadora" title="Calculadora de lomo" icon={<StraightenIcon />}>
-                <QuickSpinCalc color="primary" />
-              </FloatingWindow>
-            </Grid>
-            <Grid size={12}>
-              <FloatingWindow id="scale" title="Escalar Formato" icon={<LaunchIcon />}>
-                <ScaleCalculator color="primary" variant="outlined" />
-              </FloatingWindow>
-            </Grid>
-            <Grid size={12}>
-              <FloatingWindow id="numberGenerator" title="Generador de números" icon={<FormatListNumberedIcon />}>
-                <NumberGenerator color="primary" />
-              </FloatingWindow>
-            </Grid>
-            <Grid size={12}>
-              <FloatingWindow id="colorSheetRangeGenerator" title="Páginas color" icon={<MenuBookIcon />}>
-              <ColorSheetRangeGenerator color="primary" />
-              </FloatingWindow>
-            </Grid>
           </Grid>
         </Grid>
       </Grid>

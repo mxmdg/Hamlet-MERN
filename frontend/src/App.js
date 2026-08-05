@@ -3,7 +3,6 @@ import "./App.css";
 import "./Styles/hamlet.css";
 import Header from "./Components/NavigationBar/Header";
 import { useMemo, useState } from "react";
-import { Box } from "@mui/material";
 import ThemeProv, { createAppTheme } from "./Components/Config/theme";
 import AuthProvider from "./Components/context/AuthContext";
 import { BrowserRouter } from "react-router-dom";
@@ -28,6 +27,9 @@ import MenuBookIcon from '@mui/icons-material/MenuBook';
 import ContactPageIcon from '@mui/icons-material/ContactPage';
 import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
 import StraightenIcon from '@mui/icons-material/Straighten';
+
+import { Container, Box } from "@mui/material";
+import Grid from "@mui/material/Grid";
 
 // ---------------------------------------------------------------------------
 // AppShell vive ADENTRO de <UserPreferencesProvider>, así puede leer "prefs"
@@ -100,6 +102,7 @@ function AppShell() {
                   sx={{
                     flex: 1,
                     display: "flex",
+                    flexDirection: "column",
                     justifyContent: "center",
                     alignItems: "stretch",
                     width: "100%",
@@ -115,26 +118,31 @@ function AppShell() {
                       DEFAULT_PREFS), así que se lo pasamos directo, sin
                       el ternario de fallback que tenías antes. */}
                   <Router prefs={prefs} setLog={setLogin} />
-                  
-              <FloatingWindow id="calculadora" title="Calculadora de lomo" icon={<StraightenIcon />}>
-                <QuickSpinCalc color="primary" />
-              </FloatingWindow>
-           
-            
-              <FloatingWindow id="scale" title="Escalar Formato" icon={<LaunchIcon />}>
-                <ScaleCalculator color="primary" variant="outlined" />
-              </FloatingWindow>
-           
-            
-              <FloatingWindow id="numberGenerator" title="Generador de números" icon={<FormatListNumberedIcon />}>
-                <NumberGenerator color="primary" />
-              </FloatingWindow>
-           
-            
-              <FloatingWindow id="colorSheetRangeGenerator" title="Páginas color" icon={<MenuBookIcon />}>
-              <ColorSheetRangeGenerator color="primary" />
-              </FloatingWindow>
-           
+                  <Grid>
+                    <Grid size={{sm: 12, md:6}}>
+                      <FloatingWindow id="calculadora" title="Calculadora de lomo" icon={<StraightenIcon />}>
+                      <QuickSpinCalc color="primary" />
+                  </FloatingWindow>
+
+                    </Grid>
+                    <Grid size={{sm: 12, md:6}}>
+                      <FloatingWindow id="scale" title="Escalar Formato" icon={<LaunchIcon />}>
+                      <ScaleCalculator color="primary" variant="outlined" />
+                  </FloatingWindow>
+
+                    </Grid>
+                    <Grid size={{sm: 12, md:6}}>
+                      <FloatingWindow id="numberGenerator" title="Generador de números" icon={<FormatListNumberedIcon />}>
+                      <NumberGenerator color="primary" />
+                  </FloatingWindow>
+
+                    </Grid>
+                    <Grid size={{sm: 12, md:6}}>
+                      <FloatingWindow id="colorSheetRangeGenerator" title="Páginas color" icon={<MenuBookIcon />}>
+                      <ColorSheetRangeGenerator color="primary" />
+                      </FloatingWindow>
+                    </Grid>
+                  </Grid>
                 </WindowCanvas>
               </AuthProvider>
             </BrowserRouter>
