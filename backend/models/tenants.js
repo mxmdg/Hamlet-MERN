@@ -58,7 +58,8 @@ const TenantSchema = new mongoose.Schema(
       },
 
       extensions: {
-        papyrusExtractUrl: { type: String, required: false },
+        papyrusExtractUrl: { type: String, required: false},
+        usePapyrusCustomerDB: { type: Boolean, default: false },
         pdfValidatorUrl: { type: String, required: false },
       },
     },

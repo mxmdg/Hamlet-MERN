@@ -70,6 +70,7 @@ export const pages = [
     drop: [
       { text: "Conexión Papyrus", path: "papyrus" },
       { text: "Estadísticas Papyrus", path: "jobs/dashboard" , allowed: ["admin", "manager"]},
+      { text: "Clientes Papyrus", path: "papyrus_clientes" }
     ],
   },
 ];

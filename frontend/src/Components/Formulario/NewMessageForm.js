@@ -62,10 +62,21 @@ const PreferencesForm = () => {
     {
       inputName: "extensions.papyrusExtractUrl",
       label: "URL Papyrus Extract Extension",
+      size: 6,
       type: "Text",
       id: "papyrusExtract_url",
       required: true,
       help: "URL de la aplicacion Papyrus Extract.",
+    },
+    {
+      inputName: "extensions.usePapyrusCustomerDB",
+      label: "Usar clientes desde Papyrus",
+      type: "Select",
+      size: 6,
+      id: "usePapyrusCustomerDB",
+      required: true,
+      options:[ {text: "Activado", value: true},{text: "Desactivado", value: false}],
+      help: "Utilizar clientes desde la base de datos de Papyrus",
     },
   ];
 
@@ -223,7 +234,7 @@ const PreferencesForm = () => {
   ];
 
   if (context.usePlan === "pro") {
-    preferencesForm.push(papyrusConnection[0], papyrusConnection[1]);
+    preferencesForm.push(papyrusConnection[0], papyrusConnection[1], papyrusConnection[2],);
     preferencesForm.push(pdfValidator[0], pdfValidator[1]);
   }
 

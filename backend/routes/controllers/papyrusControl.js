@@ -1,3 +1,5 @@
+/* Estas rutas se mudaron a extensions/papyrus */
+
 const axios = require("axios");
 
 // La URL del bridge vive DENTRO del Tenant, en:
@@ -131,6 +133,48 @@ papyrusControl.getJobDetail = async (req, res, next) => {
     console.error("[papyrusControl.getJobDetail]", e.message);
     next(e);
   }
+};
+
+/* -------------------------------------------------------------------------- */
+/* Endpoint: traer Clientes desde Papyrus                          */
+/* -------------------------------------------------------------------------- */
+/*
+ * Antes: Buscabamos clientes en la base de datos de Hamlet.
+ * Ahora: Agregamos una busqueda de clientes en Papyrus.
+ */
+
+papyrusControl.getCustomers = async (req, res, next) => {
+   try {
+    const tenant = req.header("x-tenant");
+
+    // 1. No hay entrada, vamos a traer todos los clientes.
+    const getCustomersData = 'Select cod_cli, rso_cli, dir_cli , loc_cli, te1_cli, email  from trcl00 ';
+
+    // 2. Resolver a qué bridge hablarle según el tenant.
+    const bridgeUrl = await getBridgeUrl(tenant);
+
+    // 3. Hablarle al bridge (mismo contrato que usaba el frontend:
+    //    POST con { sql } en el body).
+    const bridgeResponse = await axios.post(
+      getCustomersData,
+      { sql },
+      { timeout: 15000 }
+    );
+
+    const customers = bridgeResponse.data;
+
+    return customers
+} catch (e) {
+  // Si el bridge está caído, damos un error claro en vez de romper feo.
+    if (e.code === "ECONNABORTED" || e.code === "ECONNREFUSED") {
+      return res.status(502).json({
+        message:
+          "No se pudo conectar con Papyrus (el bridge del taller no responde).",
+      });
+    }
+    console.error("[papyrusControl.getJobDetail]", e.message);
+    next(e);
+}
 };
 
 module.exports = papyrusControl;

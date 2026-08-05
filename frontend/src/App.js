@@ -17,7 +17,17 @@ import {
   UserPreferencesProvider,
   useUserPreferences,
 } from "./Hooks/useUserPreferences";
-import { WindowManagerProvider, WindowCanvas } from "./Components/windowManager";
+import { WindowManagerProvider, WindowCanvas, FloatingWindow } from "./Components/windowManager";
+import QuickSpinCalc from "./Components/utils/spinCalculator/QuickSpinCalc";
+import {ScaleCalculator} from "./Components/utils/spinCalculator/ScaleCalculator";
+import NumberGenerator from "./Components/utils/generalData/NumberGenerator";
+import ColorSheetRangeGenerator from "./Components/utils/generalData/ColorSheetRangeGenerator";
+
+import LaunchIcon from '@mui/icons-material/Launch';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
+import ContactPageIcon from '@mui/icons-material/ContactPage';
+import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
+import StraightenIcon from '@mui/icons-material/Straighten';
 
 // ---------------------------------------------------------------------------
 // AppShell vive ADENTRO de <UserPreferencesProvider>, así puede leer "prefs"
@@ -105,6 +115,26 @@ function AppShell() {
                       DEFAULT_PREFS), así que se lo pasamos directo, sin
                       el ternario de fallback que tenías antes. */}
                   <Router prefs={prefs} setLog={setLogin} />
+                  
+              <FloatingWindow id="calculadora" title="Calculadora de lomo" icon={<StraightenIcon />}>
+                <QuickSpinCalc color="primary" />
+              </FloatingWindow>
+           
+            
+              <FloatingWindow id="scale" title="Escalar Formato" icon={<LaunchIcon />}>
+                <ScaleCalculator color="primary" variant="outlined" />
+              </FloatingWindow>
+           
+            
+              <FloatingWindow id="numberGenerator" title="Generador de números" icon={<FormatListNumberedIcon />}>
+                <NumberGenerator color="primary" />
+              </FloatingWindow>
+           
+            
+              <FloatingWindow id="colorSheetRangeGenerator" title="Páginas color" icon={<MenuBookIcon />}>
+              <ColorSheetRangeGenerator color="primary" />
+              </FloatingWindow>
+           
                 </WindowCanvas>
               </AuthProvider>
             </BrowserRouter>

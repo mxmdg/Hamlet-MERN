@@ -1,16 +1,32 @@
 const empresas = require("../../models/empresas");
+const tenantModel = require("../../models/tenants");
+const { executeQuery } = require("../../extensions/papyrus/papyrusControl");
 
 const empresasControl = {};
 
 empresasControl.getCompanies = async (req, res, next) => {
   {
     try {
-      const tenant = req.header("x-tenant");
-      const empresa = await empresas.esquema
-        .find({ tenant, status: { $ne: "inactivo" } })
-        .sort({ Nombre: 1 })
-        .select("-__v");
-      res.json(empresa);
+      const tenantId = req.header("x-tenant");
+      const tenant = await tenantModel.esquema.findOne({_id: tenantId})
+      console.log(tenant)
+      if (tenant?.settings?.extensions?.usePapyrusCustomerDB) {
+        console.log("Clientes from Papyrus");
+        const papyrusEmpresas = await executeQuery({
+          tenant: tenantId,
+          queryName: "clientes",
+          incomingParams: {},
+        });
+        return res.json(papyrusEmpresas);
+      } else {
+        console.log("Clientes from Hamlet");
+        const empresa = await empresas.esquema
+          .find({ tenant: tenantId, status: { $ne: "inactivo" } })
+          .sort({ Nombre: 1 })
+          .select("-__v");
+        return res.json(empresa);
+      }
+      
     } catch (e) {
       console.error(e);
       next(e);

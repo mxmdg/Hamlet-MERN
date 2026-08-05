@@ -130,8 +130,6 @@ const Home = (props) => {
               <ColorSheetRangeGenerator color="primary" />
               </FloatingWindow>
             </Grid>
-            <Grid size={12}>
-            </Grid>
           </Grid>
         </Grid>
       </Grid>
