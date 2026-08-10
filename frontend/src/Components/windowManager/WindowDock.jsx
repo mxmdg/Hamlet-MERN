@@ -26,12 +26,19 @@ export function WindowDock() {
       sx={{
         position: 'fixed',
         left: 12,
-        bottom: 12,
+        bottom: 0,
         display: 'flex',
+        height: 36,
+        width: '40%',
         gap: 1,
         flexWrap: 'wrap',
         zIndex: 1400,
         pointerEvents: 'none',
+       /*  backgroundColor: '#0f0f0f55',
+        borderRadius: '12px 12px 0 0',
+        padding: 3,
+        border: '1px solid #ffffff22',
+        backdropFilter: 'blur(2px)', */
       }}
     >
       {minimized.map((w) => (

@@ -103,8 +103,8 @@ function AppShell() {
                     flex: 1,
                     display: "flex",
                     flexDirection: "column",
-                    justifyContent: "center",
-                    alignItems: "stretch",
+                    justifyContent: "flex-start",
+                    alignItems: "center",
                     width: "100%",
                     background: localStorage.getItem("login")
                       ? themeInUse.palette.background.default
@@ -112,17 +112,19 @@ function AppShell() {
                     backgroundRepeat: "no-repeat",
                     backgroundSize: "cover",
                     backgroundPositionY: "30%",
+                    login: useLogin,
                   }}
                 >
                   {/* prefs ya nunca es null (el context arranca con
                       DEFAULT_PREFS), así que se lo pasamos directo, sin
                       el ternario de fallback que tenías antes. */}
                   <Router prefs={prefs} setLog={setLogin} />
-                  <Grid>
-                    <Grid size={{sm: 12, md:6}}>
-                      <FloatingWindow id="calculadora" title="Calculadora de lomo" icon={<StraightenIcon />}>
-                      <QuickSpinCalc color="primary" />
-                  </FloatingWindow>
+                  {useLogin && (
+                    <Grid>
+                      <Grid size={{sm: 12, md:6}}>
+                        <FloatingWindow id="calculadora" title="Calculadora de lomo" icon={<StraightenIcon />}>
+                          <QuickSpinCalc color="primary" />
+                        </FloatingWindow>
 
                     </Grid>
                     <Grid size={{sm: 12, md:6}}>
@@ -142,7 +144,7 @@ function AppShell() {
                       <ColorSheetRangeGenerator color="primary" />
                       </FloatingWindow>
                     </Grid>
-                  </Grid>
+                  </Grid>)}
                 </WindowCanvas>
               </AuthProvider>
             </BrowserRouter>

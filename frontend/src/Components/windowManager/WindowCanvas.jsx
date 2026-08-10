@@ -10,9 +10,9 @@ import { WindowDock } from './WindowDock';
  *
  * - Renderiza tus children normalmente.
  * - Crea la capa (position: relative) donde hacen portal las <FloatingWindow />.
- * - Muestra el dock inferior con las ventanas minimizadas.
+ * - Muestra el dock inferior con las ventanas minimizadas, solo cuando el usuario esta logueado.
  */
-export function WindowCanvas({ children, sx, dock = true }) {
+export function WindowCanvas({ children, sx, dock = true, login }) {
   const { setCanvasNode } = useWindowManager();
   const ref = useRef(null);
 

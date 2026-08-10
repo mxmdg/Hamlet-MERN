@@ -100,8 +100,7 @@ export const LogPage = () => {
                 fontFamily={"Open Sans, sans-serif"}
                 //sx={{ textShadow: "2px 1px 6px #00000066" }}
               >
-                Presupuestos, pedidos y producción basados en la realidad de tu
-                imprenta.
+                Pedidos, presupuestos y preimpresión en un solo paso.
               </Typography>
               <Divider />
               <Typography
@@ -110,8 +109,8 @@ export const LogPage = () => {
                 fontWeight={300}
                 fontFamily={"Open Sans, sans-serif"}
               >
-                Hamlet se encuentra en etapa inicial, te invitamos a probarlo y
-                agradecemos tus comentarios!.
+                Hamlet importa datos de bases SQL y exporta JDF a flujos de terceros, evitando la doble carga de información y los errores de transcripción. 
+                Permite definir máquinas, materiales, formatos y procesos para gestionar coordinadamente pedidos, presupuestos y producción.
               </Typography>
               <ButtonGroup
                 variant="contained"
@@ -204,6 +203,69 @@ export const LogPage = () => {
                     La información histórica y estadística del taller está
                     siempre disponible para acompañar la toma de decisiones con
                     más criterio y menos urgencia.
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+            <Grid sx={{ padding: "15px" }} size={{ xs: 12, md: 4 }}>
+              <Card variant={cardVariant} style={cardStyle}>
+                <CardHeader
+                  title="Verificación de archivos"
+                  titleTypographyProps={cardHeaderStyle}
+                />
+                <CardContent>
+                  <Typography
+                    variant="h6"
+                    fontWeight={100}
+                    fontFamily={"Open Sans, sans-serif"}
+                    gutterBottom
+                    color={"rgb(2, 56, 66)"}
+                  >
+                    Hamlet detecta tamaño y cantidad de páginas de cada PDF automáticamente. 
+                    Si algo no coincide con lo cotizado, podés corregir el presupuesto o pedir el archivo de nuevo 
+                    antes de que llegue a producción.
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+            <Grid sx={{ padding: "15px" }} size={{ xs: 12, md: 4 }}>
+              <Card variant={cardVariant} style={cardStyle}>
+                <CardHeader
+                  title="De la cotización a preprensa, en minutos"
+                  titleTypographyProps={cardHeaderStyle}
+                />
+                <CardContent>
+                  <Typography
+                    variant="h6"
+                    fontWeight={100}
+                    fontFamily={"Open Sans, sans-serif"}
+                    gutterBottom
+                    color={"rgb(2, 56, 66)"}
+                  >
+                    Cotizar un trabajo y dejarlo listo para producción te
+                    lleva entre 5 y 10 minutos — imposición, materiales y
+                    costos calculados en el momento, sin planillas paralelas.
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+            <Grid sx={{ padding: "15px" }} size={{ xs: 12, md: 4 }}>
+              <Card variant={cardVariant} style={cardStyle}>
+                <CardHeader
+                  title="Trazabilidad de costos"
+                  titleTypographyProps={cardHeaderStyle}
+                />
+                <CardContent>
+                  <Typography
+                    variant="h6"
+                    fontWeight={100}
+                    fontFamily={"Open Sans, sans-serif"}
+                    gutterBottom
+                    color={"rgb(2, 56, 66)"}
+                  >
+                    Cada aumento de precio queda registrado automáticamente,
+                    con su fecha y su valor anterior. Sabés siempre cuánto
+                    cambió cada insumo o proceso, y cuándo.
                   </Typography>
                 </CardContent>
               </Card>
