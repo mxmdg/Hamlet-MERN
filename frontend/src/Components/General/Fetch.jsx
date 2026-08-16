@@ -288,6 +288,7 @@ const Fetch = (props) => {
             rows={rowsToShow}
             headCells={useHeaders}
             collection={props.collection}
+            filters={useFilters}
             editor={setSelected}
             selected={useSelected}
             deleted={setDeleted}

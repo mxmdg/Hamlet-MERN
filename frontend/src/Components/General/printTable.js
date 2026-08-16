@@ -60,7 +60,7 @@ const printStyles = `
  * dispara el dialogo de impresion del navegador sobre ese iframe.
  * La pagina que el usuario esta viendo no se toca ni se recarga.
  */
-export function printTable({ rows, headCells, title }) {
+export function printTable({ rows, headCells, title, subtitle }) {
   const bodyHtml = ReactDOMServer.renderToStaticMarkup(
     <PrintableTable rows={rows} headCells={headCells} title={title} />,
   );
@@ -70,6 +70,7 @@ export function printTable({ rows, headCells, title }) {
   <head>
     <meta charset="utf-8" />
     <title>${title || "Impresion"}</title>
+    <h4>${subtitle || ""}</h4>
     <style>${printStyles}</style>
   </head>
   <body>${bodyHtml}</body>

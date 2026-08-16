@@ -506,6 +506,28 @@ export default function EnhancedTable(props) {
     pages.find((pg) => pg.path === props.collection.replace("/urg", ""))
       ?.text || props.collection;
 
+  const filtersString = (arr)=> {
+  if (!Array.isArray(arr)) {
+    return "El parametro debe ser un Array"
+  }
+  let str = ""
+    arr.map((e, index)=>{
+      console.log(e)
+      if(index === 0) {
+        str = e.column + ": " + e.query
+        console.log("El primer elemento: " + str)
+      } else if (index <= arr.length) {
+        console.log("index menor o igual que el array")
+        str = str + ", " + e.column + ": " + e.query
+        console.log(str)
+      }
+    })
+    console.log(str)
+    return str
+  };
+
+const filterList = filtersString(props.filters)
+
   const success = (
     <>
       <EnhancedTableToolbar
@@ -634,7 +656,8 @@ export default function EnhancedTable(props) {
             printTable({
               rows,
               headCells: visibleHeadCells,
-              title: tableTitle,
+              title: `${tableTitle}`,
+              subtitle: `${filterList}`,
             })
           }
         >
