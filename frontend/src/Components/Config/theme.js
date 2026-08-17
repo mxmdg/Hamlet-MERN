@@ -1,5 +1,6 @@
 import * as React from "react";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
+import { invertHex } from "../utils/generalData/colors";
 
 // ---------------------------------------------------------------------------
 // Tokens de texto por default. Cualquier variante puede pisarlos definiendo
@@ -58,7 +59,7 @@ const VARIANTS = {
   mintPulse: {
     spacing: 4,
     light: {
-      primary: { main: "#8ff5d8", light: "#b2f9e6", dark: "#64cdb1", contrastText: "#052018" },
+      primary: { main: "#04fcb6", light: "#b2f9e6", dark: "#64cdb1", contrastText: "#052018" },
       secondary: { main: "#d144d1", light: "#df70df", dark: "#a632a6", contrastText: "#ffffff" },
       error: { main: "#ef3b66", light: "#f36f8f", dark: "#c3264d", contrastText: "#ffffff" },
       warning: { main: "#f0cf4f", light: "#f4dd7b", dark: "#c3a53a", contrastText: "#2e2400" },
@@ -147,6 +148,70 @@ const VARIANTS = {
     },
   },
 
+  // Paleta monocromática en tonos sepia. Todo el espectro (primary,
+  // secondary, warning, info, success) se mueve dentro de la misma familia
+  // sepia variando solo luminosidad — el único color "fuera de paleta"
+  // es error/danger, que se mantiene en rojo por convención de UI.
+  sepia: {
+    spacing: 3,
+    shape: { borderRadius: 8 },
+    typography: {
+      fontFamily: "'Libre Caslon Text', serif",
+      fontSize: 18,
+      button: { fontWeight: 400, textTransform: "none" },
+    },
+    light: {
+      primary: { main: "#8b6b4a", light: "#ab8b64", dark: "#5e4530", contrastText: "#ffffff" },
+      secondary: { main: "#6f5843", light: "#8f7860", dark: "#4a3826", contrastText: "#ffffff" },
+      error: { main: "#c0392b", light: "#e57368", dark: "#922b21", contrastText: "#ffffff" },
+      warning: { main: "#9c7b4f", light: "#c2a877", dark: "#6b5233", contrastText: "#2b1d0e" },
+      info: { main: "#7a6248", light: "#a08865", dark: "#52402c", contrastText: "#ffffff" },
+      success: { main: "#8a734f", light: "#b09a72", dark: "#5c4a30", contrastText: "#ffffff" },
+      background: { paper: "#f4ecdc", default: "linear-gradient(135deg, #f4ecdc 0%, #e6d3b3 100%)" },
+      text: { primary: "#3b2a1a", secondary: "#6b573f" },
+    },
+    dark: {
+      primary: { main: "#8b6b4a", light: "#ab8b64", dark: "#5e4530", contrastText: "#ffffff" },
+      secondary: { main: "#6f5843", light: "#8f7860", dark: "#4a3826", contrastText: "#ffffff" },
+      error: { main: "#c0392b", light: "#e57368", dark: "#922b21", contrastText: "#ffffff" },
+      warning: { main: "#9c7b4f", light: "#c2a877", dark: "#6b5233", contrastText: "#2b1d0e" },
+      info: { main: "#7a6248", light: "#a08865", dark: "#52402c", contrastText: "#ffffff" },
+      success: { main: "#8a734f", light: "#b09a72", dark: "#5c4a30", contrastText: "#ffffff" },
+      background: { paper: "#2b2013", default: "linear-gradient(135deg, #2b2013 0%, #1a130b 100%)" },
+      text: { primary: "#ede0c8", secondary: "#b8a789" },
+    },
+  },
+
+  blackAndWhite: {
+    spacing: 3,
+    shape: { borderRadius: 8 },
+    typography: {
+      fontFamily: "'Fira Sans', sans-serif",
+      fontSize: 18,
+      button: { fontWeight: 400, textTransform: "none" },
+    },
+    light: {
+      primary: { main: "#939393", light: "#b8b8b8", dark: "#5a5a5a", contrastText: "#101010" },
+      secondary: { main: "#616161", light: "#949494", dark: "#4d4d4d", contrastText: "#ffffff" },
+      error: { main: "#950f00", light: "#c01000", dark: "#760a00", contrastText: "#ffffff" },
+      warning: { main: "#bbbbbb", light: "#e8e6e6", dark: "#a0a0a0", contrastText: "#040404" },
+      info: { main: "#cdcdcd", light: "#efefef", dark: "#909090", contrastText: "#333333" },
+      success: { main: "#808080", light: "#a7a7a7", dark: "#545454", contrastText: "#000000" },
+      background: { paper: "#dfdfdf", default: "linear-gradient(135deg, #cacaca 0%, #efefef 100%)" },
+      text: { primary: "#000000", secondary: "#222222" },
+    },
+    dark: {
+      primary: { main: invertHex("#939393"), light: (invertHex("#b8b8b8")), dark: "#5a5a5a", contrastText: "#101010" },
+      secondary: { main: invertHex("#616161"), light: (invertHex("#949494")), dark: (invertHex("#4d4d4d")), contrastText: "#ffffff" },
+      error: { main: "#950f00", light: "#c01000", dark: "#760a00", contrastText: "#ffffff" },
+      warning: { main: (invertHex("#bbbbbb")), light: (invertHex("#e8e6e6")), dark: (invertHex("#a0a0a0")), contrastText: "#040404" },
+      info: { main: invertHex("#cdcdcd"), light: (invertHex("#efefef")), dark: (invertHex("#909090")) , contrastText: invertHex("#333333") },
+      success: { main: invertHex("#808080"), light: (invertHex("#a7a7a7")), dark: (invertHex("#545454")), contrastText: "#000000" },
+      background: { paper: (invertHex("#dfdfdf")), default: "linear-gradient(135deg, " + invertHex("#cacaca") + " 0%, " + invertHex("#efefef") + " 100%)" },
+      text: { primary: (invertHex("#000000")), secondary: (invertHex("#222222")) },
+    },
+  },
+
   // Era: createThemeOptions ("Soft Industrial" — la que quedó activa/comentada en App.js)
   softIndustrial: {
     spacing: 3,
@@ -207,6 +272,8 @@ export const VARIANT_INFO = {
   mintPulse: { label: "Fervor", swatch: ["#8ff5d8", "#d144d1"] },
   vivid: { label: "Bravura", swatch: ["#26c2a3", "#7a66f4"] },
   nordic: { label: "Eternidad", swatch: ["#0d9488", "#64748b"] },
+  sepia: { label: "Añoranza", swatch: ["#8b6b4a", "#c0392b"] },
+  blackAndWhite: { label: "Contraste", swatch: ["#939393", "#616161"] },
   softIndustrial: { label: "Serenidad", swatch: ["#60a5fa", "#a29bfe"] },
 };
 
@@ -220,6 +287,7 @@ export const createMintPulseTheme = (mode = "light") => createAppTheme("mintPuls
 export const createThemeOptions2 = (mode = "light") => createAppTheme("vivid", mode);
 export const createThemeOptions3 = (mode = "light") => createAppTheme("nordic", mode);
 export const createThemeOptions = (mode = "light") => createAppTheme("softIndustrial", mode);
+export const createSepiaTheme = (mode = "light") => createAppTheme("sepia", mode);
 
 const ThemeProv = ({ mode, theme, children }) => {
   const resolvedTheme = React.useMemo(

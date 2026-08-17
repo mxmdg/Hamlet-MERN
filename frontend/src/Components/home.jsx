@@ -67,7 +67,7 @@ const Home = (props) => {
 
   const homePage = (
     <>
-      <Grid container spacing={3} p={2}>
+      <Grid sx={{width: "100%", height: "100%", p: 2}} container spacing={{ xs: 0, sm: 1, md: 3 }}>
         <Grid size={{ xs: 12, sm: 8, md: 8 }}>
           <Grid
             container
@@ -94,7 +94,7 @@ const Home = (props) => {
             </Grid>
           </Grid>
         </Grid>
-        <Grid size={{ xs: 12, md: 4 }}>
+        <Grid size={{ xs: 12, sm:4, md: 4 }}>
           <Grid
             container
             spacing={{ xs: 0, sm: 1, md: 3 }}

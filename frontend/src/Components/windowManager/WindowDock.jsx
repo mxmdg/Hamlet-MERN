@@ -25,22 +25,34 @@ export function WindowDock() {
     <Box
       sx={{
         position: 'fixed',
-        left: 12,
+        right: 12,
         bottom: 0,
         display: 'flex',
         height: 36,
-        width: '40%',
         gap: 1,
         flexWrap: 'wrap',
         zIndex: 1400,
         pointerEvents: 'none',
-       /*  backgroundColor: '#0f0f0f55',
-        borderRadius: '12px 12px 0 0',
+        justifyContent: 'flex-end',
+        backgroundColor: '#ffffff0f',
+        borderRadius: '12px 0 0 0',
         padding: 3,
-        border: '1px solid #ffffff22',
-        backdropFilter: 'blur(2px)', */
+        backdropFilter: 'blur(2px)',
       }}
     >
+        <Chip 
+          key="tools" 
+          label="Tools"
+          variant="filled"
+          clickable={false}  
+          color="primary" 
+          size='large' 
+          sx={
+            { 
+              borderRadius: " 5px 0 0 5px",
+            }
+          }>
+        </Chip>
       {minimized.map((w) => (
         <Chip
           key={w.id}
@@ -55,7 +67,7 @@ export function WindowDock() {
           }}
           sx={{
             pointerEvents: 'auto',
-            borderRadius: 2,
+            borderRadius: 0,
             boxShadow: 10,
             '&:hover': { bgcolor: 'primary.dark' },
           }}
