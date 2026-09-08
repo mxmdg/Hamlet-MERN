@@ -29,6 +29,7 @@ import {
   currencyFormat,
 } from "../utils/generalData/numbersAndCurrencies";
 import Spinner from "../General/Spinner";
+import MainContainer from "../Pages/MainContainer"
 
 const PricesMainContainer = () => {
   const [useNewPrice, setNewPrice] = useState(false);

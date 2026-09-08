@@ -106,7 +106,7 @@ const buildChildJDF = (part, index, context) => {
   const { rootJobPartId, tipoTrabajo, nombre, cliente, nowIso } = context;
 
   const nombreParte = part?.nombreParte || `Parte_${index + 1}`;
-  const paginas = asPositiveInt(part?.paginas, 1);
+  let paginas = asPositiveInt(part?.paginas, 1);
   const ancho = toNumber(part?.ancho, 0);
   const alto = toNumber(part?.alto, 0);
   const gramaje = asPositiveInt(part?.gramaje, 0);
@@ -121,6 +121,12 @@ const buildChildJDF = (part, index, context) => {
   const safeNombre = sanitizeFolderName(nombre, "Trabajo");
   const url = `/${safeCliente}/${safeNombre}/${partPath}/${safeNombre}_${partPath}.pdf`;
   const FoldingScheme = foldingSchemeSelection[tipoTrabajo] ? `agfa:FoldingSchemeSelection="${foldingSchemeSelection[tipoTrabajo]}"` : ""
+
+  // console.log(paginas)
+
+  paginas = sides === "OneSided" && productType !== "cover" ? paginas * 2 : paginas
+
+  // console.log(paginas)
 
   return `\t<JDF ID="ID_ProdPart_${index}" Type="Product" Status="Waiting" xsi:type="Product" JobPartID="${escapeXML(
     `${rootJobPartId}_${index}`,

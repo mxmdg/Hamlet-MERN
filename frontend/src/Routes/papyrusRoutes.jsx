@@ -21,6 +21,17 @@ export const papyrusRoutes = ({ color, variant }) => (
       }
     />
     <Route
+      path="/papyrus_prices"
+      element={
+        <MainContainer
+                entity={"papyrus"}
+                queryName={"getPrices"}
+        />
+      }
+    />
+    
+              
+    <Route
       path="/papyrus_clientes"
       element={
         <MainContainer

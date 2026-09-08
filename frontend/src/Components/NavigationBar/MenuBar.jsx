@@ -42,8 +42,8 @@ export const pages = [
     text: "Configuración",
     drop: [
       { text: "Costos", path: "configuracion", allowed: ["admin"] },
-      { text: "Contadores", path: "billing", allowed: ["admin", "manager"] },
       { text: "Editor de fórmulas", path: "precios/formula", allowed: ["admin"] },
+      { text: "Ajustes del sistema", path: ("tenant/settings/" + context.memberships[0]?.tenant.id), allowed: ["admin"] },
     ],
   },
   {
@@ -62,6 +62,7 @@ export const pages = [
     drop: [
       { text: "Clientes", path: "empresas" },
       { text: "Membresías", path: "memberships", allowed: ["admin"] },
+      { text: "Contadores", path: "billing", allowed: ["admin", "manager"] },
     ],
   },
   {
@@ -70,7 +71,8 @@ export const pages = [
     drop: [
       { text: "Conexión Papyrus", path: "papyrus" },
       { text: "Estadísticas Papyrus", path: "jobs/dashboard" , allowed: ["admin", "manager"]},
-      { text: "Clientes Papyrus", path: "papyrus_clientes" }
+      { text: "Clientes Papyrus", path: "papyrus_clientes" },
+      { text: "Costos Papyrus", path: "papyrus_prices" , allowed: ["admin", "manager"]},
     ],
   },
 ];
