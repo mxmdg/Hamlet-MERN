@@ -58,7 +58,7 @@ import { use } from "react";
 const encodePathSegment = (value) =>
   encodeURIComponent(value === null || value === undefined ? "" : value.toString());
 
-const buildPdfUploadUrl = (baseUrl, cliente, trabajo, parte) => {
+export const buildPdfUploadUrl = (baseUrl, cliente, trabajo, parte) => {
   const safeBase = (baseUrl || "").replace(/\/+$/, "");
   return `${safeBase}/${encodePathSegment(cliente)}/${encodePathSegment(trabajo)}/${encodePathSegment(parte)}`;
 };

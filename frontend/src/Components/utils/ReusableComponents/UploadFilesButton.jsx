@@ -76,7 +76,7 @@ export default function UploadFilesButton({
   const [useError, setError] = useState(false);
   const [useLoading, setLoading] = useState(false);
 
-  console.log("Upload URL:", uploadUrl);
+  //console.log("Upload URL:", uploadUrl);
 
   const handleFileUpload = async (files) => {
     setLoading(true);

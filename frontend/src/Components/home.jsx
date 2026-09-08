@@ -37,6 +37,7 @@ import MenuBookIcon from '@mui/icons-material/MenuBook';
 import ContactPageIcon from '@mui/icons-material/ContactPage';
 import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
 import StraightenIcon from '@mui/icons-material/Straighten';
+import { buildPdfUploadUrl } from "./Jobs/Stepper";
 
 const Home = (props) => {
   const [useRoute, setUseRoute] = useState(props.route || "jobs/urg");
@@ -100,7 +101,7 @@ const Home = (props) => {
             spacing={{ xs: 0, sm: 1, md: 3 }}
           >
             <Grid size={12}>
-              <UploadFilesButton uploadUrl={context?.useSettings?.extensions?.pdfValidatorUrl} />
+              <UploadFilesButton uploadUrl={buildPdfUploadUrl(context?.useSettings?.extensions?.pdfValidatorUrl,"Preflight", "Files","PDF")} />
               <MyStepper />
             </Grid>
             <Grid size={12}>

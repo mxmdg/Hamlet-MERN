@@ -43,7 +43,6 @@ export const pages = [
     drop: [
       { text: "Costos", path: "configuracion", allowed: ["admin"] },
       { text: "Editor de fórmulas", path: "precios/formula", allowed: ["admin"] },
-      { text: "Ajustes del sistema", path: ("tenant/settings/" + context.memberships[0]?.tenant.id), allowed: ["admin"] },
     ],
   },
   {
