@@ -116,3 +116,17 @@ export const costoFijo = (valor) => {
     Formula: "Fijo",
   };
 };
+
+export const costoPorMillar = (valor, minimo, Entrada, cantidad) => {
+  // Esta funcion es para los costos que se calculan por millar de unidades.
+  let resultado = parseFloat(valor) * Math.ceil(parseFloat(cantidad) / 1000);
+  let valorUnitario = roundCents(resultado / cantidad);
+  const papyrusExport = `${valor} * ceiling(Cab_Cant_Millar)`;
+  return {
+    Unitario: valorUnitario,
+    Cantidad: cantidad,
+    Total: resultado,
+    Papyrus: papyrusExport,
+    Formula: "Millar",
+  };
+};

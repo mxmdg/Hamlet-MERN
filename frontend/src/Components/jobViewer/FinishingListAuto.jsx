@@ -19,6 +19,7 @@ import {
   productoPorUnidad,
   cantidadDeOriginales,
   cantidadDePliegos,
+  costoPorMillar,
   costoFijo,
 } from "../Precioso/formulas";
 import { currencyFormat } from "../utils/generalData/numbersAndCurrencies";
@@ -72,6 +73,13 @@ const FinishingListAuto = (props) => {
       switch (f.Unidad) {
         case "un":
           return productoPorUnidad(
+            f.Costo.Valor,
+            f.Costo.Minimo,
+            f.Costo.Entrada,
+            cantidad,
+          );
+        case "mil":
+          return costoPorMillar(
             f.Costo.Valor,
             f.Costo.Minimo,
             f.Costo.Entrada,

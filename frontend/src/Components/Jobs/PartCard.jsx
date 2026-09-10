@@ -91,7 +91,7 @@ const PartCard = (props) => {
       ></CardHeader>
       <CardContent sx={{ flexGrow: 1 }}>
         <Typography variant="body2" sx={{ marginBottom: "10px" }}>
-          Paginas: {props.part.Pages}
+          Paginas: {props.part.Pages} {props.part.RunList ? `(${props.part.RunList})` : ""}
           <br />
           Formato: {props.part.Ancho} x {props.part.Alto}
           <br />

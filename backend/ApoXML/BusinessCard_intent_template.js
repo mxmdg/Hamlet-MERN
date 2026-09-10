@@ -90,11 +90,13 @@ const buildPartialComponent = async (part, index, tenant) => {
       productDoc = null;
     }
   }
-  const productType = productDoc?.jdfType || "body";
+  let productType = productDoc?.jdfType || "body";
   const displayName = `${part?.tipoParte || "Parte"}_${part?.nombreParte || `Parte_${index + 1}`}`;
   const readerPageCount = asPositiveInt(part?.paginas, 1);
 
   const agfa = productType === "Cover" ? `agfa:CoverType="Spread"` : "";
+
+  productType = productType === "SeparatedCover" ? "Cover" : productType;
 
   return `\t\t<Component ID="ID_Component_${index}" Class="Quantity" Status="Unavailable" ProductType="${productType}" ${agfa} ComponentType="PartialProduct" DescriptiveName="${escapeXML(displayName)}" ReaderPageCount="${readerPageCount}"/>`;
 };
@@ -124,7 +126,7 @@ const buildChildJDF = (part, index, context) => {
 
   // console.log(paginas)
 
-  paginas = sides === "OneSided" && productType !== "cover" ? paginas * 2 : paginas
+  paginas = sides === "OneSided" && part?.tipoParte !== "Cover" ? paginas * 2 : paginas
 
   // console.log(paginas)
 

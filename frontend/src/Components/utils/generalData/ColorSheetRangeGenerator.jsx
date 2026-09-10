@@ -12,8 +12,8 @@ import {
 import getColorSheetRanges from "./colorPages";
 import CopyToClipboardWrapper from "../../General/CopyToClipboardWrapper";
 
-const ColorSheetRangeGenerator = () => {
-  const [pagesInput, setPagesInput] = useState("");
+const ColorSheetRangeGenerator = ({ pageList }) => {
+  const [pagesInput, setPagesInput] = useState(pageList || "");
   const [offset, setOffset] = useState(0);
   const [result, setResult] = useState("");
   const [error, setError] = useState("");

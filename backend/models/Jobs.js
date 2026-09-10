@@ -37,9 +37,14 @@ const jobTypeSchema = new Schema({
 
 const partSchema = new Schema({
   jobParts: { type: [partTypeSchema], required: true },
-  //'Type': {type: String, required: true},
   Name: { type: String, required: true },
   Pages: { type: Number, required: true },
+  RunList: {
+    type: String,
+    required: false,
+    default: "",
+    match: [/^\d+(?:-\d+)?(?:,\d+(?:-\d+)?)*$/, "Ingrese los números de páginas separados por comas o guiones (ejemplo: 1,2,3-5,6)"],
+  },
   Ancho: { type: Number, required: true },
   Alto: { type: Number, required: true },
   Formato: { type: String },

@@ -451,7 +451,7 @@ const [productionPlan, setProductionPlan] = useState(() => {
                       </Button>
                     </>
                   )}
-                  <ColorSheetRangeGenerator />
+                  <ColorSheetRangeGenerator pageList={part.RunList} />
                   {part.Finishing && (
                     <Item>
                       <FinishingListAuto

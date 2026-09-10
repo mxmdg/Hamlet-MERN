@@ -70,3 +70,16 @@ export const iGenColor = (valor, minimo, cantidad, entrada, largoPliego) => {
   let valorUnitario = roundCents(resultado / cantidad);
   return { Unitario: valorUnitario, Cantidad: cantidad, Total: resultado };
 };
+
+export const webPrinting = (valor, minimo, cantidad, entrada, largoPliego) => {
+  let resultado = cantidad * largoPliego * valor + parseFloat(entrada);
+  resultado = resultado < minimo ? minimo : roundCents(resultado);
+  return { Unitario: roundCents(resultado / cantidad), Cantidad: cantidad, Total: resultado }
+}
+
+export const posturaOffset  = (valor, minimo, cantidad, entrada, largoPliego) => {
+  let resultado = Math.ceil(cantidad / 1000) * valor + parseFloat(entrada);
+  resultado = resultado < minimo ? minimo : roundCents(resultado)
+  return { Unitario: roundCents(resultado / cantidad), Cantidad: cantidad, Total: resultado }
+}
+;

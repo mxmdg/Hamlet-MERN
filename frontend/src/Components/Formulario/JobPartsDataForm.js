@@ -24,6 +24,7 @@ let MoldeJobParts = [
     id: "id_4011",
     options: [
       { text: "Cover", value: "Cover" },
+      { text: "Separated Parts Cover", value: "SeparatedCover" },
       { text: "Insert", value: "Insert" },
       { text: "Body", value: "Body" },
     ],

@@ -500,8 +500,34 @@ const JobParts = (props) => {
               )}
             </Grid>
 
-            {/* Material (Autocomplete) */}
+            {/* Lista de Páginas */}
             <Grid size={{ xs: 1, sm: 2, md: 4 }}>
+              <TextField
+                id="RunList"
+                type="text"
+                label="Lista de Páginas"
+                variant="outlined"
+                name="RunList"
+                color="warning"
+                defaultValue={
+                  isImportedPart
+                    ? ""
+                    : props.editPart === null
+                      ? ""
+                      : props.editPart.part?.RunList
+                }
+                {...register("RunList", {
+                  required: false,
+                })}
+                onBlur={(e) => {
+                  trigger("RunList");
+                }}
+              />
+              
+            </Grid>
+
+            {/* Material (Autocomplete) */}
+            <Grid size={{ xs: 4, sm: 8, md: 8 }}>
               <Autocomplete
                 id="partStock"
                 options={filteredStocks}

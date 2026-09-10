@@ -149,6 +149,7 @@ const FinishersDataForm = (props) => {
             size: { xs: 12, sm: 6 },
             options: [
               { text: "Unidades", value: "un" },
+              {text: "Millar", value: "mil"},
               { text: "Originales", value: "or" },
               { text: "Pliegos", value: "pl" },
               { text: "Longitud", value: "cm" },
