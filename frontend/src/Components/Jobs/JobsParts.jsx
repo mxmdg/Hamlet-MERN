@@ -102,6 +102,11 @@ const JobParts = (props) => {
       ? "El número de páginas debe ser un múltiplo de 4"
       : true;
 
+  // Page numbers may be individual values or ranges, separated by commas.
+  // Examples: "1-10,14,19,21-30,45" and "12 , 15 - 20".
+  const runListPattern =
+    /^\s*\d+\s*(?:-\s*\d+\s*)?(?:,\s*\d+\s*(?:-\s*\d+\s*)?)*$/;
+
   const handleChange = (selectedValue) => {
     const part = partsList.find((item) => item._id === selectedValue);
     setCurrentPart(part || null);
@@ -518,12 +523,19 @@ const JobParts = (props) => {
                 }
                 {...register("RunList", {
                   required: false,
+                  pattern: {
+                    value: runListPattern,
+                    message:
+                      "Use números o rangos separados por comas (ej.: 1-10, 14, 21-30)",
+                  },
                 })}
                 onBlur={(e) => {
                   trigger("RunList");
                 }}
               />
-              
+              {errors.RunList && (
+                <FormHelperText error>{errors.RunList.message}</FormHelperText>
+              )}
             </Grid>
 
             {/* Material (Autocomplete) */}
