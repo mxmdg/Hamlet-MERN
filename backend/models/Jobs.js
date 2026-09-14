@@ -53,7 +53,7 @@ const partSchema = new Schema({
   ColoresDorso: { type: Number, required: false, default: 0 },
   partStock: {
     type: mongoose.Schema.ObjectId,
-    ref: "Category",
+    ref: "Category", // No esta claro por que aca dice Category.
     required: true,
   },
   Finishing: [

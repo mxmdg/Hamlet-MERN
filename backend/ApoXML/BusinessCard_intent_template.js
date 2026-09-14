@@ -1,4 +1,17 @@
 const jobParts = require("../models/jobParts");
+const { splitPartsForJDF } = require("./runListGenerator");
+
+const resolveJdfType = async (part, tenant) => {
+  const partId = part?._id || part?.tipoParteId || part?.jobParts?.[0]?._id;
+  if (!partId) return "body";
+  try {
+    const doc = await jobParts.esquema.findOne({ _id: partId, tenant }).select("jdfType").lean();
+    return doc?.jdfType || "body";
+  } catch (err) {
+    console.error(`Error fetching jobPart ${partId}:`, err.message || err);
+    return "body";
+  }
+};
 
 const escapeXML = (value) => {
   if (value === null || value === undefined) return "";
@@ -74,23 +87,33 @@ const jobTypeFinal = {
 const getSides = (colores = {}) =>
   toNumber(colores?.dorso, 0) > 0 ? "TwoSidedHeadToHead" : "OneSided";
 
+const runListConverter = (rl) => {
+  // convertir array de números a string de rango, ej: [1,2,3,4,5,6,7,10,60,64,65,...] => "1-7,10,60,64-99"
+  if (!Array.isArray(rl) || rl.length === 0) return "0";
+  const sorted = [...new Set(rl)].sort((a, b) => a - b);
+  const ranges = [];
+  let start = sorted[0];
+  let end = sorted[0];
+  for (let i = 1; i < sorted.length; i++) {
+    if (sorted[i] === end + 1) {
+      end = sorted[i];
+    } else {
+      ranges.push(start === end ? `${start}` : `${start} ~ ${end}`);
+      start = sorted[i];
+      end = sorted[i];
+    }
+  }
+  ranges.push(start === end ? `${start}` : `${start} ~ ${end}`);
+  return ranges.join(" ");
+};
+
 const getColorIntentRef = (colores = {}) =>
   toNumber(colores?.frente, 0) > 1 || toNumber(colores?.dorso, 0) > 1
     ? "ID_ColorIntent_CMYK"
     : "ID_ColorIntent_Gray";
 
-const buildPartialComponent = async (part, index, tenant) => {
-  const partId = part?._id || part?.tipoParteId || part?.jobParts?.[0]?._id;
-  let productDoc = null;
-  if (partId) {
-    try {
-      productDoc = await jobParts.esquema.findOne({ _id: partId, tenant }).select("jdfType").lean();
-    } catch (err) {
-      console.error(`Error fetching jobPart ${partId}:`, err.message || err);
-      productDoc = null;
-    }
-  }
-  let productType = productDoc?.jdfType || "body";
+const buildPartialComponent = (part, index) => {
+  let productType = part?._jdfType || "body";
   const displayName = `${part?.tipoParte || "Parte"}_${part?.nombreParte || `Parte_${index + 1}`}`;
   const readerPageCount = asPositiveInt(part?.paginas, 1);
 
@@ -109,6 +132,10 @@ const buildChildJDF = (part, index, context) => {
 
   const nombreParte = part?.nombreParte || `Parte_${index + 1}`;
   let paginas = asPositiveInt(part?.paginas, 1);
+  const runList = part.runList || [];
+  if (runList.length > 0) {{
+    paginas = runList.length
+  }}
   const ancho = toNumber(part?.ancho, 0);
   const alto = toNumber(part?.alto, 0);
   const gramaje = asPositiveInt(part?.gramaje, 0);
@@ -118,15 +145,15 @@ const buildChildJDF = (part, index, context) => {
   const impresora = part?.impresora || "Large Press";
   const colorIntentRef = getColorIntentRef(part?.colores);
   const sides = getSides(part?.colores);
-  const partPath = `${index + 1}-${sanitizeFolderName(nombreParte, `Parte_${index + 1}`)}`;
+  const partPath = `${(part?.origenIndex ?? index) + 1}-${sanitizeFolderName(nombreParte, `Parte_${index + 1}`)}`;
   const safeCliente = sanitizeFolderName(cliente, "Cliente");
   const safeNombre = sanitizeFolderName(nombre, "Trabajo");
   const url = `/${safeCliente}/${safeNombre}/${partPath}/${safeNombre}_${partPath}.pdf`;
   const FoldingScheme = foldingSchemeSelection[tipoTrabajo] ? `agfa:FoldingSchemeSelection="${foldingSchemeSelection[tipoTrabajo]}"` : ""
 
-  // console.log(paginas)
 
-  paginas = sides === "OneSided" && part?.tipoParte !== "Cover" ? paginas * 2 : paginas
+  const paginasYaExactas = Array.isArray(part?.runList) && part.runList.length > 0;
+  paginas = !paginasYaExactas && sides === "OneSided" && part?.tipoParte !== "Cover" ? paginas * 2 : paginas
 
   // console.log(paginas)
 
@@ -170,10 +197,7 @@ const buildChildJDF = (part, index, context) => {
 \t\t\t\t\t<RunListRef rRef="ID_Run_${index}"/>
 \t\t\t\t</ArtDelivery>
 \t\t\t</ArtDeliveryIntent>
-\t\t\t<RunList ID="ID_Run_${index}" Class="Parameter" NPage="${paginas}" Pages="0 ~ ${Math.max(
-      paginas - 1,
-      0,
-    )}" Status="Available">
+\t\t\t<RunList ID="ID_Run_${index}" Class="Parameter" NPage="${paginas}" Pages="${runListConverter(runList)}" Status="Available">
 \t\t\t\t<LayoutElement>
 \t\t\t\t\t<FileSpec MimeType="application/pdf" URL="${escapeXML(url)}"/>
 \t\t\t\t</LayoutElement>
@@ -199,10 +223,29 @@ const template = async (
   const safeOrden = orden || "SinOrden";
   const safeNombre = nombre || "Trabajo";
   const safePartes = Array.isArray(partes) && partes.length > 0 ? partes : [{}];
-  const totalParts = safePartes.length;
+
+  // Resolver jdfType UNA vez por parte original (misma consulta que antes
+  // hacía buildPartialComponent, pero ahora corre antes de todo para poder
+  // usarla también en el seccionado).
+  const jdfTypes = await Promise.all(safePartes.map((part) => resolveJdfType(part, tenant)));
+  const partesConTipo = safePartes.map((part, i) => ({ ...part, _jdfType: jdfTypes[i] }));
+
+  // Cover no participa de la numeración del cuerpo del libro (va en su
+  // propio archivo, posición fija). Insert y Body sí comparten la
+  // numeración total y pueden necesitar seccionado.
+  const esCuerpo = (part) => part._jdfType !== "Cover";
+
+  // TEMPORAL: total = suma de páginas declaradas. Reemplazar por el total
+  // real del validador de PDF cuando esté listo.
+  const totalPages = partesConTipo
+    .filter(esCuerpo)
+    .reduce((sum, part) => sum + asPositiveInt(part.paginas, 1), 0);
+
+  const safePartesSeccionadas = splitPartsForJDF(partesConTipo, totalPages, esCuerpo);
+  const totalParts = safePartesSeccionadas.length;
   const nowIso = new Date().toISOString();
 
-  const firstPart = safePartes[0] || {};
+  const firstPart = partesConTipo[0] || {};
   const finalWidth = toNumber(firstPart.ancho, 0);
   const finalHeight = toNumber(firstPart.alto, 0);
   const finalProductType = jobTypeFinal[tipoTrabajo] || "Other";
@@ -214,15 +257,15 @@ const template = async (
 
   const partialComponents = (
     await Promise.all(
-      safePartes.map((part, index) => buildPartialComponent(part, index, tenant)),
+      safePartesSeccionadas.map((part, index) => buildPartialComponent(part, index)),
     )
   ).join("\n");
 
-  const rootPartLinks = safePartes
+  const rootPartLinks = safePartesSeccionadas
     .map((part, index) => buildRootPartLink(part, index))
     .join("\n");
 
-  const childJdfs = safePartes
+  const childJdfs = safePartesSeccionadas
     .map((part, index) =>
       buildChildJDF(part, index, {
         rootJobPartId,
