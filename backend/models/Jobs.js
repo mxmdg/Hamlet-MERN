@@ -5,7 +5,7 @@ const timeAgo = require("../middlewares/timeAgoTranslator");
 function orientation(x, y) {
   const formato = `${x} x ${y}`;
   let orientacion;
-  console.log(x, y);
+  //console.log(x, y);
   if (x > y) {
     orientacion = "Apaisado";
   } else if (y > x) {

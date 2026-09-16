@@ -128,7 +128,7 @@ materialControl.updateMaterial = async (req, res) => {
       return res.status(404).json({ message: "Material no encontrado" });
     res.json({ Message: "Material actualizado " + material.Nombre_Material });
   } catch (error) {
-    console.log("Error: " + error);
+    //console.log("Error: " + error);
     res.status(404).json({ error });
   }
 };

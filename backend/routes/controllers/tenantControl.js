@@ -43,7 +43,7 @@ tenantsControl.addTenant = async (req, res, next) => {
       plan,
     });
 
-    //console.log(newTenant);
+    ////console.log(newTenant);
 
     await newTenant.save();
 
@@ -55,7 +55,7 @@ tenantsControl.addTenant = async (req, res, next) => {
       status: "activo",
     });
 
-    //console.log("Membership admin creado para el nuevo tenant");
+    ////console.log("Membership admin creado para el nuevo tenant");
 
     res.status(201).json({
       message: `Tenant ${newTenant.name} creado correctamente`,
@@ -68,7 +68,7 @@ tenantsControl.addTenant = async (req, res, next) => {
         message: "Ya existe una imprenta con ese identificador",
       });
     }
-    console.log(e);
+    ////console.log(e);
     next(e);
   }
 };
@@ -78,7 +78,7 @@ tenantsControl.getTenants = async (req, res, next) => {
     const tenants = await tenant.esquema.find().select("-__v");
     res.json(tenants);
   } catch (e) {
-    console.error(e);
+    //console.error(e);
     next(e);
   }
 };
@@ -101,7 +101,7 @@ tenantsControl.getSettings = async (req, res, next) => {
 
     const flattenLevel2 = flattenNestedItems(settingsFlattened);
 
-    //console.log(flattenLevel2);
+    ////console.log(flattenLevel2);
 
     res.json(flattenLevel2);
   } catch (e) {

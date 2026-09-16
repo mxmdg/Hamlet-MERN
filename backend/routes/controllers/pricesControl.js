@@ -50,7 +50,7 @@ pricesControl.addPrice = async (req, res) => {
       await newPrice.save();
       res.json({ message: newPrice.Proceso + " ha sido agregado" });
     } catch (e) {
-      console.log(e);
+      //console.log(e);
     }
   }
 };

@@ -29,7 +29,7 @@ const finisherSchema = new Schema({
 });
 
 finisherSchema.virtual("formula").get(function () {
-  console.log(this.Costo, this.Unidad);
+  //console.log(this.Costo, this.Unidad);
   return this.Costo * this.Unidad; // Esto habrá que revisarlo para ver como aplicar distintas formulas a cada proceso
 });
 

@@ -130,7 +130,7 @@ quotationsControl.addQuotation = async (req, res) => {
     await newQuotation.save();
     res.json({ message: "Cotización guardada OK", quotation: newQuotation });
   } catch (error) {
-    console.log("Errore en node.js al guardar cotizacion");
+    //console.log("Errore en node.js al guardar cotizacion");
     console.error(error);
     res
       .status(500)

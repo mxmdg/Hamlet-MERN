@@ -142,7 +142,7 @@ jobPartsControl.updateJobPart = async (req, res) => {
       return res.status(404).json({ message: "jobPart no encontrado" });
     res.json({ Message: "JobPart actualizado " + JobPart.Type });
   } catch (error) {
-    console.log(error);
+    //console.log(error);
     res.status(500).json({ message: "Error al guardar el jobPart" });
     throw error;
   }

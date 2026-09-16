@@ -16,9 +16,6 @@ export const sendXML = async (jobToSend, cot) => {
     jobId: jobToSend._id,
   };
 
-  // El seccionado (RunList -> secciones) y la decisión de qué parte es
-  // Tapa (jdfType) ahora corren en el backend, adentro de template():
-  // el frontend solo manda el RunList crudo, sin procesar.
   const partsData = jobToSend.Partes.map((part) => ({
     _id: part.jobParts?.[0]?._id,
     nombreParte: part.Name,
@@ -40,6 +37,9 @@ export const sendXML = async (jobToSend, cot) => {
 
   console.log(data);
 
+  // OJO: no atrapamos el error acá para devolverlo como valor -- lo dejamos
+  // propagarse (relanzándolo con un mensaje legible) para que el catch de
+  // xmlHandler, en CotizacionCard.jsx, sea el que de verdad se entere.
   try {
     const res = await addPrivateElement(`SendToApogee`, data);
     const xmlData = new Blob([res.data], {
@@ -53,6 +53,8 @@ export const sendXML = async (jobToSend, cot) => {
     link.click();
     document.body.removeChild(link);
   } catch (error) {
-    return { error: error.message || "Error al enviar el trabajo a Apogee" };
+    console.log(error);
+    const mensajeServidor = error.response?.data?.error;
+    throw error;
   }
 };

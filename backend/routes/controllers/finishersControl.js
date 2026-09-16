@@ -16,7 +16,7 @@ finishersControl.getFinishers = async (req, res, next) => {
       res.json(finishersList);
       return finishersList;
     } catch (error) {
-      console.log(error);
+      //console.log(error);
       next(error);
       res
         .status(500)
@@ -38,7 +38,7 @@ finishersControl.getDeletedFinishers = async (req, res, next) => {
       res.json(finishersList);
       return finishersList;
     } catch (error) {
-      console.log(error);
+      //console.log(error);
       next(error);
       res
         .status(500)
@@ -100,7 +100,7 @@ finishersControl.getFinisher = async (req, res, next) => {
       res.status(404).json({ message: "Maquinaria no encontrada" });
     }
   } catch (error) {
-    console.log(error);
+    //console.log(error);
     next(error);
     res
       .status(500)

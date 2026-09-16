@@ -40,7 +40,7 @@ const addUser = async (req, res, next) => {
     await newUser.save();
     res.json({ message: newUser.Name + " " + newUser.LastName + " Saved" });
   } catch (error) {
-    console.log(error);
+    //console.log(error);
     next(error);
   }
 };
@@ -63,7 +63,7 @@ const updateUser = async (req, res, next) => {
     );
     res.json({ message: newUser.Name + newUser.LastName + " Saved" });
   } catch (error) {
-    console.log(error);
+    //console.log(error);
     next(error);
   }
 };
@@ -176,25 +176,25 @@ const login = async (req, res, next) => {
 };
 
 const changePassword = async (req, res, next) => {
-  console.log("Cambiemos el pass");
+  //console.log("Cambiemos el pass");
 
   try {
     const userId = req.params.id;
-    console.log("ID del user: " + userId);
+    //console.log("ID del user: " + userId);
 
     const user = await usersModel.esquema
       .findOne({ _id: userId })
       .select("+password");
 
-    console.log(user);
+    //console.log(user);
 
     const { oldPassword, newPassword, confirmNewPassword } = req.body;
 
-    console.log(oldPassword, newPassword, confirmNewPassword);
+    //console.log(oldPassword, newPassword, confirmNewPassword);
 
     const passwordOk = bcrypt.compareSync(oldPassword, user.password);
 
-    console.log(passwordOk);
+    //console.log(passwordOk);
 
     if (!passwordOk) {
       return res
@@ -315,8 +315,8 @@ const resetPassword = async (req, res, next) => {
       resetPasswordExpires: { $gt: Date.now() },
     });
 
-    console.log(user);
-    console.log(token);
+    //console.log(user);
+    //console.log(token);
 
     if (!user) {
       return res
@@ -329,7 +329,7 @@ const resetPassword = async (req, res, next) => {
     user.resetPasswordToken = undefined;
     user.resetPasswordExpires = undefined;
 
-    console.log(user);
+    //console.log(user);
     await user.save();
 
     res.json({ message: "Contraseña restablecida exitosamente" });

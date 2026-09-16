@@ -77,7 +77,7 @@ printerControl.addPrinter = async (req, res, next) => {
       await newPrinter.save();
       res.json({ message: newPrinter.Modelo + " guardado OK" });
     } catch (error) {
-      console.log(error);
+      //console.log(error);
       next(error);
     }
   }
@@ -219,7 +219,7 @@ printerControl.updatePrinter = async (req, res) => {
     await printer.save();
     res.json({ message: "Impresora actualizada " + printer.Modelo });
   } catch (e) {
-    console.log(e);
+    //console.log(e);
     res.json({ message: "Error: " + e });
   }
 };

@@ -33,8 +33,8 @@ const flatWorkApoXMLExporter = async (req, res, next) => {
         res.send(xml);
         return xml;
     } catch (error) {
-  console.error("Error al generar el XML:", error);
-  res.status(500).send(error.message || "Error al generar el XML");
+  //console.log("FlatworkApoXMLExporter: ", error);
+  res.status(500).send({ message: error.message || "Error al generar el XML" });
 }
 }
 

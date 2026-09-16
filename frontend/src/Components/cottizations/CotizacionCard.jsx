@@ -125,92 +125,33 @@ const CotizacionCard = ({ cotizacion, job }) => {
     }
   };
 
- const xmlHandler = async (jobToSend, cot) => {
-    try {
-      setLoading(true);
-      setWaitingFor("Generando archivo JDF...");
-      await sendXML(jobToSend, cot);
-      setLoading(false);
-      setWaitingFor(null);
-      setError({
-        title: "Archivo JDF generado",
-        severity: "success",
-        message: "Archivo JDF generado exitosamente.",
-      });
-    } catch (error) {
-      setError({
-        title: "Error al generar el archivo JDF",
-        severity: "error",
-        message: error.message || "Error al generar el archivo JDF",
-      });
-    }
-  }
-
-  /* const sendXML = async (jobToSend, cot) => {
-    console.log(jobToSend)
+  // xmlHandler: el try/catch/finally garantiza que loading y waitingFor
+  // se limpien SIEMPRE, sea éxito o error -- antes, el catch seteaba el
+  // error pero nunca apagaba el spinner, así que la UI quedaba trabada
+  // mostrando "Generando archivo JDF..." aunque el error ya estuviera
+  // disponible en el estado.
+  const xmlHandler = async (jobToSend, cot) => {
     setLoading(true);
     setWaitingFor("Generando archivo JDF...");
-    const data = {orden: "H-" + cot.index, 
-                  nombre: jobToSend.Nombre,
-                  tipoTrabajo: jobToSend.Tipo[0].name,
-                  // Suspendemos el envío de datos de cliente real a Apogee por ahora, evitamos conflictos con los clientes existentes en webapproval.                 
-                  cliente: "Imprenta Dorrego", //jobToSend.Company.Nombre, 
-                  contactoClienteNombre: "Maxi", //jobToSend.Owner?.Name || "Juan", 
-                  contactoClienteApellido: "Maro", // jobToSend.Owner?.LastName || "Pérez",
-                  contactoClienteEmail: "maximaro@imprentadorrego.com.ar", // jobToSend.Owner?.Email || "jp@gmail.com",
-                  cantidad: parseInt(jobToSend.Cantidad),
-                  entrega: jobToSend.Entrega,
-                  jobId: jobToSend._id,
-                }
-
-    const partsData = jobToSend.Partes.map((part)=> {
-      return {
-          _id: part.jobParts?.[0]?._id,
-          nombreParte: part.Name,
-          tipoParte: part.jobParts?.[0]?.Type,
-          ancho: mmToPt(part.Ancho), 
-          alto: mmToPt(part.Alto),
-          colores: {frente: part.ColoresFrente, dorso: part.ColoresDorso}, 
-          paginas: parseInt(part.Pages),
-          gramaje: parseInt(part.partStock.Gramaje),
-          materialTipo: part.partStock.Tipo,
-          anchoResma: mmToPt(cot.data.impositionData[part._id].impositionData.sheetOriginalSize.width),
-          altoResma: mmToPt(cot.data.impositionData[part._id].impositionData.sheetOriginalSize.height),
-          impresora: cot.data.impositionData[part._id].impositionData.printerSelector.Modelo,
-          tipoParteId: part.jobParts?.[0]?._id,
-      }
-    })
-    
-    data.partes = partsData
-
-    console.log(data)
-    
     try {
-      const res = await addPrivateElement(`SendToApogee`, data);
-      const xmlData = new Blob([res.data], {
-            type: "application/vnd.cip4-jdf+xml",
-        });
-      const xmlURL = URL.createObjectURL(xmlData);
-      const link = document.createElement("a");
-      link.href = xmlURL;
-      link.download = `${data.orden + "_" + data.nombre}.jdf`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-
-      setLoading(false);
+      await sendXML(jobToSend, cot);
       setError({
         title: "Archivo JDF generado",
         severity: "success",
         message: "Archivo JDF generado exitosamente.",
       });
-      setWaitingFor(null);
     } catch (error) {
+      console.log(error);
+      setError({
+        title: "Error al generar el archivo JDF",
+        severity: "warning",
+        message: error.response?.data?.message || "Error al generar el archivo JDF",
+      });
+    } finally {
       setLoading(false);
       setWaitingFor(null);
     }
   };
- */
 
   const failure = (
     <ErrorMessage

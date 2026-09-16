@@ -9,9 +9,9 @@ empresasControl.getCompanies = async (req, res, next) => {
     try {
       const tenantId = req.header("x-tenant");
       const tenant = await tenantModel.esquema.findOne({_id: tenantId})
-      console.log(tenant)
+      //console.log(tenant)
       if (tenant?.settings?.extensions?.usePapyrusCustomerDB) {
-        console.log("Clientes from Papyrus");
+        //console.log("Clientes from Papyrus");
         const papyrusEmpresas = await executeQuery({
           tenant: tenantId,
           queryName: "clientes",
@@ -19,7 +19,7 @@ empresasControl.getCompanies = async (req, res, next) => {
         });
         return res.json(papyrusEmpresas);
       } else {
-        console.log("Clientes from Hamlet");
+        //console.log("Clientes from Hamlet");
         const empresa = await empresas.esquema
           .find({ tenant: tenantId, status: { $ne: "inactivo" } })
           .sort({ Nombre: 1 })
@@ -57,7 +57,7 @@ empresasControl.leanCompanies = async (req, res, next) => {
         .lean({ virtuals: true });
       return empresa;
     } catch (e) {
-      console.log(e);
+      //console.log(e);
       next(e);
     }
   }
@@ -105,7 +105,7 @@ empresasControl.addCompany = async (req, res, next) => {
       await newCompany.save();
       res.json({ message: newCompany.Nombre + " ha sido agregado" });
     } catch (e) {
-      console.log(e);
+      //console.log(e);
       next(e);
     }
   }
@@ -124,7 +124,7 @@ empresasControl.getCompany = async (req, res, next) => {
       res.status(404).json({ message: "Empresa no encontrada" });
     }
   } catch (e) {
-    console.log(e);
+    //console.log(e);
     next(e);
   }
 };
@@ -165,7 +165,7 @@ empresasControl.updateCompany = async (req, res, next) => {
     }
     res.json({ message: "Empresa actualizada", empresa });
   } catch (e) {
-    console.log(e);
+    //console.log(e);
     next(e);
   }
 };

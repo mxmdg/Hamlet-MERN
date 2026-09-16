@@ -58,7 +58,7 @@ troubleControl.getTroubles = async (req, res, next) => {
       
     res.json(troubleList);
   } catch (error) {
-    console.log("Error en GetTroubles:", error);
+    ////console.log("Error en GetTroubles:", error);
     next(error);
   }
 };
@@ -77,7 +77,7 @@ troubleControl.getTroubleBySource = async (req, res, next) => {
       });
     res.json(trouble);
   } catch (error) {
-    console.log(error);
+    ////console.log(error);
     next(error);
   }
 };
@@ -94,7 +94,7 @@ troubleControl.getTrouble = async (req, res, next) => {
       // });
     res.json(trouble);
   } catch (error) {
-    console.log(error);
+    //console.log(error);
     next(error);
   }
 };
@@ -111,7 +111,7 @@ troubleControl.getDeletedTroubles = async (req, res, next) => {
       // });
     res.json(trouble);
   } catch (error) {
-    console.log(error);
+    //console.log(error);
     next(error);
   }
 };
@@ -133,7 +133,7 @@ troubleControl.addTrouble = async (req, res, next) => {
     const savedTrouble = await newTrouble.save();
     res.status(201).json(savedTrouble);
   } catch (error) {
-    console.log(error);
+    //console.log(error);
     next(error);
   }
 };
@@ -158,7 +158,7 @@ troubleControl.updateTrouble = async (req, res, next) => {
     );
     res.json(updatedTrouble);
   } catch (error) {
-    console.log(error);
+    //console.log(error);
     next(error);
   }
 };
@@ -173,7 +173,7 @@ troubleControl.deleteTrouble = async (req, res, next) => {
     );
     res.json(deletedTrouble);
   } catch (error) {
-    console.log(error);
+    //console.log(error);
     next(error);
   }
 };

@@ -9,7 +9,7 @@ const jobControl = {};
 
 jobControl.getJobs = async (req, res, next) => {
   try {
-    console.log("Obteniendo trabajos eliminados para tenant:", req.header("x-tenant"));
+    //console.log("Obteniendo trabajos eliminados para tenant:", req.header("x-tenant"));
     const queryText = req.query.Q || "";
     const jobList = await jobs.esquema
       .find({
@@ -159,7 +159,7 @@ jobControl.getAllParts = async (req, res) => {
     //console.log(flattenedPartsList);
     res.json(flattenedPartsList);
   } catch (e) {
-    console.log(e);
+    //(e);
     throw e;
   }
 };
@@ -306,7 +306,7 @@ jobControl.addJob = async (req, res) => {
         Finishing,
       });
       await newJob.save();
-      console.log(`${Nombre} agregado`);
+      //console.log(`${Nombre} agregado`);
       res.json(newJob._id);
     } catch (e) {
       res.status(404).json({ message: "Error: " + e.message });
@@ -349,7 +349,7 @@ jobControl.addJob = async (req, res) => {
 
     res.json(job);
   } catch (e) {
-    console.log(e);
+    //console.log(e);
     res.status(404).json({ message: "Trabajo no encontrado: " + e.message });
   }
 }; */
@@ -466,7 +466,7 @@ jobControl.updateJob = async (req, res) => {
         },
         { Nombre, Tipo, Cantidad, Partes, Entrega, Owner, Company, Finishing }
       );
-      console.log(newJob.Nombre + " guardado OK");
+      //console.log(newJob.Nombre + " guardado OK");
       res.json({
         message: newJob.Nombre + " guardado OK" + newJob.Finishing[0],
       });

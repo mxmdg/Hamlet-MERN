@@ -4,8 +4,8 @@ const pricesSeed = require("./prices.seed");
 const pricesSchema = require("../../models/prices").esquema;
 
 async function runSeeds({ tenantId }) {
-  console.log("🌱 Seeding prices...");
-  console.log(pricesSeed);
+  //console.log("🌱 Seeding prices...");
+  //console.log(pricesSeed);
 
   for (const priceData of pricesSeed) {
     try {
@@ -22,8 +22,8 @@ async function runSeeds({ tenantId }) {
   const formatsSeed = require("./formats.seed");
   const formatosSchema = require("../../models/formatos").esquema;
 
-  console.log("Seeding formatos");
-  console.log(formatsSeed);
+  //console.log("Seeding formatos");
+  //console.log(formatsSeed);
 
   for (const formatoData of formatsSeed) {
     try {
@@ -32,7 +32,7 @@ async function runSeeds({ tenantId }) {
         tenant: tenantId,
       };
       await formatosSchema.create(formato);
-      console.log(`✔ Formato ${formato.Nombre} seeded`);
+      //console.log(`✔ Formato ${formato.Nombre} seeded`);
     } catch (error) {
       console.error(
         `❌ Error seeding formato ${formatoData.Nombre}:`,
@@ -41,7 +41,7 @@ async function runSeeds({ tenantId }) {
     }
   }
 
-  console.log("Seed customer");
+  //console.log("Seed customer");
 
   const customersSeed = require("./empresas.seed");
   const customersSchema = require("../../models/empresas").esquema;
@@ -52,7 +52,7 @@ async function runSeeds({ tenantId }) {
         tenant: tenantId,
       };
       await customersSchema.create(customer);
-      console.log(`✔ Customer ${customer.Nombre} seeded`);
+      //console.log(`✔ Customer ${customer.Nombre} seeded`);
     } catch (error) {
       console.error(
         `❌ Error seeding customer ${customerData.Nombre}:`,
@@ -61,7 +61,7 @@ async function runSeeds({ tenantId }) {
     }
   }
 
-  console.log("🌱 Seeding printers...");
+  //console.log("🌱 Seeding printers...");
 
   // resolver dependencias UNA vez
   const printPrice = await pricesSchema.findOne({
@@ -73,7 +73,7 @@ async function runSeeds({ tenantId }) {
     throw new Error("No se encontró price 'print' para seed de printers");
   }
 
-  console.log(printersSeed);
+  //console.log(printersSeed);
 
   for (const printerData of printersSeed) {
     try {
@@ -84,7 +84,7 @@ async function runSeeds({ tenantId }) {
       };
 
       await printersSchema.create(printer);
-      console.log(`✔ Printer ${printer.Nombre} seeded`);
+      //console.log(`✔ Printer ${printer.Nombre} seeded`);
     } catch (error) {
       console.error(
         `❌ Error seeding printer ${printerData.Nombre}:`,
@@ -93,12 +93,12 @@ async function runSeeds({ tenantId }) {
     }
   }
 
-  console.log("Seeding JobParts");
+  //console.log("Seeding JobParts");
 
   const jobPartsSeed = require("./jobparts.seed");
   const jobPartsSchema = require("../../models/jobParts").esquema;
 
-  console.log(jobPartsSeed);
+  //console.log(jobPartsSeed);
 
   for (const jobPartData of jobPartsSeed) {
     try {
@@ -107,7 +107,7 @@ async function runSeeds({ tenantId }) {
         tenant: tenantId,
       };
       await jobPartsSchema.create(jobPart);
-      console.log(`✔ JobPart ${jobPart.Nombre} seeded`);
+      //console.log(`✔ JobPart ${jobPart.Nombre} seeded`);
     } catch (error) {
       console.error(
         `❌ Error seeding job part ${jobPartData.Nombre}:`,
@@ -116,7 +116,7 @@ async function runSeeds({ tenantId }) {
     }
   }
 
-  console.log("Seeding Materials");
+  //console.log("Seeding Materials");
 
   // Dependencias
   const stockPrice = await pricesSchema.findOne({
@@ -137,7 +137,7 @@ async function runSeeds({ tenantId }) {
         Precio_x_Kilo: stockPrice._id,
       };
       await Materiales.create(material);
-      console.log(`✔ Material ${material.Nombre} seeded`);
+      //console.log(`✔ Material ${material.Nombre} seeded`);
     } catch (error) {
       console.error(
         `❌ Error seeding material ${materialData.Nombre}:`,
@@ -146,7 +146,7 @@ async function runSeeds({ tenantId }) {
     }
   }
 
-  console.log("Seeding Finishers");
+  ////console.log("Seeding Finishers");
 
   // Dependencias
   const finishingPrice = await pricesSchema.findOne({
@@ -184,7 +184,7 @@ async function runSeeds({ tenantId }) {
         Costo: finishingPrice._id,
       };
       await Finishers.create(finisher);
-      console.log(`✔ Finisher ${finisher.Nombre} seeded`);
+      //console.log(`✔ Finisher ${finisher.Nombre} seeded`);
     } catch (error) {
       console.error(
         `❌ Error seeding finisher ${finisherData.Nombre}:`,
@@ -193,7 +193,7 @@ async function runSeeds({ tenantId }) {
     }
   }
 
-  console.log("✅ Seeds completed successfully");
+  //console.log("✅ Seeds completed successfully");
 }
 
 module.exports = { runSeeds };
