@@ -19,6 +19,7 @@ import {
   TextField,
   MenuItem,
   Stack,
+  Typography,
 } from "@mui/material";
 
 //Custom Components
@@ -45,6 +46,10 @@ import JobsPerPartType from "../utils/stats/JobsPerPartType";
 import JobTypes from "./JobTypes";
 import NewRadialBar from "../utils/stats/NewRadialBar";
 import StockCount from "../utils/stats/stockCount";
+import QuotationsPerStatus from "../utils/stats/QuotationsPerStatus";
+import QuotationsAmountPerStatus from "../utils/stats/QuotationsAmountPerStatus";
+import QuotationsPerClient from "../utils/stats/QuotationsPerClient";
+import QuotationsAmountPerClient from "../utils/stats/QuotationsAmountPerClient";
 import { use } from "react";
 
 /*  JobFinder component allows users to search for jobs based on various properties.
@@ -115,7 +120,7 @@ const JobFinder = (props) => {
     // Construir los parámetros de la URL dinámicamente
     const params = new URLSearchParams();
     params.append("Q", useQuery);
-    params.append("P", useProperty.value);
+    params.append("P", useProperty.field || useProperty.value);
     params.append("OP", useOperator);
 
     // Si el operador es "bt" (between), agregar el valor máximo
@@ -418,6 +423,24 @@ const JobFinder = (props) => {
                         ></TextField>
                       </Grid>
                     )}
+                    {useResponse !== null && useQueryType === "month" && (
+                      <Grid size={{ xs: 12, sm: 12, md: 4 }}>
+                        <TextField
+                          id="queryMonth"
+                          type="month"
+                          variant={inputsVariant}
+                          color={inputsColor}
+                          label="Mes"
+                          fullWidth
+                          InputLabelProps={{ shrink: true }}
+                          onChange={(e) => {
+                            console.log("Selected month:", e.target.value); // Log the selected month
+                            setURL(null);
+                            setQuery(e.target.value); // ya viene como "YYYY-MM"
+                          }}
+                        />
+                      </Grid>
+)}
                     {useResponse !== null && useQueryType === "number" && (
                       <>
                         <Grid size={{ xs: 12, sm: 6, md: 2 }}>
@@ -532,6 +555,10 @@ const JobFinder = (props) => {
           </Grid>
           <Grid size={{ xs: 12, sm: 12, md: 12 }}>
             <StatsCollector route={props.entity + useURL}>
+              <QuotationsPerStatus />
+              <QuotationsAmountPerStatus />
+              <QuotationsPerClient rank={10} />
+              <QuotationsAmountPerClient rank={10} />
               <StockCount />
             </StatsCollector>
           </Grid>

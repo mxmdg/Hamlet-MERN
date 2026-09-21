@@ -380,6 +380,11 @@ jobControl.getJob = async (req, res) => {
         path: "Partes.partStock",
         model: stocks.esquema,
       })
+      .populate({
+        path: "Finishing",
+        model: finishers.esquema,
+        select: "-Costo.Historial -jobTypesAllowed -partTypesAllowed",
+      })
       .lean(); // 👈 importante
 
       

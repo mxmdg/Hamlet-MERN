@@ -155,6 +155,15 @@ const buildChildJDF = (part, index, context) => {
   const paginasYaExactas = Array.isArray(part?.runList) && part.runList.length > 0;
   paginas = !paginasYaExactas && sides === "OneSided" && part?.tipoParte !== "Cover" ? paginas * 2 : paginas
 
+  // Si esta parte pasó por splitPartsForJDF, ya tiene un runList real
+  // (array de páginas locales a su propio archivo) -> usarlo tal cual.
+  // Si NO (el caso normal, sin RunList en el trabajo), el rango es
+  // simplemente todas sus páginas de punta a punta -- el default de
+  // siempre, antes de que existiera runListConverter.
+  const pagesAttr = paginasYaExactas
+    ? runListConverter(part.runList)
+    : `0 ~ ${Math.max(paginas - 1, 0)}`;
+
   // console.log(paginas)
 
   return `\t<JDF ID="ID_ProdPart_${index}" Type="Product" Status="Waiting" xsi:type="Product" JobPartID="${escapeXML(
@@ -197,7 +206,7 @@ const buildChildJDF = (part, index, context) => {
 \t\t\t\t\t<RunListRef rRef="ID_Run_${index}"/>
 \t\t\t\t</ArtDelivery>
 \t\t\t</ArtDeliveryIntent>
-\t\t\t<RunList ID="ID_Run_${index}" Class="Parameter" NPage="${paginas}" Pages="${runListConverter(runList)}" Status="Available">
+\t\t\t<RunList ID="ID_Run_${index}" Class="Parameter" NPage="${paginas}" Pages="${pagesAttr}" Status="Available">
 \t\t\t\t<LayoutElement>
 \t\t\t\t\t<FileSpec MimeType="application/pdf" URL="${escapeXML(url)}"/>
 \t\t\t\t</LayoutElement>
@@ -224,24 +233,29 @@ const template = async (
   const safeNombre = nombre || "Trabajo";
   const safePartes = Array.isArray(partes) && partes.length > 0 ? partes : [{}];
 
-  // Resolver jdfType UNA vez por parte original (misma consulta que antes
-  // hacía buildPartialComponent, pero ahora corre antes de todo para poder
-  // usarla también en el seccionado).
+  // jdfType decide qué parte es "cuerpo" (comparte numeración) y cuál no
+  // (Cover, independiente) -- esa parte de la mecánica ya funciona bien,
+  // no se toca.
   const jdfTypes = await Promise.all(safePartes.map((part) => resolveJdfType(part, tenant)));
   const partesConTipo = safePartes.map((part, i) => ({ ...part, _jdfType: jdfTypes[i] }));
 
-  // Cover no participa de la numeración del cuerpo del libro (va en su
-  // propio archivo, posición fija). Insert y Body sí comparten la
-  // numeración total y pueden necesitar seccionado.
-  const esCuerpo = (part) => part._jdfType !== "Cover";
+  // El gate real: si NINGUNA parte tiene RunList, no corremos nada de esto
+  // -- cada parte pasa tal cual, como funcionaba antes de todo este
+  // mecanismo (Flatwork, trabajos a una sola cara, lo que sea). Recién si
+  // HAY al menos un RunList en el trabajo, se activa el seccionado.
+  const hayAlgunRunList = partesConTipo.some((part) => part.RunList && part.RunList.trim() !== "");
 
-  // TEMPORAL: total = suma de páginas declaradas. Reemplazar por el total
-  // real del validador de PDF cuando esté listo.
-  const totalPages = partesConTipo
-    .filter(esCuerpo)
-    .reduce((sum, part) => sum + asPositiveInt(part.paginas, 1), 0);
+  let safePartesSeccionadas;
+  if (hayAlgunRunList) {
+    const esCuerpo = (part) => part._jdfType !== "Cover";
+    const totalPages = partesConTipo
+      .filter(esCuerpo)
+      .reduce((sum, part) => sum + asPositiveInt(part.paginas, 1), 0);
+    safePartesSeccionadas = splitPartsForJDF(partesConTipo, totalPages, esCuerpo);
+  } else {
+    safePartesSeccionadas = partesConTipo;
+  }
 
-  const safePartesSeccionadas = splitPartsForJDF(partesConTipo, totalPages, esCuerpo);
   const totalParts = safePartesSeccionadas.length;
   const nowIso = new Date().toISOString();
 

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import ErrorMessage from "../../ErrorMessage/ErrorMessage";
 import Spinner from "../../General/Spinner";
 import { set } from "react-hook-form";
+import TopBarChart from "./TopBarChart";
+import NewRadialBar from "./NewRadialBar";
 
 /*
   Este componente recibe en props.jobs (Viene en props.jobs en lugar de props.quotes proque usamos un contexto preexistente) un array de presupuestos.
@@ -800,31 +802,24 @@ const StockCount = (props) => {
 
   return (
     <div>
-      <h3>Resumen de Pliegos por Material y Formato</h3>
-      <ul>
-        {stockSummary.sort((a, b) => b.totalPliegos - a.totalPliegos).map((item) => (
-          <li key={item.key}>
-            <b>{item.totalPliegos}</b> Pliegos - {item.key}
-          </li>
-        ))}
-      </ul>
-      <h3>Resumen de Hojas Grandes (Resmas) por Material y Formato</h3>
-      <ul>
-        {sheetSummary.sort((a, b) => b.totalHojas - a.totalHojas).map((item) => (
-          <li key={item.key}>
-            <b>{item.totalHojas}</b> Hojas - {item.key}
-          </li>
-        ))}
-      </ul>
-      <h3>Resumen de Impresiones por Impresora</h3>
-      <ul>
-        {printerSummary.map((item) => (
-          <li key={item.printer}>
-            <b>{item.totalImpresiones}</b> impresiones - {item.printer}
-          </li>
-        ))}
-      </ul>
-    </div>
+    <TopBarChart
+      data={stockSummary}
+      dataKey={{ cat: "key", qty: "totalPliegos" }}
+      title="Pliegos por Material y Formato"
+      rank={12}
+    />
+    <TopBarChart
+      data={sheetSummary}
+      dataKey={{ cat: "key", qty: "totalHojas" }}
+      title="Resmas por Material y Formato"
+      rank={12}
+    />
+    <TopBarChart
+      data={printerSummary}
+      dataKey={{ cat: "printer", qty: "totalImpresiones" }}
+      title="Carga de Impresoras"
+    />
+  </div>
   );
 };
 

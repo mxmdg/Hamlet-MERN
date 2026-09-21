@@ -18,6 +18,20 @@ export const JobProperties = [
     queryLabel: "Fecha de Ingreso",
   },
   {
+  value: "fecha_mes_ingreso",
+  field: "Fecha",
+  label: "Mes de Ingreso",
+  queryType: "month",
+  queryLabel: "Fecha de Ingreso",
+},
+{
+  value: "fecha_mes_entrega",
+  field: "Entrega",
+  label: "Mes de Entrega",
+  queryType: "month",
+  queryLabel: "Fecha de Entrega",
+},
+  {
     value: "Entrega",
     label: "Fecha de Entrega",
     queryType: "date",
@@ -128,6 +142,13 @@ export const QuotationProperties = [
     label: "Fecha de entrega",
     queryType: "date",
     queryLabel: "fechaEntrega",
+  },
+  {
+    value: "fecha_mes",
+    field: "fecha",
+    label: "Mes",
+    queryType: "month",
+    queryLabel: "fecha",
   },
   {
     value: "jobId.Owner",

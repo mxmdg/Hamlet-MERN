@@ -10,6 +10,8 @@ export const CotizationMail = ({ cotizacion, cliente, items, jobName }) => {
 
   let itemsList = "";
 
+
+
   if (items && Array.isArray(items) && items.length > 0) {
     itemsList = items
       .map(
@@ -44,7 +46,8 @@ export const CotizationMail = ({ cotizacion, cliente, items, jobName }) => {
         ${items
           .map(
             (item) => `
-            <li><b>${item.Name}</b> ${item.jobParts[0].Type}: ${item.partStock.Tipo} ${item.partStock.Gramaje} — ${item.Pages} páginas ${item.ColoresFrente}/${item.ColoresDorso} formato ${item.Ancho} x ${item.Alto}</li>
+            <li><b>${item.Name}</b> ${item.jobParts[0].Type}: ${item.partStock.Tipo} ${item.partStock.Gramaje} — ${item.Pages} páginas ${item.ColoresFrente}/${item.ColoresDorso} formato ${item.Ancho} x ${item.Alto}</li></br>
+            <li>Procesos: ${item.Finishing?.join(", ") || "Ninguno"}</li>
         `
           )
           .join("")}
