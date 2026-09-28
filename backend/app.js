@@ -9,7 +9,7 @@ const apiRouter = require("./routes");
 
 // settings
 app.set("port", process.env.PORT || 5000);
-app.set("secretKey", "hamlet");
+app.set("secretKey", process.env.SECRET_KEY || "default_secret_key");
 
 // middlewares base
 app.use(cors({ origin: "*" }));

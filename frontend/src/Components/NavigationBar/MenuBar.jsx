@@ -62,6 +62,7 @@ export const pages = [
       { text: "Clientes", path: "empresas" },
       { text: "Membresías", path: "memberships", allowed: ["admin"] },
       { text: "Contadores", path: "billing", allowed: ["admin", "manager"] },
+      { text: "Reportes", path: "reportes", allowed: ["admin"] },
     ],
   },
   {

@@ -198,6 +198,14 @@ router.use(
 );
 
 router.use(
+  "/Hamlet/reports",
+  requireRoleByMethod({
+    get: ["admin"],
+  }),
+  require("./reports"),
+);
+
+router.use(
   "/apibcra",
   requireRoleByMethod({
     get: "public",

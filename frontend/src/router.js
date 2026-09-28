@@ -20,6 +20,7 @@ import { configuracionRoutes } from "./Routes/configuracionRoutes";
 import { membershipsRoutes } from "./Routes/memberships";
 import { papyrusRoutes } from "./Routes/papyrusRoutes";
 import { troublesRoutes } from "./Routes/troublesRoute";
+import { reportsRoutes } from "./Routes/reportsRoutes";
 
 const Router = (props) => {
   const context = useContext(AuthContext);
@@ -58,6 +59,7 @@ const Router = (props) => {
           {membershipsRoutes({ color, variant })}
           {usePlan === "pro" && papyrusRoutes({ color, variant })}
           {troublesRoutes({ color, variant })}
+          {reportsRoutes({ color, variant })}
         </>
       )}
 
