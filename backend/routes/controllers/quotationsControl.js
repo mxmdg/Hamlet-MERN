@@ -17,56 +17,65 @@ function extractMailSettings(flatSettings) {
 
 const quotationsControl = {};
 
-// Obtener todas las cotizaciones - Filtros avanzados
+// En quotationsControl.js: reemplaza getQuotations.
+// La lógica de cada filtro es la misma que ya tenías, solo que ahora está
+// en una función y se puede aplicar a varios filtros a la vez.
+
+// Construye el filtro de Mongo para UNA propiedad
+function buildFilter({ P: property = "name", Q: queryText = "", OP: op = "eq", M: max = null }) {
+  const schemaType = quotations.esquema.schema.paths[property]?.instance;
+  let operator = op;
+
+  if (operator === "bt") {
+    // Rango de fechas: el fin es exclusivo ($lt) para no perder el último día
+    if (schemaType === "Date") {
+      return { [property]: { $gte: new Date(queryText), $lt: new Date(max) } };
+    }
+    return { [property]: { $gte: Number(queryText), $lte: Number(max) } };
+  }
+  if (schemaType === "String") {
+    return { [property]: { $regex: queryText, $options: "i" } };
+  }
+  if (schemaType === "Date") {
+    return {
+      $expr: {
+        $regexMatch: {
+          input: { $dateToString: { format: "%Y-%m-%dT%H:%M:%S.%LZ", date: `$${property}` } },
+          regex: queryText,
+          options: "i",
+        },
+      },
+    };
+  }
+  if (schemaType === "Number") {
+    return { [property]: { [`$${operator}`]: Number(queryText) } };
+  }
+  if (property === "data.resumen") {
+    return { [property]: { $size: parseInt(queryText) + 1 } };
+  }
+  // ObjectID y cualquier otro caso: igualdad
+  return { [property]: queryText };
+}
+
+// Obtener todas las cotizaciones - Filtros avanzados (uno o varios)
+//
+// Un filtro (como hasta ahora):  ?P=owner&Q=<id>
+// Varios filtros:                ?filters=[{"P":"owner","Q":"<id>"},{"P":"fecha","OP":"bt",...}]
 quotationsControl.getQuotations = async (req, res) => {
   try {
     const tenant = req.header("x-tenant");
-    const queryText = req.query.Q || "";
-    const property = req.query.P || "name";
-    let operator = req.query.OP || "eq"; // Default to 'eq' if not provided
-    const schemaType = quotations.esquema.schema.paths[property]?.instance;
-    const max = req.query.M || null;
 
-    let query;
-    if (operator === "bt") {
-      query = {
-        [property]: { $gte: Number(queryText), $lte: Number(max) },
-      };
-    } else if (schemaType === "String") {
-      // Para texto, usar regex
-      query = { [property]: { $regex: queryText, $options: "i" } };
-    } else if (schemaType === "Date") {
-      // Buscar fechas parcialmente usando $expr y $dateToString
-      query = {
-        $expr: {
-          $regexMatch: {
-            input: {
-              $dateToString: {
-                format: "%Y-%m-%dT%H:%M:%S.%LZ",
-                date: `$${property}`,
-              },
-            },
-            regex: queryText,
-            options: "i",
-          },
-        },
-      };
-    } else if (schemaType === "Number") {
-      // Para números, usar operador dinámico
-      operator === "bt" ? (operator = "eq") : operator;
-      query = { [property]: { [`$${operator}`]: Number(queryText) } };
-    } else if (schemaType === "ObjectID") {
-      // Para IDs, buscar por igualdad
-      query = { [property]: queryText };
-    } else if (property === "data.resumen") {
-      // Ejemplo para arrays
-      query = { [property]: { $size: parseInt(queryText) + 1 } };
-    } else {
-      // Por defecto, buscar por igualdad
-      query = { [property]: queryText };
+    let filters;
+    try {
+      filters = req.query.filters ? JSON.parse(req.query.filters) : [req.query];
+    } catch {
+      return res.status(400).json({ message: "filters no es un JSON válido" });
     }
 
-    // incluir tenant y excluir estados rechazados
+    // $and en lugar de mezclar objetos: dos filtros de fecha usan $expr y
+    // con un spread uno pisaría al otro
+    const query = { $and: filters.map(buildFilter) };
+
     const allQuotations = await quotations.esquema
       .find({ ...query, tenant, status: { $ne: "Rechazado" } })
       .populate({
@@ -74,8 +83,8 @@ quotationsControl.getQuotations = async (req, res) => {
         model: Jobs.esquema,
         select: "Nombre Owner Entrega",
       })
-      .populate({ path: "owner", model: Users.esquema })
-      .sort({ index: -1 }); // Ordenar por índice descendente
+      .populate({ path: "owner", model: Users.esquema, select: "Name LastName email" })
+      .sort({ index: -1 });
 
     res.json(allQuotations);
   } catch (error) {
@@ -83,7 +92,6 @@ quotationsControl.getQuotations = async (req, res) => {
     res.status(500).json({ message: "Error al obtener las cotizaciones" });
   }
 };
-
 // Obtener una cotización por ID
 quotationsControl.getQuotation = async (req, res) => {
   try {

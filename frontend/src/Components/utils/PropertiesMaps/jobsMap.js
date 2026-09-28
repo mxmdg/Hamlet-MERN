@@ -151,7 +151,14 @@ export const QuotationProperties = [
     queryLabel: "fecha",
   },
   {
-    value: "jobId.Owner",
+    value: "fecha_rango",
+    field: "fecha",
+    label: "Fecha (entre)",
+    queryType: "dateRange",
+    queryLabel: "fecha",
+  },
+  {
+    value: "owner",
     label: "Representante",
     queryType: "id",
     queryLabel: "owner",

@@ -108,6 +108,13 @@ const JobFinder = (props) => {
     return;
   };
 
+  // "2026-06-30" -> "2026-07-01". Se usa mediodía UTC para no cruzar de día por zona horaria
+  const nextDay = (ymd) => {
+    const d = new Date(`${ymd}T12:00:00Z`);
+    d.setUTCDate(d.getUTCDate() + 1);
+    return d.toISOString().slice(0, 10);
+  };
+
   const onSubmit = (e) => {
     e.preventDefault();
 
@@ -119,13 +126,23 @@ const JobFinder = (props) => {
 
     // Construir los parámetros de la URL dinámicamente
     const params = new URLSearchParams();
-    params.append("Q", useQuery);
     params.append("P", useProperty.field || useProperty.value);
-    params.append("OP", useOperator);
 
-    // Si el operador es "bt" (between), agregar el valor máximo
-    if (useOperator === "bt" && useMax) {
-      params.append("M", useMax);
+    if (useQueryType === "dateRange") {
+      // Rango de fechas: desde las 00:00 del primer día hasta las 00:00 del día
+      // siguiente al último (el backend excluye el fin), en hora argentina
+      if (!useMax) return;
+      params.append("OP", "bt");
+      params.append("Q", `${useQuery}T00:00:00-03:00`);
+      params.append("M", `${nextDay(useMax)}T00:00:00-03:00`);
+    } else {
+      params.append("Q", useQuery);
+      params.append("OP", useOperator);
+
+      // Si el operador es "bt" (between), agregar el valor máximo
+      if (useOperator === "bt" && useMax) {
+        params.append("M", useMax);
+      }
     }
 
     setURL(`?${params.toString()}`);
@@ -441,6 +458,41 @@ const JobFinder = (props) => {
                         />
                       </Grid>
 )}
+                    {useResponse !== null && useQueryType === "dateRange" && (
+                      <>
+                        <Grid size={{ xs: 12, sm: 6, md: 2 }}>
+                          <TextField
+                            id="queryFrom"
+                            type="date"
+                            variant={inputsVariant}
+                            color={inputsColor}
+                            label="Desde"
+                            fullWidth
+                            InputLabelProps={{ shrink: true }}
+                            onChange={(e) => {
+                              setURL(null);
+                              setQuery(e.target.value); // "YYYY-MM-DD"
+                            }}
+                          />
+                        </Grid>
+                        <Grid size={{ xs: 12, sm: 6, md: 2 }}>
+                          <TextField
+                            id="queryTo"
+                            type="date"
+                            variant={inputsVariant}
+                            color={inputsColor}
+                            label="Hasta (incluido)"
+                            fullWidth
+                            InputLabelProps={{ shrink: true }}
+                            inputProps={{ min: useQuery || undefined }}
+                            onChange={(e) => {
+                              setURL(null);
+                              setMax(e.target.value);
+                            }}
+                          />
+                        </Grid>
+                      </>
+                    )}
                     {useResponse !== null && useQueryType === "number" && (
                       <>
                         <Grid size={{ xs: 12, sm: 6, md: 2 }}>
@@ -516,6 +568,7 @@ const JobFinder = (props) => {
                             props.entity + "lastJobSearch"
                           );
                           setQuery(null);
+                          setMax(null);
                         }}
                       >
                         Reset
