@@ -1,7 +1,6 @@
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
-  Box,
   Grid,
   Paper,
   Table,
@@ -19,6 +18,7 @@ import { getPrivateElements } from "../customHooks/FetchDataHook";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import Spinner from "../General/Spinner";
 import TopBarChart from "../utils/stats/TopBarChart";
+import {Title} from "../utils/stats/Title";
 
 /*
  * Reporte mensual de cotizaciones.
@@ -58,6 +58,7 @@ const pesos = new Intl.NumberFormat("es-AR", {
 
 const formatoCantidad = (valor) => valor.toLocaleString("es-AR");
 
+// Mismo estilo que los paneles de StatsCollector
 const panelSx = {
   borderRadius: 1,
   height: "100%",
@@ -93,9 +94,7 @@ const Variacion = ({ valor }) => {
 // Siempre muestra el valor absoluto al lado del %: con bases chicas el % solo engaña.
 const Indicador = ({ titulo, reporte, campo, formato }) => (
   <Paper elevation={2} sx={panelSx}>
-    <Typography variant="overline" color="text.secondary">
-      {titulo}
-    </Typography>
+    <Title title={titulo} />
     <Typography
       variant="h4"
       sx={{ mb: 1, fontSize: { xs: "1.6rem", sm: "2.125rem" } }}
@@ -137,9 +136,7 @@ const TablaComparativa = ({ titulo, reporte, clave }) => {
   const filas = unirGrupos(reporte, clave);
   return (
     <Paper elevation={2} sx={panelSx}>
-      <Typography variant="h6" sx={{ mb: 1 }}>
-        {titulo}
-      </Typography>
+      <Title title={titulo} />
       {filas.length === 0 ? (
         <Typography color="text.secondary">Sin cotizaciones</Typography>
       ) : (
@@ -177,7 +174,7 @@ const GraficoNeto = ({ titulo, datos, labelWidth }) => (
   <Paper elevation={2} sx={panelSx}>
     {datos.length === 0 ? (
       <>
-        <Typography variant="h6">{titulo}</Typography>
+        <Title title={titulo} />
         <Typography color="text.secondary">Sin cotizaciones</Typography>
       </>
     ) : (
@@ -240,7 +237,7 @@ const MonthlyReport = () => {
     <TextField
       type="month"
       label="Mes"
-      size="small"
+      variant="standard"
       value={periodoValido ? periodo : ""}
       InputLabelProps={{ shrink: true }}
       onChange={(e) => {
@@ -252,28 +249,36 @@ const MonthlyReport = () => {
   let contenido;
   if (!periodoValido) {
     contenido = (
-      <Typography color="error">
-        El período "{periodo}" no es válido. Elegí un mes en el selector.
-      </Typography>
+      <Grid size={12}>
+        <Typography color="error">
+          El período "{periodo}" no es válido. Elegí un mes en el selector.
+        </Typography>
+      </Grid>
     );
   } else if (loading) {
-    contenido = <Spinner title={`Cargando reporte`} color={"primary"} />;
+    contenido = (
+      <Grid size={12}>
+        <Spinner title={`Cargando reporte`} color={"primary"} />
+      </Grid>
+    );
   } else if (useError) {
     contenido = (
-      <ErrorMessage
-        title={"Error cargando el reporte"}
-        message={
-          useError?.response?.data?.message ||
-          useError?.message ||
-          "Error desconocido"
-        }
+      <Grid size={12}>
+        <ErrorMessage
+          title={"Error cargando el reporte"}
+          message={
+            useError?.response?.data?.message ||
+            useError?.message ||
+            "Error desconocido"
+          }
         action={clearError}
-      />
+        />
+      </Grid>
     );
   } else if (reporte) {
     contenido = (
-      <Grid columns={12} container spacing={{ xs: 1, sm: 2, md: 3 }}>
-        <Grid size={{ xs: 12, md: 6 }} sx={itemSx}>
+      <>
+        <Grid size={{ xs: 12, sm: 6 }} sx={itemSx}>
           <Indicador
             titulo="Cotizaciones"
             reporte={reporte}
@@ -281,7 +286,7 @@ const MonthlyReport = () => {
             formato={formatoCantidad}
           />
         </Grid>
-        <Grid size={{ xs: 12, md: 6 }} sx={itemSx}>
+        <Grid size={{ xs: 12, sm: 6 }} sx={itemSx}>
           <Indicador
             titulo="Neto cotizado"
             reporte={reporte}
@@ -290,14 +295,14 @@ const MonthlyReport = () => {
           />
         </Grid>
 
-        <Grid size={{ xs: 12, md: 6 }} sx={itemSx}>
+        <Grid size={{ xs: 12, sm: 12, md: 6 }} sx={itemSx}>
           <GraficoNeto
             titulo="Neto por vendedor"
             datos={reporte.actual.porVendedor}
             labelWidth={esCelular ? 100 : 180}
           />
         </Grid>
-        <Grid size={{ xs: 12, md: 6 }} sx={itemSx}>
+        <Grid size={{ xs: 12, sm: 12, md: 6 }} sx={itemSx}>
           <GraficoNeto
             titulo="Neto por tipo de trabajo"
             datos={reporte.actual.porTipo}
@@ -305,53 +310,55 @@ const MonthlyReport = () => {
           />
         </Grid>
 
-        <Grid size={{ xs: 12 }} sx={itemSx}>
+        <Grid size={{ xs: 12, sm: 12, md: 6 }} sx={itemSx}>
           <TablaComparativa
             titulo="Por vendedor"
             reporte={reporte}
             clave="porVendedor"
           />
         </Grid>
-        <Grid size={{ xs: 12 }} sx={itemSx}>
+        <Grid size={{ xs: 12, sm: 12, md: 6 }} sx={itemSx}>
           <TablaComparativa
             titulo="Por tipo de trabajo"
             reporte={reporte}
             clave="porTipo"
           />
         </Grid>
-      </Grid>
+      </>
     );
   }
 
   return (
-    <Box sx={{ p: { xs: 1, md: 3 }, maxWidth: "100%", overflowX: "hidden" }}>
-      <Grid
-        columns={12}
-        container
-        spacing={2}
-        alignItems="center"
-        sx={{ mb: 3 }}
-      >
-        <Grid size={{ xs: 12, sm: 8 }} sx={itemSx}>
-          <Typography variant="h5">Reporte mensual de cotizaciones</Typography>
-          {periodoValido && (
-            <Typography
-              color="text.secondary"
-              sx={{ textTransform: "capitalize" }}
+    <Grid
+      sx={{ width: "100%", height: "100%", p: 2 }}
+      container
+      spacing={{ xs: 0, sm: 1, md: 3 }}
+    >
+      <Grid size={12} sx={itemSx}>
+        <Paper elevation={2} sx={panelSx}>
+          <Grid container spacing={2} alignItems="flex-end">
+            <Grid size={{ xs: 12, sm: 8 }} sx={itemSx}>
+              <Title title="Reporte mensual de cotizaciones" />
+              {periodoValido && (
+                <Typography
+                  color="text.secondary"
+                  sx={{ textTransform: "capitalize" }}
+                >
+                  {nombreDelMes(periodo)}
+                </Typography>
+              )}
+            </Grid>
+            <Grid
+              size={{ xs: 12, sm: 4 }}
+              sx={{ ...itemSx, textAlign: { xs: "left", sm: "right" } }}
             >
-              {nombreDelMes(periodo)}
-            </Typography>
-          )}
-        </Grid>
-        <Grid
-          size={{ xs: 12, sm: 4 }}
-          sx={{ ...itemSx, textAlign: { xs: "left", sm: "right" } }}
-        >
-          {selector}
-        </Grid>
+              {selector}
+            </Grid>
+          </Grid>
+        </Paper>
       </Grid>
       {contenido}
-    </Box>
+    </Grid>
   );
 };
 
