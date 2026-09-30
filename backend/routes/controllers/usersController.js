@@ -14,7 +14,7 @@ const getAll = async (req, res, next) => {
   try {
     const users = await usersModel.esquema
       .find({ status: { $ne: "inactivo" } })
-      .select("-__v");
+      .select("-__v -password");
     res.json(users);
   } catch (e) {
     next(e);
@@ -26,7 +26,7 @@ const getDeletedUsers = async (req, res, next) => {
   try {
     const users = await usersModel.esquema
       .find({ status: { $eq: "inactivo" } })
-      .select("-__v");
+      .select("-__v -password");
     res.json(users);
   } catch (e) {
     next(e);
