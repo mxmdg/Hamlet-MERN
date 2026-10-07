@@ -14,7 +14,7 @@ const getAll = async (req, res, next) => {
   try {
     const users = await usersModel.esquema
       .find({ status: { $ne: "inactivo" } })
-      .select("-__v");
+      .select("-__v -password -resetPasswordToken -resetPasswordExpires");
     res.json(users);
   } catch (e) {
     next(e);
@@ -26,7 +26,7 @@ const getDeletedUsers = async (req, res, next) => {
   try {
     const users = await usersModel.esquema
       .find({ status: { $eq: "inactivo" } })
-      .select("-__v");
+      .select("-__v -password -resetPasswordToken -resetPasswordExpires");
     res.json(users);
   } catch (e) {
     next(e);
@@ -35,19 +35,24 @@ const getDeletedUsers = async (req, res, next) => {
 };
 
 const addUser = async (req, res, next) => {
-  const newUser = new usersModel.esquema({ ...req.body });
   try {
+    const { Name, LastName, email, password } = req.body;
+    const newUser = new usersModel.esquema({ Name, LastName, email, password });
     await newUser.save();
     res.json({ message: newUser.Name + " " + newUser.LastName + " Saved" });
   } catch (error) {
-    //console.log(error);
     next(error);
   }
 };
 
 const getUser = async (req, res, next) => {
   try {
-    const user = await usersModel.esquema.findById(req.params.id);
+    if (!(await canManageUser(req, req.params.id)))
+      return res.status(403).json({ message: "No podés ver este usuario" });
+
+    const user = await usersModel.esquema
+      .findById(req.params.id)
+      .select("-__v -password -resetPasswordToken -resetPasswordExpires");
     res.json(user);
   } catch (error) {
     console.error(error);
@@ -55,15 +60,42 @@ const getUser = async (req, res, next) => {
   }
 };
 
+const canManageUser = async (req, targetId) => {
+  if (req.role === "master") return true;
+  return String(req.user.userId) === String(targetId); // solo uno mismo
+};
+
 const updateUser = async (req, res, next) => {
   try {
-    const newUser = await usersModel.esquema.findOneAndUpdate(
-      { _id: req.params.id },
-      req.body,
-    );
-    res.json({ message: newUser.Name + newUser.LastName + " Saved" });
+    const targetId = req.params.id;
+    const isSelf = String(req.user.userId) === String(targetId);
+
+    if (!(await canManageUser(req, targetId)))
+      return res.status(403).json({ message: "No podés modificar este usuario" });
+
+    const target = await usersModel.esquema.findById(targetId).select("Role");
+    if (!target) return res.status(404).json({ message: "Usuario no encontrado" });
+
+    // Un admin no toca cuentas master
+    if (!isSelf && req.role !== "master" && String(target.Role).toLowerCase() === "master")
+      return res.status(403).json({ message: "No podés modificar este usuario" });
+
+    // Campos que nunca se cambian por acá
+    const {
+      Role, status, password, tenant, _id,
+      resetPasswordToken, resetPasswordExpires,
+      ...allowed
+    } = req.body;
+
+    // El email (con el que se recupera la cuenta) solo lo cambia su dueño o master
+    if (!isSelf && req.role !== "master") delete allowed.email;
+
+    const user = await usersModel.esquema.findByIdAndUpdate(targetId, allowed, {
+      new: true,
+      runValidators: true,
+    });
+    res.json({ message: user.Name + user.LastName + " Saved" });
   } catch (error) {
-    //console.log(error);
     next(error);
   }
 };
@@ -85,10 +117,20 @@ const deleteUser = async (req, res, next) => {
 
 const hardDeleteUser = async (req, res, next) => {
   try {
+    // Con cualquier membresía (activa, inactiva o revocada) no se puede borrar
+    const memberships = await Membership.countDocuments({
+      userId: req.params.id,
+    });
+    if (memberships > 0) {
+      return res.status(409).json({
+        message: `No se puede eliminar: el usuario tiene ${memberships} membresía(s). Eliminá primero las membresías.`,
+      });
+    }
+
     const user = await usersModel.esquema.findByIdAndDelete(req.params.id);
     if (!user)
       return res.status(404).json({ message: "Usuario no encontrado" });
-    res.json({ message: `Usuario ${user.Name} ELIMINADO`, user });
+    res.json({ message: `Usuario ${user.Name} ELIMINADO` });
   } catch (error) {
     console.error("Error:" + error);
     next(error);
@@ -158,12 +200,15 @@ const login = async (req, res, next) => {
         }));
 
         // 4. Respuesta extendida (compatible)
-        return res.json({
-          token,
-          document, // lo dejamos por compatibilidad
-          expirationTime,
-          memberships: formattedMemberships,
-        });
+        const { password, resetPasswordToken, resetPasswordExpires, __v, ...safeDocument } =
+        document.toObject();
+
+      return res.json({
+        token,
+        document: safeDocument,
+        expirationTime,
+        memberships: formattedMemberships,
+      });
       } catch (e) {
         next(e);
       }

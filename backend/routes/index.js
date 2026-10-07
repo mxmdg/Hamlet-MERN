@@ -221,4 +221,20 @@ router.use(
   apiBCRA.getCotizationPerDate,
 );
 
+router.use(
+  "/Hamlet/ai",
+  requireRoleByMethod({
+    post: ["admin", "manager", "operator"],
+  }),
+  require("./ai"),
+);
+
+router.use(
+  "/Hamlet/import",
+  requireRoleByMethod({
+    post: "public"// ["admin", "manager", "operator"],
+  }),
+  require("./import")
+);
+
 module.exports = router;

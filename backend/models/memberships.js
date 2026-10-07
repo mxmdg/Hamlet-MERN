@@ -21,7 +21,7 @@ const MembershipSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["activo", "pendiente", "revocado"],
+      enum: ["activo", "pendiente", "inactivo", "revocado"],
       default: "pendiente",
     },
   },
