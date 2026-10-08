@@ -17,6 +17,8 @@ jobControl.getJobs = async (req, res, next) => {
         Nombre: { $regex: queryText, $options: "i" },
         status: { $ne: "inactivo" },
       })
+      .limit(req.query.limit ? parseInt(req.query.limit) : 0)
+      .skip(req.query.skip ? parseInt(req.query.skip) : 0)
       .select("Nombre Cantidad Fecha Entrega Emision Deadline Owner")
       .sort({ Fecha: -1 });
     res.json(jobList);
@@ -30,6 +32,8 @@ jobControl.getDeletedJobs = async (req, res, next) => {
     const tenant = req.header("x-tenant");
     const jobList = await jobs.esquema
       .find({ tenant, status: { $eq: "inactivo" } })
+      .limit(req.query.limit ? parseInt(req.query.limit) : 0)
+      .skip(req.query.skip ? parseInt(req.query.skip) : 0)
       .select("Nombre Cantidad Fecha Entrega Emision Deadline Owner")
       .sort({ Fecha: -1 });
     res.json(jobList);
@@ -108,6 +112,8 @@ jobControl.getCompleteJobs = async (req, res) => {
 
       const jobList = await jobs.esquema
         .find(query)
+        .limit(req.query.limit ? parseInt(req.query.limit) : 0)
+        .skip(req.query.skip ? parseInt(req.query.skip) : 0)
         .select(
           "-Finishing.Costo.Historial  -Finishing.jobTypesAllowed -Finishing.partTypesAllowed"
         )
