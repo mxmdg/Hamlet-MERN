@@ -36,6 +36,7 @@ const TenantSchema = new mongoose.Schema(
           def: { type: Number, default: 0 },
           max: { type: Number, default: 20 },
         },
+        quoteExpirationDays: { type: Number, default: 30 },
       },
 
       mail: {

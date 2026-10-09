@@ -173,6 +173,24 @@ const PreferencesForm = () => {
       required: true,
       help: "Porcentaje predeterminado de comisión (valor por defecto 0%).",
     },
+    // Pricing - Commission
+    {
+      label: "Presupuestos",
+      type: "Divider",
+      id: "quotes_div",
+      size: 12,
+      align: "center",
+      orientation: "horizontal",
+    },
+    
+    {
+      inputName: "pricing.quoteExpirationDays",
+      label: "Días de validez del presupuesto",
+      type: "Number",
+      id: "quotes_expiration_days",
+      required: true,
+      help: "Días que el presupuesto será válido (valor por defecto 30).",
+    },
 
     // Mail simplificado
     {
@@ -200,7 +218,7 @@ const PreferencesForm = () => {
     {
       label: "Unidades",
       type: "Divider",
-      id: "mail_div",
+      id: "units_div",
       size: 12,
       align: "center",
       orientation: "horizontal",
@@ -232,6 +250,10 @@ const PreferencesForm = () => {
       id: "unit_length",
     },
   ];
+
+  if (context.usePlan === "basic") {
+    preferencesForm.push(pdfValidator[0], pdfValidator[1]);
+  }
 
   if (context.usePlan === "pro") {
     preferencesForm.push(papyrusConnection[0], papyrusConnection[1], papyrusConnection[2],);

@@ -252,7 +252,7 @@ const FormMaterial = (props) => {
               select
               label={inp.label || inp.inputName}
               variant={variant}
-              color={color}
+              color={inp?.color || color}
               size="small"
               defaultValue={
                 useItem !== "new"
@@ -285,7 +285,7 @@ const FormMaterial = (props) => {
           <Button
             variant={variant}
             inputName={inp.inputName}
-            color={color}
+              color={inp?.color || color}
             key={inp.id}
             type={inp.type}
             selectForm={props.selectForm}
@@ -435,13 +435,13 @@ const FormMaterial = (props) => {
       return (
         <Grid size={inp.size || 12}>
           <Divider
-            color={color}
+            color={inp?.color || color}
             textAlign={inp.align || "center"}
             orientation={inp.orientation || "horizontal"}
             sx={{ margin: "15px 0 10px 0" }}
           >
             {inp.label && (
-              <Typography variant={"button"} color={color}>
+              <Typography variant={"button"} color={inp?.color || color}>
                 {inp.label || ""}
               </Typography>
             )}
@@ -484,7 +484,7 @@ const FormMaterial = (props) => {
             autoComplete={inp.inputName}
             multiline={inp.multiline || false}
             variant={variant}
-            color={color}
+              color={inp?.color || color}
             defaultValue={
               useItem !== "new"
                 ? useItem[inp.inputName]

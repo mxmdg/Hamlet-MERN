@@ -286,12 +286,12 @@ export default function UploadFilesButton({
     return <Spinner />;
   }
 
-  if (usePlan !== "pro") {
+  if (usePlan === "trial") {
     return (
       <Card>
         <CardContent>
           <Typography variant="body1" color="text.secondary">
-            Actualiza a nuestro plan Pro para habilitar la validación de
+            Actualiza tu plan para habilitar la validación de
             archivos PDF.
           </Typography>
         </CardContent>
