@@ -168,7 +168,7 @@ let PrintersDataForm = [
     options: costsList,
     required: true,
     help: "Seleccione la formula de costos mas apropiada para su impresora",
-  },
+  }/* ,
 
   {
     inputName: "TotalPrints",
@@ -209,7 +209,7 @@ let PrintersDataForm = [
     id: "id_010",
     required: true,
     help: "Consulte el manual de la impresora para corroborar la cantidad de impresiones.",
-  },
+  },*/
 ];
 
 export default PrintersDataForm;

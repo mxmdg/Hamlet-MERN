@@ -31,7 +31,7 @@ const PrinterDetails = (props) => {
   const navigate = useNavigate();
 
   const editClickHandler = (e) => {
-    navigate(`../impresoras/edit/${props.pd._id}`);
+    navigate(`../billing/edit/${props.pd._id}`);
   };
 
   const saveClickHandler = (e) => {

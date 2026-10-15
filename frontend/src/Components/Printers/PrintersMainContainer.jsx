@@ -15,8 +15,8 @@ import {
 import { useNavigate } from "react-router-dom";
 import AddFloatButton from "../General/AddFloatButton";
 
-const PrintersMainContainer = () => {
-  const collection = "impresoras";
+const PrintersMainContainer = (props) => {
+  const collection = props.entity;
   const navigate = useNavigate();
 
   return (

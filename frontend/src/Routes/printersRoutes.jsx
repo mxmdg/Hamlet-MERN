@@ -3,6 +3,7 @@ import MainContainer from "../Components/Pages/MainContainer";
 import PrintersMainContainer from "../Components/Printers/PrintersMainContainer";
 import FormMaterial from "../Components/Formulario/FormMaterial";
 import PrintersDataForm from "../Components/Formulario/PrintersDataForm";
+import BillingDataForm from "../Components/Formulario/BillingDataForm";
 
 export const printersRoutes = ({ color, variant }) => {
   return (
@@ -23,8 +24,23 @@ export const printersRoutes = ({ color, variant }) => {
         path="/billing"
         element={
           <PrintersMainContainer
-            entity={"impresoras"}
-            form={PrintersDataForm}
+            entity={"impresoras/billing/"}
+            form={BillingDataForm}
+          />
+        }
+      />
+      <Route
+        path="/billing/edit/:id"
+        element={
+          <FormMaterial
+            form={BillingDataForm}
+            collection="impresoras/billing/"
+            task="edit"
+            title="Editar Impresora"
+            subtitle="La configuracion de las impresoras es importante para el correcto funcionamiento del sistema de costos."
+            submitText={"Guardar cambios"}
+            variant={variant}
+            color={color}
           />
         }
       />

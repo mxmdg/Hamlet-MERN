@@ -144,7 +144,54 @@ printerControl.getPrintersSimple = async (req, res, next) => {
   }
 };
 
+printerControl.updatePrinterNoBilling = async (req, res) => {
+  console.log("updatePrinterNoBilling called");
+  try {
+    const {
+      Modelo,
+      SerialNumber,
+      Fabricante,
+      Tipo,
+      Colores,
+      X_Minimo,
+      X_Maximo,
+      Y_Minimo,
+      Y_Maximo,
+      Paginas_por_minuto,
+      Costo,
+    } = req.body;
+    const tenant = req.header("x-tenant");
+    const printer = await printers.esquema.findOne({
+      _id: req.params.id,
+      tenant,
+    });
+
+    if (!printer) {
+      return res.status(404).json({ message: "Impresora no encontrada" });
+    }
+
+    printer.Modelo = Modelo;
+    printer.SerialNumber = SerialNumber;
+    printer.Fabricante = Fabricante;
+    printer.Tipo = Tipo;
+    printer.Colores = Colores;
+    printer.X_Minimo = X_Minimo;
+    printer.X_Maximo = X_Maximo;
+    printer.Y_Minimo = Y_Minimo;
+    printer.Y_Maximo = Y_Maximo;
+    printer.Paginas_por_minuto = Paginas_por_minuto;
+    printer.Costo = Costo;
+
+    await printer.save();
+    res.json({ message: "Impresora actualizada " + printer.Modelo });
+  } catch (e) {
+    res.json({ message: "Error: " + e });
+  }
+};
+
+
 printerControl.updatePrinter = async (req, res) => {
+  console.log("updatePrinter called");
   try {
     const {
       Modelo,
@@ -199,28 +246,48 @@ printerControl.updatePrinter = async (req, res) => {
       newBilling,
     );
 
-    printer.Modelo = Modelo;
-    printer.SerialNumber = SerialNumber;
-    printer.Fabricante = Fabricante;
-    printer.Tipo = Tipo;
-    printer.Colores = Colores;
-    printer.X_Minimo = X_Minimo;
-    printer.X_Maximo = X_Maximo;
-    printer.Y_Minimo = Y_Minimo;
-    printer.Y_Maximo = Y_Maximo;
-    printer.Paginas_por_minuto = Paginas_por_minuto;
-    printer.Costo = Costo;
-    printer.TotalPrints = TotalPrints;
-    printer.ColorPrints = ColorPrints;
-    printer.BlackPrints = BlackPrints;
-    printer.LargePrints = LargePrints;
-    printer.SmallPrints = SmallPrints;
+    Modelo ? printer.Modelo = Modelo : printer.Modelo = printer.Modelo;
+    SerialNumber ? printer.SerialNumber = SerialNumber : printer.SerialNumber = printer.SerialNumber;
+    Fabricante ? printer.Fabricante = Fabricante : printer.Fabricante = printer.Fabricante;
+    Tipo ? printer.Tipo = Tipo : printer.Tipo = printer.Tipo;
+    Colores ? printer.Colores = Colores : printer.Colores = printer.Colores;
+    X_Minimo ? printer.X_Minimo = X_Minimo : printer.X_Minimo = printer.X_Minimo;
+    X_Maximo ? printer.X_Maximo = X_Maximo : printer.X_Maximo =printer.X_Maximo;
+    Y_Minimo ? printer.Y_Minimo = Y_Minimo : printer.Y_Minimo = printer.Y_Minimo;
+    Y_Maximo ? printer.Y_Maximo = Y_Maximo : printer.Y_Maximo = printer.Y_Maximo;
+    Paginas_por_minuto ? printer.Paginas_por_minuto = Paginas_por_minuto : printer.Paginas_por_minuto = printer.Paginas_por_minuto;
+    Costo ? printer.Costo = Costo : printer.Costo = printer.Costo;
+    TotalPrints ? printer.TotalPrints = TotalPrints : printer.TotalPrints = printer.TotalPrints;
+    ColorPrints ? printer.ColorPrints = ColorPrints : printer.ColorPrints = printer.ColorPrints;
+    BlackPrints ? printer.BlackPrints = BlackPrints : printer.BlackPrints =printer.BlackPrints;
+    LargePrints ? printer.LargePrints = LargePrints : printer.LargePrints = printer.LargePrints;
+    SmallPrints ?printer.SmallPrints = SmallPrints :printer.SmallPrints =printer.SmallPrints;
 
     await printer.save();
     res.json({ message: "Impresora actualizada " + printer.Modelo });
   } catch (e) {
     //console.log(e);
     res.json({ message: "Error: " + e });
+  }
+};
+
+printerControl.updateBilling = async (req, res) => {
+  console.log("updateBilling called");
+  try {
+    const billing = req.body;
+
+    const tenant = req.header("x-tenant");
+    const printer = await printers.esquema.findOne({ _id: req.params.id, tenant });
+
+    if (!printer) {
+      return res.status(404).json({ message: "Impresora no encontrada" });
+    }
+
+    printer.Billing = billing;
+    await printer.save();
+    res.json({ message: "Facturación actualizada", printer });
+  } catch (e) {
+    res.status(500).json({ message: "Error: " + e });
   }
 };
 

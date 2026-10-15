@@ -10,6 +10,8 @@ const {
   getPrinterSimple,
   getPrintersSimple,
   updatePrinter,
+  updatePrinterNoBilling,
+  updateBilling,
   deletePrinter,
   QueryPrinter,
   getDeletedPrinters,
@@ -23,12 +25,18 @@ routerPrinter.route("/trash").get(getDeletedPrinters);
 routerPrinter.route("/simple/").get(getPrintersSimple);
 routerPrinter.route("/simple/:id").get(getPrinterSimple);
 
+routerPrinter.route("/billing/:id").put(updatePrinter).get(getPrinter);
+
+routerPrinter.route("/billingCorrect/:id").put(updateBilling).get(getPrinter);
+
+
+routerPrinter.route("/trash/:id").delete(updateStatus);
+
 routerPrinter
   .route("/:id")
-  .put(updatePrinter)
+  .put(updatePrinterNoBilling)
   .get(getPrinter)
   .delete(updateStatus);
 
-routerPrinter.route("/trash/:id").delete(updateStatus);
 
 module.exports = routerPrinter;
