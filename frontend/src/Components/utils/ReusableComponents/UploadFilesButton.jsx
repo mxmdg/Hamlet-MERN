@@ -144,38 +144,39 @@ export default function UploadFilesButton({
         );
       }
 
-      if (
-        data.page_count !== expectedPageCount ||
-        mostCommonSize !== expectedSize
-      ) {
-        setLoading(false);
-        setError({
-          message: `Diferencias detectadas:\nPaginas esperadas: ${expectedPageCount}, paginas recibidas: ${data.page_count}\nTamaño esperado: ${expectedSize}, tamaño mas común: ${mostCommonSize}`,
-          title:
-            "El archivo PDF no coincide con las especificaciones esperadas",
-          severity: "info",
+      const samePages = Number(data.page_count) === Number(expectedPageCount);
+      const sameSize = mostCommonSize === expectedSize;
+      const validated = samePages && sameSize;
 
+      if (!validated) {
+        setError({
+          title: "El archivo PDF no coincide con las especificaciones esperadas",
+          message:
+            `Diferencias detectadas:\n` +
+            `${samePages ? "✔" : "✘"} Páginas esperadas: ${expectedPageCount}, recibidas: ${data.page_count}\n` +
+            `${sameSize ? "✔" : "✘"} Tamaño esperado: ${expectedSize}, tamaño más común: ${mostCommonSize}`,
+          severity: "warning",
         });
         return;
       }
 
-      if (onUploadSuccess) {
+      setError({
+        title: "Archivo subido correctamente",
+        message: "El archivo coincide con las especificaciones esperadas.",
+        severity: "success",
+      });
 
-        setLoading(false);
-        onUploadSuccess(data);
-      }
+      if (onUploadSuccess) onUploadSuccess(data);
     } catch (error) {
+      console.error(error);
       setLoading(false);
       if (error.name === "TypeError" && error.message === "Failed to fetch") {
-        setError({
-          title: "Error de red",
-          message:
-            "No se pudo conectar al servidor. Por favor revise su conexión o contacte al soporte.",
-        });
+        setError({ title: "Error de red", message: "No se pudo conectar al servidor..." });
       } else {
         setError({
-          title: "Error al subir el archivo",
-          message: "Ocurrió un error inesperado al subir el archivo.",
+          title: "Error inesperado",
+          message: error.message,
+          severity: "error",
         });
       }
     }
