@@ -221,6 +221,7 @@ const template = async (
   tipoTrabajo,
   partes,
   cliente = "Imprenta Dorrego",
+  idCliente,
   contactoClienteNombre = "Nombre",
   contactoClienteApellido = "Apellido",
   contactoClienteEmail = "Email",
@@ -291,6 +292,13 @@ const template = async (
     )
     .join("\n");
 
+    const person = `\t\t\t<Person FamilyName="${escapeXML(contactoClienteApellido)}" DescriptiveName="${escapeXML(
+                          `${contactoClienteNombre}_${contactoClienteApellido}`,
+                        )}" FirstName="${escapeXML(contactoClienteNombre)}" ProductID="${escapeXML(contactoClienteEmail)}">
+                    \t\t\t\t<ComChannel ChannelType="Phone" ChannelTypeDetails="LandLine" Locator="12345"/>
+                    \t\t\t\t<ComChannel ChannelType="Email" Locator="${escapeXML(contactoClienteEmail)}"/>
+                    \t\t\t</Person>`
+
   return `<?xml version="1.0" encoding="UTF-8"?>
 <JDF 
 \tJobID="ApoXML-${escapeXML(safeOrden)}" 
@@ -346,17 +354,12 @@ const template = async (
 \t\t</ColorIntent>
 ${partialComponents}
 \t\t<BindingIntent ID="ID_BindingIntent" Class="Intent" BindingOrder="${bindingOrder}" Status="Available"/>
-\t\t<CustomerInfo ID="ID_CustomerInfo_Main" Class="Parameter" Status="Available" CustomerID="PI_CompApoXML">
+\t\t<CustomerInfo ID="ID_CustomerInfo_Main" Class="Parameter" Status="Available" CustomerID="${idCliente}">
 \t\t\t<ContactRef rRef="ID_Contact_Main"/>
 \t\t</CustomerInfo>
 \t\t<Contact ID="ID_Contact_Main" Class="Parameter" Status="Available" ContactTypes="Customer Administrator">
-\t\t\t<Company OrganizationName="${escapeXML(cliente)}" ProductID="PI_CompApoXML"/>
-\t\t\t<Person FamilyName="${escapeXML(contactoClienteApellido)}" DescriptiveName="${escapeXML(
-      `${contactoClienteNombre}_${contactoClienteApellido}`,
-    )}" FirstName="${escapeXML(contactoClienteNombre)}" ProductID="PI_Pers_apoxmlNV">
-\t\t\t\t<ComChannel ChannelType="Phone" ChannelTypeDetails="LandLine" Locator="12345"/>
-\t\t\t\t<ComChannel ChannelType="Email" Locator="${escapeXML(contactoClienteEmail)}"/>
-\t\t\t</Person>
+\t\t\t<Company OrganizationName="${escapeXML(cliente)}" ProductID="${idCliente}"/>
+/*Aqui va person*/
 \t\t</Contact>
 \t\t<NodeInfo Class="Parameter" ID="ID_NodeInfo_Root" NodeStatus="Waiting" Status="Available"/>
 \t</ResourcePool>
