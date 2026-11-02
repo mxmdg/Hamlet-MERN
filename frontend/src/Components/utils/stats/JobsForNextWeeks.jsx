@@ -44,30 +44,30 @@ const JobsForNextDays = (props) => {
       endDate.setDate(today.getDate() + to); // next 30 days
       yesterday.setDate(today.getDate() - from); //Ayer
 
-      //try {
+      try {
       if (
         new Date(job.Entrega) >= yesterday &&
         new Date(job.Entrega) <= endDate
       ) {
         if (outDate[Salida]) {
           outDate[Salida][job.Tipo[0].name] >= 1
-            ? (outDate[Salida][job.Tipo[0].name] += job.Cantidad)
-            : (outDate[Salida][job.Tipo[0].name] = job.Cantidad);
+            ? (outDate[Salida][job.Tipo[0]?.name] += job.Cantidad)
+            : (outDate[Salida][job.Tipo[0]?.name] = job.Cantidad);
         } else
           outDate[Salida] = {
-            [job.Tipo[0].name]: job.Cantidad,
+            [job.Tipo[0]?.name]: job.Cantidad,
             name: `${Salida}`,
           };
       }
-      //}
-      /* catch (error) {
+      }
+      catch (error) {
         if (!errorRef.current) {
           errorRef.current = true; // Se marca que ya ocurrió un error
           setError(error); // Actualiza el estado con el error solo una vez
         }
         console.log(error);
         console.log(job);
-      } */
+      }
     }
   } catch (error) {
     setError(error);

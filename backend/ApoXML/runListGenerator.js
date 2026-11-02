@@ -69,11 +69,13 @@ function splitPartsForJDF(partesEntrada, totalPages, esCuerpo) {
   const remainderParts = cuerpoPartes.filter((p) => !p.RunList || p.RunList.trim() === "");
   for (let pos = 0; pos < totalPages; pos++) {
     if (claimedBy[pos]) continue;
-    if (remainderParts.length === 0) {
+    if (remainderParts.length > 1) {
       throw new Error(`La página ${pos} quedó libre y no hay ninguna parte remanente que la cubra.`);
     }
     claimedBy[pos] = remainderParts[0];
   }
+
+  
 
   const runs = [];
   let runStart = 0, runOwner = claimedBy[0];

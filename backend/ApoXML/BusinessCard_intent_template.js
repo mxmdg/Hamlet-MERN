@@ -3,13 +3,13 @@ const { splitPartsForJDF } = require("./runListGenerator");
 
 const resolveJdfType = async (part, tenant) => {
   const partId = part?._id || part?.tipoParteId || part?.jobParts?.[0]?._id;
-  if (!partId) return "body";
+  if (!partId) return "Body";
   try {
     const doc = await jobParts.esquema.findOne({ _id: partId, tenant }).select("jdfType").lean();
-    return doc?.jdfType || "body";
+    return doc?.jdfType || "Body";
   } catch (err) {
     console.error(`Error fetching jobPart ${partId}:`, err.message || err);
-    return "body";
+    return "Body";
   }
 };
 
@@ -113,7 +113,7 @@ const getColorIntentRef = (colores = {}) =>
     : "ID_ColorIntent_Gray";
 
 const buildPartialComponent = (part, index) => {
-  let productType = part?._jdfType || "body";
+  let productType = part?._jdfType || "Body";
   const displayName = `${part?.tipoParte || "Parte"}_${part?.nombreParte || `Parte_${index + 1}`}`;
   const readerPageCount = asPositiveInt(part?.paginas, 1);
 
@@ -248,7 +248,7 @@ const template = async (
 
   let safePartesSeccionadas;
   if (hayAlgunRunList) {
-    const esCuerpo = (part) => part._jdfType !== "Cover";
+    const esCuerpo = (part) => part._jdfType === "Body" || part._jdfType === "Insert";
     const totalPages = partesConTipo
       .filter(esCuerpo)
       .reduce((sum, part) => sum + asPositiveInt(part.paginas, 1), 0);

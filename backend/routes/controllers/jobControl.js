@@ -1,4 +1,5 @@
 const jobs = require("../../models/Jobs");
+const jobParts = require("../../models/jobParts");
 const users = require("../../models/usersSchema");
 const companies = require("../../models/empresas");
 const stocks = require("../../models/materiales");

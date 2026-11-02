@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import Alert from "@mui/material/Alert";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -16,6 +15,8 @@ import { ReactComponent as Logo2 } from "../../../src/img/Logo/logo ok-01.svg";
 const ErrorMessage = (props) => {
   // moved hook here so it's always called on every render
   const [open, setOpen] = useState(true);
+
+  console.log("ErrorMessage props:", props);
 
   // normalizeError: returns a string or null (if no error)
   const normalizeError = (err) => {
@@ -56,7 +57,7 @@ const ErrorMessage = (props) => {
   // Determine raw input (support props.error, props.message, props.children)
   const raw = props.error ?? props.message ?? props.children;
   const message = normalizeError(raw);
-  const navigate= useNavigate()
+  // const navigate= useNavigate()
 
   // Si no hay mensaje válido, no renderizar nada
   if (!message) return null;
@@ -76,7 +77,7 @@ const ErrorMessage = (props) => {
   };
 
   const cancelAction = () => {
-    navigate(-1)
+    // navigate(-1)
     handleClose()
   }
 

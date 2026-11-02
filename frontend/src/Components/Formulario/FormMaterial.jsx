@@ -46,6 +46,13 @@ import { StyledTooltip } from "../General/TableGrid";
 
 //Auxiliar Functions:
 
+const normalizeCheckboxItems = (value) => {
+  if (Array.isArray(value)) return value;
+  if (value === undefined || value === null) return [];
+  if (typeof value === "string") return value ? [value] : [];
+  return [];
+};
+
 function convertirArrayAObjeto(arr) {
   return arr.reduce((obj, item) => {
     const propName =
@@ -135,7 +142,7 @@ const FormMaterial = (props) => {
             for (let inp of dataForm) {
               if (inp.type === "checkbox") {
                 itemToEdit !== "new" && itemToEdit !== undefined
-                  ? (checkOptions[inp.inputName] = itemToEdit[inp.inputName])
+                  ? (checkOptions[inp.inputName] = normalizeCheckboxItems(itemToEdit[inp.inputName]))
                   : (checkOptions[inp.inputName] = []);
               }
               if (inp.type === "checkbox" && props.task !== "new") {
@@ -157,7 +164,14 @@ const FormMaterial = (props) => {
       };
       fetchItem();
     } else if (props.item) {
-      const item = props.item;
+      const checkOptions = {};
+      for (let inp of dataForm) {
+        if (inp.type === "checkbox") {
+          checkOptions[inp.inputName] = normalizeCheckboxItems(props.item[inp.inputName]);
+        }
+      }
+      setSelectedCheckboxItems(checkOptions);
+      setLoading(false);
     } else {
       for (let inp of props.form) {
         if (inp.type === "checkbox") {
@@ -298,44 +312,49 @@ const FormMaterial = (props) => {
         </Grid>
       );
     } else if (inp.type === "checkbox") {
+      const selectedOptions = normalizeCheckboxItems(
+        selectedCheckboxItems[inp.inputName],
+      );
       const allSelected =
-        useItem !== "new"
-          ? inp.options.length === selectedCheckboxItems[inp.inputName]?.length
-          : [];
+        useItem !== "new" && inp.options.length === selectedOptions.length;
+
+      const getOptionValue = (option) =>
+        typeof option === "object" && option !== null
+          ? option.value
+          : option;
+      const getOptionLabel = (option) =>
+        typeof option === "object" && option !== null
+          ? option.text
+          : option;
 
       const changeHandler = (e, opt, checkboxSetKey) => {
         e.preventDefault();
-        setMyValue({ [checkboxSetKey]: e.target.value });
+        const optionValue = getOptionValue(opt);
+        setMyValue({ [checkboxSetKey]: optionValue });
         setSelectedCheckboxItems((prevItems) => {
           const selectedItemsForSet = prevItems[checkboxSetKey] || [];
 
           if (e.target.checked) {
-            // Agregar elemento a la lista de elementos seleccionados para el conjunto
             return {
               ...prevItems,
-              [checkboxSetKey]: [...selectedItemsForSet, opt],
-            };
-          } else {
-            // Remover elemento de la lista de elementos seleccionados para el conjunto
-            return {
-              ...prevItems,
-              [checkboxSetKey]: selectedItemsForSet.filter(
-                (item) => item !== opt,
-              ),
+              [checkboxSetKey]: [...selectedItemsForSet, optionValue],
             };
           }
+          return {
+            ...prevItems,
+            [checkboxSetKey]: selectedItemsForSet.filter(
+              (item) => item !== optionValue,
+            ),
+          };
         });
       };
 
       const handleChange1 = (event, checkboxSetKey) => {
         const isChecked = event.target.checked;
-        setSelectedCheckboxItems((prevItems) => {
-          const updatedItems = isChecked ? inp.options : [];
-          return {
-            ...prevItems,
-            [checkboxSetKey]: updatedItems,
-          };
-        });
+        setSelectedCheckboxItems((prevItems) => ({
+          ...prevItems,
+          [checkboxSetKey]: isChecked ? inp.options.map(getOptionValue) : [],
+        }));
       };
 
       return (
@@ -371,13 +390,11 @@ const FormMaterial = (props) => {
                         variant={variant}
                         color={color}
                         indeterminate={
-                          selectedCheckboxItems[inp.inputName]?.length > 0 &&
-                          selectedCheckboxItems[inp.inputName]?.length <
-                            inp.options.length
+                          selectedOptions.length > 0 &&
+                          selectedOptions.length < inp.options.length
                         }
                         checked={
-                          selectedCheckboxItems[inp.inputName]?.length ===
-                          inp.options.length
+                          selectedOptions.length === inp.options.length
                         }
                         onChange={(e) => {
                           handleChange1(e, inp.inputName);
@@ -388,39 +405,40 @@ const FormMaterial = (props) => {
                 </StyledTooltip>
                 <FormGroup label={inp.label || inp.inputName}>
                   <Grid container columns={12}>
-                    {inp.options.sort().map((opt, index) => {
-                      return (
-                        <Grid
-                          key={index + inp.inputName}
-                          size={{ xs: 12, sm: 6, md: 4, lg: 3 }}
-                        >
-                          <FormControlLabel
-                            key={inp.inputName + index}
-                            control={
-                              <Checkbox
-                                color={color}
-                                key={inp.inputName + "_" + index}
-                                id={"id_" + inp.inputName + index}
-                                value={opt}
-                                checked={
-                                  (selectedCheckboxItems &&
-                                    selectedCheckboxItems[inp.inputName] &&
-                                    selectedCheckboxItems[
-                                      inp.inputName
-                                    ].includes(opt)) ||
-                                  false
-                                }
-                                onChange={(e) =>
-                                  changeHandler(e, opt, inp.inputName)
-                                }
-                              />
-                            }
-                            label={opt}
-                            labelPlacement="end"
-                          />
-                        </Grid>
-                      );
-                    })}
+                    {[...inp.options]
+                      .sort((a, b) =>
+                        String(getOptionLabel(a)).localeCompare(
+                          String(getOptionLabel(b)),
+                        ),
+                      )
+                      .map((opt, index) => {
+                        const optionValue = getOptionValue(opt);
+                        const optionLabel = getOptionLabel(opt);
+                        return (
+                          <Grid
+                            key={optionValue ?? index + inp.inputName}
+                            size={{ xs: 12, sm: 6, md: 4, lg: 3 }}
+                          >
+                            <FormControlLabel
+                              control={
+                                <Checkbox
+                                  color={color}
+                                  id={"id_" + inp.inputName + index}
+                                  value={optionValue}
+                                  checked={
+                                    selectedOptions.includes(optionValue) || false
+                                  }
+                                  onChange={(e) =>
+                                    changeHandler(e, opt, inp.inputName)
+                                  }
+                                />
+                              }
+                              label={optionLabel}
+                              labelPlacement="end"
+                            />
+                          </Grid>
+                        );
+                      })}
                   </Grid>
                   {errors[inp.id]?.type === "required" && (
                     <FormHelperText>Este campo es requerido</FormHelperText>

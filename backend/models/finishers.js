@@ -14,7 +14,7 @@ const finisherSchema = new Schema({
   Unidad: { type: String, required: true },
   Fecha: { type: Date, default: Date.now, required: false },
   jobTypesAllowed: { type: Object, required: false },
-  partTypesAllowed: { type: Object, required: false },
+  partTypesAllowed: { type: [String], required: false, default: [] },
   status: {
     type: String,
     enum: ["activo", "inactivo"],

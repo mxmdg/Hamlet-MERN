@@ -8,11 +8,14 @@ const {
   getDeletedFinishers,
   addFinisher,
   getFinisher,
+  getFinihsersByJobPartsAllowed,
   updateFinisher,
   updateStatus,
 } = require("./controllers/finishersControl");
 
 routerFinisher.route("/").get(getFinishers).post(addFinisher);
+
+routerFinisher.route("/jobPart/:partType").get(getFinihsersByJobPartsAllowed);
 
 routerFinisher.route("/trash").get(getDeletedFinishers);
 

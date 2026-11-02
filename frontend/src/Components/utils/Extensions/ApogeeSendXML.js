@@ -1,5 +1,17 @@
-import { addPrivateElement } from "../../customHooks/FetchDataHook";
+import { addPrivateElement, getPrivateElementByID } from "../../customHooks/FetchDataHook";
 import { mmToPt } from "../generalData/unitConverter";
+
+const descargar = (contenido, nombre) => {
+  const blob = new Blob([contenido], { type: "application/vnd.cip4-jdf+xml" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = nombre;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+};
 
 export const sendXML = async (jobToSend, cot) => {
   const data = {
@@ -33,28 +45,28 @@ export const sendXML = async (jobToSend, cot) => {
     tipoParteId: part.jobParts?.[0]?._id,
   }));
 
-  data.partes = partsData;
+  // jdfType desde el catálogo (no desde la copia guardada en el trabajo)
+  const ids = [...new Set(partsData.map((p) => p._id).filter(Boolean))];
+  const catalogo = await Promise.all(ids.map((id) => getPrivateElementByID("jobParts", id)));
+  const esFlatwork = {};
+  catalogo.forEach((c) => { esFlatwork[c._id] = c.jdfType === "Flatwork"; });
 
-  console.log(data);
+  const libro = partsData.filter((p) => !esFlatwork[p._id]);
+  const flat = partsData.filter((p) => esFlatwork[p._id]);
 
-  // OJO: no atrapamos el error acá para devolverlo como valor -- lo dejamos
-  // propagarse (relanzándolo con un mensaje legible) para que el catch de
-  // xmlHandler, en CotizacionCard.jsx, sea el que de verdad se entere.
-  try {
-    const res = await addPrivateElement(`SendToApogee`, data);
-    const xmlData = new Blob([res.data], {
-      type: "application/vnd.cip4-jdf+xml",
+  const grupos = [];
+  if (libro.length) grupos.push({ partes: libro, tipoTrabajo: data.tipoTrabajo, sufijo: "_Libro" });
+  if (flat.length) grupos.push({ partes: flat, tipoTrabajo: "Sin Encuadernacion", sufijo: "_Sin_Encuadernacion" });
+
+  for (const g of grupos) {
+    const res = await addPrivateElement("SendToApogee", {
+      ...data,
+      tipoTrabajo: g.tipoTrabajo,
+      partes: g.partes,
     });
-    const xmlURL = URL.createObjectURL(xmlData);
-    const link = document.createElement("a");
-    link.href = xmlURL;
-    link.download = `${data.orden + "_" + data.nombre}.jdf`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  } catch (error) {
-    console.log(error);
-    const mensajeServidor = error.response?.data?.error;
-    throw error;
+    const nombre = grupos.length > 1
+      ? `${data.orden}_${data.nombre}${g.sufijo}.jdf`
+      : `${data.orden}_${data.nombre}.jdf`;
+    descargar(res.data, nombre);
   }
 };

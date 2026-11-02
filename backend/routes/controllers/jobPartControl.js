@@ -1,4 +1,22 @@
 const jobParts = require("../../models/jobParts");
+const { syncPartFinishers } = require("../../services/syncPartFinishers");
+const Finishers = require("../../models/finishers").esquema;
+
+const finisherLabel = (finisher) =>
+  `${finisher.Fabricante || ""} ${finisher.Modelo || ""} - ${finisher.Proceso || ""}`.trim();
+
+const resolveFinisherIds = async (tenant, finishers) => {
+  if (!Array.isArray(finishers) || finishers.length === 0) return [];
+
+  const availableFinishers = await Finishers.find({ tenant });
+  const selectedValues = new Set(finishers.map(String));
+  return availableFinishers
+    .filter((finisher) => {
+      const id = String(finisher._id);
+      return selectedValues.has(id) || selectedValues.has(finisherLabel(finisher));
+    })
+    .map((finisher) => finisher._id);
+};
 
 const jobPartsControl = {};
 
@@ -41,6 +59,7 @@ jobPartsControl.addJobPart = async (req, res) => {
       maxStockWeight,
       jobTypesAllowed,
       jdfType,
+      finishers = [],
     } = req.body;
     const tenant = req.header("x-tenant");
     const newJobPart = new jobParts.esquema({
@@ -59,6 +78,8 @@ jobPartsControl.addJobPart = async (req, res) => {
       tenant,
     });
     await newJobPart.save();
+    const finisherIds = await resolveFinisherIds(tenant, finishers);
+    await syncPartFinishers({ tenant, partType: Type, finisherIds });
     res.json({ message: newJobPart.Type + " guardado OK" });
   } catch (error) {
     console.log(error);
@@ -118,8 +139,10 @@ jobPartsControl.updateJobPart = async (req, res) => {
       maxStockWeight,
       jobTypesAllowed,
       jdfType,
+      finishers = [],
     } = req.body;
     const tenant = req.header("x-tenant");
+    const existingJobPart = await jobParts.esquema.findOne({ _id: req.params.id, tenant });
     const JobPart = await jobParts.esquema.findOneAndUpdate(
       { _id: req.params.id, tenant },
       {
@@ -140,6 +163,11 @@ jobPartsControl.updateJobPart = async (req, res) => {
     );
     if (!JobPart)
       return res.status(404).json({ message: "jobPart no encontrado" });
+    if (existingJobPart && existingJobPart.Type !== Type) {
+      await syncPartFinishers({ tenant, partType: existingJobPart.Type, finisherIds: [] });
+    }
+    const finisherIds = await resolveFinisherIds(tenant, finishers);
+    await syncPartFinishers({ tenant, partType: Type, finisherIds });
     res.json({ Message: "JobPart actualizado " + JobPart.Type });
   } catch (error) {
     //console.log(error);

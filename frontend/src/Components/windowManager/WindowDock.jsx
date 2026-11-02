@@ -25,7 +25,7 @@ export function WindowDock() {
     <Box
       sx={{
         position: 'fixed',
-        right: 12,
+        left: 0,
         bottom: 0,
         display: 'flex',
         height: 36,
@@ -35,7 +35,7 @@ export function WindowDock() {
         pointerEvents: 'none',
         justifyContent: 'flex-end',
         backgroundColor: '#ffffff0f',
-        borderRadius: '12px 0 0 0',
+        borderRadius: '0px 12px 0 0',
         padding: 3,
         backdropFilter: 'blur(2px)',
       }}

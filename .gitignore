@@ -5,3 +5,4 @@ frontend/build
 backend/dbConnection.js
 frontend/.env
 backend/.env
+backend/.env

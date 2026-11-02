@@ -1,7 +1,6 @@
 import { Route } from "react-router-dom";
 import MainContainer from "../Components/Pages/MainContainer";
-import FormMaterial from "../Components/Formulario/FormMaterial";
-import jobPartDataForm from "../Components/Formulario/JobPartsDataForm";
+import JobPartsDataForm, { MoldeJobParts } from "../Components/Formulario/JobPartsDataForm";
 import StatsCollector from "../Components/utils/stats/StatsCollector";
 import JobsPerPartType from "../Components/utils/stats/JobsPerPartType";
 import { Grid } from "@mui/material";
@@ -13,7 +12,7 @@ export const jobPartsRoutes = ({ color, variant }) => (
       element={
         <Grid container columns={12}>
           <Grid columns={{ sm: 12, md: 6 }}>
-            <MainContainer entity={"JobParts"} form={jobPartDataForm} />
+            <MainContainer entity={"JobParts"} form={MoldeJobParts} />
           </Grid>
           <Grid columns={{ sm: 12, md: 3 }}>
             <StatsCollector route="jobs/complete">
@@ -26,14 +25,13 @@ export const jobPartsRoutes = ({ color, variant }) => (
     <Route
       path="/JobParts/trash"
       element={
-        <MainContainer entity={"JobParts/trash"} form={jobPartDataForm} />
+        <MainContainer entity={"JobParts/trash"} form={MoldeJobParts} />
       }
     />
     <Route
       path="/JobParts/add"
       element={
-        <FormMaterial
-          form={jobPartDataForm}
+        <JobPartsDataForm
           collection="JobParts"
           task="new"
           title="Agregar Parte de Trabajo"
@@ -47,8 +45,7 @@ export const jobPartsRoutes = ({ color, variant }) => (
     <Route
       path="/JobParts/copy/:id"
       element={
-        <FormMaterial
-          form={jobPartDataForm}
+        <JobPartsDataForm
           collection="JobParts"
           task="copy"
           title="Copiar Parte de Trabajo"
@@ -62,8 +59,7 @@ export const jobPartsRoutes = ({ color, variant }) => (
     <Route
       path="/JobParts/edit/:id"
       element={
-        <FormMaterial
-          form={jobPartDataForm}
+        <JobPartsDataForm
           collection="JobParts"
           task="edit"
           title="Editar Parte de Trabajo"

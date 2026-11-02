@@ -1,6 +1,7 @@
 const { Schema, model, isValidObjectId } = require("mongoose");
 const mongoose = require("../dbConnection");
 const timeAgo = require("../middlewares/timeAgoTranslator");
+const partTypeSchema = require("./jobParts").clase;
 
 function orientation(x, y) {
   const formato = `${x} x ${y}`;
@@ -16,15 +17,6 @@ function orientation(x, y) {
   return { orientacion, formato };
 }
 
-const partTypeSchema = new Schema({
-  jobTypes: [],
-  maxStockWeight: { type: Number, required: false },
-  minStockWeight: { type: Number, required: false },
-  maxStockWeight: { type: Number, required: false },
-  Type: { type: String, required: true },
-  pageRange: [],
-  printModeAllowed: { type: String, required: false },
-});
 
 const jobTypeSchema = new Schema({
   name: { type: String, required: true },

@@ -108,6 +108,21 @@ finishersControl.getFinisher = async (req, res, next) => {
   }
 };
 
+finishersControl.getFinihsersByJobPartsAllowed = async (req, res, next) => {
+  try {
+    const tenant = req.header("x-tenant");
+    const { partType } = req.params;
+    const finishersList = await finishers.esquema
+      .find({ tenant, status: { $ne: "inactivo" }, partTypesAllowed: partType })
+      .populate({ path: "Costo", model: prices.esquema })
+      .select("-Costo.Historial");
+    res.json(finishersList);
+  } catch (error) {
+    next(error);
+    res .status(500).json({ message: error.message || "Error al obtener los acabados" });
+  }
+};
+
 finishersControl.updateFinisher = async (req, res, next) => {
   try {
     const {

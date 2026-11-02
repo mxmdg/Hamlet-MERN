@@ -11,9 +11,7 @@ const jobPartSchema = new Schema({
   PrintModAllowed: {
     type: String,
     enum: ["simplex", "duplex", "Simplex", "Duplex"],
-    required: function () {
-      return this.bacon > 3;
-    },
+    required: true,
   },
   minStockWeight: { type: Number, required: true },
   maxStockWeight: { type: Number, required: true },
@@ -29,7 +27,7 @@ const jobPartSchema = new Schema({
     required: false,
     index: true,
   },
-  jdfType: { type: String, required: true, enum: ["Cover", "SeparatedCover", "Insert", "Body"], default: "Body" },
+  jdfType: { type: String, required: true, enum: ["Cover", "SeparatedCover", "Insert", "Body", "Flatwork"], default: "Body" },
   Fecha: { type: Date, default: Date.now },
 });
 
