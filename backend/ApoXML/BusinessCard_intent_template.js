@@ -172,7 +172,7 @@ const buildChildJDF = (part, index, context) => {
 \t\t<AuditPool>
 \t\t\t<Created ID="crea_${index}_ID" AgentName="Hamlet Convertor" TimeStamp="${nowIso}" AgentVersion="1.3.3"/>
 \t\t</AuditPool>
-\t\t<Comment Name="Instruction" AgentName="Hamlet Convertor" AgentVersion="1.3.3">${escapeXML(
+\t\t<Comment Name="Description" AgentName="Hamlet Convertor" AgentVersion="1.3.3">${escapeXML(
       part?.tipoParte || nombreParte,
     )}</Comment>
 \t\t<ResourceLinkPool>
@@ -317,7 +317,7 @@ const template = async (
 \txmlns:agfa="http://www.agfa.com/w3c/gs/jdf/agfaextensions.xsd">
 \t<!--Created using Convertor v1.2.7 and stylesheet: v1.3.3 for Prepress v110-->
 \t<!--General Job Comment-->
-\t<Comment Name="${escapeXML(safeNombre)}" AgentName="Hamlet Convertor" AgentVersion="1.3.3">www.hamlet.com.ar/jobs/edit/${escapeXML(
+\t<Comment Name="JobDescription" AgentName="Hamlet Convertor" AgentVersion="1.3.3">www.hamlet.com.ar/jobs/edit/${escapeXML(
     jobId || "",
   )}</Comment>
 \t<ResourcePool>
