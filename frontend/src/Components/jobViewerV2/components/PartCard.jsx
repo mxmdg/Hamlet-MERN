@@ -19,6 +19,13 @@ import DarkWoodCard from "../../utils/DarkWoodCard";
 // Finishers
 import FinishingListAuto from "../../jobViewer/FinishingListAuto";
 
+const normalizeImpositionData = (data) =>
+  data?.impositionData
+    ? data
+    : data
+      ? { ...data, impositionData: data }
+      : null;
+
 
 /**
  * Renderiza UNA parte del trabajo. Componente de verdad (no función suelta).
@@ -36,12 +43,39 @@ import FinishingListAuto from "../../jobViewer/FinishingListAuto";
  * 
  * 
  */
-const PartCard = ({ part, index, total, impoData, cantidad }) => {
+const PartCard = ({
+  part,
+  index,
+  total,
+  impoData,
+  cantidad,
+  onImpositionChange,
+}) => {
   const [usePlainsheetCutting, setPlainSheetCutting] = useState(null);
-  const [ useData, setData]  = useState(impoData || null);
+  const [ useData, setData]  = useState(() => normalizeImpositionData(impoData));
   const [ usePoses, setPoses] = useState(impoData?.Poses || null);
 
   const [ partFinishingData, setPartFinishingData ] = useState(part?.Finishing || null);
+
+  useEffect(() => {
+    const normalizedData = normalizeImpositionData(impoData);
+    setData(normalizedData);
+    setPoses(impoData?.Poses ?? null);
+
+    const savedSheet = normalizedData?.impositionData?.sheetOriginalSize;
+    if (savedSheet) {
+      setPlainSheetCutting({
+        widthSheet: part?.partStock?.Ancho_Resma,
+        heightSheet: part?.partStock?.Alto_Resma,
+        widthPage: savedSheet.width,
+        heightPage: savedSheet.height,
+        margenes: 0,
+        Calle: 0,
+      });
+    } else {
+      setPlainSheetCutting(null);
+    }
+  }, [impoData, part?.partStock?.Ancho_Resma, part?.partStock?.Alto_Resma]);
 
 
   const tipo = part?.jobParts?.[0]?.Type ?? "Parte";
@@ -81,10 +115,8 @@ const PartCard = ({ part, index, total, impoData, cantidad }) => {
     }
 
     setData(impoData);
+    onImpositionChange?.(part?._id, impoData);
   }
-
-  useEffect(() => {}, [usePlainsheetCutting, useData, usePoses]);
-
 
   return (
     <Card variant="outlined" sx={{ mb: 1 }}>

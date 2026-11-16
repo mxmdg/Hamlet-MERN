@@ -3,17 +3,21 @@ import axios from "axios";
 import { HAMLET_API, HEALTH_API } from "../Config/config";
 
 
-const token = localStorage.getItem("token");
-const memberships = JSON.parse(localStorage.getItem("memberships") || "[]");
-const tenantId = memberships[0]?.tenant?.id;
+const getAuthData = () => {
+  const token = localStorage.getItem("token");
+  const memberships = JSON.parse(localStorage.getItem("memberships") || "[]");
+  return { token, tenantId: memberships[0]?.tenant?.id };
+};
+
+const getAuthHeaders = (authData = getAuthData()) => ({
+  Authorization: `Bearer ${authData.token}`,
+  "X-Tenant": authData.tenantId,
+});
 
 export const fechtData = async (collection, setFunction) => {
   try {
     const res = await axios.get(`${HAMLET_API}${collection}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "X-Tenant": tenantId,
-      },
+      headers: getAuthHeaders(),
     });
     setFunction(res.data);
   } catch (e) {
@@ -37,30 +41,26 @@ export const checkHealth = async () => {
 };
 
 export const getPrivateElements = async (collection) => {
-  if (!tenantId) {
+  const authData = getAuthData();
+  if (!authData.tenantId) {
     throw new Error("Imprenta activa no encontrada");
   }
 
   const elements = await axios.get(`${HAMLET_API}${collection}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "X-Tenant": tenantId,
-    },
+    headers: getAuthHeaders(authData),
   });
 
   return elements.data;
 };
 
 export const getPrivateElementByID = async (collection, id) => {
-  if (!tenantId) {
+  const authData = getAuthData();
+  if (!authData.tenantId) {
     throw new Error("Tenant activo no encontrado");
   }
 
   const elements = await axios.get(`${HAMLET_API}${collection}/${id}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "X-Tenant": tenantId,
-    },
+    headers: getAuthHeaders(authData),
   });
   // console.log(`${HAMLET_API}${collection}/${id}`);
   // console.log(elements.data);
@@ -70,10 +70,7 @@ export const getPrivateElementByID = async (collection, id) => {
 export const addPrivateElement = async (collection, formData) => {
   try {
     const elements = await axios.post(`${HAMLET_API + collection}`, formData, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "X-Tenant": tenantId,
-      },
+      headers: getAuthHeaders(),
     });
     return elements;
   } catch (e) {
@@ -103,10 +100,7 @@ export const uploadFile = async (endpoint, data) => {
 export const putPrivateElement = async (itemURL, formData) => {
   try {
     const elements = await axios.put(itemURL, formData, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "X-Tenant": tenantId,
-      },
+      headers: getAuthHeaders(),
     });
     return elements;
   } catch (e) {
@@ -120,10 +114,7 @@ export const patchPrivateElement = async (collection, id, formData) => {
       `${HAMLET_API + collection}/${id}`,
       formData,
       {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "X-Tenant": tenantId,
-        },
+        headers: getAuthHeaders(),
       },
     );
     return elements;
@@ -135,10 +126,7 @@ export const patchPrivateElement = async (collection, id, formData) => {
 export const deletePrivateElement = async (collection, id) => {
   try {
     const elements = await axios.delete(`${HAMLET_API + collection}/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "X-Tenant": tenantId,
-      },
+      headers: getAuthHeaders(),
     });
     return { message: `Elemento eliminado` };
   } catch (e) {
@@ -176,7 +164,8 @@ export const deleteMultiple = (ids, collection) => {
 // Podés BORRAR importFromPapyrus una vez migrados los dos usos.
 
 export const runPapyrusQuery = async (queryName, params = {}) => {
-  if (!tenantId) {
+  const authData = getAuthData();
+  if (!authData.tenantId) {
     throw new Error("Imprenta activa no encontrada");
   }
 
@@ -184,10 +173,7 @@ export const runPapyrusQuery = async (queryName, params = {}) => {
     `${HAMLET_API}papyrus/query`,
     { query: queryName, params },
     {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "X-Tenant": tenantId,
-      },
+      headers: getAuthHeaders(authData),
     }
   );
 

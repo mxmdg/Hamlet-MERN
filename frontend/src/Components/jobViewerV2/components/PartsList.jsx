@@ -7,7 +7,12 @@ import PartCard from "./PartCard";
  * Recibe el array de partes y lo recorre.
  * Cada parte se renderiza como un <PartCard /> real, con su key.
  */
-const PartsList = ({ partes = [], impoData = {}, cantidad = 1 }) => {
+const PartsList = ({
+  partes = [],
+  impoData = {},
+  cantidad = 1,
+  onImpositionChange,
+}) => {
   if (!Array.isArray(partes) || partes.length === 0) {
     return <Typography variant="body2">Este trabajo no tiene partes.</Typography>;
   }
@@ -25,6 +30,7 @@ const PartsList = ({ partes = [], impoData = {}, cantidad = 1 }) => {
           total={partes.length}
           impoData={impoData[part._id] ?? null}
           cantidad={cantidad}
+          onImpositionChange={onImpositionChange}
         />
       ))}
     </Box>

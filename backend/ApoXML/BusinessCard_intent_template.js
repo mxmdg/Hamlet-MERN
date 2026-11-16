@@ -24,6 +24,17 @@ const escapeXML = (value) => {
     .replace(/'/g, "&apos;");
 };
 
+const toJdfDateTime = (value) => {
+  if (!value) return null;
+  const d = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(d.getTime())) return null;
+  // Argentina: UTC-3 fijo (sin horario de verano desde 2009).
+  // Se toma la fecha en UTC (medianoche UTC = mismo día en Argentina)
+  // y se fija 12:00 para evitar corrimientos de día.
+  const ymd = d.toISOString().slice(0, 10);
+  return `${ymd}T12:00:00-03:00`;
+};
+
 const toNumber = (value, fallback = 0) => {
   const parsed = Number(value);
   return Number.isFinite(parsed) ? parsed : fallback;
@@ -259,6 +270,8 @@ const template = async (
 
   const totalParts = safePartesSeccionadas.length;
   const nowIso = new Date().toISOString();
+  const endDate = toJdfDateTime(entrega);
+  const endAttr = endDate ? ` End="${endDate}"` : "";
 
   const firstPart = partesConTipo[0] || {};
   const finalWidth = toNumber(firstPart.ancho, 0);
@@ -361,7 +374,7 @@ ${partialComponents}
 \t\t\t<Company OrganizationName="${escapeXML(cliente)}" ProductID="${idCliente}"/>
 /*Aqui va person*/
 \t\t</Contact>
-\t\t<NodeInfo Class="Parameter" ID="ID_NodeInfo_Root" NodeStatus="Waiting" Status="Available"/>
+\t\t<NodeInfo Class="Parameter" ID="ID_NodeInfo_Root" NodeStatus="Waiting" Status="Available"${endAttr}/>
 \t</ResourcePool>
 \t<ResourceLinkPool>
 \t\t<NodeInfoLink rRef="ID_NodeInfo_Root" Usage="Input"/>

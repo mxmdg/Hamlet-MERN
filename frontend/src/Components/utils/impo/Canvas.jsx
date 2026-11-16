@@ -40,59 +40,72 @@ const Canvas = (props) => {
     });
   };
 
-  const handleImpoClick = (data) => {
+  const handleImpoClick = (data, notify = true) => {
     if (svgRef.current) {
+      const drawingData = { ...data };
       const { context: svgContext, getShapes } = createSvgDrawingContext();
       const canvasWidth = useCanvasSize.x;
       const canvasHeight = useCanvasSize.y;
       const sheet = {
-        width: parseInt(data.widthSheet),
-        height: parseInt(data.heightSheet),
+        width: parseInt(drawingData.widthSheet),
+        height: parseInt(drawingData.heightSheet),
+      };
+      const originalData = {
+        ...data,
+        sheetOriginalSize: sheet,
       };
 
       // Verifica si el tamaño de la hoja es mayor que el tamaño del canvas
       if (
-        parseInt(data.widthSheet) > canvasWidth ||
-        parseInt(data.heightSheet) > canvasHeight
+        parseInt(drawingData.widthSheet) > canvasWidth ||
+        parseInt(drawingData.heightSheet) > canvasHeight
       ) {
         // Calcula el factor de escala necesario para que quepa en el canvas
-        const scaleWidth = canvasWidth / parseInt(data.widthSheet);
-        const scaleHeight = canvasHeight / parseInt(data.heightSheet);
+        const scaleWidth = canvasWidth / parseInt(drawingData.widthSheet);
+        const scaleHeight = canvasHeight / parseInt(drawingData.heightSheet);
         const scale = Math.min(scaleWidth, scaleHeight);
         setScale(scale);
 
         // Escala todas las medidas en consecuencia
-        data.widthSheet = Math.floor(parseInt(data.widthSheet) * scale);
-        data.heightSheet = Math.floor(parseInt(data.heightSheet) * scale);
-        data.widthPage = Math.floor(parseInt(data.widthPage) * scale);
-        data.heightPage = Math.floor(parseInt(data.heightPage) * scale);
-        data.margenes = Math.floor(parseInt(data.margenes) * scale);
-        data.Calle = Math.floor(parseInt(data.Calle) * scale);
+        drawingData.widthSheet = Math.floor(
+          parseInt(drawingData.widthSheet) * scale,
+        );
+        drawingData.heightSheet = Math.floor(
+          parseInt(drawingData.heightSheet) * scale,
+        );
+        drawingData.widthPage = Math.floor(
+          parseInt(drawingData.widthPage) * scale,
+        );
+        drawingData.heightPage = Math.floor(
+          parseInt(drawingData.heightPage) * scale,
+        );
+        drawingData.margenes = Math.floor(
+          parseInt(drawingData.margenes || 0) * scale,
+        );
+        drawingData.Calle = Math.floor(
+          parseInt(drawingData.Calle || 0) * scale,
+        );
       }
-      data.sheetOriginalSize = sheet;
-      //console.log(data);
+      drawingData.sheetOriginalSize = sheet;
 
       const totalPoses = drawOptimusCutting(
-        parseInt(data.widthSheet),
-        parseInt(data.heightSheet),
-        parseInt(data.widthPage),
-        parseInt(data.heightPage),
-        parseInt(data.margenes),
-        parseInt(data.Calle),
+        parseInt(drawingData.widthSheet),
+        parseInt(drawingData.heightSheet),
+        parseInt(drawingData.widthPage),
+        parseInt(drawingData.heightPage),
+        parseInt(drawingData.margenes),
+        parseInt(drawingData.Calle),
         svgContext,
         useCanvasSize.x,
         useCanvasSize.y,
       );
       setSvgShapes(getShapes());
 
-      //console.log("Total Poses: " + totalPoses.tPoses);
-
-      if (props.getPoses) {
+      if (notify && props.getPoses) {
         props.getPoses(totalPoses.tPoses);
-        props.getSheet(data);
+        props.getSheet(originalData);
       }
     }
-    //props.save(false);
   };
 
   useEffect(() => {
@@ -107,6 +120,25 @@ const Canvas = (props) => {
       window.removeEventListener("resize", handleResize);
     };
   }, [setCanvasSize]);
+
+  useEffect(() => {
+    if (!props.sheet) return;
+
+    const savedSheet = props.sheet.sheetOriginalSize;
+    const drawingData = {
+      ...props.sheet,
+      widthSheet:
+        props.sheet.widthSheet ?? savedSheet?.width,
+      heightSheet:
+        props.sheet.heightSheet ?? savedSheet?.height,
+      widthPage: props.sheet.widthPage ?? props.part?.Ancho,
+      heightPage: props.sheet.heightPage ?? props.part?.Alto,
+      margenes: props.sheet.margenes ?? 0,
+      Calle: props.sheet.Calle ?? 0,
+    };
+
+    handleImpoClick(drawingData, false);
+  }, [props.sheet, props.part?.Ancho, props.part?.Alto, useCanvasSize]);
 
   return (
     <Box>

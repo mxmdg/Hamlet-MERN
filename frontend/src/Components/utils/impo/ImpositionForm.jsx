@@ -108,7 +108,10 @@ export const ImpositionForm = (props) => {
   };
 
   const onSubmit = (values) => {
-    values.printerSelector = useSelectedPrinter;
+    values.printerSelector =
+      usePrinters.find((printer) => printer._id === values.printerSelector) ||
+      props.impositionSettings?.printerSelector ||
+      useSelectedPrinter;
     values.formatSelector = customFormat ? "Personalizado" : selectedFormat;
     context.setImpoData(values);
     props.doImposition(values);
@@ -118,6 +121,9 @@ export const ImpositionForm = (props) => {
 
   useEffect(() => {
     fetchingData();
+  }, []);
+
+  useEffect(() => {
     if (props.impositionSettings?.printerSelector) {
       setSelectedPrinter(props.impositionSettings?.printerSelector);
     }
@@ -153,7 +159,7 @@ export const ImpositionForm = (props) => {
         props.impositionSettings?.sheetOriginalSize?.height || "",
       );
     }
-  }, []);
+  }, [props.impositionSettings, props.part, setValue]);
 
   useEffect(() => {
     if (props.impositionSettings) {

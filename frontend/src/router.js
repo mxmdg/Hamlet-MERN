@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react"; // add useEffect
+import React, { useContext, useEffect } from "react";
 import { AuthContext } from "./Components/context/AuthContext";
 import { Routes, Route } from "react-router-dom";
 import { useUserPreferences } from "./Hooks/useUserPreferences";
@@ -25,11 +25,7 @@ import { reportsRoutes } from "./Routes/reportsRoutes";
 const Router = (props) => {
   const context = useContext(AuthContext);
 
-  const [usePlan, setPlan] = useState(
-    localStorage.getItem("memberships")
-      ? JSON.parse(localStorage.getItem("memberships"))[0]?.tenant.plan
-      : null,
-  );
+  const usePlan = context.usePlan;
 
   const { color, variant } = props.prefs;
 

@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { serverURL } from "../Config/config";
-import axios from "axios";
 import { jwtDecode } from "jwt-decode";
-import { getPrivateElements } from "../customHooks/FetchDataHook";
 
 export const AuthContext = React.createContext();
 
@@ -24,13 +21,9 @@ const AuthProvider = ({ children }) => {
 
   const Navigate = useNavigate();
 
-  // Derivamos estados de las memberships cargadas
-  const [usePlan, setPlan] = useState(
-    memberships.length > 0 ? memberships[0].tenant.plan : null,
-  );
-  const [useSettings, setSettings] = useState(
-    memberships.length > 0 ? memberships[0].tenant.settings : null,
-  );
+  const tenant = memberships[0]?.tenant;
+  const usePlan = tenant?.plan ?? null;
+  const useSettings = tenant?.settings ?? null;
 
   const handleLogin = (token, expirationTime, user, membershipsData) => {
     // Seteamos logout automático
@@ -41,12 +34,6 @@ const AuthProvider = ({ children }) => {
       setToken(token);
       setUserLogged(user);
       setMemberships(membershipsData);
-
-      // Actualizamos estados derivados inmediatamente
-      if (membershipsData && membershipsData.length > 0) {
-        setPlan(membershipsData[0].tenant.plan);
-        setSettings(membershipsData[0].tenant.settings);
-      }
 
       // GUARDADO CORRECTO EN LOCALSTORAGE
       localStorage.setItem("login", "true");
@@ -61,8 +48,6 @@ const AuthProvider = ({ children }) => {
     setToken(null);
     setUserLogged(null);
     setMemberships([]);
-    setPlan(null);
-    setSettings(null);
     localStorage.removeItem("login");
     localStorage.removeItem("token");
     localStorage.removeItem("user");
